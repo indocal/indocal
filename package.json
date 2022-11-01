@@ -1,0 +1,27 @@
+{
+  "name": "@indocal/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "npm": "=8.15.0",
+    "node": "=16.17.1"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@commitlint/cli": "17.1.2",
+    "@commitlint/config-conventional": "17.1.0",
+    "@indocal/eslint-config-indocal": "*",
+    "husky": "8.0.1",
+    "prettier": "2.7.1",
+    "turbo": "1.5.6"
+  }
+}

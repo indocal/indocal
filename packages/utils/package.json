@@ -1,0 +1,9 @@
+{
+  "name": "@indocal/utils",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "18.8.4",
+    "typescript": "4.8.4"
+  }
+}

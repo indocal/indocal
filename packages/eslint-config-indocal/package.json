@@ -1,0 +1,17 @@
+{
+  "name": "@indocal/eslint-config-indocal",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "5.40.0",
+    "@typescript-eslint/parser": "5.40.0",
+    "eslint": "8.25.0",
+    "eslint-config-next": "12.3.1",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-config-turbo": "0.0.4",
+    "eslint-plugin-react": "7.31.10"
+  },
+  "devDependencies": {
+    "typescript": "4.8.4"
+  }
+}

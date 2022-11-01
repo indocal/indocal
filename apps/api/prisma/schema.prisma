@@ -1,0 +1,217 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//////////////////////
+// Users Management //
+//////////////////////
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  email    String @unique
+  password String
+
+  status UserStatus @default(ENABLED)
+
+  roles  UserRole[]
+  groups UserGroup[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserStatus {
+  ENABLED
+  DISABLED
+}
+
+model UserRole {
+  id          String @id @default(uuid())
+  type        String @unique
+  name        String
+  description String
+
+  config Json?
+
+  permissions UserRolePermission[]
+  users       User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserRolePermission {
+  id     String @id @default(uuid())
+  action String // model::action
+
+  role   UserRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([action, roleId])
+}
+
+model UserGroup {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  members User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////
+// Forms Management //
+//////////////////////
+
+model Form {
+  id          String  @id @default(uuid())
+  slug        String  @unique
+  title       String
+  description String?
+
+  fields FormField[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FormField {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+
+  config Json?
+
+  type FormFieldType
+
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([title, formId])
+  @@unique([description, formId])
+}
+
+enum FormFieldType {
+  CHECKBOX
+  EMAIL
+  NUMBER
+  RADIO
+  TEXT
+  TEXTAREA
+}
+
+/////////////////////
+// Nobu Management //
+/////////////////////
+
+//////////////////////////
+// Trainings Management //
+//////////////////////////
+
+//////////////////////////
+// Warehouse Management //
+//////////////////////////
+
+model Item {
+  id                String  @id @default(uuid())
+  institutionalCode String  @unique
+  governmentCode    String? @unique
+
+  name        String
+  description String?
+
+  stock Int @default(0)
+
+  unit ItemUnit
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ItemUnit {
+  UNIT
+  PACK
+  BOX
+
+  BLOCK
+  REAM
+  BALE
+
+  SACK
+  GALLON
+}
+
+model Supplier {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Purchase {
+  id String @id @default(uuid())
+
+  period PurchasePeriod
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PurchasePeriod {
+  JANUARY_MARCH
+  APRIL_JUNE
+  JULY_SEPTEMBER
+  OCTOBER_DECEMBER
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  cost     Decimal
+  quantity Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SalidaForm {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+///////////////////////
+// Events Management //
+///////////////////////
+
+model Event {
+  id          String  @id @default(uuid())
+  slug        String  @unique
+  title       String
+  description String?
+
+  guests Json[] @default([])
+
+  scheduledAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

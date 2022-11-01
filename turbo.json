@@ -1,0 +1,32 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "dev": {
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "lint": {
+      "outputs": []
+    }
+  },
+  "globalEnv": [
+    "NODE_ENV",
+    "PORT",
+    "DATABASE_URL",
+    "JWT_SECRET",
+    "ROOT_USER_USERNAME",
+    "ROOT_USER_EMAIL",
+    "ROOT_USER_PASSWORD",
+    "NODEMAILER_SERVICE",
+    "NODEMAILER_FROM",
+    "NODEMAILER_AUTH_USER",
+    "NODEMAILER_AUTH_PASSWORD",
+    "NEXT_PUBLIC_SITE_URL",
+    "NEXT_PUBLIC_API_URL",
+    "NEXTAUTH_URL",
+    "NEXTAUTH_SECRET"
+  ]
+}
