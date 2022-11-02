@@ -39,8 +39,7 @@ const schema = zod.object(
           invalid_type_error: 'Formato no válido',
         }
       )
-      .array()
-      .min(1, 'Debe seleccionar al menos un grupo'),
+      .array(),
   },
   {
     description: 'Grupos a los que pertenece el usuario',

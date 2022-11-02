@@ -17,7 +17,14 @@ import {
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useForm, getShortUUID, UUID, Form } from '@indocal/services';
+import {
+  useForm,
+  getShortUUID,
+  translateFormStatus,
+  translateFormVisibility,
+  UUID,
+  Form,
+} from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -112,6 +119,20 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
                 <ListItemText
                   primary="Fecha de creación"
                   secondary={new Date(form.createdAt).toLocaleDateString()}
+                />
+              </ListItem>
+
+              <ListItem disablePadding>
+                <ListItemText
+                  primary="Estado"
+                  secondary={translateFormStatus(form.status)}
+                />
+              </ListItem>
+
+              <ListItem disablePadding>
+                <ListItemText
+                  primary="Visibilidad"
+                  secondary={translateFormVisibility(form.visibility)}
                 />
               </ListItem>
 

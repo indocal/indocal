@@ -41,8 +41,7 @@ const schema = zod.object(
           invalid_type_error: 'Formato no válido',
         }
       )
-      .array()
-      .min(1, 'Debe seleccionar al menos un rol'),
+      .array(),
   },
   {
     description: 'Roles asignados al usuario',

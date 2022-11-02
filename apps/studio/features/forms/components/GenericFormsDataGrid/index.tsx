@@ -16,7 +16,12 @@ import {
 import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
-import { getShortUUID, Form } from '@indocal/services';
+import {
+  getShortUUID,
+  translateFormStatus,
+  translateFormVisibility,
+  Form,
+} from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -70,8 +75,24 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
         headerName: 'Formulario',
         headerAlign: 'center',
         align: 'center',
-        minWidth: 250,
+        minWidth: 350,
         flex: 1,
+      },
+      {
+        field: 'status',
+        headerName: 'Estado',
+        headerAlign: 'center',
+        align: 'center',
+        minWidth: 150,
+        valueGetter: ({ value }) => translateFormStatus(value),
+      },
+      {
+        field: 'visibility',
+        headerName: 'Visibilidad',
+        headerAlign: 'center',
+        align: 'center',
+        minWidth: 150,
+        valueGetter: ({ value }) => translateFormVisibility(value),
       },
       {
         field: 'fields',
@@ -98,6 +119,8 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
       forms.map((form) => ({
         id: form.id,
         title: form.title,
+        status: form.status,
+        visibility: form.visibility,
         fields: form.fields,
         updatedAt: form.updatedAt,
       })),

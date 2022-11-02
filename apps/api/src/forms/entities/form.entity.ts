@@ -1,5 +1,7 @@
 import {
   Form as DBFormModel,
+  FormStatus as DBFormStatusEnum,
+  FormVisibility as DBFormVisibilityEnum,
   FormField as DBFormFieldModel,
 } from '@prisma/client';
 
@@ -22,6 +24,8 @@ export class FormEntity implements Entity, DBFormModel {
   slug: string;
   title: string;
   description: string | null;
+  status: DBFormStatusEnum;
+  visibility: DBFormVisibilityEnum;
   createdAt: Date;
   updatedAt: Date;
 }

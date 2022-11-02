@@ -43,6 +43,8 @@ export class FormsService {
         slug: updateFormDto.slug,
         title: updateFormDto.title,
         description: updateFormDto.description,
+        status: updateFormDto.status,
+        visibility: updateFormDto.visibility,
       },
     });
   }

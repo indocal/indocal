@@ -73,8 +73,7 @@ const schema = zod
             invalid_type_error: 'Formato no válido',
           }
         )
-        .array()
-        .min(1, 'Debe seleccionar al menos un rol'),
+        .array(),
 
       groups: zod
         .object(
@@ -91,8 +90,7 @@ const schema = zod
             invalid_type_error: 'Formato no válido',
           }
         )
-        .array()
-        .min(1, 'Debe seleccionar al menos un grupo'),
+        .array(),
     },
     {
       description: 'Datos del usuario',

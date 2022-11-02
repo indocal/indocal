@@ -14,9 +14,18 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { Form, ApiEndpoints } from '@indocal/services';
+import {
+  Form,
+  FormStatus,
+  FormVisibility,
+  ApiEndpoints,
+} from '@indocal/services';
 
 import { indocal } from '@/lib';
+import {
+  ControlledFormStatusSelect,
+  ControlledFormVisibilitySelect,
+} from '@/features';
 
 import { useFormCard } from '../../context';
 
@@ -51,6 +60,28 @@ const schema = zod
         })
         .trim()
         .nullable(),
+
+      status: zod
+        .enum<string, [FormStatus, ...FormStatus[]]>(
+          ['DRAFT', 'PUBLISHED', 'HIDDEN'],
+          {
+            description: 'Estado del formulario',
+            required_error: 'Debe ingresar el estado del formulario',
+            invalid_type_error: 'Formato no válido',
+          }
+        )
+        .describe('Estado del formulario'),
+
+      visibility: zod
+        .enum<string, [FormVisibility, ...FormVisibility[]]>(
+          ['PUBLIC', 'PRIVATE'],
+          {
+            description: 'Visibilidad del formulario',
+            required_error: 'Debe ingresar el visibilidad del formulario',
+            invalid_type_error: 'Formato no válido',
+          }
+        )
+        .describe('Visibilidad del formulario'),
     },
     {
       description: 'Datos del formulario',
@@ -74,6 +105,7 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
+    control,
     handleSubmit,
     reset,
   } = useForm<FormData>({
@@ -82,6 +114,8 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
       slug: form.slug,
       title: form.title,
       description: form.description,
+      status: form.status,
+      visibility: form.visibility,
     },
   });
 
@@ -91,6 +125,8 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
         slug: formData.slug,
         title: formData.title,
         description: formData.description,
+        status: formData.status,
+        visibility: formData.visibility,
       });
 
       if (error) {
@@ -164,6 +200,22 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
             inputProps={register('description')}
             error={Boolean(errors.description)}
             helperText={errors.description?.message}
+          />
+
+          <ControlledFormStatusSelect
+            required
+            name="status"
+            label="Estado"
+            control={control}
+            disabled={isSubmitting}
+          />
+
+          <ControlledFormVisibilitySelect
+            required
+            name="visibility"
+            label="Visibilidad"
+            control={control}
+            disabled={isSubmitting}
           />
         </Stack>
       </DialogContent>
