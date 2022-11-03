@@ -4,7 +4,7 @@ export type UpdateUserRoleDto = Partial<{
   type: string;
   name: string;
   description: string;
-  users: UUID;
+  users: UUID[];
 }>;
 
 export default UpdateUserRoleDto;

@@ -13,18 +13,18 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { UserGroup, UserStatus, ApiEndpoints } from '@indocal/services';
+import { UserRole, UserStatus, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { ControlledUsersAutocomplete } from '@/features';
 
-import { useGroupUsersDataGrid } from '../../context';
+import { useRoleUsersDataGrid } from '../../context';
 
 type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    members: zod
+    users: zod
       .object(
         {
           id: zod.string().uuid(),
@@ -38,7 +38,7 @@ const schema = zod.object(
           updatedAt: zod.string(),
         },
         {
-          description: 'Miembros que pertenecen al grupo',
+          description: 'Miembros que pertenecen al rol',
           required_error: 'Debe seleccionar al menos un miembro',
           invalid_type_error: 'Formato no válido',
         }
@@ -46,23 +46,23 @@ const schema = zod.object(
       .array(),
   },
   {
-    description: 'Miembros que pertenecen al grupo',
+    description: 'Miembros que pertenecen al rol',
     required_error: 'Debe seleccionar al menos un miembro',
     invalid_type_error: 'Formato no válido',
   }
 );
 
-export interface ManageGroupUsersDialogProps {
-  group: UserGroup;
+export interface ManageRoleUsersDialogProps {
+  role: UserRole;
 }
 
-export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
-  group,
+export const ManageRoleUsersDialog: React.FC<ManageRoleUsersDialogProps> = ({
+  role,
 }) => {
   const { mutate } = useSWRConfig();
 
-  const { isManageGroupUsersDialogOpen, toggleManageGroupUsersDialog } =
-    useGroupUsersDataGrid();
+  const { isManageRoleUsersDialogOpen, toggleManageRoleUsersDialog } =
+    useRoleUsersDataGrid();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -74,16 +74,16 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      members: group.members,
+      users: role.users,
     },
   });
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { group: updated, error } = await indocal.auth.groups.update(
-        group.id,
+      const { role: updated, error } = await indocal.auth.roles.update(
+        role.id,
         {
-          members: formData.members.map((member) => member.id),
+          users: formData.users.map((user) => user.id),
         }
       );
 
@@ -98,36 +98,36 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
           { variant: 'error' }
         );
       } else {
-        await mutate(`${ApiEndpoints.USERS_GROUPS}/${group.id}`, updated);
+        await mutate(`${ApiEndpoints.USERS_ROLES}/${role.id}`, updated);
 
         enqueueSnackbar('Miembros actualizados exitosamente', {
           variant: 'success',
-          onEntered: toggleManageGroupUsersDialog,
+          onEntered: toggleManageRoleUsersDialog,
         });
       }
     },
-    [group.id, mutate, toggleManageGroupUsersDialog, enqueueSnackbar]
+    [role.id, mutate, toggleManageRoleUsersDialog, enqueueSnackbar]
   );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
-      toggleManageGroupUsersDialog();
+      toggleManageRoleUsersDialog();
     } else {
       const response = window.confirm(
         '¿Estás seguro que deseas cancelar esta acción?'
       );
 
       if (response) {
-        toggleManageGroupUsersDialog();
+        toggleManageRoleUsersDialog();
         reset();
       }
     }
-  }, [isDirty, reset, toggleManageGroupUsersDialog]);
+  }, [isDirty, reset, toggleManageRoleUsersDialog]);
 
   return (
     <Dialog
       fullWidth
-      open={isManageGroupUsersDialogOpen}
+      open={isManageRoleUsersDialogOpen}
       onClose={handleOnClose}
     >
       <DialogTitle>Miembros</DialogTitle>
@@ -137,7 +137,7 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
           <ControlledUsersAutocomplete
             required
             multiple
-            name="members"
+            name="users"
             label="Usuarios"
             control={control as unknown as Control}
             disabled={isSubmitting}
@@ -161,4 +161,4 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
   );
 };
 
-export default ManageGroupUsersDialog;
+export default ManageRoleUsersDialog;

@@ -150,7 +150,7 @@ export const ManageUserGroupsDialog: React.FC<ManageUserGroupsDialogProps> = ({
           disabled={!isDirty}
           onClick={handleSubmit(onSubmit)}
         >
-          Editar
+          Actualizar
         </LoadingButton>
       </DialogActions>
     </Dialog>

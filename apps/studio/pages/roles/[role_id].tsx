@@ -4,7 +4,11 @@ import { Container, Grid } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useUserRole, UUID } from '@indocal/services';
 
-import { UserRoleCard, UserRolePermissionsManagamentPanel } from '@/features';
+import {
+  UserRoleCard,
+  RoleUsersDataGrid,
+  UserRolePermissionsManagamentPanel,
+} from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -36,9 +40,15 @@ const UserRolePage: EnhancedNextPage = () => {
             alignItems="center"
             spacing={1}
           >
-            <Grid item xs={12}>
-              <Widget disableDefaultSizes>
+            <Grid item xs={12} md={4}>
+              <Widget>
                 <UserRoleCard role={role} />
+              </Widget>
+            </Grid>
+
+            <Grid item xs={12} md={8}>
+              <Widget>
+                <RoleUsersDataGrid role={role} />
               </Widget>
             </Grid>
 

@@ -7,7 +7,9 @@ export * from './ControlledUserStatusSelect';
 export * from './ControlledUsersAutocomplete';
 
 export * from './UserRoleCard';
-export * from './UsersRolesTable';
+export * from './UsersRolesDataGrid';
+export * from './GenericUsersRolesDataGrid';
+export * from './RoleUsersDataGrid';
 export * from './UserRolePermissionsManagamentPanel';
 export * from './ControlledUsersRolesAutocomplete';
 

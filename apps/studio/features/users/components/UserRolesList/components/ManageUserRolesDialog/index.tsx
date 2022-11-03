@@ -152,7 +152,7 @@ export const ManageUserRolesDialog: React.FC<ManageUserRolesDialogProps> = ({
           disabled={!isDirty}
           onClick={handleSubmit(onSubmit)}
         >
-          Editar
+          Actualizar
         </LoadingButton>
       </DialogActions>
     </Dialog>
