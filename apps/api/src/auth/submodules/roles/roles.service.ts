@@ -48,6 +48,12 @@ export class UsersRolesService {
         type: updateUserRoleDto.type,
         name: updateUserRoleDto.name,
         description: updateUserRoleDto.description,
+
+        ...(updateUserRoleDto.users && {
+          users: {
+            set: updateUserRoleDto.users.map((user) => ({ id: user })),
+          },
+        }),
       },
     });
   }

@@ -11,7 +11,10 @@ import { UsersRolesModule } from '../roles';
 import { UsersGroupsModule } from '../groups';
 
 @Module({
-  imports: [UsersRolesModule, forwardRef(() => UsersGroupsModule)],
+  imports: [
+    forwardRef(() => UsersRolesModule),
+    forwardRef(() => UsersGroupsModule),
+  ],
   controllers: [UsersController],
   providers: [PrismaService, UsersService, AbilityFactory],
   exports: [UsersService],

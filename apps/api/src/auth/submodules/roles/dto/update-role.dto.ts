@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 
-import { TrimParam } from '@/common';
+import { TrimParam, UUID } from '@/common';
 
 class UpdateUserRoleDtoSchema {
   @IsString()
@@ -15,6 +15,9 @@ class UpdateUserRoleDtoSchema {
   @IsString()
   @TrimParam()
   description: string;
+
+  @IsUUID('all', { each: true })
+  users: UUID[];
 }
 
 export class UpdateUserRoleDto extends PartialType(UpdateUserRoleDtoSchema) {}

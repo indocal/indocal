@@ -28,14 +28,16 @@ import {
   UpdateUserRoleDto,
 } from './dto';
 
-import { UsersRolesPermissionsService } from '../permissions';
+import UsersRolesPermissionsService from '../permissions/permissions.service';
+import UsersService from '../users/users.service';
 
 @Controller('auth/roles')
 @UseGuards(PoliciesGuard)
 export class UsersRolesController {
   constructor(
     private usersRolesService: UsersRolesService,
-    private usersRolesPermissionsService: UsersRolesPermissionsService
+    private usersRolesPermissionsService: UsersRolesPermissionsService,
+    private usersService: UsersService
   ) {}
 
   @Post()
@@ -46,7 +48,11 @@ export class UsersRolesController {
     const role = await this.usersRolesService.create(createUserRoleDto);
     const permissions = await this.usersRolesPermissionsService.findAll(role);
 
-    return new UserRoleEntity(role, permissions);
+    const users = await this.usersService.findMany({
+      where: { roles: { some: { id: role.id } } },
+    });
+
+    return new UserRoleEntity(role, permissions, users);
   }
 
   @Get('count')
@@ -78,7 +84,11 @@ export class UsersRolesController {
           role
         );
 
-        return new UserRoleEntity(role, permissions);
+        const users = await this.usersService.findMany({
+          where: { roles: { some: { id: role.id } } },
+        });
+
+        return new UserRoleEntity(role, permissions, users);
       })
     );
   }
@@ -91,7 +101,11 @@ export class UsersRolesController {
     const role = await this.usersRolesService.findUnique('id', id);
     const permissions = await this.usersRolesPermissionsService.findAll(id);
 
-    return role ? new UserRoleEntity(role, permissions) : null;
+    const users = await this.usersService.findMany({
+      where: { roles: { some: { id } } },
+    });
+
+    return role ? new UserRoleEntity(role, permissions, users) : null;
   }
 
   @Patch(':id')
@@ -103,7 +117,11 @@ export class UsersRolesController {
     const role = await this.usersRolesService.update(id, updateUserRoleDto);
     const permissions = await this.usersRolesPermissionsService.findAll(role);
 
-    return new UserRoleEntity(role, permissions);
+    const users = await this.usersService.findMany({
+      where: { roles: { some: { id: role.id } } },
+    });
+
+    return new UserRoleEntity(role, permissions, users);
   }
 
   @Delete(':id')
@@ -112,7 +130,11 @@ export class UsersRolesController {
     const role = await this.usersRolesService.delete(id);
     const permissions = await this.usersRolesPermissionsService.findAll(role);
 
-    return new UserRoleEntity(role, permissions);
+    const users = await this.usersService.findMany({
+      where: { roles: { some: { id: role.id } } },
+    });
+
+    return new UserRoleEntity(role, permissions, users);
   }
 }
 

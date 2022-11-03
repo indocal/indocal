@@ -2,18 +2,22 @@ import {
   Prisma,
   UserRole as DBUserRoleModel,
   UserRolePermission as DBUserRolePermissionModel,
+  User as DBUserModel,
 } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
 import { UserRolePermissionEntity } from '../../permissions';
+import { UserEntity } from '../../users';
 
 export class UserRoleEntity implements Entity, DBUserRoleModel {
   permissions?: UserRolePermissionEntity[];
+  users?: UserEntity[];
 
   constructor(
     role: DBUserRoleModel,
-    permissions?: DBUserRolePermissionModel[]
+    permissions?: DBUserRolePermissionModel[],
+    users?: DBUserModel[]
   ) {
     Object.assign(this, role);
 
@@ -21,6 +25,10 @@ export class UserRoleEntity implements Entity, DBUserRoleModel {
       this.permissions = permissions.map(
         (permission) => new UserRolePermissionEntity(permission)
       );
+    }
+
+    if (users) {
+      this.users = users.map((user) => new UserEntity(user));
     }
   }
 
