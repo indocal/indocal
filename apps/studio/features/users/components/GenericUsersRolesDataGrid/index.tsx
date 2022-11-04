@@ -84,6 +84,14 @@ export const GenericUsersRolesDataGrid: React.FC<
         flex: 1,
       },
       {
+        field: 'users',
+        headerName: 'Cantidad de usuarios',
+        headerAlign: 'center',
+        align: 'center',
+        minWidth: 175,
+        valueGetter: ({ value }) => value.length,
+      },
+      {
         field: 'updatedAt',
         headerName: 'Última modificación',
         headerAlign: 'right',
@@ -101,6 +109,7 @@ export const GenericUsersRolesDataGrid: React.FC<
         id: role.id,
         name: role.name,
         type: role.type,
+        users: role.users,
         updatedAt: role.updatedAt,
       })),
     [roles]

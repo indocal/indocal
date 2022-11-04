@@ -40,6 +40,7 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
         onAddButtonClick={toggleManageGroupUsersDialog}
         onRefreshButtonClick={handleRefetch}
         enhancedDataGridProps={{
+          density: 'compact',
           loading: loading || validating,
           error: serviceError,
           quickFilterProps: { placeholder: 'Buscar...' },

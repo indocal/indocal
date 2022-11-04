@@ -29,7 +29,7 @@ const UsersPage: EnhancedNextPage = () => (
               </NextLink>
             }
           >
-            Roles y permisos
+            Roles / Permisos
           </Alert>
         </Grid>
 

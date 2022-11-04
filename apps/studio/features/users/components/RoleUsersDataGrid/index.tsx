@@ -40,6 +40,7 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
         onAddButtonClick={toggleManageRoleUsersDialog}
         onRefreshButtonClick={handleRefetch}
         enhancedDataGridProps={{
+          density: 'compact',
           loading: loading || validating,
           error: serviceError,
           quickFilterProps: { placeholder: 'Buscar...' },
