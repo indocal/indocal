@@ -31,7 +31,6 @@ const schema = zod.object(
           type: zod.string(),
           name: zod.string(),
           description: zod.string(),
-          config: zod.unknown().optional(),
           createdAt: zod.string(),
           updatedAt: zod.string(),
         },

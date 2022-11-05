@@ -1,13 +1,13 @@
 import { Entity, UUID } from '../../../../../common';
 
-export type UserStatus = 'ENABLED' | 'DISABLED';
+import { UserRoleConfig } from '../../roles-service';
 
 type Role = {
   id: UUID;
   type: string;
   name: string;
   description: string;
-  config: object;
+  config?: UserRoleConfig;
   createdAt: string;
   updatedAt: string;
 };
@@ -19,6 +19,8 @@ type Group = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type UserStatus = 'ENABLED' | 'DISABLED';
 
 export interface User extends Entity {
   username: string;

@@ -23,4 +23,4 @@ export default INDOCAL;
 
 export * from './common';
 export * from './modules';
-export { ApiEndpoints } from './config';
+export * from './config';

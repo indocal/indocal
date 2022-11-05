@@ -4,14 +4,20 @@ import {
   Card,
   CardHeader,
   CardContent,
+  CardActions,
   List,
   ListItem,
   ListItemText,
+  Button,
   IconButton,
   Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
-import { Handyman as ManageIcon, Edit as EditIcon } from '@mui/icons-material';
+import {
+  Handyman as ManageIcon,
+  Edit as EditIcon,
+  Security as SecurityIcon,
+} from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { useUserRole, getShortUUID, UUID, UserRole } from '@indocal/services';
@@ -19,7 +25,7 @@ import { useUserRole, getShortUUID, UUID, UserRole } from '@indocal/services';
 import { Pages } from '@/config';
 
 import { UserRoleCardProvider, useUserRoleCard } from './context';
-import { EditUserRoleDialog } from './components';
+import { EditUserRoleDialog, ManageUserRoleConfigDialog } from './components';
 
 export interface UserRoleCardProps {
   role: UUID | UserRole;
@@ -30,8 +36,12 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
     typeof entity === 'string' ? entity : entity.id
   );
 
-  const { isEditUserRoleDialogOpen, toggleEditUserRoleDialog } =
-    useUserRoleCard();
+  const {
+    isEditUserRoleDialogOpen,
+    toggleEditUserRoleDialog,
+    isManageUserRoleConfigDialogOpen,
+    toggleManageUserRoleConfigDialog,
+  } = useUserRoleCard();
 
   return (
     <Card
@@ -50,6 +60,10 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
       ) : role ? (
         <>
           {isEditUserRoleDialogOpen && <EditUserRoleDialog role={role} />}
+
+          {isManageUserRoleConfigDialogOpen && (
+            <ManageUserRoleConfigDialog role={role} />
+          )}
 
           {validating && (
             <LinearProgress
@@ -122,6 +136,17 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
               </ListItem>
             </List>
           </CardContent>
+
+          <CardActions>
+            <Button
+              fullWidth
+              variant="contained"
+              endIcon={<SecurityIcon />}
+              onClick={toggleManageUserRoleConfigDialog}
+            >
+              Configurar accesos
+            </Button>
+          </CardActions>
         </>
       ) : (
         <NoData message="No se han encontrado datos del rol" />

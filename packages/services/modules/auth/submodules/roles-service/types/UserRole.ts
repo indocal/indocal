@@ -18,11 +18,17 @@ type User = {
   updatedAt: string;
 };
 
+export type UserRoleAccessType = 'STANDARD' | 'ADMIN';
+
+export type UserRoleConfig = Partial<{
+  access: Record<string, UserRoleAccessType>;
+}>;
+
 export interface UserRole extends Entity {
   type: string;
   name: string;
   description: string;
-  config?: object;
+  config?: UserRoleConfig;
   permissions: Permission[];
   users: User[];
   createdAt: string;

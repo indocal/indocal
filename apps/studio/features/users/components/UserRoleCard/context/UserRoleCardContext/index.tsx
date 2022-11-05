@@ -6,15 +6,17 @@ import { useReducer, useCallback, useContext, createContext } from 'react';
 
 const initialContextState: UserRoleCardContextState = {
   isEditUserRoleDialogOpen: false,
+  isManageUserRoleConfigDialogOpen: false,
 };
 
 interface UserRoleCardContextState {
   isEditUserRoleDialogOpen: boolean;
+  isManageUserRoleConfigDialogOpen: boolean;
 }
 
-type UserRoleCardContextStateAction = {
-  type: 'TOGGLE_EDIT_USER_ROLE_DIALOG';
-};
+type UserRoleCardContextStateAction =
+  | { type: 'TOGGLE_EDIT_USER_ROLE_DIALOG' }
+  | { type: 'TOGGLE_MANAGE_USER_ROLE_CONFIG_DIALOG' };
 
 function reducer(
   state: UserRoleCardContextState,
@@ -25,6 +27,13 @@ function reducer(
       return {
         ...state,
         isEditUserRoleDialogOpen: !state.isEditUserRoleDialogOpen,
+      };
+
+    case 'TOGGLE_MANAGE_USER_ROLE_CONFIG_DIALOG':
+      return {
+        ...state,
+        isManageUserRoleConfigDialogOpen:
+          !state.isManageUserRoleConfigDialogOpen,
       };
 
     default:
@@ -38,12 +47,18 @@ function reducer(
 
 export const initialContextValue: UserRoleCardContextValue = {
   isEditUserRoleDialogOpen: initialContextState.isEditUserRoleDialogOpen,
+  isManageUserRoleConfigDialogOpen:
+    initialContextState.isManageUserRoleConfigDialogOpen,
+
   toggleEditUserRoleDialog: () => undefined,
+  toggleManageUserRoleConfigDialog: () => undefined,
 };
 
 export interface UserRoleCardContextValue {
   isEditUserRoleDialogOpen: boolean;
+  isManageUserRoleConfigDialogOpen: boolean;
   toggleEditUserRoleDialog: () => void;
+  toggleManageUserRoleConfigDialog: () => void;
 }
 
 const UserRoleCardContext =
@@ -59,11 +74,21 @@ export const UserRoleCardProvider: React.FC<React.PropsWithChildren> = ({
     []
   );
 
+  const handleToggleManageUserRoleConfigDialog = useCallback(
+    () => dispatch({ type: 'TOGGLE_MANAGE_USER_ROLE_CONFIG_DIALOG' }),
+    []
+  );
+
   return (
     <UserRoleCardContext.Provider
       value={{
         isEditUserRoleDialogOpen: state.isEditUserRoleDialogOpen,
+        isManageUserRoleConfigDialogOpen:
+          state.isManageUserRoleConfigDialogOpen,
+
         toggleEditUserRoleDialog: handleToggleEditUserRoleDialog,
+        toggleManageUserRoleConfigDialog:
+          handleToggleManageUserRoleConfigDialog,
       }}
     >
       {children}
