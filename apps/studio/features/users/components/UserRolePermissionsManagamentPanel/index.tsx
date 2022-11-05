@@ -8,28 +8,34 @@ import {
 import { CloudSync as SaveIcon } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { UUID, UserRole } from '@indocal/services';
+import { useUserRole, UUID, UserRole } from '@indocal/services';
 
 import {
-  UserRolePermissionsManagamentPanelProvider,
-  useUserRolePermissionsManagamentPanel,
-} from './context';
-import { UserRolePermissionsManagamentPanelModelPermissions } from './components';
-import { useUserRolePermissionsByRole } from './hooks';
+  UserModelPermissions,
+  UserRoleModelPermissions,
+  UserGroupModelPermissions,
+  FormModelPermissions,
+  EventModelPermissions,
+} from './components';
 
-const UserRolePermissionsManagamentPanel: React.FC = () => {
-  const { saving, role, permissions, save } =
-    useUserRolePermissionsManagamentPanel();
+export interface UserRolePermissionsManagamentPanelProps {
+  role: UUID | UserRole;
+}
 
-  const { loading, validating, error } = useUserRolePermissionsByRole(role);
+export const UserRolePermissionsManagamentPanel: React.FC<
+  UserRolePermissionsManagamentPanelProps
+> = ({ role: entity }) => {
+  const { loading, validating, role, error } = useUserRole(
+    typeof entity === 'string' ? entity : entity.id
+  );
 
   return (
-    <Paper sx={{ display: 'grid' }}>
+    <Paper>
       {loading ? (
         <Loader invisible message="Cargando permisos..." />
       ) : error ? (
         <ErrorInfo error={error} />
-      ) : permissions ? (
+      ) : role ? (
         <Stack
           sx={{ position: 'relative', padding: (theme) => theme.spacing(1, 2) }}
         >
@@ -57,44 +63,24 @@ const UserRolePermissionsManagamentPanel: React.FC = () => {
               size="small"
               variant="contained"
               color="secondary"
-              disabled={validating || saving}
+              disabled={validating}
               endIcon={<SaveIcon />}
-              onClick={save}
             >
               Guardar
             </Button>
           </Stack>
 
-          <Stack sx={{ padding: (theme) => theme.spacing(1) }}>
-            {Object.entries(permissions).map(([model, permissions]) => (
-              <UserRolePermissionsManagamentPanelModelPermissions
-                key={model}
-                model={model}
-                permissions={permissions}
-              />
-            ))}
-          </Stack>
+          <UserModelPermissions role={role} />
+          <UserRoleModelPermissions role={role} />
+          <UserGroupModelPermissions role={role} />
+          <FormModelPermissions role={role} />
+          <EventModelPermissions role={role} />
         </Stack>
       ) : (
-        <NoData message="Sin permisos a mostrar" />
+        <NoData message="No se han encontrado datos del rol" />
       )}
     </Paper>
   );
 };
-
-interface UserRolePermissionsManagamentPanelWrapperProps {
-  role: UUID | UserRole;
-}
-
-const UserRolePermissionsManagamentPanelWrapper: React.FC<
-  UserRolePermissionsManagamentPanelWrapperProps
-> = ({ role }) => (
-  <UserRolePermissionsManagamentPanelProvider role={role}>
-    <UserRolePermissionsManagamentPanel />
-  </UserRolePermissionsManagamentPanelProvider>
-);
-
-export { UserRolePermissionsManagamentPanelWrapper as UserRolePermissionsManagamentPanel };
-export type { UserRolePermissionsManagamentPanelWrapperProps as UserRolePermissionsManagamentPanelProps };
 
 export default UserRolePermissionsManagamentPanel;
