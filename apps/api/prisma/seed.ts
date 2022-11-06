@@ -25,6 +25,15 @@ async function main() {
           type: 'developer',
           name: 'Desarrollador',
           description: 'Rol libre de restricciones con fines de desarrollo',
+          config: {
+            access: {
+              studio: 'ADMIN',
+              nobu: 'ADMIN',
+              events: 'ADMIN',
+              trainings: 'ADMIN',
+              warehouse: 'ADMIN',
+            },
+          },
           permissions: {
             createMany: {
               data: models

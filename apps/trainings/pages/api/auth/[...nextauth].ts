@@ -1,9 +1,9 @@
 import { NextApiHandler } from 'next';
-import NextAuth, { User } from 'next-auth';
+import NextAuth, { User as NextAuthUser } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { setCookie, destroyCookie } from 'nookies';
 
-import { Session, TOKEN_KEY } from '@indocal/services';
+import { Session, User, TOKEN_KEY, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { Pages } from '@/config';
@@ -27,7 +27,22 @@ const handler: NextApiHandler = async (req, res) =>
 
           if (error) throw error;
 
-          if (session) return session as unknown as User;
+          if (session) {
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}${ApiEndpoints.USERS}/${session.user.id}`,
+              { headers: { Authorization: `Bearer ${session.access_token}` } }
+            );
+
+            const user: User | null = await response.json();
+
+            const hasPermissions = user?.roles.some(
+              (role) => role.config?.access?.trainings !== 'NONE'
+            );
+
+            if (!hasPermissions) throw new Error('Acceso restringido');
+
+            return session as unknown as NextAuthUser;
+          }
 
           return null;
         },

@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsUUID } from 'class-validator';
+import { IsString, IsObject, IsUUID } from 'class-validator';
 
 import { TrimParam, UUID } from '@/common';
 
@@ -15,6 +15,9 @@ class UpdateUserRoleDtoSchema {
   @IsString()
   @TrimParam()
   description: string;
+
+  @IsObject()
+  config: object;
 
   @IsUUID('all', { each: true })
   users: UUID[];

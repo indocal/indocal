@@ -48,6 +48,7 @@ export class UsersRolesService {
         type: updateUserRoleDto.type,
         name: updateUserRoleDto.name,
         description: updateUserRoleDto.description,
+        config: updateUserRoleDto.config,
 
         ...(updateUserRoleDto.users && {
           users: {

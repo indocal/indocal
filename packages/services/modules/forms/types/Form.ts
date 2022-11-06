@@ -7,7 +7,7 @@ type Field = {
   type: FormFieldType;
   title: string;
   description: string | null;
-  config?: object;
+  config: object | null;
   createdAt: string;
   updatedAt: string;
 };

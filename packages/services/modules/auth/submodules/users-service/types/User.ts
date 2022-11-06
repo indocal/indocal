@@ -7,7 +7,7 @@ type Role = {
   type: string;
   name: string;
   description: string;
-  config?: UserRoleConfig;
+  config: UserRoleConfig | null;
   createdAt: string;
   updatedAt: string;
 };

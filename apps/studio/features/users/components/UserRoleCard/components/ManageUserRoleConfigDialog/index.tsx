@@ -9,9 +9,13 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Switch,
+  ToggleButtonGroup,
+  ToggleButton,
 } from '@mui/material';
 import {
+  Block as NoneAccessIcon,
+  Person as StandardAccessIcon,
+  AdminPanelSettings as AdminAccessIcon,
   Dashboard as StudioAppIcon,
   SupportAgent as NobuAppIcon,
   Event as EventsAppIcon,
@@ -21,11 +25,11 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { UserRole, ApiEndpoints } from '@indocal/services';
+import { UserRole, UserRoleAccessType, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
 
@@ -35,11 +39,18 @@ type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    access: zod.unknown({
-      description: 'Accesos del rol',
-      required_error: 'Debe ingresar los accesos del rol',
-      invalid_type_error: 'Formato no válido',
-    }),
+    access: zod.record(
+      zod.enum<string, [UserRoleAccessType, ...UserRoleAccessType[]]>([
+        'NONE',
+        'STANDARD',
+        'ADMIN',
+      ]),
+      {
+        description: 'Accesos del rol',
+        required_error: 'Debe ingresar los accesos del rol',
+        invalid_type_error: 'Formato no válido',
+      }
+    ),
   },
   {
     description: 'Accesos del rol',
@@ -64,12 +75,19 @@ export const ManageUserRoleConfigDialog: React.FC<
 
   const {
     formState: { isDirty, isSubmitting },
+    control,
     handleSubmit,
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      access: role.config?.access,
+      access: {
+        studio: role.config?.access?.studio || 'NONE',
+        nobu: role.config?.access?.nobu || 'NONE',
+        events: role.config?.access?.events || 'NONE',
+        trainings: role.config?.access?.trainings || 'NONE',
+        warehouse: role.config?.access?.warehouse || 'NONE',
+      },
     },
   });
 
@@ -104,31 +122,45 @@ export const ManageUserRoleConfigDialog: React.FC<
     []
   );
 
-  const onSubmit = useCallback(async () => {
-    const { role: updated, error } = await indocal.auth.roles.update(
-      role.id,
-      {}
-    );
-
-    if (error) {
-      enqueueSnackbar(
-        error.details
-          ? error.details.reduce(
-              (acc, current) => (acc ? `${acc} | ${current}` : current),
-              ``
-            )
-          : error.message,
-        { variant: 'error' }
+  const onSubmit = useCallback(
+    async (formData: FormData) => {
+      const { role: updated, error } = await indocal.auth.roles.update(
+        role.id,
+        {
+          config: {
+            ...role.config,
+            access: formData.access,
+          },
+        }
       );
-    } else {
-      await mutate(`${ApiEndpoints.USERS_ROLES}/${role.id}`, updated);
 
-      enqueueSnackbar('Accesos actualizados exitosamente', {
-        variant: 'success',
-        onEntered: toggleManageUserRoleConfigDialog,
-      });
-    }
-  }, [role.id, mutate, toggleManageUserRoleConfigDialog, enqueueSnackbar]);
+      if (error) {
+        enqueueSnackbar(
+          error.details
+            ? error.details.reduce(
+                (acc, current) => (acc ? `${acc} | ${current}` : current),
+                ``
+              )
+            : error.message,
+          { variant: 'error' }
+        );
+      } else {
+        await mutate(`${ApiEndpoints.USERS_ROLES}/${role.id}`, updated);
+
+        enqueueSnackbar('Accesos actualizados exitosamente', {
+          variant: 'success',
+          onEntered: toggleManageUserRoleConfigDialog,
+        });
+      }
+    },
+    [
+      role.id,
+      role.config,
+      mutate,
+      toggleManageUserRoleConfigDialog,
+      enqueueSnackbar,
+    ]
+  );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
@@ -155,15 +187,41 @@ export const ManageUserRoleConfigDialog: React.FC<
 
       <DialogContent dividers>
         <List disablePadding sx={{ bgcolor: 'background.paper' }}>
-          <ListSubheader>Aplicaciones</ListSubheader>
+          <ListSubheader disableSticky>Aplicaciones</ListSubheader>
 
           {apps.map((app) => (
-            <ListItem key={app.name}>
+            <ListItem key={app.name} divider>
               <ListItemIcon>{app.icon}</ListItemIcon>
 
-              <ListItemText>{app.label}</ListItemText>
+              <ListItemText sx={{ display: ['none', 'inherit'] }}>
+                {app.label}
+              </ListItemText>
 
-              <Switch edge="end" />
+              <Controller
+                name={`access.${app.name}`}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleButtonGroup
+                    exclusive
+                    size="small"
+                    value={value}
+                    onChange={(_, value) => onChange(value)}
+                    sx={{ marginLeft: 'auto' }}
+                  >
+                    <ToggleButton value={'NONE' as UserRoleAccessType}>
+                      <NoneAccessIcon />
+                    </ToggleButton>
+
+                    <ToggleButton value={'STANDARD' as UserRoleAccessType}>
+                      <StandardAccessIcon />
+                    </ToggleButton>
+
+                    <ToggleButton value={'ADMIN' as UserRoleAccessType}>
+                      <AdminAccessIcon />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                )}
+              />
             </ListItem>
           ))}
         </List>
