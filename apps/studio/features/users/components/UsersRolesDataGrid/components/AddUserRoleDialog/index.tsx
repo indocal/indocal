@@ -108,14 +108,14 @@ export const AddUserRoleDialog: React.FC = () => {
     if (!isDirty) {
       toggleAddUserRoleDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleAddUserRoleDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleAddUserRoleDialog();
+      reset();
     }
   }, [isDirty, reset, toggleAddUserRoleDialog]);
 

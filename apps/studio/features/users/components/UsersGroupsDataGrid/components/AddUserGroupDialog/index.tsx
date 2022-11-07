@@ -98,14 +98,14 @@ export const AddUserGroupDialog: React.FC = () => {
     if (!isDirty) {
       toggleAddUserGroupDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleAddUserGroupDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleAddUserGroupDialog();
+      reset();
     }
   }, [isDirty, reset, toggleAddUserGroupDialog]);
 

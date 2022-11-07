@@ -122,14 +122,14 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
     if (!isDirty) {
       toggleManageGroupUsersDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleManageGroupUsersDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleManageGroupUsersDialog();
+      reset();
     }
   }, [isDirty, reset, toggleManageGroupUsersDialog]);
 

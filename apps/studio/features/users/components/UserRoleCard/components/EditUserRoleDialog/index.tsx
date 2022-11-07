@@ -125,14 +125,14 @@ export const EditUserRoleDialog: React.FC<EditUserRoleDialogProps> = ({
     if (!isDirty) {
       toggleEditUserRoleDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleEditUserRoleDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleEditUserRoleDialog();
+      reset();
     }
   }, [isDirty, reset, toggleEditUserRoleDialog]);
 

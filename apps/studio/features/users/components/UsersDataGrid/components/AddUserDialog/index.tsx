@@ -108,14 +108,14 @@ export const AddUserDialog: React.FC = () => {
     if (!isDirty) {
       toggleAddUserDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleAddUserDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleAddUserDialog();
+      reset();
     }
   }, [isDirty, reset, toggleAddUserDialog]);
 

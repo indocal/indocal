@@ -122,14 +122,14 @@ export const ManageRoleUsersDialog: React.FC<ManageRoleUsersDialogProps> = ({
     if (!isDirty) {
       toggleManageRoleUsersDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleManageRoleUsersDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleManageRoleUsersDialog();
+      reset();
     }
   }, [isDirty, reset, toggleManageRoleUsersDialog]);
 

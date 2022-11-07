@@ -34,14 +34,14 @@ export const AppearanceSettings: React.FC = () => {
     useDashboard();
 
   const handleReset = useCallback(() => {
-    const response = window.confirm(
-      '¿Estás seguro que deseas restablecer la apariencia por defecto?'
+    const answer = window.confirm(
+      '¿Estás seguro de que deseas restablecer la apariencia por defecto?'
     );
 
-    if (response) {
-      resetThemePreferences();
-      resetDashboardPreferences();
-    }
+    if (!answer) return;
+
+    resetThemePreferences();
+    resetDashboardPreferences();
   }, [resetThemePreferences, resetDashboardPreferences]);
 
   return (

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import NextLink from 'next/link';
 import {
   Box,
@@ -12,12 +12,20 @@ import {
   Refresh as RefreshIcon,
   AddCircle as AddIcon,
   Launch as ViewDetailsIcon,
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { useSnackbar } from 'notistack';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
-import { getShortUUID, translateUserStatus, User } from '@indocal/services';
+import {
+  getShortUUID,
+  translateUserStatus,
+  UUID,
+  User,
+} from '@indocal/services';
 
+import { indocal } from '@/lib';
 import { Pages } from '@/config';
 
 export interface GenericUsersDataGridProps {
@@ -35,6 +43,31 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
   onAddButtonClick,
   enhancedDataGridProps,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleDelete = useCallback(
+    async (id: UUID) => {
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas eliminar este usuario?'
+      );
+
+      if (!answer) return;
+
+      const { error } = await indocal.auth.users.delete(id);
+
+      if (error) {
+        enqueueSnackbar(error.message, { variant: 'error' });
+      } else {
+        if (onRefreshButtonClick) await onRefreshButtonClick();
+
+        enqueueSnackbar('Usuario eliminado exitosamente', {
+          variant: 'success',
+        });
+      }
+    },
+    [onRefreshButtonClick, enqueueSnackbar]
+  );
+
   const columns = useMemo<GridColumns>(
     () => [
       {
@@ -46,15 +79,25 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
         width: 120,
         disableExport: true,
         renderCell: ({ id }) => (
-          <NextLink passHref href={`${Pages.USERS}/${id}`}>
+          <Stack direction="row" spacing={0.25}>
+            <NextLink passHref href={`${Pages.USERS}/${id}`}>
+              <IconButton
+                LinkComponent={MuiLink}
+                size="small"
+                sx={{ display: 'flex' }}
+              >
+                <ViewDetailsIcon />
+              </IconButton>
+            </NextLink>
+
             <IconButton
-              LinkComponent={MuiLink}
               size="small"
-              sx={{ display: 'flex' }}
+              color="error"
+              onClick={async () => await handleDelete(id as UUID)}
             >
-              <ViewDetailsIcon />
+              <DeleteIcon />
             </IconButton>
-          </NextLink>
+          </Stack>
         ),
       },
       {
@@ -98,7 +141,7 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
         valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
       },
     ],
-    []
+    [handleDelete]
   );
 
   const rows = useMemo<GridRowsProp>(

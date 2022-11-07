@@ -107,14 +107,14 @@ export const AddFormDialog: React.FC = () => {
     if (!isDirty) {
       toggleAddFormDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleAddFormDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleAddFormDialog();
+      reset();
     }
   }, [isDirty, reset, toggleAddFormDialog]);
 

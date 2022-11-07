@@ -114,14 +114,14 @@ export const EditUserGroupDialog: React.FC<EditUserGroupDialogProps> = ({
     if (!isDirty) {
       toggleEditUserGroupDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleEditUserGroupDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleEditUserGroupDialog();
+      reset();
     }
   }, [isDirty, reset, toggleEditUserGroupDialog]);
 

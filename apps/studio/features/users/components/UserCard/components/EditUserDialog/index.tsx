@@ -129,46 +129,46 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const response = window.confirm(
-        '¿Estás seguro que quieres guardar los cambios? Si hace esto tendrá que volver a iniciar sesión'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas guardar los cambios? Si hace esto tendrá que volver a iniciar sesión'
       );
 
-      if (response) {
-        const { user: updated, error } = await indocal.auth.users.update(
-          user.id,
-          {
-            username: formData.username,
-            email: formData.email,
-            status: formData.status,
+      if (!answer) return;
 
-            ...(formData.roles && {
-              roles: formData.roles.map((role) => role.id),
-            }),
+      const { user: updated, error } = await indocal.auth.users.update(
+        user.id,
+        {
+          username: formData.username,
+          email: formData.email,
+          status: formData.status,
 
-            ...(formData.groups && {
-              groups: formData.groups.map((group) => group.id),
-            }),
-          }
-        );
+          ...(formData.roles && {
+            roles: formData.roles.map((role) => role.id),
+          }),
 
-        if (error) {
-          enqueueSnackbar(
-            error.details
-              ? error.details.reduce(
-                  (acc, current) => (acc ? `${acc} | ${current}` : current),
-                  ``
-                )
-              : error.message,
-            { variant: 'error' }
-          );
-        } else {
-          await mutate(`${ApiEndpoints.USERS}/${user.id}`, updated);
-
-          enqueueSnackbar('Usuario editado exitosamente', {
-            variant: 'success',
-            onEntered: toggleEditUserDialog,
-          });
+          ...(formData.groups && {
+            groups: formData.groups.map((group) => group.id),
+          }),
         }
+      );
+
+      if (error) {
+        enqueueSnackbar(
+          error.details
+            ? error.details.reduce(
+                (acc, current) => (acc ? `${acc} | ${current}` : current),
+                ``
+              )
+            : error.message,
+          { variant: 'error' }
+        );
+      } else {
+        await mutate(`${ApiEndpoints.USERS}/${user.id}`, updated);
+
+        enqueueSnackbar('Usuario editado exitosamente', {
+          variant: 'success',
+          onEntered: toggleEditUserDialog,
+        });
       }
     },
     [user.id, mutate, toggleEditUserDialog, enqueueSnackbar]
@@ -178,14 +178,14 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
     if (!isDirty) {
       toggleEditUserDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleEditUserDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleEditUserDialog();
+      reset();
     }
   }, [isDirty, reset, toggleEditUserDialog]);
 

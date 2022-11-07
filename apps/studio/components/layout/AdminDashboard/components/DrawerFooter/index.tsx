@@ -14,9 +14,11 @@ export const AdminDashboardDrawerFooter: React.FC = () => {
   const { isDrawerOpen, drawerPosition } = useDashboard();
 
   const handleSignOut = useCallback(async () => {
-    const response = window.confirm('¿Estás seguro que quieres cerrar sesión?');
+    const answer = window.confirm('¿Estás seguro de que deseas cerrar sesión?');
 
-    if (response) await signOut();
+    if (!answer) return;
+
+    await signOut();
   }, []);
 
   return (

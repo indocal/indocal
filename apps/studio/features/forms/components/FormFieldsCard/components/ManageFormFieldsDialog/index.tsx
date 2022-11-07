@@ -83,14 +83,14 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
     if (!isDirty) {
       toggleManageFormFieldsDialog();
     } else {
-      const response = window.confirm(
-        '¿Estás seguro que deseas cancelar esta acción?'
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas cancelar esta acción?'
       );
 
-      if (response) {
-        toggleManageFormFieldsDialog();
-        reset();
-      }
+      if (!answer) return;
+
+      toggleManageFormFieldsDialog();
+      reset();
     }
   }, [isDirty, reset, toggleManageFormFieldsDialog]);
 
