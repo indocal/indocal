@@ -11,16 +11,10 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
-import { useUserRole, UserRole } from '@indocal/services';
+import { useUserRolePermissionsManagamentPanel } from '../../context';
 
-export interface UserGroupModelPermissionsProps {
-  role: UserRole;
-}
-
-export const UserGroupModelPermissions: React.FC<
-  UserGroupModelPermissionsProps
-> = ({ role }) => {
-  const { validating } = useUserRole(role.id);
+export const UserGroupModelPermissions: React.FC = () => {
+  const { validating, permissions } = useUserRolePermissionsManagamentPanel();
 
   return (
     <Accordion defaultExpanded>
@@ -38,7 +32,7 @@ export const UserGroupModelPermissions: React.FC<
           spacing={1}
         >
           <Typography variant="caption" color="text.secondary">
-            group
+            userGroup
           </Typography>
 
           <Box
@@ -61,7 +55,12 @@ export const UserGroupModelPermissions: React.FC<
           >
             <FormControlLabel
               label="Contar"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.userGroup.count}
+                />
+              }
             />
           </Grid>
 
@@ -74,7 +73,12 @@ export const UserGroupModelPermissions: React.FC<
           >
             <FormControlLabel
               label="Leer"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.userGroup.read}
+                />
+              }
             />
           </Grid>
 
@@ -87,7 +91,12 @@ export const UserGroupModelPermissions: React.FC<
           >
             <FormControlLabel
               label="Crear"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.userGroup.create}
+                />
+              }
             />
           </Grid>
 
@@ -100,7 +109,12 @@ export const UserGroupModelPermissions: React.FC<
           >
             <FormControlLabel
               label="Modificar"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.userGroup.update}
+                />
+              }
             />
           </Grid>
 
@@ -113,7 +127,12 @@ export const UserGroupModelPermissions: React.FC<
           >
             <FormControlLabel
               label="Borrar"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.userGroup.delete}
+                />
+              }
             />
           </Grid>
         </Grid>

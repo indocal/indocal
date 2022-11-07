@@ -11,16 +11,10 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
-import { useUserRole, UserRole } from '@indocal/services';
+import { useUserRolePermissionsManagamentPanel } from '../../context';
 
-export interface UserModelPermissionsProps {
-  role: UserRole;
-}
-
-export const UserModelPermissions: React.FC<UserModelPermissionsProps> = ({
-  role,
-}) => {
-  const { validating } = useUserRole(role.id);
+export const UserModelPermissions: React.FC = () => {
+  const { validating, permissions } = useUserRolePermissionsManagamentPanel();
 
   return (
     <Accordion defaultExpanded>
@@ -61,7 +55,12 @@ export const UserModelPermissions: React.FC<UserModelPermissionsProps> = ({
           >
             <FormControlLabel
               label="Contar"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.user.count}
+                />
+              }
             />
           </Grid>
 
@@ -74,7 +73,12 @@ export const UserModelPermissions: React.FC<UserModelPermissionsProps> = ({
           >
             <FormControlLabel
               label="Leer"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.user.read}
+                />
+              }
             />
           </Grid>
 
@@ -87,7 +91,12 @@ export const UserModelPermissions: React.FC<UserModelPermissionsProps> = ({
           >
             <FormControlLabel
               label="Crear"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.user.create}
+                />
+              }
             />
           </Grid>
 
@@ -100,7 +109,12 @@ export const UserModelPermissions: React.FC<UserModelPermissionsProps> = ({
           >
             <FormControlLabel
               label="Modificar"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.user.update}
+                />
+              }
             />
           </Grid>
 
@@ -113,7 +127,12 @@ export const UserModelPermissions: React.FC<UserModelPermissionsProps> = ({
           >
             <FormControlLabel
               label="Borrar"
-              control={<Checkbox disabled={validating} />}
+              control={
+                <Checkbox
+                  disabled={validating}
+                  defaultChecked={permissions?.user.delete}
+                />
+              }
             />
           </Grid>
         </Grid>

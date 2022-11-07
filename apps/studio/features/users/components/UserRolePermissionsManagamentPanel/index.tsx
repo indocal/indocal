@@ -8,8 +8,12 @@ import {
 import { CloudSync as SaveIcon } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useUserRole, UUID, UserRole } from '@indocal/services';
 
+import {
+  UserRolePermissionsManagamentPanelProvider,
+  useUserRolePermissionsManagamentPanel,
+  UserRolePermissionsManagamentPanelProviderProps,
+} from './context';
 import {
   UserModelPermissions,
   UserRoleModelPermissions,
@@ -18,16 +22,9 @@ import {
   EventModelPermissions,
 } from './components';
 
-export interface UserRolePermissionsManagamentPanelProps {
-  role: UUID | UserRole;
-}
-
-export const UserRolePermissionsManagamentPanel: React.FC<
-  UserRolePermissionsManagamentPanelProps
-> = ({ role: entity }) => {
-  const { loading, validating, role, error } = useUserRole(
-    typeof entity === 'string' ? entity : entity.id
-  );
+const UserRolePermissionsManagamentPanel: React.FC = () => {
+  const { loading, validating, role, error } =
+    useUserRolePermissionsManagamentPanel();
 
   return (
     <Paper>
@@ -70,11 +67,11 @@ export const UserRolePermissionsManagamentPanel: React.FC<
             </Button>
           </Stack>
 
-          <UserModelPermissions role={role} />
-          <UserRoleModelPermissions role={role} />
-          <UserGroupModelPermissions role={role} />
-          <FormModelPermissions role={role} />
-          <EventModelPermissions role={role} />
+          <UserModelPermissions />
+          <UserRoleModelPermissions />
+          <UserGroupModelPermissions />
+          <FormModelPermissions />
+          <EventModelPermissions />
         </Stack>
       ) : (
         <NoData message="No se han encontrado datos del rol" />
@@ -83,4 +80,14 @@ export const UserRolePermissionsManagamentPanel: React.FC<
   );
 };
 
-export default UserRolePermissionsManagamentPanel;
+const UserRolePermissionsManagamentPanelWrapper: React.FC<
+  UserRolePermissionsManagamentPanelProviderProps
+> = (props) => (
+  <UserRolePermissionsManagamentPanelProvider {...props}>
+    <UserRolePermissionsManagamentPanel />
+  </UserRolePermissionsManagamentPanelProvider>
+);
+
+export { UserRolePermissionsManagamentPanelWrapper as UserRolePermissionsManagamentPanel };
+
+export default UserRolePermissionsManagamentPanelWrapper;
