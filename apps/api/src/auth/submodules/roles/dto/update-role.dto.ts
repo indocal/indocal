@@ -19,6 +19,9 @@ class UpdateUserRoleDtoSchema {
   @IsObject()
   config: object;
 
+  @IsObject()
+  permissions: Record<string, Record<string, boolean>>;
+
   @IsUUID('all', { each: true })
   users: UUID[];
 }

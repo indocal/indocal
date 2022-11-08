@@ -7,6 +7,7 @@ export type UpdateUserRoleDto = Partial<{
   name: string;
   description: string;
   config: UserRoleConfig;
+  permissions: Record<string, Record<string, boolean>>;
   users: UUID[];
 }>;
 

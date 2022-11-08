@@ -23,7 +23,7 @@ import {
 } from './components';
 
 const UserRolePermissionsManagamentPanel: React.FC = () => {
-  const { loading, validating, role, error } =
+  const { loading, validating, saving, role, error, save } =
     useUserRolePermissionsManagamentPanel();
 
   return (
@@ -60,8 +60,9 @@ const UserRolePermissionsManagamentPanel: React.FC = () => {
               size="small"
               variant="contained"
               color="secondary"
-              disabled={validating}
+              disabled={validating || saving}
               endIcon={<SaveIcon />}
+              onClick={save}
             >
               Guardar
             </Button>

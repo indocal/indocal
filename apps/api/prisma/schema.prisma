@@ -222,10 +222,20 @@ model Event {
   title       String
   description String?
 
-  guests Json[] @default([])
+  guests Json[] @default([]) // TODO: Create EventGuest Model
 
   scheduledAt DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// model EventGuest {
+//   id    String @id @default(uuid())
+//   name  String
+//   email String
+//   phone String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }

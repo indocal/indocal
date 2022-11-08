@@ -50,6 +50,37 @@ export class UsersRolesService {
         description: updateUserRoleDto.description,
         config: updateUserRoleDto.config,
 
+        ...(updateUserRoleDto.permissions && {
+          permissions: {
+            createMany: {
+              skipDuplicates: true,
+              data: Object.entries(updateUserRoleDto.permissions)
+                .map(([model, permissions]) => {
+                  const actions = Object.entries(permissions).filter(
+                    ([, value]) => value === true
+                  );
+
+                  return actions.map(([action]) => ({
+                    action: `${model}::${action}`,
+                  }));
+                })
+                .flat(),
+            },
+
+            deleteMany: Object.entries(updateUserRoleDto.permissions)
+              .map(([model, permissions]) => {
+                const actions = Object.entries(permissions).filter(
+                  ([, value]) => value === false
+                );
+
+                return actions.map(([action]) => ({
+                  action: `${model}::${action}`,
+                }));
+              })
+              .flat(),
+          },
+        }),
+
         ...(updateUserRoleDto.users && {
           users: {
             set: updateUserRoleDto.users.map((user) => ({ id: user })),

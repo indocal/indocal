@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from 'react';
 import {
   Box,
   Grid,
@@ -14,7 +15,51 @@ import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useUserRolePermissionsManagamentPanel } from '../../context';
 
 export const UserModelPermissions: React.FC = () => {
-  const { validating, permissions } = useUserRolePermissionsManagamentPanel();
+  const { validating, permissions, saving, togglePermission } =
+    useUserRolePermissionsManagamentPanel();
+
+  const items = useMemo(
+    () => [
+      {
+        label: 'Contar',
+        action: 'count',
+        checked: Boolean(permissions?.user?.count),
+      },
+      {
+        label: 'Leer',
+        action: 'read',
+        checked: Boolean(permissions?.user?.read),
+      },
+      {
+        label: 'Crear',
+        action: 'create',
+        checked: Boolean(permissions?.user?.create),
+      },
+      {
+        label: 'Modificar',
+        action: 'update',
+        checked: Boolean(permissions?.user?.update),
+      },
+      {
+        label: 'Borrar',
+        action: 'delete',
+        checked: Boolean(permissions?.user?.delete),
+      },
+    ],
+    [permissions?.user]
+  );
+
+  const allChecked = items.every((item) => item.checked);
+
+  const toggleAll = useCallback(() => {
+    if (allChecked) {
+      items.forEach(({ action }) => togglePermission('user', action));
+    } else {
+      items
+        .filter(({ checked }) => !checked)
+        .forEach(({ action }) => togglePermission('user', action));
+    }
+  }, [items, allChecked, togglePermission]);
 
   return (
     <Accordion defaultExpanded>
@@ -42,99 +87,35 @@ export const UserModelPermissions: React.FC = () => {
             }}
           />
 
-          <Checkbox disabled={validating} />
+          <Checkbox
+            disabled={validating || saving}
+            checked={allChecked}
+            onChange={toggleAll}
+          />
         </Stack>
 
         <Grid container justifyContent="center" alignItems="center" spacing={1}>
-          <Grid
-            item
-            container
-            justifyContent="flex-start"
-            alignItems="center"
-            xs
-          >
-            <FormControlLabel
-              label="Contar"
-              control={
-                <Checkbox
-                  disabled={validating}
-                  defaultChecked={permissions?.user.count}
-                />
-              }
-            />
-          </Grid>
-
-          <Grid
-            item
-            container
-            justifyContent="flex-start"
-            alignItems="center"
-            xs
-          >
-            <FormControlLabel
-              label="Leer"
-              control={
-                <Checkbox
-                  disabled={validating}
-                  defaultChecked={permissions?.user.read}
-                />
-              }
-            />
-          </Grid>
-
-          <Grid
-            item
-            container
-            justifyContent="flex-start"
-            alignItems="center"
-            xs
-          >
-            <FormControlLabel
-              label="Crear"
-              control={
-                <Checkbox
-                  disabled={validating}
-                  defaultChecked={permissions?.user.create}
-                />
-              }
-            />
-          </Grid>
-
-          <Grid
-            item
-            container
-            justifyContent="flex-start"
-            alignItems="center"
-            xs
-          >
-            <FormControlLabel
-              label="Modificar"
-              control={
-                <Checkbox
-                  disabled={validating}
-                  defaultChecked={permissions?.user.update}
-                />
-              }
-            />
-          </Grid>
-
-          <Grid
-            item
-            container
-            justifyContent="flex-start"
-            alignItems="center"
-            xs
-          >
-            <FormControlLabel
-              label="Borrar"
-              control={
-                <Checkbox
-                  disabled={validating}
-                  defaultChecked={permissions?.user.delete}
-                />
-              }
-            />
-          </Grid>
+          {items.map(({ label, action, checked }) => (
+            <Grid
+              key={action}
+              item
+              container
+              justifyContent="flex-start"
+              alignItems="center"
+              xs
+            >
+              <FormControlLabel
+                label={label}
+                control={
+                  <Checkbox
+                    disabled={validating || saving}
+                    checked={checked}
+                    onChange={() => togglePermission('user', action)}
+                  />
+                }
+              />
+            </Grid>
+          ))}
         </Grid>
       </AccordionDetails>
     </Accordion>
