@@ -10,9 +10,9 @@ import { CloudSync as SaveIcon } from '@mui/icons-material';
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 
 import {
-  UserRolePermissionsManagamentPanelProvider,
-  useUserRolePermissionsManagamentPanel,
-  UserRolePermissionsManagamentPanelProviderProps,
+  UserRolePermissionsManagementPanelProvider,
+  useUserRolePermissionsManagementPanel,
+  UserRolePermissionsManagementPanelProviderProps,
 } from './context';
 import {
   UserModelPermissions,
@@ -22,9 +22,9 @@ import {
   EventModelPermissions,
 } from './components';
 
-const UserRolePermissionsManagamentPanel: React.FC = () => {
+const UserRolePermissionsManagementPanel: React.FC = () => {
   const { loading, validating, saving, role, error, save } =
-    useUserRolePermissionsManagamentPanel();
+    useUserRolePermissionsManagementPanel();
 
   return (
     <Paper>
@@ -34,7 +34,7 @@ const UserRolePermissionsManagamentPanel: React.FC = () => {
         <ErrorInfo error={error} />
       ) : role ? (
         <Stack
-          sx={{ position: 'relative', padding: (theme) => theme.spacing(1, 2) }}
+          sx={{ position: 'relative', padding: (theme) => theme.spacing(2) }}
         >
           {validating && (
             <LinearProgress
@@ -81,14 +81,14 @@ const UserRolePermissionsManagamentPanel: React.FC = () => {
   );
 };
 
-const UserRolePermissionsManagamentPanelWrapper: React.FC<
-  UserRolePermissionsManagamentPanelProviderProps
+const UserRolePermissionsManagementPanelWrapper: React.FC<
+  UserRolePermissionsManagementPanelProviderProps
 > = (props) => (
-  <UserRolePermissionsManagamentPanelProvider {...props}>
-    <UserRolePermissionsManagamentPanel />
-  </UserRolePermissionsManagamentPanelProvider>
+  <UserRolePermissionsManagementPanelProvider {...props}>
+    <UserRolePermissionsManagementPanel />
+  </UserRolePermissionsManagementPanelProvider>
 );
 
-export { UserRolePermissionsManagamentPanelWrapper as UserRolePermissionsManagamentPanel };
+export { UserRolePermissionsManagementPanelWrapper as UserRolePermissionsManagementPanel };
 
-export default UserRolePermissionsManagamentPanelWrapper;
+export default UserRolePermissionsManagementPanelWrapper;

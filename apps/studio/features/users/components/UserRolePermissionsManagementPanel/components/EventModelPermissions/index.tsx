@@ -12,52 +12,52 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
-import { useUserRolePermissionsManagamentPanel } from '../../context';
+import { useUserRolePermissionsManagementPanel } from '../../context';
 
-export const UserGroupModelPermissions: React.FC = () => {
+export const EventModelPermissions: React.FC = () => {
   const { validating, permissions, saving, togglePermission } =
-    useUserRolePermissionsManagamentPanel();
+    useUserRolePermissionsManagementPanel();
 
   const items = useMemo(
     () => [
       {
         label: 'Contar',
         action: 'count',
-        checked: Boolean(permissions?.userGroup?.count),
+        checked: Boolean(permissions?.event?.count),
       },
       {
         label: 'Leer',
         action: 'read',
-        checked: Boolean(permissions?.userGroup?.read),
+        checked: Boolean(permissions?.event?.read),
       },
       {
         label: 'Crear',
         action: 'create',
-        checked: Boolean(permissions?.userGroup?.create),
+        checked: Boolean(permissions?.event?.create),
       },
       {
         label: 'Modificar',
         action: 'update',
-        checked: Boolean(permissions?.userGroup?.update),
+        checked: Boolean(permissions?.event?.update),
       },
       {
         label: 'Borrar',
         action: 'delete',
-        checked: Boolean(permissions?.userGroup?.delete),
+        checked: Boolean(permissions?.event?.delete),
       },
     ],
-    [permissions?.userGroup]
+    [permissions?.event]
   );
 
   const allChecked = items.every((item) => item.checked);
 
   const toggleAll = useCallback(() => {
     if (allChecked) {
-      items.forEach(({ action }) => togglePermission('userGroup', action));
+      items.forEach(({ action }) => togglePermission('event', action));
     } else {
       items
         .filter(({ checked }) => !checked)
-        .forEach(({ action }) => togglePermission('userGroup', action));
+        .forEach(({ action }) => togglePermission('event', action));
     }
   }, [items, allChecked, togglePermission]);
 
@@ -65,7 +65,7 @@ export const UserGroupModelPermissions: React.FC = () => {
     <Accordion defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography color="text.secondary" sx={{ fontWeight: 'bold' }}>
-          Grupos
+          Eventos
         </Typography>
       </AccordionSummary>
 
@@ -77,7 +77,7 @@ export const UserGroupModelPermissions: React.FC = () => {
           spacing={1}
         >
           <Typography variant="caption" color="text.secondary">
-            userGroup
+            event
           </Typography>
 
           <Box
@@ -110,7 +110,7 @@ export const UserGroupModelPermissions: React.FC = () => {
                   <Checkbox
                     disabled={validating || saving}
                     checked={checked}
-                    onChange={() => togglePermission('userGroup', action)}
+                    onChange={() => togglePermission('event', action)}
                   />
                 }
               />
@@ -122,4 +122,4 @@ export const UserGroupModelPermissions: React.FC = () => {
   );
 };
 
-export default UserGroupModelPermissions;
+export default EventModelPermissions;

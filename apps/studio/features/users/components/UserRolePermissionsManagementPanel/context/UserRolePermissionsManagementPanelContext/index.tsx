@@ -15,17 +15,17 @@ import { indocal } from '@/lib';
 // State //
 ///////////
 
-const initialContextState: UserRolePermissionsManagamentPanelContextState = {
+const initialContextState: UserRolePermissionsManagementPanelContextState = {
   saving: false,
   permissions: null,
 };
 
-interface UserRolePermissionsManagamentPanelContextState {
+interface UserRolePermissionsManagementPanelContextState {
   saving: boolean;
   permissions: Record<string, Record<string, boolean>> | null;
 }
 
-type UserRolePermissionsManagamentPanelContextStateAction =
+type UserRolePermissionsManagementPanelContextStateAction =
   | {
       type: 'SET_SAVING';
       saving: boolean;
@@ -41,9 +41,9 @@ type UserRolePermissionsManagamentPanelContextStateAction =
     };
 
 function reducer(
-  state: UserRolePermissionsManagamentPanelContextState,
-  action: UserRolePermissionsManagamentPanelContextStateAction
-): UserRolePermissionsManagamentPanelContextState {
+  state: UserRolePermissionsManagementPanelContextState,
+  action: UserRolePermissionsManagementPanelContextStateAction
+): UserRolePermissionsManagementPanelContextState {
   switch (action.type) {
     case 'SET_SAVING':
       return {
@@ -81,7 +81,7 @@ function reducer(
 // Context //
 /////////////
 
-export const initialContextValue: UserRolePermissionsManagamentPanelContextValue =
+export const initialContextValue: UserRolePermissionsManagementPanelContextValue =
   {
     loading: false,
     validating: false,
@@ -93,7 +93,7 @@ export const initialContextValue: UserRolePermissionsManagamentPanelContextValue
     save: async () => undefined,
   };
 
-export interface UserRolePermissionsManagamentPanelContextValue {
+export interface UserRolePermissionsManagementPanelContextValue {
   loading: boolean;
   validating: boolean;
   saving: boolean;
@@ -104,17 +104,17 @@ export interface UserRolePermissionsManagamentPanelContextValue {
   save: () => Promise<void>;
 }
 
-const UserRolePermissionsManagamentPanelContext =
-  createContext<UserRolePermissionsManagamentPanelContextValue>(
+const UserRolePermissionsManagementPanelContext =
+  createContext<UserRolePermissionsManagementPanelContextValue>(
     initialContextValue
   );
 
-export interface UserRolePermissionsManagamentPanelProviderProps {
+export interface UserRolePermissionsManagementPanelProviderProps {
   role: UUID | UserRole;
 }
 
-export const UserRolePermissionsManagamentPanelProvider: React.FC<
-  React.PropsWithChildren<UserRolePermissionsManagamentPanelProviderProps>
+export const UserRolePermissionsManagementPanelProvider: React.FC<
+  React.PropsWithChildren<UserRolePermissionsManagementPanelProviderProps>
 > = ({ role: entity, children }) => {
   const { loading, validating, role, error } = useUserRole(
     typeof entity === 'string' ? entity : entity.id
@@ -171,7 +171,7 @@ export const UserRolePermissionsManagamentPanelProvider: React.FC<
   }, [loading, role]);
 
   return (
-    <UserRolePermissionsManagamentPanelContext.Provider
+    <UserRolePermissionsManagementPanelContext.Provider
       value={{
         loading,
         validating,
@@ -184,12 +184,12 @@ export const UserRolePermissionsManagamentPanelProvider: React.FC<
       }}
     >
       {children}
-    </UserRolePermissionsManagamentPanelContext.Provider>
+    </UserRolePermissionsManagementPanelContext.Provider>
   );
 };
 
-export function useUserRolePermissionsManagamentPanel(): UserRolePermissionsManagamentPanelContextValue {
-  return useContext(UserRolePermissionsManagamentPanelContext);
+export function useUserRolePermissionsManagementPanel(): UserRolePermissionsManagementPanelContextValue {
+  return useContext(UserRolePermissionsManagementPanelContext);
 }
 
-export default UserRolePermissionsManagamentPanelProvider;
+export default UserRolePermissionsManagementPanelProvider;

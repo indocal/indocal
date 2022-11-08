@@ -12,11 +12,11 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
-import { useUserRolePermissionsManagamentPanel } from '../../context';
+import { useUserRolePermissionsManagementPanel } from '../../context';
 
 export const UserModelPermissions: React.FC = () => {
   const { validating, permissions, saving, togglePermission } =
-    useUserRolePermissionsManagamentPanel();
+    useUserRolePermissionsManagementPanel();
 
   const items = useMemo(
     () => [

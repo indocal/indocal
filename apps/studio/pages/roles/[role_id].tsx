@@ -7,7 +7,7 @@ import { useUserRole, UUID } from '@indocal/services';
 import {
   UserRoleCard,
   RoleUsersDataGrid,
-  UserRolePermissionsManagamentPanel,
+  UserRolePermissionsManagementPanel,
 } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -54,7 +54,7 @@ const UserRolePage: EnhancedNextPage = () => {
 
             <Grid item xs={12}>
               <Widget disableDefaultSizes>
-                <UserRolePermissionsManagamentPanel role={role} />
+                <UserRolePermissionsManagementPanel role={role} />
               </Widget>
             </Grid>
           </Grid>

@@ -10,7 +10,7 @@ export * from './UserRoleCard';
 export * from './UsersRolesDataGrid';
 export * from './GenericUsersRolesDataGrid';
 export * from './RoleUsersDataGrid';
-export * from './UserRolePermissionsManagamentPanel';
+export * from './UserRolePermissionsManagementPanel';
 export * from './ControlledUsersRolesAutocomplete';
 
 export * from './UserGroupCard';

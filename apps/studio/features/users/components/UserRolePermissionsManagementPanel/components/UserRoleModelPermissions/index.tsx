@@ -12,101 +12,105 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
-import { useUserRolePermissionsManagamentPanel } from '../../context';
+import { useUserRolePermissionsManagementPanel } from '../../context';
 
-export const FormModelPermissions: React.FC = () => {
+export const UserRoleModelPermissions: React.FC = () => {
   const { validating, permissions, saving, togglePermission } =
-    useUserRolePermissionsManagamentPanel();
+    useUserRolePermissionsManagementPanel();
 
-  const formItems = useMemo(
+  const userRoleItems = useMemo(
     () => [
       {
         label: 'Contar',
         action: 'count',
-        checked: Boolean(permissions?.form?.count),
+        checked: Boolean(permissions?.userRole?.count),
       },
       {
         label: 'Leer',
         action: 'read',
-        checked: Boolean(permissions?.form?.read),
+        checked: Boolean(permissions?.userRole?.read),
       },
       {
         label: 'Crear',
         action: 'create',
-        checked: Boolean(permissions?.form?.create),
+        checked: Boolean(permissions?.userRole?.create),
       },
       {
         label: 'Modificar',
         action: 'update',
-        checked: Boolean(permissions?.form?.update),
+        checked: Boolean(permissions?.userRole?.update),
       },
       {
         label: 'Borrar',
         action: 'delete',
-        checked: Boolean(permissions?.form?.delete),
+        checked: Boolean(permissions?.userRole?.delete),
       },
     ],
-    [permissions?.form]
+    [permissions?.userRole]
   );
 
-  const formFieldItems = useMemo(
+  const userRolePermissionItems = useMemo(
     () => [
       {
         label: 'Contar',
         action: 'count',
-        checked: Boolean(permissions?.formField?.count),
+        checked: Boolean(permissions?.userRolePermission?.count),
       },
       {
         label: 'Leer',
         action: 'read',
-        checked: Boolean(permissions?.formField?.read),
+        checked: Boolean(permissions?.userRolePermission?.read),
       },
       {
         label: 'Crear',
         action: 'create',
-        checked: Boolean(permissions?.formField?.create),
+        checked: Boolean(permissions?.userRolePermission?.create),
       },
       {
         label: 'Modificar',
         action: 'update',
-        checked: Boolean(permissions?.formField?.update),
+        checked: Boolean(permissions?.userRolePermission?.update),
       },
       {
         label: 'Borrar',
         action: 'delete',
-        checked: Boolean(permissions?.formField?.delete),
+        checked: Boolean(permissions?.userRolePermission?.delete),
       },
     ],
-    [permissions?.formField]
+    [permissions?.userRolePermission]
   );
 
   const allChecked =
-    formItems.every((item) => item.checked) &&
-    formFieldItems.every((item) => item.checked);
+    userRoleItems.every((item) => item.checked) &&
+    userRolePermissionItems.every((item) => item.checked);
 
   const toggleAll = useCallback(() => {
     if (allChecked) {
-      formItems.forEach(({ action }) => togglePermission('form', action));
+      userRoleItems.forEach(({ action }) =>
+        togglePermission('userRole', action)
+      );
 
-      formFieldItems.forEach(({ action }) =>
-        togglePermission('formField', action)
+      userRolePermissionItems.forEach(({ action }) =>
+        togglePermission('userRolePermission', action)
       );
     } else {
-      formItems
+      userRoleItems
         .filter(({ checked }) => !checked)
-        .forEach(({ action }) => togglePermission('form', action));
+        .forEach(({ action }) => togglePermission('userRole', action));
 
-      formFieldItems
+      userRolePermissionItems
         .filter(({ checked }) => !checked)
-        .forEach(({ action }) => togglePermission('formField', action));
+        .forEach(({ action }) =>
+          togglePermission('userRolePermission', action)
+        );
     }
-  }, [formItems, formFieldItems, allChecked, togglePermission]);
+  }, [userRoleItems, userRolePermissionItems, allChecked, togglePermission]);
 
   return (
     <Accordion defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography color="text.secondary" sx={{ fontWeight: 'bold' }}>
-          Formularios
+          Roles
         </Typography>
       </AccordionSummary>
 
@@ -119,7 +123,7 @@ export const FormModelPermissions: React.FC = () => {
           sx={{ marginBottom: (theme) => theme.spacing(1) }}
         >
           <Typography variant="caption" color="text.secondary">
-            [ form / formField ]
+            [ userRole / userRolePermission ]
           </Typography>
 
           <Box
@@ -145,7 +149,7 @@ export const FormModelPermissions: React.FC = () => {
               spacing={1}
             >
               <Typography variant="caption" color="text.secondary">
-                form
+                userRole
               </Typography>
 
               <Box
@@ -162,7 +166,7 @@ export const FormModelPermissions: React.FC = () => {
               alignItems="center"
               spacing={1}
             >
-              {formItems.map(({ label, action, checked }) => (
+              {userRoleItems.map(({ label, action, checked }) => (
                 <Grid
                   key={action}
                   item
@@ -177,7 +181,7 @@ export const FormModelPermissions: React.FC = () => {
                       <Checkbox
                         disabled={validating || saving}
                         checked={checked}
-                        onChange={() => togglePermission('form', action)}
+                        onChange={() => togglePermission('userRole', action)}
                       />
                     }
                   />
@@ -194,7 +198,7 @@ export const FormModelPermissions: React.FC = () => {
               spacing={1}
             >
               <Typography variant="caption" color="text.secondary">
-                formField
+                userRolePermission
               </Typography>
 
               <Box
@@ -211,7 +215,7 @@ export const FormModelPermissions: React.FC = () => {
               alignItems="center"
               spacing={1}
             >
-              {formFieldItems.map(({ label, action, checked }) => (
+              {userRolePermissionItems.map(({ label, action, checked }) => (
                 <Grid
                   key={action}
                   item
@@ -226,7 +230,9 @@ export const FormModelPermissions: React.FC = () => {
                       <Checkbox
                         disabled={validating || saving}
                         checked={checked}
-                        onChange={() => togglePermission('formField', action)}
+                        onChange={() =>
+                          togglePermission('userRolePermission', action)
+                        }
                       />
                     }
                   />
@@ -240,4 +246,4 @@ export const FormModelPermissions: React.FC = () => {
   );
 };
 
-export default FormModelPermissions;
+export default UserRoleModelPermissions;
