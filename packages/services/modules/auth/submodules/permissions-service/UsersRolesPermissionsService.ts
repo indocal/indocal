@@ -16,12 +16,12 @@ export interface CreateUserRolePermissionReturn {
   error: ServiceError | null;
 }
 
-export interface CountUsersRolesPermissionsReturn {
+export interface CountUserRolePermissionsReturn {
   count: number | null;
   error: ServiceError | null;
 }
 
-export interface FindManyUsersRolesPermissionsReturn {
+export interface FindAllUserRolePermissionsReturn {
   permissions: UserRolePermission[];
   error: ServiceError | null;
 }
@@ -71,9 +71,7 @@ export class UsersRolesPermissionsService {
     }
   }
 
-  async count(
-    role: UUID | UserRole
-  ): Promise<CountUsersRolesPermissionsReturn> {
+  async count(role: UUID | UserRole): Promise<CountUserRolePermissionsReturn> {
     try {
       const response = await this.config.axios.get<number>(
         `${ApiEndpoints.USERS_ROLES}/${this.getUUID(role)}/permissions/count`
@@ -93,7 +91,7 @@ export class UsersRolesPermissionsService {
 
   async findAll(
     role: UUID | UserRole
-  ): Promise<FindManyUsersRolesPermissionsReturn> {
+  ): Promise<FindAllUserRolePermissionsReturn> {
     try {
       const response = await this.config.axios.get<UserRolePermission[]>(
         `${ApiEndpoints.USERS_ROLES}/${this.getUUID(role)}/permissions`
