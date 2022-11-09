@@ -13,7 +13,7 @@ type Field = {
 };
 
 export type FormStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';
-export type FormVisibility = 'PUBLIC' | 'PRIVATE';
+export type FormVisibility = 'PUBLIC' | 'PROTECTED' | 'PRIVATE';
 
 export interface Form extends Entity {
   slug: string;

@@ -17,7 +17,7 @@ export interface CountFormFieldsReturn {
   error: ServiceError | null;
 }
 
-export interface FindManyFormFieldsReturn {
+export interface FindAllFormFieldsReturn {
   fields: FormField[];
   error: ServiceError | null;
 }
@@ -85,7 +85,7 @@ export class FormsFieldsService {
     }
   }
 
-  async findAll(form: UUID | Form): Promise<FindManyFormFieldsReturn> {
+  async findAll(form: UUID | Form): Promise<FindAllFormFieldsReturn> {
     try {
       const response = await this.config.axios.get<FormField[]>(
         `${ApiEndpoints.FORMS}/${this.getUUID(form)}/fields`
