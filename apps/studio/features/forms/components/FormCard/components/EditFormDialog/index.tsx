@@ -74,7 +74,7 @@ const schema = zod
 
       visibility: zod
         .enum<string, [FormVisibility, ...FormVisibility[]]>(
-          ['PUBLIC', 'PRIVATE'],
+          ['PUBLIC', 'PROTECTED', 'PRIVATE'],
           {
             description: 'Visibilidad del formulario',
             required_error: 'Debe ingresar el visibilidad del formulario',

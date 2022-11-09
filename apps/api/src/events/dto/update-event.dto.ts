@@ -1,5 +1,6 @@
+import { EventStatus as DBEventStatusEnum } from '@prisma/client';
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsDateString, IsOptional } from 'class-validator';
 
 import { TrimParam } from '@/common';
 
@@ -16,6 +17,9 @@ class UpdateEventDtoSchema {
   @IsOptional()
   @TrimParam()
   description?: string | null;
+
+  @IsEnum(DBEventStatusEnum)
+  status: DBEventStatusEnum;
 
   @IsDateString()
   scheduledAt: Date;

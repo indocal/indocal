@@ -16,7 +16,10 @@ export interface ControlledFormVisibilitySelectProps {
 export const ControlledFormVisibilitySelect: React.FC<
   ControlledFormVisibilitySelectProps
 > = ({ name, label, control, disabled, required }) => {
-  const status = useMemo<FormVisibility[]>(() => ['PUBLIC', 'PRIVATE'], []);
+  const status = useMemo<FormVisibility[]>(
+    () => ['PUBLIC', 'PROTECTED', 'PRIVATE'],
+    []
+  );
 
   return (
     <ControlledSelect

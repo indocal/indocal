@@ -11,6 +11,8 @@ import {
   FindManyEventsParamsDto,
 } from './types';
 
+import { EventsGuestsService } from './submodules';
+
 export interface CreateEventReturn {
   event: Event | null;
   error: ServiceError | null;
@@ -42,7 +44,11 @@ export interface DeleteEventReturn {
 }
 
 export class EventsService {
-  constructor(private config: Config) {}
+  guests: EventsGuestsService;
+
+  constructor(private config: Config) {
+    this.guests = new EventsGuestsService(config);
+  }
 
   async create(data: CreateEventDto): Promise<CreateEventReturn> {
     try {

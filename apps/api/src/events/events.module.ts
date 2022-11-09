@@ -6,8 +6,10 @@ import { AuthModule } from '@/auth';
 import EventsController from './events.controller';
 import EventsService from './events.service';
 
+import { EventsGuestsModule } from './submodules';
+
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, EventsGuestsModule],
   controllers: [EventsController],
   providers: [PrismaService, EventsService],
   exports: [EventsService],

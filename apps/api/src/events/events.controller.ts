@@ -23,17 +23,23 @@ import {
   UpdateEventDto,
 } from './dto';
 
+import { EventsGuestsService } from './submodules';
+
 @Controller('events')
 @UseGuards(PoliciesGuard)
 export class EventsController {
-  constructor(private eventsService: EventsService) {}
+  constructor(
+    private eventsService: EventsService,
+    private eventsGuestsService: EventsGuestsService
+  ) {}
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'event'))
   async create(@Body() createEventDto: CreateEventDto): Promise<EventEntity> {
     const event = await this.eventsService.create(createEventDto);
+    const guests = await this.eventsGuestsService.findAll(event);
 
-    return new EventEntity(event);
+    return new EventEntity(event, guests);
   }
 
   @Get('count')
@@ -59,7 +65,13 @@ export class EventsController {
       cursor: query.pagination?.cursor,
     });
 
-    return events.map((event) => new EventEntity(event));
+    return await Promise.all(
+      events.map(async (event) => {
+        const guests = await this.eventsGuestsService.findAll(event);
+
+        return new EventEntity(event, guests);
+      })
+    );
   }
 
   @Get(':id')
@@ -68,8 +80,9 @@ export class EventsController {
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<EventEntity | null> {
     const event = await this.eventsService.findUnique('id', id);
+    const guests = await this.eventsGuestsService.findAll(id);
 
-    return event ? new EventEntity(event) : null;
+    return event ? new EventEntity(event, guests) : null;
   }
 
   @Patch(':id')
@@ -79,16 +92,18 @@ export class EventsController {
     @Body() updateEventDto: UpdateEventDto
   ): Promise<EventEntity> {
     const event = await this.eventsService.update(id, updateEventDto);
+    const guests = await this.eventsGuestsService.findAll(event);
 
-    return new EventEntity(event);
+    return new EventEntity(event, guests);
   }
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'event'))
   async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<EventEntity> {
     const event = await this.eventsService.delete(id);
+    const guests = await this.eventsGuestsService.findAll(event);
 
-    return new EventEntity(event);
+    return new EventEntity(event, guests);
   }
 }
 

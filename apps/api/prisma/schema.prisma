@@ -97,6 +97,7 @@ enum FormStatus {
 
 enum FormVisibility {
   PUBLIC
+  PROTECTED
   PRIVATE
 }
 
@@ -119,6 +120,7 @@ model FormField {
   @@unique([description, formId])
 }
 
+// TODO: add dni, phone and user
 enum FormFieldType {
   CHECKBOX
   EMAIL
@@ -131,6 +133,51 @@ enum FormFieldType {
 /////////////////////
 // Nobu Management //
 /////////////////////
+
+///////////////////////
+// Events Management //
+///////////////////////
+
+model Event {
+  id          String  @id @default(uuid())
+  slug        String  @unique
+  title       String
+  description String?
+
+  status EventStatus @default(SCHEDULED)
+
+  guests EventGuest[]
+
+  scheduledAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum EventStatus {
+  SCHEDULED
+  OVERDUED
+}
+
+model EventGuest {
+  id   String @id @default(uuid())
+  dni  String
+  name String
+
+  email String
+  phone String
+
+  from     String
+  position String
+
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([dni, eventId])
+}
 
 //////////////////////////
 // Trainings Management //
@@ -207,34 +254,6 @@ enum FormFieldType {
 
 // model SalidaForm {
 //   id String @id @default(uuid())
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
-///////////////////////
-// Events Management //
-///////////////////////
-
-model Event {
-  id          String  @id @default(uuid())
-  slug        String  @unique
-  title       String
-  description String?
-
-  guests Json[] @default([]) // TODO: Create EventGuest Model
-
-  scheduledAt DateTime
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// model EventGuest {
-//   id    String @id @default(uuid())
-//   name  String
-//   email String
-//   phone String
 
 //   createdAt DateTime @default(now())
 //   updatedAt DateTime @updatedAt

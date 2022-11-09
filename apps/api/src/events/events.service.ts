@@ -47,6 +47,7 @@ export class EventsService {
         slug: updateEventDto.slug,
         title: updateEventDto.title,
         description: updateEventDto.description,
+        status: updateEventDto.status,
         scheduledAt: updateEventDto.scheduledAt,
       },
     });

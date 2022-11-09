@@ -13,6 +13,7 @@ import {
   Form,
   FormField,
   Event,
+  EventGuest,
 } from '@prisma/client';
 
 import { PrismaService } from '@/common';
@@ -35,6 +36,7 @@ export type Subjects = PrismaSubjects<{
   form: Form;
   formField: FormField;
   event: Event;
+  eventGuest: EventGuest;
 }>;
 
 export type AppAbility = PureAbility<[Action, Subjects], PrismaQuery>;
