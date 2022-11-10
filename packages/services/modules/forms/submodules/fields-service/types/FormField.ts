@@ -1,12 +1,19 @@
 import { Entity } from '../../../../../common';
 
 export type FormFieldType =
-  | 'CHECKBOX'
-  | 'EMAIL'
-  | 'NUMBER'
-  | 'RADIO'
   | 'TEXT'
-  | 'TEXTAREA';
+  | 'TEXTAREA'
+  | 'NUMBER'
+  | 'DNI'
+  | 'PHONE'
+  | 'EMAIL'
+  | 'CHECKBOX'
+  | 'SELECT'
+  | 'RADIO'
+  | 'TIME'
+  | 'DATE'
+  | 'DATETIME'
+  | 'USERS';
 
 export interface FormField extends Entity {
   type: FormFieldType;

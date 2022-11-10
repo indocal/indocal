@@ -51,7 +51,7 @@ const schema = zod
       status: zod
         .enum<string, [UserStatus, ...UserStatus[]]>(['ENABLED', 'DISABLED'], {
           description: 'Estado del usuario',
-          required_error: 'Debe ingresar el estado del usuario',
+          required_error: 'Debe seleccionar el estado del usuario',
           invalid_type_error: 'Formato no válido',
         })
         .describe('Estado del usuario'),

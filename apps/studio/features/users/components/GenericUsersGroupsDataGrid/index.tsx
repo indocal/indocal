@@ -53,7 +53,15 @@ export const GenericUsersGroupsDataGrid: React.FC<
       const { error } = await indocal.auth.groups.delete(id);
 
       if (error) {
-        enqueueSnackbar(error.message, { variant: 'error' });
+        enqueueSnackbar(
+          error.details
+            ? error.details.reduce(
+                (acc, current) => (acc ? `${acc} | ${current}` : current),
+                ``
+              )
+            : error.message,
+          { variant: 'error' }
+        );
       } else {
         if (onRefreshButtonClick) await onRefreshButtonClick();
 

@@ -120,14 +120,24 @@ model FormField {
   @@unique([description, formId])
 }
 
-// TODO: add dni, phone and user
 enum FormFieldType {
-  CHECKBOX
-  EMAIL
-  NUMBER
-  RADIO
   TEXT
   TEXTAREA
+  NUMBER
+
+  DNI
+  PHONE
+  EMAIL
+
+  CHECKBOX
+  SELECT
+  RADIO
+
+  TIME
+  DATE
+  DATETIME
+
+  USERS
 }
 
 /////////////////////

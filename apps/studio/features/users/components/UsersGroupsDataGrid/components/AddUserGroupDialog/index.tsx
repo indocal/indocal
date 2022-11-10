@@ -69,7 +69,7 @@ export const AddUserGroupDialog: React.FC = () => {
     async (formData: FormData) => {
       const { group, error } = await indocal.auth.groups.create({
         name: formData.name,
-        description: formData.description,
+        ...(formData.description && { description: formData.description }),
       });
 
       if (error) {

@@ -1,14 +1,34 @@
-import { useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import {
-  Stack,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListItemSecondaryAction,
   Typography,
   IconButton,
 } from '@mui/material';
-import { AddCircle as AddIcon } from '@mui/icons-material';
+import {
+  AddCircle as AddIcon,
+  Edit as EditIcon,
+  ShortText as ShortTextIcon,
+  WrapText as WrapTextIcon,
+  Numbers as NumberIcon,
+  ContactEmergency as DniIcon,
+  Phone as PhoneIcon,
+  Email as EmailIcon,
+  CheckBox as CheckBoxIcon,
+  List as ListIcon,
+  RadioButtonChecked as RadioButtonIcon,
+  Schedule as TimeIcon,
+  DateRange as DateIcon,
+  EventNote as DateTimeIcon,
+  Group as UsersIcon,
+} from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
@@ -17,7 +37,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import { NoData } from '@indocal/ui';
-import { Form, ApiEndpoints } from '@indocal/services';
+import { Form, FormFieldType, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
 
@@ -43,8 +63,11 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
 }) => {
   const { mutate } = useSWRConfig();
 
-  const { isManageFormFieldsDialogOpen, toggleManageFormFieldsDialog } =
-    useFormFieldsCard();
+  const {
+    isManageFormFieldsDialogOpen,
+    toggleManageFormFieldsDialog,
+    toggleAddFormFieldDialog,
+  } = useFormFieldsCard();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -55,6 +78,25 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
+  const icons = useMemo<Record<FormFieldType, React.ReactElement>>(
+    () => ({
+      TEXT: <ShortTextIcon />,
+      TEXTAREA: <WrapTextIcon />,
+      NUMBER: <NumberIcon />,
+      DNI: <DniIcon />,
+      PHONE: <PhoneIcon />,
+      EMAIL: <EmailIcon />,
+      CHECKBOX: <CheckBoxIcon />,
+      SELECT: <ListIcon />,
+      RADIO: <RadioButtonIcon />,
+      TIME: <TimeIcon />,
+      DATE: <DateIcon />,
+      DATETIME: <DateTimeIcon />,
+      USERS: <UsersIcon />,
+    }),
+    []
+  );
 
   const onSubmit = useCallback(async () => {
     const { form: updated, error } = await indocal.forms.update(form.id, {});
@@ -110,16 +152,28 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
       >
         <Typography sx={{ fontWeight: 'bolder' }}>Campos</Typography>
 
-        <IconButton>
+        <IconButton onClick={toggleAddFormFieldDialog}>
           <AddIcon />
         </IconButton>
       </DialogTitle>
 
       <DialogContent dividers>
         {form.fields.length > 0 ? (
-          <Stack component="form" autoComplete="off" spacing={2}>
-            {form.fields.map((field) => field.title)}
-          </Stack>
+          <List disablePadding>
+            {form.fields.map((field) => (
+              <ListItem key={field.id} divider>
+                <ListItemIcon>{icons[field.type]}</ListItemIcon>
+
+                <ListItemText>{field.title}</ListItemText>
+
+                <ListItemSecondaryAction>
+                  <IconButton color="warning">
+                    <EditIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
         ) : (
           <NoData message="El formulario no contiene campos" />
         )}

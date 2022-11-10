@@ -66,7 +66,7 @@ const schema = zod
           ['DRAFT', 'PUBLISHED', 'HIDDEN'],
           {
             description: 'Estado del formulario',
-            required_error: 'Debe ingresar el estado del formulario',
+            required_error: 'Debe seleccionar el estado del formulario',
             invalid_type_error: 'Formato no válido',
           }
         )
@@ -77,7 +77,7 @@ const schema = zod
           ['PUBLIC', 'PROTECTED', 'PRIVATE'],
           {
             description: 'Visibilidad del formulario',
-            required_error: 'Debe ingresar el visibilidad del formulario',
+            required_error: 'Debe seleccionar la visibilidad del formulario',
             invalid_type_error: 'Formato no válido',
           }
         )
@@ -124,7 +124,7 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
       const { form: updated, error } = await indocal.forms.update(form.id, {
         slug: formData.slug,
         title: formData.title,
-        description: formData.description,
+        description: formData.description || null,
         status: formData.status,
         visibility: formData.visibility,
       });

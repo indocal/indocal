@@ -84,7 +84,7 @@ export const EditUserGroupDialog: React.FC<EditUserGroupDialogProps> = ({
         group.id,
         {
           name: formData.name,
-          description: formData.description,
+          description: formData.description || null,
         }
       );
 

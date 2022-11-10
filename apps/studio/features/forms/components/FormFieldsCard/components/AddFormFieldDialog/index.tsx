@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useRouter } from 'next/router';
 import {
   Stack,
   Dialog,
@@ -10,73 +9,107 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
+import { useSWRConfig } from 'swr';
+import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { indocal } from '@/lib';
-import { Pages } from '@/config';
+import { Form, FormFieldType, ApiEndpoints } from '@indocal/services';
 
-import { useFormsDataGrid } from '../../context';
+import { indocal } from '@/lib';
+import { ControlledFormFieldTypeSelect } from '@/features';
+
+import { useFormFieldsCard } from '../../context';
 
 type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    slug: zod
-      .string({
-        description: 'Slug del formulario',
-        required_error: 'Debe ingresar el slug del formulario',
-        invalid_type_error: 'Formato no válido',
-      })
-      .min(1, 'Debe ingresar el slug del formulario')
-      .trim(),
+    type: zod
+      .enum<string, [FormFieldType, ...FormFieldType[]]>(
+        [
+          'TEXT',
+          'TEXTAREA',
+          'NUMBER',
+
+          'DNI',
+          'PHONE',
+          'EMAIL',
+
+          'CHECKBOX',
+          'SELECT',
+          'RADIO',
+
+          'TIME',
+          'DATE',
+          'DATETIME',
+
+          'USERS',
+        ],
+        {
+          description: 'Tipo del campo',
+          required_error: 'Debe seleccionar el tipo del campo',
+          invalid_type_error: 'Formato no válido',
+        }
+      )
+      .describe('Tipo del campo'),
 
     title: zod
       .string({
-        description: 'Título del formulario',
-        required_error: 'Debe ingresar el título del formulario',
+        description: 'Título del campo',
+        required_error: 'Debe ingresar el título del campo',
         invalid_type_error: 'Formato no válido',
       })
-      .min(1, 'Debe ingresar el título del formulario')
+      .min(1, 'Debe ingresar el título del campo')
       .trim(),
 
     description: zod
       .string({
-        description: 'Descripción del formulario',
-        required_error: 'Debe ingresar la descripción del formulario',
-        invalid_type_error: 'Formato no válido',
+        description: 'Descripción del campo',
+        required_error: 'Debe ingresar la descripción del campo',
+        invalid_type_error: 'Formato no campo',
       })
       .trim()
       .optional(),
   },
   {
-    description: 'Datos del formulario',
-    required_error: 'Debe ingresar los datos del formulario',
+    description: 'Datos del campo',
+    required_error: 'Debe ingresar los datos del campo',
     invalid_type_error: 'Formato no válido',
   }
 );
 
-export const AddFormDialog: React.FC = () => {
-  const router = useRouter();
+export interface AddFormFieldDialogProps {
+  form: Form;
+}
 
-  const { isAddFormDialogOpen, toggleAddFormDialog } = useFormsDataGrid();
+export const AddFormFieldDialog: React.FC<AddFormFieldDialogProps> = ({
+  form,
+}) => {
+  const { mutate } = useSWRConfig();
+
+  const { isAddFormFieldDialogOpen, toggleAddFormFieldDialog } =
+    useFormFieldsCard();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
+    control,
     handleSubmit,
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      type: 'TEXT',
+    },
   });
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { form, error } = await indocal.forms.create({
-        slug: formData.slug,
+      const { error } = await indocal.forms.fields.create(form.id, {
+        type: formData.type,
         title: formData.title,
         ...(formData.description && { description: formData.description }),
       });
@@ -92,20 +125,20 @@ export const AddFormDialog: React.FC = () => {
           { variant: 'error' }
         );
       } else {
-        await router.push(`${Pages.FORMS}/${form?.id}`);
+        await mutate(`${ApiEndpoints.FORMS}/${form.id}`);
 
-        enqueueSnackbar('Formulario agregado exitosamente', {
+        enqueueSnackbar('Campo agregado exitosamente', {
           variant: 'success',
-          onEntered: toggleAddFormDialog,
+          onEntered: toggleAddFormFieldDialog,
         });
       }
     },
-    [router, toggleAddFormDialog, enqueueSnackbar]
+    [form.id, mutate, toggleAddFormFieldDialog, enqueueSnackbar]
   );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
-      toggleAddFormDialog();
+      toggleAddFormFieldDialog();
     } else {
       const answer = window.confirm(
         '¿Estás seguro de que deseas cancelar esta acción?'
@@ -113,25 +146,23 @@ export const AddFormDialog: React.FC = () => {
 
       if (!answer) return;
 
-      toggleAddFormDialog();
+      toggleAddFormFieldDialog();
       reset();
     }
-  }, [isDirty, reset, toggleAddFormDialog]);
+  }, [isDirty, reset, toggleAddFormFieldDialog]);
 
   return (
-    <Dialog fullWidth open={isAddFormDialogOpen} onClose={handleOnClose}>
-      <DialogTitle>Agregar formulario</DialogTitle>
+    <Dialog fullWidth open={isAddFormFieldDialogOpen} onClose={handleOnClose}>
+      <DialogTitle>Agregar campo</DialogTitle>
 
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
-          <TextField
+          <ControlledFormFieldTypeSelect
             required
-            autoComplete="off"
-            label="Slug"
+            name="type"
+            label="Tipo"
+            control={control as unknown as Control}
             disabled={isSubmitting}
-            inputProps={register('slug')}
-            error={Boolean(errors.slug)}
-            helperText={errors.slug?.message}
           />
 
           <TextField
@@ -172,4 +203,4 @@ export const AddFormDialog: React.FC = () => {
   );
 };
 
-export default AddFormDialog;
+export default AddFormFieldDialog;

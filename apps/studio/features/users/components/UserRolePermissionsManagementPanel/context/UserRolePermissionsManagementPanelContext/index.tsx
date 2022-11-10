@@ -141,7 +141,15 @@ export const UserRolePermissionsManagementPanelProvider: React.FC<
     );
 
     if (error) {
-      enqueueSnackbar(error.message, { variant: 'error' });
+      enqueueSnackbar(
+        error.details
+          ? error.details.reduce(
+              (acc, current) => (acc ? `${acc} | ${current}` : current),
+              ``
+            )
+          : error.message,
+        { variant: 'error' }
+      );
     } else {
       enqueueSnackbar('Permisos actualizados exitosamente', {
         variant: 'success',

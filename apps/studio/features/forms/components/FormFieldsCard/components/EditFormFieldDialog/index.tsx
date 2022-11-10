@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useRouter } from 'next/router';
 import {
   Stack,
   Dialog,
@@ -10,57 +9,61 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { indocal } from '@/lib';
-import { Pages } from '@/config';
+import { Form, FormField, ApiEndpoints } from '@indocal/services';
 
-import { useFormsDataGrid } from '../../context';
+import { indocal } from '@/lib';
+
+import { useFormFieldsCard } from '../../context';
 
 type FormData = zod.infer<typeof schema>;
 
-const schema = zod.object(
-  {
-    slug: zod
-      .string({
-        description: 'Slug del formulario',
-        required_error: 'Debe ingresar el slug del formulario',
-        invalid_type_error: 'Formato no válido',
-      })
-      .min(1, 'Debe ingresar el slug del formulario')
-      .trim(),
+const schema = zod
+  .object(
+    {
+      title: zod
+        .string({
+          description: 'Título del campo',
+          required_error: 'Debe ingresar el título del campo',
+          invalid_type_error: 'Formato no válido',
+        })
+        .min(1, 'Debe ingresar el título del campo')
+        .trim(),
 
-    title: zod
-      .string({
-        description: 'Título del formulario',
-        required_error: 'Debe ingresar el título del formulario',
-        invalid_type_error: 'Formato no válido',
-      })
-      .min(1, 'Debe ingresar el título del formulario')
-      .trim(),
+      description: zod
+        .string({
+          description: 'Descripción del campo',
+          required_error: 'Debe ingresar la descripción del campo',
+          invalid_type_error: 'Formato no válido',
+        })
+        .trim()
+        .nullable(),
+    },
+    {
+      description: 'Datos del campo',
+      required_error: 'Debe ingresar los datos del campo',
+      invalid_type_error: 'Formato no válido',
+    }
+  )
+  .partial();
 
-    description: zod
-      .string({
-        description: 'Descripción del formulario',
-        required_error: 'Debe ingresar la descripción del formulario',
-        invalid_type_error: 'Formato no válido',
-      })
-      .trim()
-      .optional(),
-  },
-  {
-    description: 'Datos del formulario',
-    required_error: 'Debe ingresar los datos del formulario',
-    invalid_type_error: 'Formato no válido',
-  }
-);
+export interface EditFormFieldDialogProps {
+  form: Form;
+  field: FormField;
+}
 
-export const AddFormDialog: React.FC = () => {
-  const router = useRouter();
+export const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
+  form,
+  field,
+}) => {
+  const { mutate } = useSWRConfig();
 
-  const { isAddFormDialogOpen, toggleAddFormDialog } = useFormsDataGrid();
+  const { isEditFormFieldDialogOpen, toggleEditFormFieldDialog } =
+    useFormFieldsCard();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -71,14 +74,17 @@ export const AddFormDialog: React.FC = () => {
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      title: field.title,
+      description: field.description,
+    },
   });
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { form, error } = await indocal.forms.create({
-        slug: formData.slug,
+      const { error } = await indocal.forms.fields.update(field.id, {
         title: formData.title,
-        ...(formData.description && { description: formData.description }),
+        description: formData.description || null,
       });
 
       if (error) {
@@ -92,20 +98,20 @@ export const AddFormDialog: React.FC = () => {
           { variant: 'error' }
         );
       } else {
-        await router.push(`${Pages.FORMS}/${form?.id}`);
+        await mutate(`${ApiEndpoints.FORMS}/${form.id}`);
 
-        enqueueSnackbar('Formulario agregado exitosamente', {
+        enqueueSnackbar('Campo editado exitosamente', {
           variant: 'success',
-          onEntered: toggleAddFormDialog,
+          onEntered: toggleEditFormFieldDialog,
         });
       }
     },
-    [router, toggleAddFormDialog, enqueueSnackbar]
+    [form.id, field.id, mutate, toggleEditFormFieldDialog, enqueueSnackbar]
   );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
-      toggleAddFormDialog();
+      toggleEditFormFieldDialog();
     } else {
       const answer = window.confirm(
         '¿Estás seguro de que deseas cancelar esta acción?'
@@ -113,27 +119,17 @@ export const AddFormDialog: React.FC = () => {
 
       if (!answer) return;
 
-      toggleAddFormDialog();
+      toggleEditFormFieldDialog();
       reset();
     }
-  }, [isDirty, reset, toggleAddFormDialog]);
+  }, [isDirty, reset, toggleEditFormFieldDialog]);
 
   return (
-    <Dialog fullWidth open={isAddFormDialogOpen} onClose={handleOnClose}>
-      <DialogTitle>Agregar formulario</DialogTitle>
+    <Dialog fullWidth open={isEditFormFieldDialogOpen} onClose={handleOnClose}>
+      <DialogTitle>Editar campo</DialogTitle>
 
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
-          <TextField
-            required
-            autoComplete="off"
-            label="Slug"
-            disabled={isSubmitting}
-            inputProps={register('slug')}
-            error={Boolean(errors.slug)}
-            helperText={errors.slug?.message}
-          />
-
           <TextField
             required
             autoComplete="off"
@@ -165,11 +161,11 @@ export const AddFormDialog: React.FC = () => {
           disabled={!isDirty}
           onClick={handleSubmit(onSubmit)}
         >
-          Agregar
+          Editar
         </LoadingButton>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddFormDialog;
+export default EditFormFieldDialog;

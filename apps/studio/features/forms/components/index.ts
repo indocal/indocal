@@ -4,3 +4,5 @@ export * from './GenericFormsDataGrid';
 export * from './FormFieldsCard';
 export * from './ControlledFormStatusSelect';
 export * from './ControlledFormVisibilitySelect';
+
+export * from './ControlledFormFieldTypeSelect';

@@ -23,7 +23,7 @@ import { useForm, UUID, Form } from '@indocal/services';
 import { Pages } from '@/config';
 
 import { FormFieldsCardProvider, useFormFieldsCard } from './context';
-import { ManageFormFieldsDialog } from './components';
+import { ManageFormFieldsDialog, AddFormFieldDialog } from './components';
 
 export interface FormFieldsCardProps {
   form: UUID | Form;
@@ -34,8 +34,11 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
     typeof entity === 'string' ? entity : entity.id
   );
 
-  const { isManageFormFieldsDialogOpen, toggleManageFormFieldsDialog } =
-    useFormFieldsCard();
+  const {
+    isManageFormFieldsDialogOpen,
+    isAddFormFieldDialogOpen,
+    toggleManageFormFieldsDialog,
+  } = useFormFieldsCard();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -82,6 +85,8 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
           {isManageFormFieldsDialogOpen && (
             <ManageFormFieldsDialog form={form} />
           )}
+
+          {isAddFormFieldDialogOpen && <AddFormFieldDialog form={form} />}
 
           {validating && (
             <LinearProgress
