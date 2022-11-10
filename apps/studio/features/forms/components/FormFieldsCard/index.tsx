@@ -94,7 +94,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                zIndex: (theme) => theme.zIndex.tooltip,
+                zIndex: (theme) => theme.zIndex.modal - 1,
                 width: '100%',
                 borderTopLeftRadius: (theme) => theme.shape.borderRadius,
                 borderTopRightRadius: (theme) => theme.shape.borderRadius,
