@@ -106,6 +106,8 @@ model FormField {
   title       String
   description String?
 
+  order Int
+
   config Json?
 
   type FormFieldType
@@ -118,6 +120,7 @@ model FormField {
 
   @@unique([title, formId])
   @@unique([description, formId])
+  @@unique([order, formId])
 }
 
 enum FormFieldType {

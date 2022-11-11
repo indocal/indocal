@@ -16,7 +16,9 @@ export class FormEntity implements Entity, DBFormModel {
     Object.assign(this, form);
 
     if (fields) {
-      this.fields = fields.map((field) => new FormFieldEntity(field));
+      this.fields = fields
+        .map((field) => new FormFieldEntity(field))
+        .sort((a, b) => (a.order === b.order ? 0 : a.order > b.order ? 1 : -1));
     }
   }
 

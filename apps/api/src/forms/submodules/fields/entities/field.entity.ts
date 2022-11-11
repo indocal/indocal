@@ -16,6 +16,10 @@ export class FormFieldEntity implements Entity, DBFormFieldModel {
   type: DBFormFieldTypeEnum;
   title: string;
   description: string | null;
+
+  @Exclude()
+  order: number;
+
   config: Prisma.JsonValue;
 
   @Exclude()

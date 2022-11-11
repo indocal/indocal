@@ -17,11 +17,19 @@ export class FormsFieldsService {
     form: UUID | DBFormModel,
     createFormFieldDto: CreateFormFieldDto
   ): Promise<DBFormFieldFieldModel> {
+    const fields = await this.prismaService.formField.findMany({
+      where: { form: { id: typeof form === 'string' ? form : form.id } },
+      orderBy: { order: 'asc' },
+    });
+
+    const lastField = fields.pop();
+
     return await this.prismaService.formField.create({
       data: {
         type: createFormFieldDto.type,
         title: createFormFieldDto.title,
         description: createFormFieldDto.description,
+        order: lastField ? lastField.order + 1 : 1,
         form: {
           connect: {
             id: typeof form === 'string' ? form : form.id,
