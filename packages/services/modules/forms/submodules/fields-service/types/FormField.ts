@@ -15,13 +15,80 @@ export type FormFieldType =
   | 'DATETIME'
   | 'USERS';
 
+export type FormFieldConfig = Partial<
+  | TextFormFieldConfig
+  | TextAreaFormFieldConfig
+  | NumberFormFieldConfig
+  | DniFormFieldConfig
+  | PhoneFormFieldConfig
+  | EmailFormFieldConfig
+  | CheckboxFormFieldConfig
+  | SelectFormFieldConfig
+  | RadioFormFieldConfig
+  | TimeFormFieldConfig
+  | DateFormFieldConfig
+  | DateTimeFormFieldConfig
+  | UsersFormFieldConfig
+>;
+
 export interface FormField extends Entity {
   type: FormFieldType;
   title: string;
   description: string | null;
-  config: object | null;
+  config: FormFieldConfig | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export default FormField;
+
+////////////////////
+// Config by type //
+////////////////////
+
+export type CommonFormFieldConfig = {
+  required: boolean;
+};
+
+export type TextFormFieldConfig = CommonFormFieldConfig & {
+  minLength: number;
+  maxLength: number;
+};
+
+export type TextAreaFormFieldConfig = CommonFormFieldConfig & {
+  minLength: number;
+  maxLength: number;
+};
+
+export type NumberFormFieldConfig = CommonFormFieldConfig & {
+  min: number;
+  max: number;
+};
+
+export type DniFormFieldConfig = CommonFormFieldConfig;
+
+export type PhoneFormFieldConfig = CommonFormFieldConfig;
+
+export type EmailFormFieldConfig = CommonFormFieldConfig;
+
+export type CheckboxFormFieldConfig = CommonFormFieldConfig;
+
+export type SelectFormFieldConfig = CommonFormFieldConfig & {
+  options: string[];
+  multiple: boolean;
+};
+
+export type RadioFormFieldConfig = CommonFormFieldConfig & {
+  options: string[];
+  multiple: boolean;
+};
+
+export type TimeFormFieldConfig = CommonFormFieldConfig;
+
+export type DateFormFieldConfig = CommonFormFieldConfig;
+
+export type DateTimeFormFieldConfig = CommonFormFieldConfig;
+
+export type UsersFormFieldConfig = CommonFormFieldConfig & {
+  multiple: boolean;
+};

@@ -77,6 +77,7 @@ export class FormsFieldsService {
       data: {
         title: updateFormFieldDto.title,
         description: updateFormFieldDto.description,
+        config: updateFormFieldDto.config,
       },
     });
   }

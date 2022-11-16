@@ -1,13 +1,13 @@
 import { Entity, UUID } from '../../../common';
 
-import { FormFieldType } from '../submodules';
+import { FormFieldType, FormFieldConfig } from '../submodules';
 
 type Field = {
   id: UUID;
   type: FormFieldType;
   title: string;
   description: string | null;
-  config: object | null;
+  config: FormFieldConfig | null;
   createdAt: string;
   updatedAt: string;
 };

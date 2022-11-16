@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsObject, IsOptional } from 'class-validator';
 
 import { TrimParam } from '@/common';
 
@@ -12,6 +12,9 @@ class UpdateFormFieldDtoSchema {
   @IsOptional()
   @TrimParam()
   description?: string | null;
+
+  @IsObject()
+  config: object;
 }
 
 export class UpdateFormFieldDto extends PartialType(UpdateFormFieldDtoSchema) {}
