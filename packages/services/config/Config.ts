@@ -4,6 +4,7 @@ import { AuthService } from '../modules/auth';
 
 export type ConfigOptions = {
   baseURL: string;
+  token?: string;
 };
 
 export class Config {
@@ -15,12 +16,18 @@ export class Config {
     });
 
     this.axios.interceptors.request.use((config) => {
-      const token = AuthService.getToken();
-
-      if (token) {
+      if (options.token) {
         config.headers = {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${options.token}`,
         };
+      } else {
+        const token = AuthService.getToken();
+
+        if (token) {
+          config.headers = {
+            Authorization: `Bearer ${token}`,
+          };
+        }
       }
 
       return config;
