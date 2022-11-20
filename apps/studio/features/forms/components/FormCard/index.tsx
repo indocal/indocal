@@ -117,13 +117,6 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
 
               <ListItem disablePadding>
                 <ListItemText
-                  primary="Fecha de creación"
-                  secondary={new Date(form.createdAt).toLocaleDateString()}
-                />
-              </ListItem>
-
-              <ListItem disablePadding>
-                <ListItemText
                   primary="Estado"
                   secondary={translateFormStatus(form.status)}
                 />
@@ -133,6 +126,13 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
                 <ListItemText
                   primary="Visibilidad"
                   secondary={translateFormVisibility(form.visibility)}
+                />
+              </ListItem>
+
+              <ListItem disablePadding>
+                <ListItemText
+                  primary="Fecha de creación"
+                  secondary={new Date(form.createdAt).toLocaleDateString()}
                 />
               </ListItem>
 
