@@ -52,7 +52,7 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
               borderBottom: (theme) => `1px dashed ${theme.palette.divider}`,
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+            <Typography variant="h6" fontWeight="bolder">
               Permisos
             </Typography>
 

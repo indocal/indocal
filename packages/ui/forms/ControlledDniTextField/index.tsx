@@ -26,8 +26,11 @@ export interface ControlledDniTextFieldProps {
   name: string;
   label: string;
   control: Control;
-  controllerProps?: Omit<ControllerProps, 'name' | 'render'>;
-  textFieldProps?: TextFieldProps;
+  controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
+  textFieldProps?: Omit<
+    TextFieldProps,
+    'label' | 'value' | 'onChange' | 'error' | 'helperText' | 'InputProps'
+  >;
 }
 
 export const ControlledDniTextField: React.FC<ControlledDniTextFieldProps> = ({
@@ -39,6 +42,7 @@ export const ControlledDniTextField: React.FC<ControlledDniTextFieldProps> = ({
 }) => {
   return (
     <Controller
+      {...controllerProps}
       name={name}
       control={control}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
@@ -50,13 +54,11 @@ export const ControlledDniTextField: React.FC<ControlledDniTextFieldProps> = ({
           error={Boolean(error)}
           helperText={error?.message}
           InputProps={{
-            ...textFieldProps?.InputProps,
             inputComponent:
               DniMask as React.ElementType<InputBaseComponentProps>,
           }}
         />
       )}
-      {...controllerProps}
     />
   );
 };

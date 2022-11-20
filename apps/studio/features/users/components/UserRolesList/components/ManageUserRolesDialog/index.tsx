@@ -79,9 +79,7 @@ export const ManageUserRolesDialog: React.FC<ManageUserRolesDialogProps> = ({
     async (formData: FormData) => {
       const { user: updated, error } = await indocal.auth.users.update(
         user.id,
-        {
-          roles: formData.roles.map((role) => role.id),
-        }
+        { roles: formData.roles.map((role) => role.id) }
       );
 
       if (error) {

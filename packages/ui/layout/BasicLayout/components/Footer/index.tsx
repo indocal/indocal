@@ -35,12 +35,11 @@ export const BasicLayoutFooter: React.FC = () => (
 
     <Typography
       variant="caption"
+      align="center"
+      fontWeight="bolder"
       sx={{
         display: 'block',
-        width: '100%',
         marginTop: (theme) => theme.spacing(2),
-        textAlign: 'center',
-        fontWeight: 'bolder',
       }}
     >
       {`© ${new Date().getFullYear()} - Todos los derechos reservados`}

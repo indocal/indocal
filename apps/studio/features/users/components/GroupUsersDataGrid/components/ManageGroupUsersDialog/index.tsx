@@ -25,7 +25,7 @@ type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    members: zod
+    users: zod
       .object(
         {
           id: zod.string().uuid(),
@@ -75,7 +75,7 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      members: group.members,
+      users: group.members,
     },
   });
 
@@ -83,9 +83,7 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
     async (formData: FormData) => {
       const { group: updated, error } = await indocal.auth.groups.update(
         group.id,
-        {
-          members: formData.members.map((member) => member.id),
-        }
+        { members: formData.users.map((member) => member.id) }
       );
 
       if (error) {

@@ -64,7 +64,7 @@ export const UserModelPermissions: React.FC = () => {
   return (
     <Accordion defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography color="text.secondary" sx={{ fontWeight: 'bold' }}>
+        <Typography fontWeight="bolder" color="text.secondary">
           Usuarios
         </Typography>
       </AccordionSummary>

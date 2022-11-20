@@ -78,9 +78,7 @@ export const ManageUserGroupsDialog: React.FC<ManageUserGroupsDialogProps> = ({
     async (formData: FormData) => {
       const { user: updated, error } = await indocal.auth.users.update(
         user.id,
-        {
-          groups: formData.groups.map((group) => group.id),
-        }
+        { groups: formData.groups.map((group) => group.id) }
       );
 
       if (error) {

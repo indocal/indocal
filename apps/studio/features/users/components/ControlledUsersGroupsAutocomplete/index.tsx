@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
-import { Controller, Control } from 'react-hook-form';
+import {
+  Autocomplete,
+  TextField,
+  AutocompleteProps,
+  TextFieldProps,
+} from '@mui/material';
+import { Controller, Control, ControllerProps } from 'react-hook-form';
 
-import { useUsersGroups } from '@indocal/services';
+import { useUsersGroups, UserGroup } from '@indocal/services';
 
 export interface ControlledUsersGroupsAutocompleteProps {
   name: string;
@@ -11,11 +16,39 @@ export interface ControlledUsersGroupsAutocompleteProps {
   multiple?: boolean;
   disabled?: boolean;
   required?: boolean;
+  controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
+  autocompleteProps?: Omit<
+    AutocompleteProps<UserGroup, boolean, boolean, false>,
+    | 'multiple'
+    | 'loading'
+    | 'disabled'
+    | 'options'
+    | 'value'
+    | 'onChange'
+    | 'onInputChange'
+    | 'isOptionEqualToValue'
+    | 'getOptionLabel'
+    | 'renderInput'
+  >;
+  textFieldProps?: Omit<
+    TextFieldProps,
+    'required' | 'label' | 'error' | 'helperText'
+  >;
 }
 
 export const ControlledUsersGroupsAutocomplete: React.FC<
   ControlledUsersGroupsAutocompleteProps
-> = ({ name, label, control, multiple, disabled, required }) => {
+> = ({
+  name,
+  label,
+  control,
+  multiple,
+  disabled,
+  required,
+  controllerProps,
+  autocompleteProps,
+  textFieldProps,
+}) => {
   const [input, setInput] = useState<string>('');
 
   const {
@@ -35,6 +68,7 @@ export const ControlledUsersGroupsAutocomplete: React.FC<
 
   return (
     <Controller
+      {...controllerProps}
       name={name}
       control={control}
       render={({
@@ -42,11 +76,12 @@ export const ControlledUsersGroupsAutocomplete: React.FC<
         fieldState: { error: fieldError },
       }) => (
         <Autocomplete
+          {...autocompleteProps}
           multiple={multiple}
           loading={loading || validating}
           disabled={disabled}
           options={groups}
-          value={value ?? null}
+          value={multiple ? value ?? [] : value ?? null}
           onChange={(_, value) => onChange(value)}
           onInputChange={(_, value) => setInput(value)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -54,6 +89,7 @@ export const ControlledUsersGroupsAutocomplete: React.FC<
           renderInput={(params) => (
             <TextField
               {...params}
+              {...textFieldProps}
               required={required}
               label={label}
               error={Boolean(serviceError) || Boolean(fieldError)}

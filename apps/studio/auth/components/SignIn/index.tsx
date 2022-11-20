@@ -202,11 +202,9 @@ export const SignIn: React.FC = () => {
           <Typography
             variant="caption"
             align="center"
+            fontWeight="bolder"
             color="GrayText"
-            sx={{
-              display: 'block',
-              fontWeight: 'bolder',
-            }}
+            sx={{ display: 'block' }}
           >
             {`© ${new Date().getFullYear()} - Todos los derechos reservados`}
           </Typography>

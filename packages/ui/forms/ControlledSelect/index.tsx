@@ -14,11 +14,11 @@ export interface ControlledSelectProps {
   name: string;
   label: string;
   control: Control;
-  controllerProps?: Omit<ControllerProps, 'name' | 'render'>;
-  formControlProps?: FormControlProps;
+  controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
+  formControlProps?: Omit<FormControlProps, 'error'>;
   formHelperTextProps?: FormHelperTextProps;
   inputLabelProps?: InputLabelProps;
-  selectProps?: SelectProps;
+  selectProps?: Omit<SelectProps, 'label' | 'value' | 'onChange'>;
 }
 
 export const ControlledSelect: React.FC<
@@ -35,17 +35,18 @@ export const ControlledSelect: React.FC<
   children,
 }) => (
   <Controller
+    {...controllerProps}
     name={name}
     control={control}
     render={({ field: { value, onChange }, fieldState: { error } }) => (
-      <FormControl error={Boolean(error)} {...formControlProps}>
+      <FormControl {...formControlProps} error={Boolean(error)}>
         <InputLabel {...inputLabelProps}>{label}</InputLabel>
 
         <Select
+          {...selectProps}
           label={label}
           value={value}
           onChange={(value) => onChange(value)}
-          {...selectProps}
         >
           {children}
         </Select>
@@ -55,7 +56,6 @@ export const ControlledSelect: React.FC<
         </FormHelperText>
       </FormControl>
     )}
-    {...controllerProps}
   />
 );
 

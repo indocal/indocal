@@ -80,7 +80,6 @@ export type SelectFormFieldConfig = CommonFormFieldConfig & {
 
 export type RadioFormFieldConfig = CommonFormFieldConfig & {
   options: string[];
-  multiple: boolean;
 };
 
 export type TimeFormFieldConfig = CommonFormFieldConfig;

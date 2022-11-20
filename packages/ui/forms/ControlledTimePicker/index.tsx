@@ -6,9 +6,12 @@ export interface ControlledTimePickerProps {
   name: string;
   label: string;
   control: Control;
-  controllerProps?: Omit<ControllerProps, 'name' | 'render'>;
-  timePickerProps?: TimePickerProps<Date, Date>;
-  textFieldProps?: TextFieldProps;
+  controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
+  timePickerProps?: Omit<
+    TimePickerProps<Date, Date>,
+    'label' | 'value' | 'onChange' | 'renderInput'
+  >;
+  textFieldProps?: Omit<TextFieldProps, 'error' | 'helperText'>;
 }
 
 export const ControlledTimePicker: React.FC<ControlledTimePickerProps> = ({
@@ -20,25 +23,25 @@ export const ControlledTimePicker: React.FC<ControlledTimePickerProps> = ({
   textFieldProps,
 }) => (
   <Controller
+    {...controllerProps}
     name={name}
     control={control}
     render={({ field: { value, onChange }, fieldState: { error } }) => (
       <TimePicker
+        {...timePickerProps}
         label={label}
-        value={value}
+        value={value ?? null}
         onChange={(value) => onChange(value)}
         renderInput={(params) => (
           <TextField
             {...params}
+            {...textFieldProps}
             error={Boolean(error)}
             helperText={error?.message}
-            {...textFieldProps}
           />
         )}
-        {...timePickerProps}
       />
     )}
-    {...controllerProps}
   />
 );
 

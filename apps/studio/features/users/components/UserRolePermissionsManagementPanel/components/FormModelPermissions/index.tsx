@@ -105,7 +105,7 @@ export const FormModelPermissions: React.FC = () => {
   return (
     <Accordion defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography color="text.secondary" sx={{ fontWeight: 'bold' }}>
+        <Typography fontWeight="bolder" color="text.secondary">
           Formularios
         </Typography>
       </AccordionSummary>

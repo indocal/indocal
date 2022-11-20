@@ -20,10 +20,8 @@ import { useSnackbar } from 'notistack';
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { useForm, UUID, Form } from '@indocal/services';
 
-import { Pages } from '@/config';
-
 import { FormFieldsCardProvider, useFormFieldsCard } from './context';
-import { ManageFormFieldsDialog, AddFormFieldDialog } from './components';
+import { ManageFormFieldsDialog } from './components';
 
 export interface FormFieldsCardProps {
   form: UUID | Form;
@@ -34,11 +32,8 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
     typeof entity === 'string' ? entity : entity.id
   );
 
-  const {
-    isManageFormFieldsDialogOpen,
-    isAddFormFieldDialogOpen,
-    toggleManageFormFieldsDialog,
-  } = useFormFieldsCard();
+  const { isManageFormFieldsDialogOpen, toggleManageFormFieldsDialog } =
+    useFormFieldsCard();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -46,7 +41,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
     try {
       if (form) {
         await navigator.clipboard.writeText(
-          `${process.env.NEXT_PUBLIC_SITE_URL}${Pages.FORMS}/${form.id}`
+          `${process.env.NEXT_PUBLIC_SITE_URL}/${form.slug}`
         );
 
         enqueueSnackbar('Enlace copiado', {
@@ -85,8 +80,6 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
           {isManageFormFieldsDialogOpen && (
             <ManageFormFieldsDialog form={form} />
           )}
-
-          {isAddFormFieldDialogOpen && <AddFormFieldDialog form={form} />}
 
           {validating && (
             <LinearProgress
@@ -137,7 +130,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
             <ListItem dense divider>
               <ListItemText
                 primary="Enlance del formulario"
-                secondary={`${process.env.NEXT_PUBLIC_SITE_URL}${Pages.FORMS}/${form.slug}`}
+                secondary={`${process.env.NEXT_PUBLIC_SITE_URL}/${form.slug}`}
               />
             </ListItem>
 

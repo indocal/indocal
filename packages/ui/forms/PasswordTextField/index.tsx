@@ -15,6 +15,7 @@ export const PasswordTextField: React.FC<PasswordTextFieldProps> = (props) => {
 
   return (
     <TextField
+      {...props}
       type={show ? 'text' : 'password'}
       InputProps={{
         endAdornment: (
@@ -27,7 +28,6 @@ export const PasswordTextField: React.FC<PasswordTextFieldProps> = (props) => {
           </IconButton>
         ),
       }}
-      {...props}
     />
   );
 };

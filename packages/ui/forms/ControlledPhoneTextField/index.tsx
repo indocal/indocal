@@ -27,8 +27,11 @@ export interface ControlledPhoneTextFieldProps {
   name: string;
   label: string;
   control: Control;
-  controllerProps?: Omit<ControllerProps, 'name' | 'render'>;
-  textFieldProps?: TextFieldProps;
+  controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
+  textFieldProps?: Omit<
+    TextFieldProps,
+    'label' | 'value' | 'onChange' | 'error' | 'helperText' | 'InputProps'
+  >;
 }
 
 export const ControlledPhoneTextField: React.FC<
@@ -36,24 +39,24 @@ export const ControlledPhoneTextField: React.FC<
 > = ({ name, label, control, controllerProps, textFieldProps }) => {
   return (
     <Controller
+      {...controllerProps}
       name={name}
       control={control}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <TextField
           {...textFieldProps}
+          type="tel"
           label={label}
           value={value}
           onChange={onChange}
           error={Boolean(error)}
           helperText={error?.message}
           InputProps={{
-            ...textFieldProps?.InputProps,
             inputComponent:
               PhoneTextMask as React.ElementType<InputBaseComponentProps>,
           }}
         />
       )}
-      {...controllerProps}
     />
   );
 };

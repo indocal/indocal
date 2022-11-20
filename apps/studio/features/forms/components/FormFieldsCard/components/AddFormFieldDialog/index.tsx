@@ -67,7 +67,7 @@ const schema = zod.object(
       .string({
         description: 'Descripción del campo',
         required_error: 'Debe ingresar la descripción del campo',
-        invalid_type_error: 'Formato no campo',
+        invalid_type_error: 'Formato no válido',
       })
       .trim()
       .optional(),
