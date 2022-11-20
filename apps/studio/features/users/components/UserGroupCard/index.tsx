@@ -11,7 +11,10 @@ import {
   Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
-import { Handyman as ManageIcon, Edit as EditIcon } from '@mui/icons-material';
+import {
+  Launch as ViewDetailsIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { useUserGroup, getShortUUID, UUID, UserGroup } from '@indocal/services';
@@ -61,13 +64,13 @@ const UserGroupCard: React.FC<UserGroupCardProps> = ({ group: entity }) => {
             subheader="Detalles del grupo"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <NextLink passHref href={Pages.USERS_GROUPS}>
+                <NextLink passHref href={`${Pages.USERS_GROUPS}/${group.id}`}>
                   <IconButton
                     LinkComponent={MuiLink}
                     size="small"
                     sx={{ display: 'flex' }}
                   >
-                    <ManageIcon />
+                    <ViewDetailsIcon />
                   </IconButton>
                 </NextLink>
 

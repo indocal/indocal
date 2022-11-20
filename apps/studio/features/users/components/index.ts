@@ -17,4 +17,5 @@ export * from './UserGroupCard';
 export * from './UsersGroupsDataGrid';
 export * from './GenericUsersGroupsDataGrid';
 export * from './GroupUsersDataGrid';
+export * from './GroupFormsDataGrid';
 export * from './ControlledUsersGroupsAutocomplete';

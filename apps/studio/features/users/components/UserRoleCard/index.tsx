@@ -14,7 +14,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 import {
-  Handyman as ManageIcon,
+  Launch as ViewDetailsIcon,
   Edit as EditIcon,
   Security as SecurityIcon,
 } from '@mui/icons-material';
@@ -75,13 +75,13 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
             subheader="Detalles del rol"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <NextLink passHref href={Pages.USERS_ROLES}>
+                <NextLink passHref href={`${Pages.USERS_ROLES}/${role.id}`}>
                   <IconButton
                     LinkComponent={MuiLink}
                     size="small"
                     sx={{ display: 'flex' }}
                   >
-                    <ManageIcon />
+                    <ViewDetailsIcon />
                   </IconButton>
                 </NextLink>
 

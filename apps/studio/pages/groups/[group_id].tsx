@@ -4,7 +4,11 @@ import { Container, Grid } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useUserGroup, UUID } from '@indocal/services';
 
-import { UserGroupCard, GroupUsersDataGrid } from '@/features';
+import {
+  UserGroupCard,
+  GroupUsersDataGrid,
+  GroupFormsDataGrid,
+} from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -45,6 +49,12 @@ const UserGroupPage: EnhancedNextPage = () => {
             <Grid item xs={12} md={8}>
               <Widget>
                 <GroupUsersDataGrid group={group} />
+              </Widget>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Widget>
+                <GroupFormsDataGrid group={group} />
               </Widget>
             </Grid>
           </Grid>
