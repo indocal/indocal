@@ -144,7 +144,7 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
           <ControlledUsersAutocomplete
             required
             multiple
-            name="members"
+            name="users"
             label="Usuarios"
             control={control as unknown as Control}
             disabled={isSubmitting}

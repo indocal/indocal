@@ -1,11 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsUUID, IsOptional } from 'class-validator';
 import {
   FormStatus as DBFormStatusEnum,
   FormVisibility as DBFormVisibilityEnum,
 } from '@prisma/client';
 
-import { TrimParam } from '@/common';
+import { TrimParam, UUID } from '@/common';
 
 class UpdateFormDtoSchema {
   @IsString()
@@ -26,6 +26,9 @@ class UpdateFormDtoSchema {
 
   @IsEnum(DBFormVisibilityEnum)
   visibility: DBFormVisibilityEnum;
+
+  @IsUUID()
+  group: UUID;
 }
 
 export class UpdateFormDto extends PartialType(UpdateFormDtoSchema) {}

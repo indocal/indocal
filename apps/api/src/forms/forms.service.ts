@@ -15,6 +15,7 @@ export class FormsService {
         slug: createFormDto.slug,
         title: createFormDto.title,
         description: createFormDto.description,
+        group: { connect: { id: createFormDto.group } },
       },
     });
   }
@@ -45,6 +46,7 @@ export class FormsService {
         description: updateFormDto.description,
         status: updateFormDto.status,
         visibility: updateFormDto.visibility,
+        group: { connect: { id: updateFormDto.group } },
       },
     });
   }

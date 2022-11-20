@@ -12,7 +12,12 @@ import {
 } from '@nestjs/common';
 
 import { UUID } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import {
+  PoliciesGuard,
+  CheckPolicies,
+  Action,
+  UsersGroupsService,
+} from '@/auth';
 
 import FormsService from './forms.service';
 import { FormEntity } from './entities';
@@ -30,7 +35,8 @@ import { FormsFieldsService } from './submodules';
 export class FormsController {
   constructor(
     private formsService: FormsService,
-    private formsFieldsService: FormsFieldsService
+    private formsFieldsService: FormsFieldsService,
+    private usersGroupsService: UsersGroupsService
   ) {}
 
   @Post()
@@ -39,7 +45,11 @@ export class FormsController {
     const form = await this.formsService.create(createFormDto);
     const fields = await this.formsFieldsService.findAll(form);
 
-    return new FormEntity(form, fields);
+    const groups = await this.usersGroupsService.findMany({
+      where: { forms: { some: { id: form.id } } },
+    });
+
+    return new FormEntity(form, fields, groups.pop());
   }
 
   @Get('count')
@@ -69,7 +79,11 @@ export class FormsController {
       forms.map(async (form) => {
         const fields = await this.formsFieldsService.findAll(form);
 
-        return new FormEntity(form, fields);
+        const groups = await this.usersGroupsService.findMany({
+          where: { forms: { some: { id: form.id } } },
+        });
+
+        return new FormEntity(form, fields, groups.pop());
       })
     );
   }
@@ -82,7 +96,11 @@ export class FormsController {
     const form = await this.formsService.findUnique('id', id);
     const fields = await this.formsFieldsService.findAll(id);
 
-    return form ? new FormEntity(form, fields) : null;
+    const groups = await this.usersGroupsService.findMany({
+      where: { forms: { some: { id } } },
+    });
+
+    return form ? new FormEntity(form, fields, groups.pop()) : null;
   }
 
   @Patch(':id')
@@ -94,7 +112,11 @@ export class FormsController {
     const form = await this.formsService.update(id, updateFormDto);
     const fields = await this.formsFieldsService.findAll(form);
 
-    return new FormEntity(form, fields);
+    const groups = await this.usersGroupsService.findMany({
+      where: { forms: { some: { id: form.id } } },
+    });
+
+    return new FormEntity(form, fields, groups.pop());
   }
 
   @Delete(':id')
@@ -103,7 +125,11 @@ export class FormsController {
     const form = await this.formsService.delete(id);
     const fields = await this.formsFieldsService.findAll(form);
 
-    return new FormEntity(form, fields);
+    const groups = await this.usersGroupsService.findMany({
+      where: { forms: { some: { id: form.id } } },
+    });
+
+    return new FormEntity(form, fields, groups.pop());
   }
 }
 

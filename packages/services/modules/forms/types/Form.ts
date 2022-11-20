@@ -12,6 +12,14 @@ type Field = {
   updatedAt: string;
 };
 
+type Group = {
+  id: UUID;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type FormStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';
 export type FormVisibility = 'PUBLIC' | 'PROTECTED' | 'PRIVATE';
 
@@ -22,6 +30,7 @@ export interface Form extends Entity {
   status: FormStatus;
   visibility: FormVisibility;
   fields: Field[];
+  group: Group;
   createdAt: string;
   updatedAt: string;
 }

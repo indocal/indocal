@@ -1,6 +1,6 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsUUID, IsOptional } from 'class-validator';
 
-import { TrimParam } from '@/common';
+import { TrimParam, UUID } from '@/common';
 
 export class CreateFormDto {
   @IsString()
@@ -15,6 +15,9 @@ export class CreateFormDto {
   @IsOptional()
   @TrimParam()
   description?: string;
+
+  @IsUUID()
+  group: UUID;
 }
 
 export default CreateFormDto;

@@ -10,11 +10,12 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
+import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import { indocal } from '@/lib';
+import { ControlledUsersGroupsAutocomplete } from '@/features';
 import { Pages } from '@/config';
 
 import { useFormsDataGrid } from '../../context';
@@ -49,6 +50,21 @@ const schema = zod.object(
       })
       .trim()
       .optional(),
+
+    group: zod.object(
+      {
+        id: zod.string().uuid(),
+        name: zod.string(),
+        description: zod.string().nullable(),
+        createdAt: zod.string(),
+        updatedAt: zod.string(),
+      },
+      {
+        description: 'Grupo al que pertenece el formulario',
+        required_error: 'Debe seleccionar el grupo',
+        invalid_type_error: 'Formato no válido',
+      }
+    ),
   },
   {
     description: 'Datos del formulario',
@@ -67,6 +83,7 @@ export const AddFormDialog: React.FC = () => {
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
+    control,
     handleSubmit,
     reset,
   } = useForm<FormData>({
@@ -79,6 +96,7 @@ export const AddFormDialog: React.FC = () => {
         slug: formData.slug,
         title: formData.title,
         ...(formData.description && { description: formData.description }),
+        group: formData.group.id,
       });
 
       if (error) {
@@ -152,6 +170,14 @@ export const AddFormDialog: React.FC = () => {
             inputProps={register('description')}
             error={Boolean(errors.description)}
             helperText={errors.description?.message}
+          />
+
+          <ControlledUsersGroupsAutocomplete
+            required
+            name="group"
+            label="Grupo"
+            control={control as unknown as Control}
+            disabled={isSubmitting}
           />
         </Stack>
       </DialogContent>

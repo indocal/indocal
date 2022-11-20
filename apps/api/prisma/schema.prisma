@@ -65,6 +65,7 @@ model UserGroup {
   description String?
 
   members User[]
+  forms   Form[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -84,6 +85,9 @@ model Form {
   visibility FormVisibility @default(PRIVATE)
 
   fields FormField[]
+
+  group   UserGroup @relation(fields: [groupId], references: [id])
+  groupId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

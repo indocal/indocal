@@ -10,7 +10,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
-import { useForm } from 'react-hook-form';
+import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
@@ -25,6 +25,7 @@ import { indocal } from '@/lib';
 import {
   ControlledFormStatusSelect,
   ControlledFormVisibilitySelect,
+  ControlledUsersGroupsAutocomplete,
 } from '@/features';
 
 import { useFormCard } from '../../context';
@@ -82,6 +83,21 @@ const schema = zod
           }
         )
         .describe('Visibilidad del formulario'),
+
+      group: zod.object(
+        {
+          id: zod.string().uuid(),
+          name: zod.string(),
+          description: zod.string().nullable(),
+          createdAt: zod.string(),
+          updatedAt: zod.string(),
+        },
+        {
+          description: 'Grupo al que pertenece el formulario',
+          required_error: 'Debe seleccionar el grupo',
+          invalid_type_error: 'Formato no válido',
+        }
+      ),
     },
     {
       description: 'Datos del formulario',
@@ -116,6 +132,7 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
       description: form.description,
       status: form.status,
       visibility: form.visibility,
+      group: form.group,
     },
   });
 
@@ -127,6 +144,7 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
         description: formData.description || null,
         status: formData.status,
         visibility: formData.visibility,
+        group: formData.group?.id,
       });
 
       if (error) {
@@ -215,6 +233,14 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
             name="visibility"
             label="Visibilidad"
             control={control}
+            disabled={isSubmitting}
+          />
+
+          <ControlledUsersGroupsAutocomplete
+            required
+            name="group"
+            label="Grupo"
+            control={control as unknown as Control}
             disabled={isSubmitting}
           />
         </Stack>
