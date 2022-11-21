@@ -10,7 +10,6 @@ import {
   ListItemText,
   Button,
   IconButton,
-  Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
 import {
@@ -75,15 +74,14 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
             subheader="Detalles del rol"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <NextLink passHref href={`${Pages.USERS_ROLES}/${role.id}`}>
-                  <IconButton
-                    LinkComponent={MuiLink}
-                    size="small"
-                    sx={{ display: 'flex' }}
-                  >
-                    <ViewDetailsIcon />
-                  </IconButton>
-                </NextLink>
+                <IconButton
+                  LinkComponent={NextLink}
+                  href={`${Pages.USERS_ROLES}/${role.id}`}
+                  size="small"
+                  sx={{ display: 'flex' }}
+                >
+                  <ViewDetailsIcon />
+                </IconButton>
 
                 <IconButton size="small" onClick={toggleEditUserRoleDialog}>
                   <EditIcon />

@@ -8,7 +8,6 @@ import {
   ListItemSecondaryAction,
   Typography,
   IconButton,
-  Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
 import {
@@ -104,18 +103,14 @@ const UserGroupsList: React.FC<UserGroupsListProps> = ({ user: entity }) => {
                   <ListItemText>{group.name}</ListItemText>
 
                   <ListItemSecondaryAction>
-                    <NextLink
-                      passHref
+                    <IconButton
+                      LinkComponent={NextLink}
                       href={`${Pages.USERS_GROUPS}/${group.id}`}
+                      size="small"
+                      sx={{ display: 'flex' }}
                     >
-                      <IconButton
-                        LinkComponent={MuiLink}
-                        size="small"
-                        sx={{ display: 'flex' }}
-                      >
-                        <ViewDetailsIcon />
-                      </IconButton>
-                    </NextLink>
+                      <ViewDetailsIcon />
+                    </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
               ))

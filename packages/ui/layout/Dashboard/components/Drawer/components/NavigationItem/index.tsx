@@ -6,7 +6,6 @@ import {
   ListItemText,
   ListItemIcon,
   Tooltip,
-  Link as MuiLink,
   useTheme,
 } from '@mui/material';
 
@@ -55,57 +54,55 @@ export const DashboardDrawerNavigationItem: React.FC<
   );
 
   return (
-    <NextLink passHref href={item.href}>
-      <MuiLink color="inherit" underline="none">
-        <Tooltip
-          title={!isDrawerOpen ? item.label : ''}
-          placement={drawerPosition === 'left' ? 'right' : 'left'}
+    <Tooltip
+      title={!isDrawerOpen ? item.label : ''}
+      placement={drawerPosition === 'left' ? 'right' : 'left'}
+    >
+      <ListItemButton
+        LinkComponent={NextLink}
+        href={item.href}
+        sx={{
+          borderRadius: (theme) => theme.spacing(1),
+          ...(isDrawerOpen && {
+            margin: (theme) => theme.spacing(0.5, 1),
+          }),
+          ...(!isDrawerOpen && {
+            padding: (theme) => theme.spacing(1.5, 2),
+          }),
+          ...(nested && {
+            margin: (theme) => theme.spacing(0.5, 2),
+          }),
+        }}
+      >
+        <ListItemIcon
+          sx={{
+            display: 'flex',
+            minWidth: 'fit-content',
+            marginRight: (theme) => theme.spacing(2),
+            color: textColor,
+          }}
         >
-          <ListItemButton
-            sx={{
-              borderRadius: (theme) => theme.spacing(1),
-              ...(isDrawerOpen && {
-                margin: (theme) => theme.spacing(0.5, 1),
-              }),
-              ...(!isDrawerOpen && {
-                padding: (theme) => theme.spacing(1.5, 2),
-              }),
-              ...(nested && {
-                margin: (theme) => theme.spacing(0.5, 2),
-              }),
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                display: 'flex',
-                minWidth: 'fit-content',
-                marginRight: (theme) => theme.spacing(2),
-                color: textColor,
-              }}
-            >
-              {item.icon}
-            </ListItemIcon>
+          {item.icon}
+        </ListItemIcon>
 
-            {isDrawerOpen && (
-              <ListItemText
-                primary={item.label}
-                primaryTypographyProps={{
-                  sx: {
-                    color: textColor,
-                    ...(nested && {
-                      fontSize: (theme) => theme.typography.caption,
-                    }),
-                    ...(isCurrentPath && {
-                      fontWeight: 'bolder',
-                    }),
-                  },
-                }}
-              />
-            )}
-          </ListItemButton>
-        </Tooltip>
-      </MuiLink>
-    </NextLink>
+        {isDrawerOpen && (
+          <ListItemText
+            primary={item.label}
+            primaryTypographyProps={{
+              sx: {
+                color: textColor,
+                ...(nested && {
+                  fontSize: (theme) => theme.typography.caption,
+                }),
+                ...(isCurrentPath && {
+                  fontWeight: 'bolder',
+                }),
+              },
+            }}
+          />
+        )}
+      </ListItemButton>
+    </Tooltip>
   );
 };
 

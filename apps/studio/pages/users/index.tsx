@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { Container, Grid, Alert, Button, Link as MuiLink } from '@mui/material';
+import { Container, Grid, Alert, Button } from '@mui/material';
 import { Launch as ViewDetailsIcon } from '@mui/icons-material';
 
 import { Page, Widget } from '@indocal/ui';
@@ -17,16 +17,15 @@ const UsersPage: EnhancedNextPage = () => (
           <Alert
             severity="info"
             action={
-              <NextLink passHref href={Pages.USERS_ROLES}>
-                <Button
-                  LinkComponent={MuiLink}
-                  size="small"
-                  color="info"
-                  endIcon={<ViewDetailsIcon />}
-                >
-                  Administrar
-                </Button>
-              </NextLink>
+              <Button
+                LinkComponent={NextLink}
+                href={Pages.USERS_ROLES}
+                size="small"
+                color="info"
+                endIcon={<ViewDetailsIcon />}
+              >
+                Administrar
+              </Button>
             }
           >
             Roles / Permisos
@@ -37,16 +36,15 @@ const UsersPage: EnhancedNextPage = () => (
           <Alert
             severity="info"
             action={
-              <NextLink passHref href={Pages.USERS_GROUPS}>
-                <Button
-                  LinkComponent={MuiLink}
-                  size="small"
-                  color="info"
-                  endIcon={<ViewDetailsIcon />}
-                >
-                  Administrar
-                </Button>
-              </NextLink>
+              <Button
+                LinkComponent={NextLink}
+                href={Pages.USERS_GROUPS}
+                size="small"
+                color="info"
+                endIcon={<ViewDetailsIcon />}
+              >
+                Administrar
+              </Button>
             }
           >
             Grupos

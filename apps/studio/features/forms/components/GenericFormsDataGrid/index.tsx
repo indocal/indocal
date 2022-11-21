@@ -1,13 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import NextLink from 'next/link';
-import {
-  Box,
-  Paper,
-  Stack,
-  Typography,
-  IconButton,
-  Link as MuiLink,
-} from '@mui/material';
+import { Box, Paper, Stack, Typography, IconButton } from '@mui/material';
 import {
   Refresh as RefreshIcon,
   AddCircle as AddIcon,
@@ -89,15 +82,14 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
         disableExport: true,
         renderCell: ({ id }) => (
           <Stack direction="row" spacing={0.25}>
-            <NextLink passHref href={`${Pages.FORMS}/${id}`}>
-              <IconButton
-                LinkComponent={MuiLink}
-                size="small"
-                sx={{ display: 'flex' }}
-              >
-                <ViewDetailsIcon />
-              </IconButton>
-            </NextLink>
+            <IconButton
+              LinkComponent={NextLink}
+              href={`${Pages.FORMS}/${id}`}
+              size="small"
+              sx={{ display: 'flex' }}
+            >
+              <ViewDetailsIcon />
+            </IconButton>
 
             <IconButton
               size="small"

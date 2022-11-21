@@ -21,7 +21,12 @@ export const ErrorInfo: React.FC<ErrorInfoProps> = ({ error }) => (
     }}
   >
     <Box sx={{ maxWidth: (theme) => theme.spacing(10) }}>
-      <Image priority alt={error.message} src={warning} />
+      <Image
+        priority
+        alt={error.message}
+        src={warning}
+        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+      />
     </Box>
 
     <Typography

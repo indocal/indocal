@@ -47,7 +47,12 @@ export const NotFound: React.FC<NotFoundProps> = ({
       </Stack>
 
       <Box sx={{ maxWidth: (theme) => theme.spacing(22.5) }}>
-        <Image priority alt={caption} src={notFoundImage} />
+        <Image
+          priority
+          alt={caption}
+          src={notFoundImage}
+          style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+        />
       </Box>
 
       {fallbackUrl && (

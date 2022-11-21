@@ -8,7 +8,6 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
 import {
@@ -64,15 +63,14 @@ const UserGroupCard: React.FC<UserGroupCardProps> = ({ group: entity }) => {
             subheader="Detalles del grupo"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <NextLink passHref href={`${Pages.USERS_GROUPS}/${group.id}`}>
-                  <IconButton
-                    LinkComponent={MuiLink}
-                    size="small"
-                    sx={{ display: 'flex' }}
-                  >
-                    <ViewDetailsIcon />
-                  </IconButton>
-                </NextLink>
+                <IconButton
+                  LinkComponent={NextLink}
+                  href={`${Pages.USERS_GROUPS}/${group.id}`}
+                  size="small"
+                  sx={{ display: 'flex' }}
+                >
+                  <ViewDetailsIcon />
+                </IconButton>
 
                 <IconButton size="small" onClick={toggleEditUserGroupDialog}>
                   <EditIcon />

@@ -8,7 +8,6 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
 import {
@@ -70,15 +69,14 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
             subheader="Detalles del formulario"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <NextLink passHref href={`${Pages.FORMS}/${form.id}`}>
-                  <IconButton
-                    LinkComponent={MuiLink}
-                    size="small"
-                    sx={{ display: 'flex' }}
-                  >
-                    <ViewDetailsIcon />
-                  </IconButton>
-                </NextLink>
+                <IconButton
+                  LinkComponent={NextLink}
+                  href={`${Pages.FORMS}/${form.id}`}
+                  size="small"
+                  sx={{ display: 'flex' }}
+                >
+                  <ViewDetailsIcon />
+                </IconButton>
 
                 <IconButton size="small" onClick={toggleEditFormDialog}>
                   <EditIcon />

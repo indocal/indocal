@@ -21,7 +21,12 @@ export const NoData: React.FC<NoDataProps> = ({ message }) => (
     }}
   >
     <Box sx={{ maxWidth: (theme) => theme.spacing(10) }}>
-      <Image priority alt={message} src={notData} />
+      <Image
+        priority
+        alt={message || 'Sin datos'}
+        src={notData}
+        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+      />
     </Box>
 
     <Typography

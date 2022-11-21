@@ -8,7 +8,6 @@ import {
   ListItemSecondaryAction,
   Typography,
   IconButton,
-  Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
 import {
@@ -102,15 +101,14 @@ const UserRolesList: React.FC<UserRolesListProps> = ({ user: entity }) => {
                   <ListItemText primary={role.name} secondary={role.type} />
 
                   <ListItemSecondaryAction>
-                    <NextLink passHref href={`${Pages.USERS_ROLES}/${role.id}`}>
-                      <IconButton
-                        LinkComponent={MuiLink}
-                        size="small"
-                        sx={{ display: 'flex' }}
-                      >
-                        <ViewDetailsIcon />
-                      </IconButton>
-                    </NextLink>
+                    <IconButton
+                      LinkComponent={NextLink}
+                      href={`${Pages.USERS_ROLES}/${role.id}`}
+                      size="small"
+                      sx={{ display: 'flex' }}
+                    >
+                      <ViewDetailsIcon />
+                    </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
               ))

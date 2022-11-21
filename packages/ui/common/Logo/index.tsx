@@ -10,9 +10,9 @@ export interface LogoProps {
 export const Logo: React.FC<LogoProps> = ({ variant }) => (
   <Image
     priority
-    layout="fill"
-    alt="Logo"
+    alt="Logo INDOCAL"
     src={variant === 'full' ? logoFull : logoShort}
+    style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
   />
 );
 

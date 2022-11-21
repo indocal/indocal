@@ -9,7 +9,6 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
-  Link as MuiLink,
   LinearProgress,
 } from '@mui/material';
 import {
@@ -71,15 +70,14 @@ const UserCard: React.FC<UserCardProps> = ({ user: entity }) => {
             subheader="Detalles del usuario"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <NextLink passHref href={`${Pages.USERS}/${user.id}`}>
-                  <IconButton
-                    LinkComponent={MuiLink}
-                    size="small"
-                    sx={{ display: 'flex' }}
-                  >
-                    <ViewDetailsIcon />
-                  </IconButton>
-                </NextLink>
+                <IconButton
+                  LinkComponent={NextLink}
+                  href={`${Pages.USERS}/${user.id}`}
+                  size="small"
+                  sx={{ display: 'flex' }}
+                >
+                  <ViewDetailsIcon />
+                </IconButton>
 
                 <IconButton size="small" onClick={toggleEditUserDialog}>
                   <EditIcon />
