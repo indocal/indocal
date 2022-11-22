@@ -12,6 +12,7 @@ import {
   UserGroup,
   Form,
   FormField,
+  FormEntry,
   Event,
   EventGuest,
 } from '@prisma/client';
@@ -35,6 +36,7 @@ export type Subjects = PrismaSubjects<{
   userGroup: UserGroup;
   form: Form;
   formField: FormField;
+  formEntry: FormEntry;
   event: Event;
   eventGuest: EventGuest;
 }>;

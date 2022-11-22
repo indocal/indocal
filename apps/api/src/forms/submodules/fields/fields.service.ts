@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   Prisma,
   Form as DBFormModel,
-  FormField as DBFormFieldFieldModel,
+  FormField as DBFormFieldModel,
 } from '@prisma/client';
 
 import { PrismaService, UUID } from '@/common';
@@ -16,7 +16,7 @@ export class FormsFieldsService {
   async create(
     form: UUID | DBFormModel,
     createFormFieldDto: CreateFormFieldDto
-  ): Promise<DBFormFieldFieldModel> {
+  ): Promise<DBFormFieldModel> {
     const fields = await this.prismaService.formField.findMany({
       where: { form: { id: typeof form === 'string' ? form : form.id } },
       orderBy: { order: 'asc' },
@@ -49,7 +49,7 @@ export class FormsFieldsService {
     });
   }
 
-  async findAll(form: UUID | DBFormModel): Promise<DBFormFieldFieldModel[]> {
+  async findAll(form: UUID | DBFormModel): Promise<DBFormFieldModel[]> {
     return await this.prismaService.formField.findMany({
       where: {
         form: {
@@ -62,7 +62,7 @@ export class FormsFieldsService {
   async findUnique(
     identifier: keyof Prisma.FormFieldWhereUniqueInput,
     input: string
-  ): Promise<DBFormFieldFieldModel | null> {
+  ): Promise<DBFormFieldModel | null> {
     return await this.prismaService.formField.findUnique({
       where: { [identifier]: input },
     });
@@ -71,7 +71,7 @@ export class FormsFieldsService {
   async update(
     id: UUID,
     updateFormFieldDto: UpdateFormFieldDto
-  ): Promise<DBFormFieldFieldModel> {
+  ): Promise<DBFormFieldModel> {
     return await this.prismaService.formField.update({
       where: { id },
       data: {
@@ -82,7 +82,7 @@ export class FormsFieldsService {
     });
   }
 
-  async delete(id: UUID): Promise<DBFormFieldFieldModel> {
+  async delete(id: UUID): Promise<DBFormFieldModel> {
     return await this.prismaService.formField.delete({
       where: { id },
     });

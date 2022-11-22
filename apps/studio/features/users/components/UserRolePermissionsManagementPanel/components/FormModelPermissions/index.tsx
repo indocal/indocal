@@ -80,9 +80,41 @@ export const FormModelPermissions: React.FC = () => {
     [permissions?.formField]
   );
 
+  const formEntryItems = useMemo(
+    () => [
+      {
+        label: 'Contar',
+        action: 'count',
+        checked: Boolean(permissions?.formEntry?.count),
+      },
+      {
+        label: 'Leer',
+        action: 'read',
+        checked: Boolean(permissions?.formEntry?.read),
+      },
+      {
+        label: 'Crear',
+        action: 'create',
+        checked: Boolean(permissions?.formEntry?.create),
+      },
+      {
+        label: 'Modificar',
+        action: 'update',
+        checked: Boolean(permissions?.formEntry?.update),
+      },
+      {
+        label: 'Borrar',
+        action: 'delete',
+        checked: Boolean(permissions?.formEntry?.delete),
+      },
+    ],
+    [permissions?.formEntry]
+  );
+
   const allChecked =
     formItems.every((item) => item.checked) &&
-    formFieldItems.every((item) => item.checked);
+    formFieldItems.every((item) => item.checked) &&
+    formEntryItems.every((item) => item.checked);
 
   const toggleAll = useCallback(() => {
     if (allChecked) {
@@ -90,6 +122,10 @@ export const FormModelPermissions: React.FC = () => {
 
       formFieldItems.forEach(({ action }) =>
         togglePermission('formField', action)
+      );
+
+      formEntryItems.forEach(({ action }) =>
+        togglePermission('formEntry', action)
       );
     } else {
       formItems
@@ -99,8 +135,12 @@ export const FormModelPermissions: React.FC = () => {
       formFieldItems
         .filter(({ checked }) => !checked)
         .forEach(({ action }) => togglePermission('formField', action));
+
+      formEntryItems
+        .filter(({ checked }) => !checked)
+        .forEach(({ action }) => togglePermission('formEntry', action));
     }
-  }, [formItems, formFieldItems, allChecked, togglePermission]);
+  }, [formItems, formFieldItems, formEntryItems, allChecked, togglePermission]);
 
   return (
     <Accordion defaultExpanded>
@@ -119,7 +159,7 @@ export const FormModelPermissions: React.FC = () => {
           sx={{ marginBottom: (theme) => theme.spacing(1) }}
         >
           <Typography variant="caption" color="text.secondary">
-            [ form / formField ]
+            [ form / formField / formEntry ]
           </Typography>
 
           <Box
@@ -227,6 +267,55 @@ export const FormModelPermissions: React.FC = () => {
                         disabled={validating || saving}
                         checked={checked}
                         onChange={() => togglePermission('formField', action)}
+                      />
+                    }
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Stack>
+
+          <Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={1}
+            >
+              <Typography variant="caption" color="text.secondary">
+                formEntry
+              </Typography>
+
+              <Box
+                sx={{
+                  flex: 1,
+                  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+                }}
+              />
+            </Stack>
+
+            <Grid
+              container
+              justifyContent="center"
+              alignItems="center"
+              spacing={1}
+            >
+              {formEntryItems.map(({ label, action, checked }) => (
+                <Grid
+                  key={action}
+                  item
+                  container
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  xs
+                >
+                  <FormControlLabel
+                    label={label}
+                    control={
+                      <Checkbox
+                        disabled={validating || saving}
+                        checked={checked}
+                        onChange={() => togglePermission('formEntry', action)}
                       />
                     }
                   />

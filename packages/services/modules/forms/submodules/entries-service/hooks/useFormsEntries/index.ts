@@ -5,25 +5,25 @@ import qs from 'qs';
 import { ServiceError, createServiceError } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
-import { CountUsersGroupsParamsDto } from '../../types';
+import { FormEntry, FindManyFormsEntriesParamsDto } from '../../types';
 
-export interface UsersGroupsCountHookReturn {
+export interface FormsEntriessHookReturn {
   loading: boolean;
   validating: boolean;
-  count: number | null;
+  entries: FormEntry[];
   error: ServiceError | null;
   refetch: () => Promise<void>;
 }
 
-export function useUsersGroupsCount(
-  params?: CountUsersGroupsParamsDto
-): UsersGroupsCountHookReturn {
+export function useFormsEntriess(
+  params?: FindManyFormsEntriesParamsDto
+): FormsEntriessHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<number>(
+  const { isValidating, data, error, mutate } = useSWR<FormEntry[]>(
     params
-      ? `${ApiEndpoints.USERS_GROUPS_COUNT}?${query}`
-      : ApiEndpoints.USERS_GROUPS_COUNT
+      ? `${ApiEndpoints.FORMS_ENTRIES}?${query}`
+      : ApiEndpoints.FORMS_ENTRIES
   );
 
   const handleRefetch = useCallback(async () => {
@@ -33,10 +33,10 @@ export function useUsersGroupsCount(
   return {
     loading: typeof data === 'undefined' && !error,
     validating: isValidating,
-    count: data ?? null,
+    entries: data ?? [],
     error: error ? createServiceError(error) : null,
     refetch: handleRefetch,
   };
 }
 
-export default useUsersGroupsCount;
+export default useFormsEntriess;

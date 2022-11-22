@@ -6,10 +6,15 @@ import { AuthModule, UsersGroupsModule } from '@/auth';
 import FormsController from './forms.controller';
 import FormsService from './forms.service';
 
-import { FormsFieldsModule } from './submodules';
+import { FormsFieldsModule, FormsEntriesModule } from './submodules';
 
 @Module({
-  imports: [AuthModule, UsersGroupsModule, FormsFieldsModule],
+  imports: [
+    AuthModule,
+    FormsFieldsModule,
+    FormsEntriesModule,
+    UsersGroupsModule,
+  ],
   controllers: [FormsController],
   providers: [PrismaService, FormsService],
   exports: [FormsService],

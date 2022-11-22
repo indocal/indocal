@@ -12,6 +12,8 @@ export enum ApiEndpoints {
 
   FORMS = '/forms',
   FORMS_COUNT = '/forms/count',
+  FORMS_ENTRIES = '/entries',
+  FORMS_ENTRIES_COUNT = '/entries/count',
 
   EVENTS = '/events',
   EVENTS_COUNT = '/events/count',

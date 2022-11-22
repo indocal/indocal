@@ -5,9 +5,9 @@ import qs from 'qs';
 import { ServiceError, createServiceError } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
-import { CountUsersGroupsParamsDto } from '../../types';
+import { CountFormsEntriesParamsDto } from '../../types';
 
-export interface UsersGroupsCountHookReturn {
+export interface FormsEntriesCountHookReturn {
   loading: boolean;
   validating: boolean;
   count: number | null;
@@ -15,15 +15,15 @@ export interface UsersGroupsCountHookReturn {
   refetch: () => Promise<void>;
 }
 
-export function useUsersGroupsCount(
-  params?: CountUsersGroupsParamsDto
-): UsersGroupsCountHookReturn {
+export function useFormsEntriesCount(
+  params?: CountFormsEntriesParamsDto
+): FormsEntriesCountHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
   const { isValidating, data, error, mutate } = useSWR<number>(
     params
-      ? `${ApiEndpoints.USERS_GROUPS_COUNT}?${query}`
-      : ApiEndpoints.USERS_GROUPS_COUNT
+      ? `${ApiEndpoints.FORMS_ENTRIES_COUNT}?${query}`
+      : ApiEndpoints.FORMS_ENTRIES_COUNT
   );
 
   const handleRefetch = useCallback(async () => {
@@ -39,4 +39,4 @@ export function useUsersGroupsCount(
   };
 }
 
-export default useUsersGroupsCount;
+export default useFormsEntriesCount;
