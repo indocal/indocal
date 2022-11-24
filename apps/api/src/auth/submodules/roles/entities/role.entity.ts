@@ -10,25 +10,26 @@ import { Entity, UUID } from '@/common';
 import { UserRolePermissionEntity } from '../../permissions';
 import { UserEntity } from '../../users';
 
+type Include = Partial<{
+  permissions: DBUserRolePermissionModel[];
+  users: DBUserModel[];
+}>;
+
 export class UserRoleEntity implements Entity, DBUserRoleModel {
   permissions?: UserRolePermissionEntity[];
   users?: UserEntity[];
 
-  constructor(
-    role: DBUserRoleModel,
-    permissions?: DBUserRolePermissionModel[],
-    users?: DBUserModel[]
-  ) {
+  constructor(role: DBUserRoleModel, include?: Include) {
     Object.assign(this, role);
 
-    if (permissions) {
-      this.permissions = permissions.map(
+    if (include?.permissions) {
+      this.permissions = include.permissions.map(
         (permission) => new UserRolePermissionEntity(permission)
       );
     }
 
-    if (users) {
-      this.users = users.map((user) => new UserEntity(user));
+    if (include?.users) {
+      this.users = include.users.map((user) => new UserEntity(user));
     }
   }
 

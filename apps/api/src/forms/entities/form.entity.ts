@@ -12,25 +12,26 @@ import { UserGroupEntity } from '@/auth';
 
 import { FormFieldEntity } from '../submodules';
 
+type Include = Partial<{
+  fields?: DBFormFieldModel[];
+  group?: DBUserGroupModel;
+}>;
+
 export class FormEntity implements Entity, DBFormModel {
   fields?: FormFieldEntity[];
   group?: UserGroupEntity;
 
-  constructor(
-    form: DBFormModel,
-    fields?: DBFormFieldModel[],
-    group?: DBUserGroupModel
-  ) {
+  constructor(form: DBFormModel, include?: Include) {
     Object.assign(this, form);
 
-    if (fields) {
-      this.fields = fields
+    if (include?.fields) {
+      this.fields = include.fields
         .map((field) => new FormFieldEntity(field))
         .sort((a, b) => (a.order === b.order ? 0 : a.order > b.order ? 1 : -1));
     }
 
-    if (group) {
-      this.group = new UserGroupEntity(group);
+    if (include?.group) {
+      this.group = new UserGroupEntity(include.group);
     }
   }
 

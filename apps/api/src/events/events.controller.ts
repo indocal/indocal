@@ -39,7 +39,7 @@ export class EventsController {
     const event = await this.eventsService.create(createEventDto);
     const guests = await this.eventsGuestsService.findAll(event);
 
-    return new EventEntity(event, guests);
+    return new EventEntity(event, { guests });
   }
 
   @Get('count')
@@ -69,7 +69,7 @@ export class EventsController {
       events.map(async (event) => {
         const guests = await this.eventsGuestsService.findAll(event);
 
-        return new EventEntity(event, guests);
+        return new EventEntity(event, { guests });
       })
     );
   }
@@ -79,10 +79,10 @@ export class EventsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<EventEntity | null> {
-    const event = await this.eventsService.findUnique('id', id);
+    const event = await this.eventsService.findUnique({ id });
     const guests = await this.eventsGuestsService.findAll(id);
 
-    return event ? new EventEntity(event, guests) : null;
+    return event ? new EventEntity(event, { guests }) : null;
   }
 
   @Patch(':id')
@@ -94,7 +94,7 @@ export class EventsController {
     const event = await this.eventsService.update(id, updateEventDto);
     const guests = await this.eventsGuestsService.findAll(event);
 
-    return new EventEntity(event, guests);
+    return new EventEntity(event, { guests });
   }
 
   @Delete(':id')
@@ -103,7 +103,7 @@ export class EventsController {
     const event = await this.eventsService.delete(id);
     const guests = await this.eventsGuestsService.findAll(event);
 
-    return new EventEntity(event, guests);
+    return new EventEntity(event, { guests });
   }
 }
 

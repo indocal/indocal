@@ -11,7 +11,7 @@ class UpdateFormFieldDtoSchema {
   @IsString()
   @IsOptional()
   @TrimParam()
-  description?: string | null;
+  description: string | null;
 
   @IsObject()
   config: object;

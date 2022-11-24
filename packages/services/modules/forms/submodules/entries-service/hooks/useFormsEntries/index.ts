@@ -7,7 +7,7 @@ import { ApiEndpoints } from '../../../../../../config';
 
 import { FormEntry, FindManyFormsEntriesParamsDto } from '../../types';
 
-export interface FormsEntriessHookReturn {
+export interface FormsEntriesHookReturn {
   loading: boolean;
   validating: boolean;
   entries: FormEntry[];
@@ -15,9 +15,9 @@ export interface FormsEntriessHookReturn {
   refetch: () => Promise<void>;
 }
 
-export function useFormsEntriess(
+export function useFormsEntries(
   params?: FindManyFormsEntriesParamsDto
-): FormsEntriessHookReturn {
+): FormsEntriesHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
   const { isValidating, data, error, mutate } = useSWR<FormEntry[]>(
@@ -39,4 +39,4 @@ export function useFormsEntriess(
   };
 }
 
-export default useFormsEntriess;
+export default useFormsEntries;

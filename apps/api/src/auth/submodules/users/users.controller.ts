@@ -19,6 +19,9 @@ import {
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
+import UsersRolesService from '../roles/roles.service';
+import UsersGroupsService from '../groups/groups.service';
+
 import UsersService from './users.service';
 import { UserEntity } from './entities';
 import {
@@ -27,9 +30,6 @@ import {
   CreateUserDto,
   UpdateUserDto,
 } from './dto';
-
-import UsersRolesService from '../roles/roles.service';
-import UsersGroupsService from '../groups/groups.service';
 
 @Controller('auth/users')
 @UseGuards(PoliciesGuard)
@@ -45,15 +45,16 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     const user = await this.usersService.create(createUserDto);
 
-    const roles = await this.usersRolesService.findMany({
-      where: { users: { some: { id: user.id } } },
-    });
+    const [roles, groups] = await Promise.all([
+      this.usersRolesService.findMany({
+        where: { users: { some: { id: user.id } } },
+      }),
+      this.usersGroupsService.findMany({
+        where: { members: { some: { id: user.id } } },
+      }),
+    ]);
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { members: { some: { id: user.id } } },
-    });
-
-    return new UserEntity(user, roles, groups);
+    return new UserEntity(user, { roles, groups });
   }
 
   @Get('count')
@@ -81,15 +82,16 @@ export class UsersController {
 
     return await Promise.all(
       users.map(async (user) => {
-        const roles = await this.usersRolesService.findMany({
-          where: { users: { some: { id: user.id } } },
-        });
+        const [roles, groups] = await Promise.all([
+          this.usersRolesService.findMany({
+            where: { users: { some: { id: user.id } } },
+          }),
+          this.usersGroupsService.findMany({
+            where: { members: { some: { id: user.id } } },
+          }),
+        ]);
 
-        const groups = await this.usersGroupsService.findMany({
-          where: { members: { some: { id: user.id } } },
-        });
-
-        return new UserEntity(user, roles, groups);
+        return new UserEntity(user, { roles, groups });
       })
     );
   }
@@ -99,17 +101,18 @@ export class UsersController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<UserEntity | null> {
-    const user = await this.usersService.findUnique('id', id);
+    const user = await this.usersService.findUnique({ id });
 
-    const roles = await this.usersRolesService.findMany({
-      where: { users: { some: { id } } },
-    });
+    const [roles, groups] = await Promise.all([
+      this.usersRolesService.findMany({
+        where: { users: { some: { id } } },
+      }),
+      this.usersGroupsService.findMany({
+        where: { members: { some: { id } } },
+      }),
+    ]);
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { members: { some: { id } } },
-    });
-
-    return user ? new UserEntity(user, roles, groups) : null;
+    return user ? new UserEntity(user, { roles, groups }) : null;
   }
 
   @Patch(':id')
@@ -120,15 +123,16 @@ export class UsersController {
   ): Promise<UserEntity> {
     const user = await this.usersService.update(id, updateUserDto);
 
-    const roles = await this.usersRolesService.findMany({
-      where: { users: { some: { id: user.id } } },
-    });
+    const [roles, groups] = await Promise.all([
+      this.usersRolesService.findMany({
+        where: { users: { some: { id: user.id } } },
+      }),
+      this.usersGroupsService.findMany({
+        where: { members: { some: { id: user.id } } },
+      }),
+    ]);
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { members: { some: { id: user.id } } },
-    });
-
-    return new UserEntity(user, roles, groups);
+    return new UserEntity(user, { roles, groups });
   }
 
   @Delete(':id')
@@ -136,15 +140,16 @@ export class UsersController {
   async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<UserEntity> {
     const user = await this.usersService.delete(id);
 
-    const roles = await this.usersRolesService.findMany({
-      where: { users: { some: { id: user.id } } },
-    });
+    const [roles, groups] = await Promise.all([
+      this.usersRolesService.findMany({
+        where: { users: { some: { id: user.id } } },
+      }),
+      this.usersGroupsService.findMany({
+        where: { members: { some: { id: user.id } } },
+      }),
+    ]);
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { members: { some: { id: user.id } } },
-    });
-
-    return new UserEntity(user, roles, groups);
+    return new UserEntity(user, { roles, groups });
   }
 }
 

@@ -22,7 +22,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: AuthenticatedUser): Promise<AuthenticatedUser> {
-    const user = await this.usersService.findUnique('id', payload.id);
+    const user = await this.usersService.findUnique({ id: payload.id });
 
     if (!user) throw new InvalidCredentialsException();
     if (user.status === 'DISABLED') throw new DisabledUserException();

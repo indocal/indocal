@@ -19,7 +19,7 @@ class UpdateFormDtoSchema {
   @IsString()
   @IsOptional()
   @TrimParam()
-  description?: string | null;
+  description: string | null;
 
   @IsEnum(DBFormStatusEnum)
   status: DBFormStatusEnum;

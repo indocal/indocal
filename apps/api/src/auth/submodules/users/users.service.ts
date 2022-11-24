@@ -32,12 +32,9 @@ export class UsersService {
   }
 
   async findUnique(
-    identifier: keyof Prisma.UserWhereUniqueInput,
-    input: string
+    input: Prisma.UserWhereUniqueInput
   ): Promise<DBUserModel | null> {
-    return await this.prismaService.user.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.user.findUnique({ where: input });
   }
 
   async update(id: UUID, updateUserDto: UpdateUserDto): Promise<DBUserModel> {

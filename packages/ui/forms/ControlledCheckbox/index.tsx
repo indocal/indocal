@@ -62,7 +62,6 @@ export const ControlledCheckbox: React.FC<ControlledCheckboxProps> = ({
             }
             sx={{
               ...(error && { color: (theme) => theme.palette.error.main }),
-
               ...formControlLabelProps?.sx,
             }}
           />

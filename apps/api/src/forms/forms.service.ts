@@ -29,12 +29,9 @@ export class FormsService {
   }
 
   async findUnique(
-    identifier: keyof Prisma.FormWhereUniqueInput,
-    input: string
+    input: Prisma.FormWhereUniqueInput
   ): Promise<DBFormModel | null> {
-    return await this.prismaService.form.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.form.findUnique({ where: input });
   }
 
   async update(id: UUID, updateFormDto: UpdateFormDto): Promise<DBFormModel> {

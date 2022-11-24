@@ -88,7 +88,7 @@ model Form {
   fields  FormField[]
   entries FormEntry[]
 
-  group   UserGroup @relation(fields: [groupId], references: [id])
+  group   UserGroup @relation(fields: [groupId], references: [id], onDelete: Restrict)
   groupId String
 
   createdAt DateTime @default(now())
@@ -154,11 +154,11 @@ model FormEntry {
 
   answers Json[] @default([]) // Array<{ field: FormField, content: unknown }>
 
-  form   Form   @relation(fields: [formId], references: [id])
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
   formId String
 
-  sentBy   User?   @relation(fields: [sentById], references: [id])
-  sentById String?
+  answeredBy   User?   @relation(fields: [answeredById], references: [id], onDelete: Restrict)
+  answeredById String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

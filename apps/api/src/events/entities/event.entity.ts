@@ -8,14 +8,18 @@ import { Entity, UUID } from '@/common';
 
 import { EventGuestEntity } from '../submodules';
 
+type Include = Partial<{
+  guests: DBEventGuestModel[];
+}>;
+
 export class EventEntity implements Entity, DBEventModel {
   guests?: EventGuestEntity[];
 
-  constructor(event: DBEventModel, guests?: DBEventGuestModel[]) {
+  constructor(event: DBEventModel, include?: Include) {
     Object.assign(this, event);
 
-    if (guests) {
-      this.guests = guests.map((guest) => new EventGuestEntity(guest));
+    if (include?.guests) {
+      this.guests = include.guests.map((guest) => new EventGuestEntity(guest));
     }
   }
 

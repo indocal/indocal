@@ -16,7 +16,9 @@ export class FormsEntriesService {
       data: {
         answers: createFormEntryDto.answers,
         form: { connect: { id: createFormEntryDto.form } },
-        sentBy: { connect: { id: createFormEntryDto.sentBy } },
+        ...(createFormEntryDto.answeredBy && {
+          answeredBy: { connect: { id: createFormEntryDto.answeredBy } },
+        }),
       },
     });
   }
@@ -32,12 +34,9 @@ export class FormsEntriesService {
   }
 
   async findUnique(
-    identifier: keyof Prisma.FormEntryWhereUniqueInput,
-    input: string
+    input: Prisma.FormEntryWhereUniqueInput
   ): Promise<DBFormEntryModel | null> {
-    return await this.prismaService.formEntry.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.formEntry.findUnique({ where: input });
   }
 
   async delete(id: UUID): Promise<DBFormEntryModel> {

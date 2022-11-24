@@ -31,12 +31,9 @@ export class UsersGroupsService {
   }
 
   async findUnique(
-    identifier: keyof Prisma.UserGroupWhereUniqueInput,
-    input: string
+    input: Prisma.UserGroupWhereUniqueInput
   ): Promise<DBUserGroupModel | null> {
-    return await this.prismaService.userGroup.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.userGroup.findUnique({ where: input });
   }
 
   async update(

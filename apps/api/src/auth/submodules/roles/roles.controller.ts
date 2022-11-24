@@ -19,6 +19,9 @@ import {
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
+import UsersRolesPermissionsService from '../permissions/permissions.service';
+import UsersService from '../users/users.service';
+
 import UsersRolesService from './roles.service';
 import { UserRoleEntity } from './entities';
 import {
@@ -27,9 +30,6 @@ import {
   CreateUserRoleDto,
   UpdateUserRoleDto,
 } from './dto';
-
-import UsersRolesPermissionsService from '../permissions/permissions.service';
-import UsersService from '../users/users.service';
 
 @Controller('auth/roles')
 @UseGuards(PoliciesGuard)
@@ -46,13 +46,15 @@ export class UsersRolesController {
     @Body() createUserRoleDto: CreateUserRoleDto
   ): Promise<UserRoleEntity> {
     const role = await this.usersRolesService.create(createUserRoleDto);
-    const permissions = await this.usersRolesPermissionsService.findAll(role);
 
-    const users = await this.usersService.findMany({
-      where: { roles: { some: { id: role.id } } },
-    });
+    const [permissions, users] = await Promise.all([
+      this.usersRolesPermissionsService.findAll(role),
+      this.usersService.findMany({
+        where: { roles: { some: { id: role.id } } },
+      }),
+    ]);
 
-    return new UserRoleEntity(role, permissions, users);
+    return new UserRoleEntity(role, { permissions, users });
   }
 
   @Get('count')
@@ -80,15 +82,14 @@ export class UsersRolesController {
 
     return await Promise.all(
       roles.map(async (role) => {
-        const permissions = await this.usersRolesPermissionsService.findAll(
-          role
-        );
+        const [permissions, users] = await Promise.all([
+          this.usersRolesPermissionsService.findAll(role),
+          this.usersService.findMany({
+            where: { roles: { some: { id: role.id } } },
+          }),
+        ]);
 
-        const users = await this.usersService.findMany({
-          where: { roles: { some: { id: role.id } } },
-        });
-
-        return new UserRoleEntity(role, permissions, users);
+        return new UserRoleEntity(role, { permissions, users });
       })
     );
   }
@@ -98,14 +99,16 @@ export class UsersRolesController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<UserRoleEntity | null> {
-    const role = await this.usersRolesService.findUnique('id', id);
-    const permissions = await this.usersRolesPermissionsService.findAll(id);
+    const role = await this.usersRolesService.findUnique({ id });
 
-    const users = await this.usersService.findMany({
-      where: { roles: { some: { id } } },
-    });
+    const [permissions, users] = await Promise.all([
+      this.usersRolesPermissionsService.findAll(id),
+      this.usersService.findMany({
+        where: { roles: { some: { id } } },
+      }),
+    ]);
 
-    return role ? new UserRoleEntity(role, permissions, users) : null;
+    return role ? new UserRoleEntity(role, { permissions, users }) : null;
   }
 
   @Patch(':id')
@@ -115,26 +118,30 @@ export class UsersRolesController {
     @Body() updateUserRoleDto: UpdateUserRoleDto
   ): Promise<UserRoleEntity> {
     const role = await this.usersRolesService.update(id, updateUserRoleDto);
-    const permissions = await this.usersRolesPermissionsService.findAll(role);
 
-    const users = await this.usersService.findMany({
-      where: { roles: { some: { id: role.id } } },
-    });
+    const [permissions, users] = await Promise.all([
+      this.usersRolesPermissionsService.findAll(role),
+      this.usersService.findMany({
+        where: { roles: { some: { id: role.id } } },
+      }),
+    ]);
 
-    return new UserRoleEntity(role, permissions, users);
+    return new UserRoleEntity(role, { permissions, users });
   }
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'userRole'))
   async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<UserRoleEntity> {
     const role = await this.usersRolesService.delete(id);
-    const permissions = await this.usersRolesPermissionsService.findAll(role);
 
-    const users = await this.usersService.findMany({
-      where: { roles: { some: { id: role.id } } },
-    });
+    const [permissions, users] = await Promise.all([
+      this.usersRolesPermissionsService.findAll(role),
+      this.usersService.findMany({
+        where: { roles: { some: { id: role.id } } },
+      }),
+    ]);
 
-    return new UserRoleEntity(role, permissions, users);
+    return new UserRoleEntity(role, { permissions, users });
   }
 }
 

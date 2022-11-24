@@ -7,14 +7,18 @@ import { Entity, UUID } from '@/common';
 
 import { UserEntity } from '../../users';
 
+type Include = Partial<{
+  members: DBUserModel[];
+}>;
+
 export class UserGroupEntity implements Entity, DBUserGroupModel {
   members?: UserEntity[];
 
-  constructor(group: DBUserGroupModel, members?: DBUserModel[]) {
+  constructor(group: DBUserGroupModel, include?: Include) {
     Object.assign(this, group);
 
-    if (members) {
-      this.members = members.map((member) => new UserEntity(member));
+    if (include?.members) {
+      this.members = include.members.map((member) => new UserEntity(member));
     }
   }
 

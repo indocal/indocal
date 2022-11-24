@@ -20,6 +20,8 @@ import { useSnackbar } from 'notistack';
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { useForm, UUID, Form } from '@indocal/services';
 
+import { Pages } from '@/config';
+
 import { FormFieldsCardProvider, useFormFieldsCard } from './context';
 import { ManageFormFieldsDialog } from './components';
 
@@ -41,7 +43,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
     try {
       if (form) {
         await navigator.clipboard.writeText(
-          `${process.env.NEXT_PUBLIC_SITE_URL}/${form.slug}`
+          `${process.env.NEXT_PUBLIC_SITE_URL}${Pages.FORMS_PREVIEW}/${form.id}`
         );
 
         enqueueSnackbar('Enlace copiado', {
@@ -130,7 +132,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
             <ListItem dense divider>
               <ListItemText
                 primary="Enlance del formulario"
-                secondary={`${process.env.NEXT_PUBLIC_SITE_URL}/${form.slug}`}
+                secondary={`${process.env.NEXT_PUBLIC_SITE_URL}${Pages.FORMS_PREVIEW}/${form.id}`}
               />
             </ListItem>
 

@@ -11,7 +11,7 @@ class UpdateUserGroupDtoSchema {
   @IsString()
   @IsOptional()
   @TrimParam()
-  description?: string | null;
+  description: string | null;
 
   @IsUUID('all', { each: true })
   members: UUID[];

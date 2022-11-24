@@ -11,7 +11,7 @@ export class CreateFormEntryDto {
 
   @IsUUID()
   @IsOptional()
-  sentBy?: UUID;
+  answeredBy?: UUID;
 }
 
 export default CreateFormEntryDto;

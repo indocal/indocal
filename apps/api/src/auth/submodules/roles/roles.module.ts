@@ -4,11 +4,11 @@ import { PrismaService } from '@/common';
 
 import { AbilityFactory } from '../../strategies/attribute-based-access-control';
 
-import UsersRolesController from './roles.controller';
-import UsersRolesService from './roles.service';
-
 import { UsersRolesPermissionsModule } from '../permissions';
 import { UsersModule } from '../users';
+
+import UsersRolesController from './roles.controller';
+import UsersRolesService from './roles.service';
 
 @Module({
   imports: [UsersRolesPermissionsModule, forwardRef(() => UsersModule)],

@@ -26,9 +26,7 @@ export class EventsGuestsService {
         from: createEventGuestDto.from,
         position: createEventGuestDto.position,
         event: {
-          connect: {
-            id: typeof event === 'string' ? event : event.id,
-          },
+          connect: { id: typeof event === 'string' ? event : event.id },
         },
       },
     });
@@ -36,31 +34,20 @@ export class EventsGuestsService {
 
   async count(event: UUID | DBEventModel): Promise<number> {
     return await this.prismaService.eventGuest.count({
-      where: {
-        event: {
-          id: typeof event === 'string' ? event : event.id,
-        },
-      },
+      where: { event: { id: typeof event === 'string' ? event : event.id } },
     });
   }
 
   async findAll(event: UUID | DBEventModel): Promise<DBEventGuestModel[]> {
     return await this.prismaService.eventGuest.findMany({
-      where: {
-        event: {
-          id: typeof event === 'string' ? event : event.id,
-        },
-      },
+      where: { event: { id: typeof event === 'string' ? event : event.id } },
     });
   }
 
   async findUnique(
-    identifier: keyof Prisma.EventGuestWhereUniqueInput,
-    input: string
+    input: Prisma.EventGuestWhereUniqueInput
   ): Promise<DBEventGuestModel | null> {
-    return await this.prismaService.eventGuest.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.eventGuest.findUnique({ where: input });
   }
 
   async update(
@@ -81,9 +68,7 @@ export class EventsGuestsService {
   }
 
   async delete(id: UUID): Promise<DBEventGuestModel> {
-    return await this.prismaService.eventGuest.delete({
-      where: { id },
-    });
+    return await this.prismaService.eventGuest.delete({ where: { id } });
   }
 }
 

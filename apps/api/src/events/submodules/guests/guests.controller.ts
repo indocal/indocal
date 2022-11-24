@@ -55,7 +55,7 @@ export class EventsGuestsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<EventGuestEntity | null> {
-    const guest = await this.eventsGuestsService.findUnique('id', id);
+    const guest = await this.eventsGuestsService.findUnique({ id });
 
     return guest ? new EventGuestEntity(guest) : null;
   }

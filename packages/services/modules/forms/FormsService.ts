@@ -11,7 +11,7 @@ import {
   FindManyFormsParamsDto,
 } from './types';
 
-import { FormsFieldsService } from './submodules';
+import { FormsFieldsService, FormsEntriesService } from './submodules';
 
 export interface CreateFormReturn {
   form: Form | null;
@@ -45,9 +45,11 @@ export interface DeleteFormReturn {
 
 export class FormsService {
   fields: FormsFieldsService;
+  entries: FormsEntriesService;
 
   constructor(private config: Config) {
     this.fields = new FormsFieldsService(config);
+    this.entries = new FormsEntriesService(config);
   }
 
   async create(data: CreateFormDto): Promise<CreateFormReturn> {

@@ -11,22 +11,25 @@ import { UserEntity } from '@/auth';
 
 import { FormEntity } from '../../../entities';
 
+type Include = Partial<{
+  form?: DBFormModel;
+  answeredBy?: DBUserModel | null;
+}>;
+
 export class FormEntryEntity implements Entity, DBFormEntryModel {
   form?: FormEntity;
-  sentBy?: UserEntity | null;
+  answeredBy?: UserEntity | null;
 
-  constructor(
-    entry: DBFormEntryModel,
-    form?: DBFormModel,
-    sentBy?: DBUserModel
-  ) {
+  constructor(entry: DBFormEntryModel, include?: Include) {
     Object.assign(this, entry);
 
-    if (form) {
-      this.form = new FormEntity(form);
+    if (include?.form) {
+      this.form = new FormEntity(include.form);
     }
 
-    this.sentBy = sentBy ? new UserEntity(sentBy) : null;
+    this.answeredBy = include?.answeredBy
+      ? new UserEntity(include.answeredBy)
+      : null;
   }
 
   id: UUID;
@@ -36,7 +39,7 @@ export class FormEntryEntity implements Entity, DBFormEntryModel {
   formId: string;
 
   @Exclude()
-  sentById: string | null;
+  answeredById: string | null;
 
   createdAt: Date;
   updatedAt: Date;

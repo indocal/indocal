@@ -39,14 +39,24 @@ export class FormsEntriesController {
   ): Promise<FormEntryEntity> {
     const formEntry = await this.formsEntriesService.create(createFormEntryDto);
 
-    const form = await this.formsService.findUnique('id', formEntry.formId);
-    const sentBy = await this.usersService.findUnique('id', formEntry.formId);
+    const form = await this.formsService.findUnique({
+      id: formEntry.formId,
+    });
 
-    return new FormEntryEntity(
-      formEntry,
-      form || undefined,
-      sentBy || undefined
-    );
+    if (formEntry.answeredById) {
+      const answeredBy = await this.usersService.findUnique({
+        id: formEntry.answeredById,
+      });
+
+      return new FormEntryEntity(formEntry, {
+        ...(form && { form }),
+        ...(answeredBy && { answeredBy }),
+      });
+    }
+
+    return new FormEntryEntity(formEntry, {
+      ...(form && { form }),
+    });
   }
 
   @Get('count')
@@ -74,17 +84,24 @@ export class FormsEntriesController {
 
     return await Promise.all(
       forms.map(async (formEntry) => {
-        const form = await this.formsService.findUnique('id', formEntry.formId);
-        const sentBy = await this.usersService.findUnique(
-          'id',
-          formEntry.formId
-        );
+        const form = await this.formsService.findUnique({
+          id: formEntry.formId,
+        });
 
-        return new FormEntryEntity(
-          formEntry,
-          form || undefined,
-          sentBy || undefined
-        );
+        if (formEntry.answeredById) {
+          const answeredBy = await this.usersService.findUnique({
+            id: formEntry.answeredById,
+          });
+
+          return new FormEntryEntity(formEntry, {
+            ...(form && { form }),
+            ...(answeredBy && { answeredBy }),
+          });
+        }
+
+        return new FormEntryEntity(formEntry, {
+          ...(form && { form }),
+        });
       })
     );
   }
@@ -94,14 +111,28 @@ export class FormsEntriesController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<FormEntryEntity | null> {
-    const formEntry = await this.formsEntriesService.findUnique('id', id);
+    const formEntry = await this.formsEntriesService.findUnique({ id });
 
-    const form = await this.formsService.findUnique('id', id);
-    const sentBy = await this.usersService.findUnique('id', id);
+    if (!formEntry) return null;
 
-    return formEntry
-      ? new FormEntryEntity(formEntry, form || undefined, sentBy || undefined)
-      : null;
+    const form = await this.formsService.findUnique({
+      id: formEntry.formId,
+    });
+
+    if (formEntry.answeredById) {
+      const answeredBy = await this.usersService.findUnique({
+        id: formEntry.answeredById,
+      });
+
+      return new FormEntryEntity(formEntry, {
+        ...(form && { form }),
+        ...(answeredBy && { answeredBy }),
+      });
+    }
+
+    return new FormEntryEntity(formEntry, {
+      ...(form && { form }),
+    });
   }
 
   @Delete(':id')
@@ -109,14 +140,24 @@ export class FormsEntriesController {
   async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<FormEntryEntity> {
     const formEntry = await this.formsEntriesService.delete(id);
 
-    const form = await this.formsService.findUnique('id', formEntry.formId);
-    const sentBy = await this.usersService.findUnique('id', formEntry.formId);
+    const form = await this.formsService.findUnique({
+      id: formEntry.formId,
+    });
 
-    return new FormEntryEntity(
-      formEntry,
-      form || undefined,
-      sentBy || undefined
-    );
+    if (formEntry.answeredById) {
+      const answeredBy = await this.usersService.findUnique({
+        id: formEntry.answeredById,
+      });
+
+      return new FormEntryEntity(formEntry, {
+        ...(form && { form }),
+        ...(answeredBy && { answeredBy }),
+      });
+    }
+
+    return new FormEntryEntity(formEntry, {
+      ...(form && { form }),
+    });
   }
 }
 

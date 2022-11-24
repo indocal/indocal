@@ -29,12 +29,9 @@ export class EventsService {
   }
 
   async findUnique(
-    identifier: keyof Prisma.EventWhereUniqueInput,
-    input: string
+    input: Prisma.EventWhereUniqueInput
   ): Promise<DBEventModel | null> {
-    return await this.prismaService.event.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.event.findUnique({ where: input });
   }
 
   async update(

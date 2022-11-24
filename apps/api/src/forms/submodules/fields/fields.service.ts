@@ -30,42 +30,27 @@ export class FormsFieldsService {
         title: createFormFieldDto.title,
         description: createFormFieldDto.description,
         order: lastField ? lastField.order + 1 : 1,
-        form: {
-          connect: {
-            id: typeof form === 'string' ? form : form.id,
-          },
-        },
+        form: { connect: { id: typeof form === 'string' ? form : form.id } },
       },
     });
   }
 
   async count(form: UUID | DBFormModel): Promise<number> {
     return await this.prismaService.formField.count({
-      where: {
-        form: {
-          id: typeof form === 'string' ? form : form.id,
-        },
-      },
+      where: { form: { id: typeof form === 'string' ? form : form.id } },
     });
   }
 
   async findAll(form: UUID | DBFormModel): Promise<DBFormFieldModel[]> {
     return await this.prismaService.formField.findMany({
-      where: {
-        form: {
-          id: typeof form === 'string' ? form : form.id,
-        },
-      },
+      where: { form: { id: typeof form === 'string' ? form : form.id } },
     });
   }
 
   async findUnique(
-    identifier: keyof Prisma.FormFieldWhereUniqueInput,
-    input: string
+    input: Prisma.FormFieldWhereUniqueInput
   ): Promise<DBFormFieldModel | null> {
-    return await this.prismaService.formField.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.formField.findUnique({ where: input });
   }
 
   async update(
@@ -83,9 +68,7 @@ export class FormsFieldsService {
   }
 
   async delete(id: UUID): Promise<DBFormFieldModel> {
-    return await this.prismaService.formField.delete({
-      where: { id },
-    });
+    return await this.prismaService.formField.delete({ where: { id } });
   }
 }
 

@@ -69,10 +69,9 @@ export class UsersRolesPermissionsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<UserRolePermissionEntity | null> {
-    const permission = await this.usersRolesPermissionsService.findUnique(
-      'id',
-      id
-    );
+    const permission = await this.usersRolesPermissionsService.findUnique({
+      id,
+    });
 
     return permission ? new UserRolePermissionEntity(permission) : null;
   }

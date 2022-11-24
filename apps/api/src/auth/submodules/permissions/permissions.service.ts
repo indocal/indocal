@@ -23,22 +23,14 @@ export class UsersRolesPermissionsService {
     return await this.prismaService.userRolePermission.create({
       data: {
         action: createUserRolePermissionDto.action,
-        role: {
-          connect: {
-            id: typeof role === 'string' ? role : role.id,
-          },
-        },
+        role: { connect: { id: typeof role === 'string' ? role : role.id } },
       },
     });
   }
 
   async count(role: UUID | DBUserRoleModel): Promise<number> {
     return await this.prismaService.userRolePermission.count({
-      where: {
-        role: {
-          id: typeof role === 'string' ? role : role.id,
-        },
-      },
+      where: { role: { id: typeof role === 'string' ? role : role.id } },
     });
   }
 
@@ -46,20 +38,15 @@ export class UsersRolesPermissionsService {
     role: UUID | DBUserRoleModel
   ): Promise<DBUserRolePermissionModel[]> {
     return await this.prismaService.userRolePermission.findMany({
-      where: {
-        role: {
-          id: typeof role === 'string' ? role : role.id,
-        },
-      },
+      where: { role: { id: typeof role === 'string' ? role : role.id } },
     });
   }
 
   async findUnique(
-    identifier: keyof Prisma.UserRolePermissionWhereUniqueInput,
-    input: string
+    input: Prisma.UserRolePermissionWhereUniqueInput
   ): Promise<DBUserRolePermissionModel | null> {
     return await this.prismaService.userRolePermission.findUnique({
-      where: { [identifier]: input },
+      where: input,
     });
   }
 
@@ -69,9 +56,7 @@ export class UsersRolesPermissionsService {
   ): Promise<DBUserRolePermissionModel> {
     return await this.prismaService.userRolePermission.update({
       where: { id },
-      data: {
-        action: updateUserRolePermissionDto.action,
-      },
+      data: { action: updateUserRolePermissionDto.action },
     });
   }
 

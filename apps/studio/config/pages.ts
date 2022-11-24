@@ -8,6 +8,7 @@ export enum Pages {
   USERS_ROLES = '/roles',
   USERS_GROUPS = '/groups',
   FORMS = '/forms',
+  FORMS_PREVIEW = '/forms/preview',
   SETTINGS = '/settings',
 }
 

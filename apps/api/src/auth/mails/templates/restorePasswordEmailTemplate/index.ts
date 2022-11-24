@@ -1,3 +1,4 @@
+// TODO: use mjml
 export const restorePasswordEmailTemplate = (
   email: string,
   password: string

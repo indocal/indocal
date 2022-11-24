@@ -43,13 +43,15 @@ export class FormsController {
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'form'))
   async create(@Body() createFormDto: CreateFormDto): Promise<FormEntity> {
     const form = await this.formsService.create(createFormDto);
-    const fields = await this.formsFieldsService.findAll(form);
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { forms: { some: { id: form.id } } },
-    });
+    const [fields, groups] = await Promise.all([
+      this.formsFieldsService.findAll(form),
+      this.usersGroupsService.findMany({
+        where: { forms: { some: { id: form.id } } },
+      }),
+    ]);
 
-    return new FormEntity(form, fields, groups.pop());
+    return new FormEntity(form, { fields, group: groups.pop() });
   }
 
   @Get('count')
@@ -77,13 +79,14 @@ export class FormsController {
 
     return await Promise.all(
       forms.map(async (form) => {
-        const fields = await this.formsFieldsService.findAll(form);
+        const [fields, groups] = await Promise.all([
+          this.formsFieldsService.findAll(form),
+          this.usersGroupsService.findMany({
+            where: { forms: { some: { id: form.id } } },
+          }),
+        ]);
 
-        const groups = await this.usersGroupsService.findMany({
-          where: { forms: { some: { id: form.id } } },
-        });
-
-        return new FormEntity(form, fields, groups.pop());
+        return new FormEntity(form, { fields, group: groups.pop() });
       })
     );
   }
@@ -93,14 +96,14 @@ export class FormsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<FormEntity | null> {
-    const form = await this.formsService.findUnique('id', id);
-    const fields = await this.formsFieldsService.findAll(id);
+    const form = await this.formsService.findUnique({ id });
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { forms: { some: { id } } },
-    });
+    const [fields, groups] = await Promise.all([
+      this.formsFieldsService.findAll(id),
+      this.usersGroupsService.findMany({ where: { forms: { some: { id } } } }),
+    ]);
 
-    return form ? new FormEntity(form, fields, groups.pop()) : null;
+    return form ? new FormEntity(form, { fields, group: groups.pop() }) : null;
   }
 
   @Patch(':id')
@@ -110,26 +113,30 @@ export class FormsController {
     @Body() updateFormDto: UpdateFormDto
   ): Promise<FormEntity> {
     const form = await this.formsService.update(id, updateFormDto);
-    const fields = await this.formsFieldsService.findAll(form);
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { forms: { some: { id: form.id } } },
-    });
+    const [fields, groups] = await Promise.all([
+      this.formsFieldsService.findAll(form),
+      this.usersGroupsService.findMany({
+        where: { forms: { some: { id: form.id } } },
+      }),
+    ]);
 
-    return new FormEntity(form, fields, groups.pop());
+    return new FormEntity(form, { fields, group: groups.pop() });
   }
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'form'))
   async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<FormEntity> {
     const form = await this.formsService.delete(id);
-    const fields = await this.formsFieldsService.findAll(form);
 
-    const groups = await this.usersGroupsService.findMany({
-      where: { forms: { some: { id: form.id } } },
-    });
+    const [fields, groups] = await Promise.all([
+      this.formsFieldsService.findAll(form),
+      this.usersGroupsService.findMany({
+        where: { forms: { some: { id: form.id } } },
+      }),
+    ]);
 
-    return new FormEntity(form, fields, groups.pop());
+    return new FormEntity(form, { fields, group: groups.pop() });
   }
 }
 

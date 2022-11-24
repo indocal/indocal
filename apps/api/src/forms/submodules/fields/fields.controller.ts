@@ -52,7 +52,7 @@ export class FormsFieldsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<FormFieldEntity | null> {
-    const field = await this.formsfieldsService.findUnique('id', id);
+    const field = await this.formsfieldsService.findUnique({ id });
 
     return field ? new FormFieldEntity(field) : null;
   }

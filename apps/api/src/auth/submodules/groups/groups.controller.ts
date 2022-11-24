@@ -19,6 +19,8 @@ import {
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
+import UsersService from '../users/users.service';
+
 import UsersGroupsService from './groups.service';
 import { UserGroupEntity } from './entities';
 import {
@@ -27,8 +29,6 @@ import {
   CreateUserGroupDto,
   UpdateUserGroupDto,
 } from './dto';
-
-import UsersService from '../users/users.service';
 
 @Controller('auth/groups')
 @UseGuards(PoliciesGuard)
@@ -49,7 +49,7 @@ export class UsersGroupsController {
       where: { groups: { some: { id: group.id } } },
     });
 
-    return new UserGroupEntity(group, members);
+    return new UserGroupEntity(group, { members });
   }
 
   @Get('count')
@@ -81,7 +81,7 @@ export class UsersGroupsController {
           where: { groups: { some: { id: group.id } } },
         });
 
-        return new UserGroupEntity(group, members);
+        return new UserGroupEntity(group, { members });
       })
     );
   }
@@ -91,13 +91,13 @@ export class UsersGroupsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<UserGroupEntity | null> {
-    const group = await this.usersGroupsService.findUnique('id', id);
+    const group = await this.usersGroupsService.findUnique({ id });
 
     const members = await this.usersService.findMany({
       where: { groups: { some: { id } } },
     });
 
-    return group ? new UserGroupEntity(group, members) : null;
+    return group ? new UserGroupEntity(group, { members }) : null;
   }
 
   @Patch(':id')
@@ -112,7 +112,7 @@ export class UsersGroupsController {
       where: { groups: { some: { id: group.id } } },
     });
 
-    return new UserGroupEntity(group, members);
+    return new UserGroupEntity(group, { members });
   }
 
   @Delete(':id')
@@ -124,7 +124,7 @@ export class UsersGroupsController {
       where: { groups: { some: { id: group.id } } },
     });
 
-    return new UserGroupEntity(group, members);
+    return new UserGroupEntity(group, { members });
   }
 }
 

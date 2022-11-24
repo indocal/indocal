@@ -30,12 +30,9 @@ export class UsersRolesService {
   }
 
   async findUnique(
-    identifier: keyof Prisma.UserRoleWhereUniqueInput,
-    input: string
+    input: Prisma.UserRoleWhereUniqueInput
   ): Promise<DBUserRoleModel | null> {
-    return await this.prismaService.userRole.findUnique({
-      where: { [identifier]: input },
-    });
+    return await this.prismaService.userRole.findUnique({ where: input });
   }
 
   async update(
