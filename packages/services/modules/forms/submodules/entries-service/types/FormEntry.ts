@@ -25,7 +25,7 @@ type AnsweredBy = {
 };
 
 export interface FormEntry extends Entity {
-  answers: object;
+  answers: object[];
   form: Form;
   answeredBy: AnsweredBy | null;
   createdAt: string;

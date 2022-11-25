@@ -4,7 +4,12 @@ import { Container, Grid } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useForm, UUID } from '@indocal/services';
 
-import { FormCard, FormFieldsCard, UserGroupCard } from '@/features';
+import {
+  FormCard,
+  FormFieldsCard,
+  UserGroupCard,
+  FormEntriesDataGrid,
+} from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -51,6 +56,12 @@ const FormPage: EnhancedNextPage = () => {
             <Grid item xs={12} md={4}>
               <Widget>
                 <UserGroupCard group={form.group.id} />
+              </Widget>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Widget>
+                <FormEntriesDataGrid form={form} />
               </Widget>
             </Grid>
           </Grid>

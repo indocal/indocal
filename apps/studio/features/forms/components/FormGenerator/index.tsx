@@ -1,5 +1,6 @@
-import { Fragment, useMemo, useCallback } from 'react';
+import { Fragment, useMemo } from 'react';
 import { Paper, Stack, Divider, Typography } from '@mui/material';
+import { Save as SaveIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import { useFormContext } from 'react-hook-form';
 
@@ -25,9 +26,10 @@ import {
 
 export interface FormGeneratorProps {
   form: Form;
+  onSubmit: (formData: Record<string, unknown>) => void | Promise<void>;
 }
 
-const FormGenerator: React.FC<FormGeneratorProps> = ({ form }) => {
+const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
   const {
     formState: { isSubmitting },
     handleSubmit,
@@ -55,11 +57,6 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form }) => {
     }),
     []
   );
-
-  const onSubmit = useCallback(async (data: unknown) => {
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
-  }, []);
 
   return (
     <Stack
@@ -95,8 +92,9 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form }) => {
             type="submit"
             variant="contained"
             loading={isSubmitting}
+            endIcon={<SaveIcon />}
           >
-            Enviar
+            Guardar respuestas
           </LoadingButton>
         </Stack>
       ) : (
@@ -106,9 +104,9 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form }) => {
   );
 };
 
-const FormGeneratorWrapper: React.FC<FormGeneratorProps> = ({ form }) => (
+const FormGeneratorWrapper: React.FC<FormGeneratorProps> = (props) => (
   <FormGeneratorProvider>
-    <FormGenerator form={form} />
+    <FormGenerator {...props} />
   </FormGeneratorProvider>
 );
 
