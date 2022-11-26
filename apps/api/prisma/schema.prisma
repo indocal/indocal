@@ -147,6 +147,8 @@ enum FormFieldType {
   DATETIME
 
   USERS
+
+  TABLE
 }
 
 model FormEntry {

@@ -45,6 +45,8 @@ const schema = zod.object(
           'DATETIME',
 
           'USERS',
+
+          'TABLE',
         ],
         {
           description: 'Tipo del campo',

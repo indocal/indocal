@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { Form } from '@indocal/services';
+import { Form, FormFieldType } from '@indocal/services';
 
 export type EditFormFieldDialogData = zod.infer<typeof schema>;
 
@@ -111,6 +111,54 @@ const schema = zod
               .min(1, 'Debe ingresar la opción')
               .array()
               .min(1, 'Debe ingresar al menos una opción'),
+
+            columns: zod
+              .object({
+                type: zod
+                  .enum<
+                    string,
+                    [
+                      Exclude<FormFieldType, 'TABLE'>,
+                      ...Exclude<FormFieldType, 'TABLE'>[]
+                    ]
+                  >(
+                    [
+                      'TEXT',
+                      'TEXTAREA',
+                      'NUMBER',
+
+                      'DNI',
+                      'PHONE',
+                      'EMAIL',
+
+                      'CHECKBOX',
+                      'SELECT',
+                      'RADIO',
+
+                      'TIME',
+                      'DATE',
+                      'DATETIME',
+
+                      'USERS',
+                    ],
+                    {
+                      description: 'Tipo de la columna',
+                      required_error: 'Debe seleccionar el tipo',
+                      invalid_type_error: 'Formato no válido',
+                    }
+                  )
+                  .describe('Tipo de la columna'),
+
+                heading: zod
+                  .string({
+                    description: 'Encabezado de la columna',
+                    required_error: 'Debe ingresar el encabezado',
+                    invalid_type_error: 'Formato no válido',
+                  })
+                  .min(1, 'Debe ingresar el encabezado'),
+              })
+              .array()
+              .min(1, 'Debe definir al menos una columna'),
           },
           {
             description: 'Configuración del campo',

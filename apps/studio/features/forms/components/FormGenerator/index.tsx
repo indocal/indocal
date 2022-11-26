@@ -22,6 +22,7 @@ import {
   DateFormField,
   DateTimeFormField,
   UsersFormField,
+  TableFormField,
 } from './components';
 
 export interface FormGeneratorProps {
@@ -54,6 +55,8 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
       DATETIME: DateTimeFormField,
 
       USERS: UsersFormField,
+
+      TABLE: TableFormField,
     }),
     []
   );

@@ -16,4 +16,6 @@ export * from './DateTimeFormFieldConfig';
 
 export * from './UsersFormFieldConfig';
 
+export * from './TableFormFieldConfig';
+
 export * from './ApiFormFieldConfig';

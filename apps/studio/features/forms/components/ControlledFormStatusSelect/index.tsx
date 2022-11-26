@@ -1,6 +1,12 @@
 import { useMemo } from 'react';
-import { MenuItem } from '@mui/material';
-import { Control } from 'react-hook-form';
+import {
+  MenuItem,
+  FormControlProps,
+  FormHelperTextProps,
+  InputLabelProps,
+  SelectProps,
+} from '@mui/material';
+import { Control, ControllerProps } from 'react-hook-form';
 
 import { ControlledSelect } from '@indocal/ui';
 import { FormStatus, translateFormStatus } from '@indocal/services';
@@ -11,11 +17,27 @@ export interface ControlledFormStatusSelectProps {
   control: Control;
   disabled?: boolean;
   required?: boolean;
+  controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
+  formControlProps?: Omit<FormControlProps, 'required' | 'disabled' | 'error'>;
+  formHelperTextProps?: FormHelperTextProps;
+  inputLabelProps?: InputLabelProps;
+  selectProps?: Omit<SelectProps, 'label' | 'value' | 'onChange'>;
 }
 
 export const ControlledFormStatusSelect: React.FC<
   ControlledFormStatusSelectProps
-> = ({ name, label, control, disabled, required }) => {
+> = ({
+  name,
+  label,
+  control,
+  disabled,
+  required,
+  controllerProps,
+  formControlProps,
+  formHelperTextProps,
+  inputLabelProps,
+  selectProps,
+}) => {
   const status = useMemo<FormStatus[]>(
     () => ['DRAFT', 'PUBLISHED', 'HIDDEN'],
     []
@@ -26,7 +48,11 @@ export const ControlledFormStatusSelect: React.FC<
       name={name}
       label={label}
       control={control}
-      formControlProps={{ required, disabled }}
+      controllerProps={controllerProps}
+      formControlProps={{ required, disabled, ...formControlProps }}
+      formHelperTextProps={formHelperTextProps}
+      inputLabelProps={inputLabelProps}
+      selectProps={selectProps}
     >
       {status.map((status) => (
         <MenuItem key={status} value={status}>

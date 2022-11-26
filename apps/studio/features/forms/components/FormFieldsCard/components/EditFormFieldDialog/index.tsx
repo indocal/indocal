@@ -45,6 +45,7 @@ import {
   DateFormFieldConfig,
   DateTimeFormFieldConfig,
   UsersFormFieldConfig,
+  TableFormFieldConfig,
   // ApiFormFieldConfig, {/* TODO: implement API feature */}
 } from './components';
 
@@ -98,6 +99,8 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
       DATETIME: <DateTimeFormFieldConfig />,
 
       USERS: <UsersFormFieldConfig />,
+
+      TABLE: <TableFormFieldConfig />,
     }),
     []
   );

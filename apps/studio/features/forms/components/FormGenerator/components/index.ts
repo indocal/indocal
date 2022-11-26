@@ -15,3 +15,5 @@ export * from './DateFormField';
 export * from './DateTimeFormField';
 
 export * from './UsersFormField';
+
+export * from './TableFormField';

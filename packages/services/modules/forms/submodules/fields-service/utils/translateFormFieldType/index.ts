@@ -19,6 +19,8 @@ export function translateFormFieldType(type: FormFieldType): string {
     DATETIME: 'Fecha y hora',
 
     USERS: 'Usuarios (INDOCAL)',
+
+    TABLE: 'Tabla',
   };
 
   return translations[type] ?? type;

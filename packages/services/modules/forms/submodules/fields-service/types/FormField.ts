@@ -13,7 +13,8 @@ export type FormFieldType =
   | 'TIME'
   | 'DATE'
   | 'DATETIME'
-  | 'USERS';
+  | 'USERS'
+  | 'TABLE';
 
 export type FormFieldConfig = Partial<
   | TextFormFieldConfig
@@ -29,6 +30,7 @@ export type FormFieldConfig = Partial<
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
   | UsersFormFieldConfig
+  | TableFormFieldConfig
 >;
 
 export interface FormField extends Entity {
@@ -90,4 +92,8 @@ export type DateTimeFormFieldConfig = CommonFormFieldConfig;
 
 export type UsersFormFieldConfig = CommonFormFieldConfig & {
   multiple: boolean;
+};
+
+export type TableFormFieldConfig = CommonFormFieldConfig & {
+  columns: Array<{ type: Exclude<FormFieldType, 'TABLE'>; heading: string }>;
 };
