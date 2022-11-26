@@ -15,11 +15,11 @@ import {
   UserRolePermissionsManagementPanelProviderProps,
 } from './context';
 import {
-  UserModelPermissions,
-  UserRoleModelPermissions,
-  UserGroupModelPermissions,
-  FormModelPermissions,
-  EventModelPermissions,
+  UsersScopePermissions,
+  UsersRolesScopePermissions,
+  UsersGroupsScopePermissions,
+  FormsScopePermissions,
+  EventsScopePermissions,
 } from './components';
 
 const UserRolePermissionsManagementPanel: React.FC = () => {
@@ -68,11 +68,11 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
             </Button>
           </Stack>
 
-          <UserModelPermissions />
-          <UserRoleModelPermissions />
-          <UserGroupModelPermissions />
-          <FormModelPermissions />
-          <EventModelPermissions />
+          <UsersScopePermissions />
+          <UsersRolesScopePermissions />
+          <UsersGroupsScopePermissions />
+          <FormsScopePermissions />
+          <EventsScopePermissions />
         </Stack>
       ) : (
         <NoData message="No se han encontrado datos del rol" />

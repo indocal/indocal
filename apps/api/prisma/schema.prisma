@@ -49,7 +49,7 @@ model UserRole {
 
 model UserRolePermission {
   id     String @id @default(uuid())
-  action String // model::action // TODO: use 'scope' instead 'model'
+  action String // scope::action
 
   role   UserRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId String

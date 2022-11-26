@@ -14,7 +14,7 @@ import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 import { useUserRolePermissionsManagementPanel } from '../../context';
 
-export const EventModelPermissions: React.FC = () => {
+export const EventsScopePermissions: React.FC = () => {
   const { validating, permissions, saving, togglePermission } =
     useUserRolePermissionsManagementPanel();
 
@@ -240,4 +240,4 @@ export const EventModelPermissions: React.FC = () => {
   );
 };
 
-export default EventModelPermissions;
+export default EventsScopePermissions;

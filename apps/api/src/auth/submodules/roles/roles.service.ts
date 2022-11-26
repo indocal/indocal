@@ -52,26 +52,26 @@ export class UsersRolesService {
             createMany: {
               skipDuplicates: true,
               data: Object.entries(updateUserRoleDto.permissions)
-                .map(([model, permissions]) => {
+                .map(([scope, permissions]) => {
                   const actions = Object.entries(permissions).filter(
                     ([, value]) => value === true
                   );
 
                   return actions.map(([action]) => ({
-                    action: `${model}::${action}`,
+                    action: `${scope}::${action}`,
                   }));
                 })
                 .flat(),
             },
 
             deleteMany: Object.entries(updateUserRoleDto.permissions)
-              .map(([model, permissions]) => {
+              .map(([scope, permissions]) => {
                 const actions = Object.entries(permissions).filter(
                   ([, value]) => value === false
                 );
 
                 return actions.map(([action]) => ({
-                  action: `${model}::${action}`,
+                  action: `${scope}::${action}`,
                 }));
               })
               .flat(),

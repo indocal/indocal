@@ -63,9 +63,9 @@ export class AbilityFactory {
     });
 
     permissions.forEach((permission) => {
-      const [model, action] = permission.action.split('::');
+      const [scope, action] = permission.action.split('::');
 
-      can(action as Action, model as ExtractSubjectType<Subjects>);
+      can(action as Action, scope as ExtractSubjectType<Subjects>);
     });
 
     const ability = build();

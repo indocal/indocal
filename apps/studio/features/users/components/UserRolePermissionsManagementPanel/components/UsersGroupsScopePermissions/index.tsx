@@ -14,7 +14,7 @@ import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 import { useUserRolePermissionsManagementPanel } from '../../context';
 
-export const UserGroupModelPermissions: React.FC = () => {
+export const UsersGroupsScopePermissions: React.FC = () => {
   const { validating, permissions, saving, togglePermission } =
     useUserRolePermissionsManagementPanel();
 
@@ -122,4 +122,4 @@ export const UserGroupModelPermissions: React.FC = () => {
   );
 };
 
-export default UserGroupModelPermissions;
+export default UsersGroupsScopePermissions;

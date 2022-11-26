@@ -36,7 +36,7 @@ type UserRolePermissionsManagementPanelContextStateAction =
     }
   | {
       type: 'TOGGLE_PERMISSION';
-      model: string;
+      scope: string;
       action: string;
     };
 
@@ -62,11 +62,11 @@ function reducer(
         ...state,
         permissions: {
           ...state.permissions,
-          [action.model]: {
-            ...(state.permissions && state.permissions[action.model]),
+          [action.scope]: {
+            ...(state.permissions && state.permissions[action.scope]),
             [action.action]:
-              state.permissions && state.permissions[action.model]
-                ? !state.permissions[action.model][action.action]
+              state.permissions && state.permissions[action.scope]
+                ? !state.permissions[action.scope][action.action]
                 : true,
           },
         },
@@ -100,7 +100,7 @@ export interface UserRolePermissionsManagementPanelContextValue {
   role: UserRole | null;
   permissions: Record<string, Record<string, boolean>> | null;
   error: ServiceError | null;
-  togglePermission: (model: string, action: string) => void;
+  togglePermission: (scope: string, action: string) => void;
   save: () => Promise<void>;
 }
 
@@ -125,8 +125,8 @@ export const UserRolePermissionsManagementPanelProvider: React.FC<
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   const handleTogglePermission = useCallback(
-    (model: string, action: string) =>
-      dispatch({ type: 'TOGGLE_PERMISSION', model, action }),
+    (scope: string, action: string) =>
+      dispatch({ type: 'TOGGLE_PERMISSION', scope, action }),
     []
   );
 
@@ -164,12 +164,12 @@ export const UserRolePermissionsManagementPanelProvider: React.FC<
       dispatch({
         type: 'SET_PERMISSIONS',
         permissions: role.permissions.reduce((permissions, permission) => {
-          const [model, action] = permission.action.split('::');
+          const [scope, action] = permission.action.split('::');
 
           return {
             ...permissions,
-            [model]: {
-              ...permissions[model],
+            [scope]: {
+              ...permissions[scope],
               [action]: true,
             },
           };
