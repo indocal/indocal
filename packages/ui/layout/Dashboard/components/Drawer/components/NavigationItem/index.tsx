@@ -6,6 +6,7 @@ import {
   ListItemText,
   ListItemIcon,
   Tooltip,
+  Link as MuiLink,
   useTheme,
 } from '@mui/material';
 
@@ -54,55 +55,60 @@ export const DashboardDrawerNavigationItem: React.FC<
   );
 
   return (
-    <Tooltip
-      title={!isDrawerOpen ? item.label : ''}
-      placement={drawerPosition === 'left' ? 'right' : 'left'}
+    <MuiLink
+      component={NextLink}
+      href={item.href}
+      color="inherit"
+      underline="none"
     >
-      <ListItemButton
-        LinkComponent={NextLink}
-        href={item.href}
-        sx={{
-          borderRadius: (theme) => theme.spacing(1),
-          ...(isDrawerOpen && {
-            margin: (theme) => theme.spacing(0.5, 1),
-          }),
-          ...(!isDrawerOpen && {
-            padding: (theme) => theme.spacing(1.5, 2),
-          }),
-          ...(nested && {
-            margin: (theme) => theme.spacing(0.5, 2),
-          }),
-        }}
+      <Tooltip
+        title={!isDrawerOpen ? item.label : ''}
+        placement={drawerPosition === 'left' ? 'right' : 'left'}
       >
-        <ListItemIcon
+        <ListItemButton
           sx={{
-            display: 'flex',
-            minWidth: 'fit-content',
-            marginRight: (theme) => theme.spacing(2),
-            color: textColor,
+            borderRadius: (theme) => theme.spacing(1),
+            ...(isDrawerOpen && {
+              margin: (theme) => theme.spacing(0.5, 1),
+            }),
+            ...(!isDrawerOpen && {
+              padding: (theme) => theme.spacing(1.5, 2),
+            }),
+            ...(nested && {
+              margin: (theme) => theme.spacing(0.5, 2),
+            }),
           }}
         >
-          {item.icon}
-        </ListItemIcon>
-
-        {isDrawerOpen && (
-          <ListItemText
-            primary={item.label}
-            primaryTypographyProps={{
-              sx: {
-                color: textColor,
-                ...(nested && {
-                  fontSize: (theme) => theme.typography.caption,
-                }),
-                ...(isCurrentPath && {
-                  fontWeight: 'bolder',
-                }),
-              },
+          <ListItemIcon
+            sx={{
+              display: 'flex',
+              minWidth: 'fit-content',
+              marginRight: (theme) => theme.spacing(2),
+              color: textColor,
             }}
-          />
-        )}
-      </ListItemButton>
-    </Tooltip>
+          >
+            {item.icon}
+          </ListItemIcon>
+
+          {isDrawerOpen && (
+            <ListItemText
+              primary={item.label}
+              primaryTypographyProps={{
+                sx: {
+                  color: textColor,
+                  ...(nested && {
+                    fontSize: (theme) => theme.typography.caption,
+                  }),
+                  ...(isCurrentPath && {
+                    fontWeight: 'bolder',
+                  }),
+                },
+              }}
+            />
+          )}
+        </ListItemButton>
+      </Tooltip>
+    </MuiLink>
   );
 };
 

@@ -39,9 +39,7 @@ async function main() {
               data: models
                 .map((model) =>
                   ['count', 'create', 'read', 'update', 'delete'].map(
-                    (action) => ({
-                      action: `${model}::${action}`,
-                    })
+                    (action) => ({ action: `${model}::${action}` })
                   )
                 )
                 .flat(),
