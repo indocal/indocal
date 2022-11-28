@@ -177,7 +177,7 @@ const schema = zod
   .partial();
 
 export interface EditFormFieldDialogProviderProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const EditFormFieldDialogProvider: React.FC<

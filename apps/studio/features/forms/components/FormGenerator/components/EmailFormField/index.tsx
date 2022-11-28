@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { Form, EmailFormFieldConfig } from '@indocal/services';
 
 export interface EmailFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const EmailFormField: React.FC<EmailFormFieldProps> = ({ field }) => {

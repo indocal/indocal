@@ -4,7 +4,7 @@ import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
 import { Form, TableFormFieldColumn } from '@indocal/services';
 
 export interface NumberColumnProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
   column: TableFormFieldColumn;
   row: number;
   isSubmitting: boolean;

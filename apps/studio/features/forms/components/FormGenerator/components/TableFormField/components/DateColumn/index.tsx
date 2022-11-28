@@ -5,7 +5,7 @@ import { ControlledDatePicker } from '@indocal/ui';
 import { Form, TableFormFieldColumn } from '@indocal/services';
 
 export interface DateColumnProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
   column: TableFormFieldColumn;
   row: number;
   isSubmitting: boolean;

@@ -5,7 +5,7 @@ import { ControlledPhoneTextField } from '@indocal/ui';
 import { Form, PhoneFormFieldConfig } from '@indocal/services';
 
 export interface PhoneFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const PhoneFormField: React.FC<PhoneFormFieldProps> = ({ field }) => {

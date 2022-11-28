@@ -4,7 +4,7 @@ import { ControlledDniTextField } from '@indocal/ui';
 import { Form, TableFormFieldColumn } from '@indocal/services';
 
 export interface DniColumnProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
   column: TableFormFieldColumn;
   row: number;
   isSubmitting: boolean;

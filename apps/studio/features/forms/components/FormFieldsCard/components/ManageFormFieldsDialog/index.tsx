@@ -54,7 +54,7 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
     toggleEditFormFieldDialog,
   } = useFormFieldsCard();
 
-  const [field, setField] = useState<Form['fields'][0] | null>(null);
+  const [field, setField] = useState<Form['fields'][number] | null>(null);
 
   const icons = useMemo<Record<FormFieldType, React.ReactElement>>(
     () => ({
@@ -82,7 +82,7 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
   );
 
   const handleEdit = useCallback(
-    (field: Form['fields'][0]) => {
+    (field: Form['fields'][number]) => {
       setField(field);
       toggleEditFormFieldDialog();
     },

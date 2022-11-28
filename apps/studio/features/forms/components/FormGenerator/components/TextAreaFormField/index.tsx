@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { Form, TextAreaFormFieldConfig } from '@indocal/services';
 
 export interface TextAreaFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const TextAreaFormField: React.FC<TextAreaFormFieldProps> = ({

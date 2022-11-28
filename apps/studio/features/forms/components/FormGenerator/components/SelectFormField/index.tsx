@@ -6,7 +6,7 @@ import { ControlledSelect } from '@indocal/ui';
 import { Form, SelectFormFieldConfig } from '@indocal/services';
 
 export interface SelectFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const SelectFormField: React.FC<SelectFormFieldProps> = ({ field }) => {

@@ -8,7 +8,7 @@ import { useForm, UUID } from '@indocal/services';
 import { Page, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 
 import { indocal } from '@/lib';
-import { FormGenerator } from '@/features';
+import { FormGenerator, FormFieldAnswer } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -22,13 +22,8 @@ const FormPreviewPage: EnhancedNextPage = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleOnSubmit = useCallback(
-    async (formData: Record<string, unknown>) => {
+    async (answers: FormFieldAnswer[]) => {
       if (!form) return;
-
-      const answers = form.fields.map((field) => ({
-        field,
-        content: formData[field.id] || null,
-      }));
 
       // TODO: remove it
       console.log(answers);

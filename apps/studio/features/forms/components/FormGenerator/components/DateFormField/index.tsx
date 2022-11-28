@@ -6,7 +6,7 @@ import { ControlledDatePicker } from '@indocal/ui';
 import { Form, DateFormFieldConfig } from '@indocal/services';
 
 export interface DateFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const DateFormField: React.FC<DateFormFieldProps> = ({ field }) => {

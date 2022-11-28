@@ -6,7 +6,7 @@ import { ControlledRadioGroup } from '@indocal/ui';
 import { Form, RadioFormFieldConfig } from '@indocal/services';
 
 export interface RadioFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {

@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react';
+import { Fragment, useMemo, useCallback } from 'react';
 import { Paper, Stack, Divider, Typography } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
@@ -24,10 +24,11 @@ import {
   UsersFormField,
   TableFormField,
 } from './components';
+import { FormFieldAnswer } from './types';
 
 export interface FormGeneratorProps {
   form: Form;
-  onSubmit: (formData: Record<string, unknown>) => void | Promise<void>;
+  onSubmit: (answers: FormFieldAnswer[]) => void | Promise<void>;
 }
 
 const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
@@ -61,6 +62,18 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
     []
   );
 
+  const handleOnSubmit = useCallback(
+    async (formData: Record<string, unknown>) => {
+      const answers: FormFieldAnswer[] = form.fields.map((field) => ({
+        field,
+        content: formData[field.id] || null,
+      }));
+
+      await onSubmit(answers);
+    },
+    [form.fields, onSubmit]
+  );
+
   return (
     <Stack
       component={Paper}
@@ -85,7 +98,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
           component="form"
           noValidate
           spacing={2}
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleOnSubmit)}
         >
           {form.fields.map((field) => (
             <Fragment key={field.id}>{fields[field.type]({ field })}</Fragment>
@@ -116,3 +129,9 @@ const FormGeneratorWrapper: React.FC<FormGeneratorProps> = (props) => (
 export { FormGeneratorWrapper as FormGenerator };
 
 export default FormGeneratorWrapper;
+
+////////////////
+// Re-exports //
+////////////////
+
+export * from './types';

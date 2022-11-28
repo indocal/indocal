@@ -6,7 +6,7 @@ import { Form, UsersFormFieldConfig } from '@indocal/services';
 import { ControlledUsersAutocomplete } from '@/features';
 
 export interface UsersFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const UsersFormField: React.FC<UsersFormFieldProps> = ({ field }) => {

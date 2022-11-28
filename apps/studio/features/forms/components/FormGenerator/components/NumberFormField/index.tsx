@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { Form, NumberFormFieldConfig } from '@indocal/services';
 
 export interface NumberFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const NumberFormField: React.FC<NumberFormFieldProps> = ({ field }) => {

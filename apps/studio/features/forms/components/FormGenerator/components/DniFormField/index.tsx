@@ -5,7 +5,7 @@ import { ControlledDniTextField } from '@indocal/ui';
 import { Form, DniFormFieldConfig } from '@indocal/services';
 
 export interface DniFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const DniFormField: React.FC<DniFormFieldProps> = ({ field }) => {

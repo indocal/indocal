@@ -6,7 +6,7 @@ import { ControlledDateTimePicker } from '@indocal/ui';
 import { Form, DateTimeFormFieldConfig } from '@indocal/services';
 
 export interface DateTimeFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const DateTimeFormField: React.FC<DateTimeFormFieldProps> = ({

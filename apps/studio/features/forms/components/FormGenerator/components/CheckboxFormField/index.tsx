@@ -6,7 +6,7 @@ import { ControlledCheckbox } from '@indocal/ui';
 import { Form, CheckboxFormFieldConfig } from '@indocal/services';
 
 export interface CheckboxFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const CheckboxFormField: React.FC<CheckboxFormFieldProps> = ({

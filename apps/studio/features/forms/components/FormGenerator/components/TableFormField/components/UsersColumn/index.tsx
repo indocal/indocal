@@ -5,7 +5,7 @@ import { Form, TableFormFieldColumn } from '@indocal/services';
 import { ControlledUsersAutocomplete } from '@/features';
 
 export interface UsersColumnProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
   column: TableFormFieldColumn;
   row: number;
   isSubmitting: boolean;

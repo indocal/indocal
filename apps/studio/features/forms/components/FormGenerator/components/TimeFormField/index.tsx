@@ -6,7 +6,7 @@ import { ControlledTimePicker } from '@indocal/ui';
 import { Form, TimeFormFieldConfig } from '@indocal/services';
 
 export interface TimeFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const TimeFormField: React.FC<TimeFormFieldProps> = ({ field }) => {

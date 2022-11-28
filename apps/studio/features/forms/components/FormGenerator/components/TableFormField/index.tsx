@@ -42,7 +42,7 @@ import {
 } from './components';
 
 export interface TableFormFieldProps {
-  field: Form['fields'][0];
+  field: Form['fields'][number];
 }
 
 export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
