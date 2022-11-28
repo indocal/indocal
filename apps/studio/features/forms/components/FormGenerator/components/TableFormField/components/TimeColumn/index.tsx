@@ -21,10 +21,13 @@ export const TimeColumn: React.FC<TimeColumnProps> = ({
 }) => (
   <ControlledTimePicker
     name={`${field.id}.${row}.${column.heading}`}
-    label={column.heading}
     control={control}
     timePickerProps={{ disabled: isSubmitting }}
-    textFieldProps={{ size: 'small', required: field.config?.required }}
+    textFieldProps={{
+      size: 'small',
+      required: field.config?.required,
+      FormHelperTextProps: { sx: { marginX: 0 } },
+    }}
     controllerProps={{
       rules: {
         required: {

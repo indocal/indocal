@@ -23,7 +23,7 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
   return (
     <Box
       sx={{
-        padding: (theme) => theme.spacing(2, 1.5, 1),
+        padding: (theme) => theme.spacing(1.5, 1.5, 0.5),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) => `1px solid ${theme.palette.divider}`,
       }}

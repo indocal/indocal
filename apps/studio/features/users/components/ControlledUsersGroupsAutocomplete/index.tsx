@@ -11,7 +11,7 @@ import { useUsersGroups, UserGroup } from '@indocal/services';
 
 export interface ControlledUsersGroupsAutocompleteProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;

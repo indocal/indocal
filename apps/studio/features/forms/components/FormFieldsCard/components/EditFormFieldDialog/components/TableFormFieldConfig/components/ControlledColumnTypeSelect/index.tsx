@@ -13,7 +13,7 @@ import { FormFieldType, translateFormFieldType } from '@indocal/services';
 
 export interface ControlledColumnTypeSelectProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   disabled?: boolean;
   required?: boolean;

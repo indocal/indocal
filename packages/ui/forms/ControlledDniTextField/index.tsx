@@ -24,12 +24,18 @@ const DniMask = forwardRef<HTMLElement, { onChange: (value: unknown) => void }>(
 
 export interface ControlledDniTextFieldProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   textFieldProps?: Omit<
     TextFieldProps,
-    'label' | 'value' | 'onChange' | 'error' | 'helperText' | 'InputProps'
+    | 'label'
+    | 'placeholder'
+    | 'value'
+    | 'onChange'
+    | 'error'
+    | 'helperText'
+    | 'InputProps'
   >;
 }
 
@@ -48,6 +54,7 @@ export const ControlledDniTextField: React.FC<ControlledDniTextFieldProps> = ({
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <TextField
           {...textFieldProps}
+          placeholder="###-#######-#"
           label={label}
           value={value}
           onChange={onChange}

@@ -25,12 +25,18 @@ const PhoneTextMask = forwardRef<
 
 export interface ControlledPhoneTextFieldProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   textFieldProps?: Omit<
     TextFieldProps,
-    'label' | 'value' | 'onChange' | 'error' | 'helperText' | 'InputProps'
+    | 'label'
+    | 'placeholder'
+    | 'value'
+    | 'onChange'
+    | 'error'
+    | 'helperText'
+    | 'InputProps'
   >;
 }
 
@@ -46,6 +52,7 @@ export const ControlledPhoneTextField: React.FC<
         <TextField
           {...textFieldProps}
           type="tel"
+          placeholder="(###) ###-####"
           label={label}
           value={value}
           onChange={onChange}

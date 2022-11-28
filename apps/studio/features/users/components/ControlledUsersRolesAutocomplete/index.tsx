@@ -11,7 +11,7 @@ import { useUsersRoles, UserRole } from '@indocal/services';
 
 export interface ControlledUsersRolesAutocompleteProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;

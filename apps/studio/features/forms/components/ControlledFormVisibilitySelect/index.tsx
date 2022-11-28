@@ -13,7 +13,7 @@ import { FormVisibility, translateFormVisibility } from '@indocal/services';
 
 export interface ControlledFormVisibilitySelectProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   disabled?: boolean;
   required?: boolean;

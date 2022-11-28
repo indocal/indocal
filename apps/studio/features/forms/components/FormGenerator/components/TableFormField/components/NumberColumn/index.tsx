@@ -25,7 +25,7 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
     required={field.config?.required}
     fullWidth
     size="small"
-    placeholder={column.heading}
+    placeholder="#"
     disabled={isSubmitting}
     inputProps={register(`${field.id}.${row}.${column.heading}`, {
       valueAsNumber: true,
@@ -47,6 +47,7 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
       (((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.heading]
         ?.message as string)
     }
+    FormHelperTextProps={{ sx: { marginX: 0 } }}
   />
 );
 

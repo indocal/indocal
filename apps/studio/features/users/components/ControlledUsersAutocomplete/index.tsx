@@ -11,7 +11,7 @@ import { useUsers, User } from '@indocal/services';
 
 export interface ControlledUsersAutocompleteProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;

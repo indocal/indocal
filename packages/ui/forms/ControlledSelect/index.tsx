@@ -12,7 +12,7 @@ import { Controller, ControllerProps, Control } from 'react-hook-form';
 
 export interface ControlledSelectProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   formControlProps?: Omit<FormControlProps, 'error'>;
@@ -40,7 +40,7 @@ export const ControlledSelect: React.FC<
     control={control}
     render={({ field: { value, onChange }, fieldState: { error } }) => (
       <FormControl {...formControlProps} error={Boolean(error)}>
-        <InputLabel {...inputLabelProps}>{label}</InputLabel>
+        {label && <InputLabel {...inputLabelProps}>{label}</InputLabel>}
 
         <Select
           {...selectProps}

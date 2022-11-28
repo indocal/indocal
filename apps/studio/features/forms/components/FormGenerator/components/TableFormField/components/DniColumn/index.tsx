@@ -20,12 +20,12 @@ export const DniColumn: React.FC<DniColumnProps> = ({
 }) => (
   <ControlledDniTextField
     name={`${field.id}.${row}.${column.heading}`}
-    label={column.heading}
     control={control}
     textFieldProps={{
       size: 'small',
       required: field.config?.required,
       disabled: isSubmitting,
+      FormHelperTextProps: { sx: { marginX: 0 } },
     }}
     controllerProps={{
       rules: {

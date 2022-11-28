@@ -13,7 +13,7 @@ import { UserStatus, translateUserStatus } from '@indocal/services';
 
 export interface ControlledUserStatusSelectProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   disabled?: boolean;
   required?: boolean;

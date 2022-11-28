@@ -23,10 +23,13 @@ export const UsersColumn: React.FC<UsersColumnProps> = ({
     required={field.config?.required}
     // multiple={config?.multiple} // TODO: implement it
     name={`${field.id}.${row}.${column.heading}`}
-    label={column.heading}
     control={control}
     disabled={isSubmitting}
-    textFieldProps={{ size: 'small' }}
+    textFieldProps={{
+      size: 'small',
+      placeholder: 'multiple' ? 'Usuarios' : 'Usuario',
+      FormHelperTextProps: { sx: { marginX: 0 } },
+    }}
     controllerProps={{
       rules: {
         required: {

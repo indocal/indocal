@@ -13,7 +13,7 @@ import { FormStatus, translateFormStatus } from '@indocal/services';
 
 export interface ControlledFormStatusSelectProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   disabled?: boolean;
   required?: boolean;

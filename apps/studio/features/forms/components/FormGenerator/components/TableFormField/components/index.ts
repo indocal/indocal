@@ -7,6 +7,8 @@ export * from './PhoneColumn';
 export * from './EmailColumn';
 
 export * from './CheckboxColumn';
+export * from './SelectColumn';
+export * from './RadioColumn';
 
 export * from './TimeColumn';
 export * from './DateColumn';

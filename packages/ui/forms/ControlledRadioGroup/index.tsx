@@ -12,7 +12,7 @@ import { Controller, ControllerProps, Control } from 'react-hook-form';
 
 export interface ControlledRadioGroupProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   formControlProps?: Omit<FormControlProps, 'error'>;
@@ -40,7 +40,7 @@ export const ControlledRadioGroup: React.FC<
     control={control}
     render={({ field: { value, onChange }, fieldState: { error } }) => (
       <FormControl {...formControlProps} error={Boolean(error)}>
-        <FormLabel {...formLabelProps}>{label}</FormLabel>
+        {label && <FormLabel {...formLabelProps}>{label}</FormLabel>}
 
         <RadioGroup
           {...radioGroupProps}

@@ -25,7 +25,7 @@ export const TextAreaColumn: React.FC<TextAreaColumnProps> = ({
     required={field.config?.required}
     fullWidth
     size="small"
-    placeholder={column.heading}
+    placeholder="abc xyz ..."
     disabled={isSubmitting}
     inputProps={register(`${field.id}.${row}.${column.heading}`, {
       required: {
@@ -45,6 +45,7 @@ export const TextAreaColumn: React.FC<TextAreaColumnProps> = ({
       (((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.heading]
         ?.message as string)
     }
+    FormHelperTextProps={{ sx: { marginX: 0 } }}
   />
 );
 

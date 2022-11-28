@@ -25,7 +25,7 @@ export const EmailColumn: React.FC<EmailColumnProps> = ({
     required={field.config?.required}
     fullWidth
     size="small"
-    placeholder={column.heading}
+    placeholder="example@domain.com"
     disabled={isSubmitting}
     inputProps={register(`${field.id}.${row}.${column.heading}`, {
       required: {
@@ -50,6 +50,7 @@ export const EmailColumn: React.FC<EmailColumnProps> = ({
       (((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.heading]
         ?.message as string)
     }
+    FormHelperTextProps={{ sx: { marginX: 0 } }}
   />
 );
 

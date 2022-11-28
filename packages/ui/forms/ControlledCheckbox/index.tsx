@@ -13,7 +13,7 @@ import { Controller, ControllerProps, Control } from 'react-hook-form';
 
 export interface ControlledCheckboxProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   formControlProps?: Omit<FormControlProps, 'error'>;
@@ -42,7 +42,11 @@ export const ControlledCheckbox: React.FC<ControlledCheckboxProps> = ({
           badgeContent="*"
           invisible={!formControlProps?.required}
           componentsProps={{
-            badge: { style: { top: 15, right: error ? 65 : 10 } },
+            badge: {
+              style: label
+                ? { top: 15, right: error ? 65 : 10 }
+                : { top: 10, right: error ? 120 : 20 },
+            },
           }}
           sx={{ ...(error && { color: (theme) => theme.palette.error.main }) }}
         >

@@ -1,10 +1,10 @@
+import { FormControlLabel, Radio } from '@mui/material';
 import { Control } from 'react-hook-form';
-import { isValid } from 'date-fns';
 
-import { ControlledDateTimePicker } from '@indocal/ui';
+import { ControlledRadioGroup } from '@indocal/ui';
 import { Form, TableFormFieldColumn } from '@indocal/services';
 
-export interface DateTimeColumnProps {
+export interface RadioColumnProps {
   field: Form['fields'][0];
   column: TableFormFieldColumn;
   row: number;
@@ -12,33 +12,39 @@ export interface DateTimeColumnProps {
   control: Control;
 }
 
-export const DateTimeColumn: React.FC<DateTimeColumnProps> = ({
+export const RadioColumn: React.FC<RadioColumnProps> = ({
   field,
   column,
   row,
   isSubmitting,
   control,
 }) => (
-  <ControlledDateTimePicker
+  <ControlledRadioGroup
     name={`${field.id}.${row}.${column.heading}`}
     control={control}
-    dateTimePickerProps={{ disabled: isSubmitting }}
-    textFieldProps={{
-      size: 'small',
+    formControlProps={{
       required: field.config?.required,
-      FormHelperTextProps: { sx: { marginX: 0 } },
+      disabled: isSubmitting,
     }}
+    formHelperTextProps={{ sx: { marginX: 0 } }}
     controllerProps={{
       rules: {
         required: {
           value: Boolean(field.config?.required),
           message: 'Debe completar este campo',
         },
-
-        validate: (value) => value && (isValid(value) || 'Formato no válido'),
       },
     }}
-  />
+  >
+    {['Opción 1', 'Opción 2', 'Opción 3'].map((option) => (
+      <FormControlLabel
+        key={option}
+        value={option}
+        label={option}
+        control={<Radio />}
+      />
+    ))}
+  </ControlledRadioGroup>
 );
 
-export default DateTimeColumn;
+export default RadioColumn;

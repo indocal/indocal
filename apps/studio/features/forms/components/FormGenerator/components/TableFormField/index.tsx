@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   Paper,
+  Stack,
   Toolbar,
   TableContainer,
   Table,
@@ -16,6 +17,8 @@ import {
 } from '@mui/material';
 import {
   AddCircle as AddIcon,
+  ArrowDropUp as ArrowUpIcon,
+  ArrowDropDown as ArrowDownIcon,
   RemoveCircle as RemoveIcon,
 } from '@mui/icons-material';
 import { useFormContext, useFieldArray } from 'react-hook-form';
@@ -30,6 +33,8 @@ import {
   PhoneColumn,
   EmailColumn,
   CheckboxColumn,
+  SelectColumn,
+  RadioColumn,
   TimeColumn,
   DateColumn,
   DateTimeColumn,
@@ -50,6 +55,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
   const {
     fields: rows,
     append,
+    swap,
     remove,
   } = useFieldArray({
     name: field.id,
@@ -77,8 +83,8 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
       EMAIL: EmailColumn,
 
       CHECKBOX: CheckboxColumn,
-      SELECT: TextColumn,
-      RADIO: TextColumn,
+      SELECT: SelectColumn,
+      RADIO: RadioColumn,
 
       TIME: TimeColumn,
       DATE: DateColumn,
@@ -93,6 +99,8 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
     <Paper
       sx={{
         display: 'grid',
+        width: '100%',
+        overflow: 'hidden',
         border: (theme) =>
           errors[field.id]?.root
             ? `1px solid ${theme.palette.error.main}`
@@ -122,8 +130,8 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
         </Badge>
       </Toolbar>
 
-      <TableContainer>
-        <Table size="small">
+      <TableContainer sx={{ maxHeight: 500 }}>
+        <Table stickyHeader size="small">
           {(errors[field.id]?.root || field.description) && (
             <Typography
               component="caption"
@@ -139,6 +147,21 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
 
           <TableHead>
             <TableRow>
+              <TableCell
+                align="center"
+                sx={{
+                  ...(config &&
+                    config.columns.length > 0 && {
+                      borderRight: (theme) =>
+                        errors[field.id]?.root
+                          ? `1px dashed ${theme.palette.error.main}`
+                          : `1px dashed ${theme.palette.divider}`,
+                    }),
+                }}
+              >
+                -
+              </TableCell>
+
               {config?.columns.map((column) => (
                 <TableCell
                   key={column.heading}
@@ -151,27 +174,56 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
                   {column.heading}
                 </TableCell>
               ))}
-
-              <TableCell
-                align="center"
-                sx={{
-                  ...(config &&
-                    config.columns.length > 0 && {
-                      borderLeft: (theme) =>
-                        errors[field.id]?.root
-                          ? `1px dashed ${theme.palette.error.main}`
-                          : `1px dashed ${theme.palette.divider}`,
-                    }),
-                }}
-              >
-                -
-              </TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={row.id}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    ...(config &&
+                      config.columns.length > 0 && {
+                        borderRight: (theme) =>
+                          errors[field.id]?.root
+                            ? `1px dashed ${theme.palette.error.main}`
+                            : `1px dashed ${theme.palette.divider}`,
+                      }),
+                  }}
+                >
+                  <Stack spacing={0.5}>
+                    <Stack direction="row" spacing={0.5}>
+                      <IconButton
+                        edge="end"
+                        size="small"
+                        disabled={index === 0}
+                        onClick={() => swap(index, index - 1)}
+                      >
+                        <ArrowUpIcon fontSize="small" />
+                      </IconButton>
+
+                      <IconButton
+                        edge="start"
+                        size="small"
+                        disabled={rows.length - 1 === index}
+                        onClick={() => swap(index, index + 1)}
+                      >
+                        <ArrowDownIcon fontSize="small" />
+                      </IconButton>
+                    </Stack>
+
+                    <IconButton
+                      size="small"
+                      color="error"
+                      disabled={isSubmitting}
+                      onClick={() => remove(index)}
+                    >
+                      <RemoveIcon fontSize="small" />
+                    </IconButton>
+                  </Stack>
+                </TableCell>
+
                 {config?.columns.map((column) => (
                   <TableCell key={column.heading} sx={{ minWidth: 225 }}>
                     {columns[column.type]({
@@ -185,28 +237,6 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
                     })}
                   </TableCell>
                 ))}
-
-                <TableCell
-                  align="center"
-                  sx={{
-                    ...(config &&
-                      config.columns.length > 0 && {
-                        borderLeft: (theme) =>
-                          errors[field.id]?.root
-                            ? `1px dashed ${theme.palette.error.main}`
-                            : `1px dashed ${theme.palette.divider}`,
-                      }),
-                  }}
-                >
-                  <IconButton
-                    size="small"
-                    color="error"
-                    disabled={isSubmitting}
-                    onClick={() => remove(index)}
-                  >
-                    <RemoveIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>

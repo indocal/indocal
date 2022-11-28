@@ -21,10 +21,13 @@ export const DateColumn: React.FC<DateColumnProps> = ({
 }) => (
   <ControlledDatePicker
     name={`${field.id}.${row}.${column.heading}`}
-    label={column.heading}
     control={control}
     datePickerProps={{ disabled: isSubmitting }}
-    textFieldProps={{ size: 'small', required: field.config?.required }}
+    textFieldProps={{
+      size: 'small',
+      required: field.config?.required,
+      FormHelperTextProps: { sx: { marginX: 0 } },
+    }}
     controllerProps={{
       rules: {
         required: {

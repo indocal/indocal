@@ -4,7 +4,7 @@ import { Controller, ControllerProps, Control } from 'react-hook-form';
 
 export interface ControlledTimePickerProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   timePickerProps?: Omit<
