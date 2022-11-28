@@ -95,5 +95,10 @@ export type UsersFormFieldConfig = CommonFormFieldConfig & {
 };
 
 export type TableFormFieldConfig = CommonFormFieldConfig & {
-  columns: Array<{ type: Exclude<FormFieldType, 'TABLE'>; heading: string }>;
+  columns: TableFormFieldColumn[];
+};
+
+export type TableFormFieldColumn = {
+  type: Exclude<FormFieldType, 'TABLE'>;
+  heading: string;
 };

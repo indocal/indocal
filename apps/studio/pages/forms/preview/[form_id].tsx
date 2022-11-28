@@ -30,6 +30,9 @@ const FormPreviewPage: EnhancedNextPage = () => {
         content: formData[field.id] || null,
       }));
 
+      // TODO: remove it
+      console.log(answers);
+
       const { error } = await indocal.forms.entries.create({
         answers,
         form: form.id,

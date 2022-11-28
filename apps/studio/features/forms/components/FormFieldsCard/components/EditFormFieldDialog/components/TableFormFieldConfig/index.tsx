@@ -20,9 +20,9 @@ import { useFormContext, useFieldArray, Control } from 'react-hook-form';
 
 import { NoData, ControlledCheckbox } from '@indocal/ui';
 
-import { ControlledFormFieldTypeSelect } from '@/features';
-
 import { EditFormFieldDialogData } from '../../context';
+
+import { ControlledColumnTypeSelect } from './components';
 
 export const TableFormFieldConfig: React.FC = () => {
   const {
@@ -105,7 +105,7 @@ export const TableFormFieldConfig: React.FC = () => {
                 spacing={2}
                 sx={{ width: '100%', marginY: (theme) => theme.spacing(1) }}
               >
-                <ControlledFormFieldTypeSelect
+                <ControlledColumnTypeSelect
                   required
                   name={`config.columns.${index}.type`}
                   label={`Tipo (Columna ${index + 1})`}

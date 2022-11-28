@@ -12,6 +12,7 @@ import {
   Typography,
   Button,
   IconButton,
+  Badge,
 } from '@mui/material';
 import {
   AddCircle as AddIcon,
@@ -21,19 +22,43 @@ import { useFormContext, useFieldArray } from 'react-hook-form';
 
 import { Form, TableFormFieldConfig } from '@indocal/services';
 
+import {
+  TextColumn,
+  TextAreaColumn,
+  NumberColumn,
+  DniColumn,
+  PhoneColumn,
+  EmailColumn,
+  CheckboxColumn,
+  TimeColumn,
+  DateColumn,
+  DateTimeColumn,
+  UsersColumn,
+} from './components';
+
 export interface TableFormFieldProps {
   field: Form['fields'][0];
 }
 
 export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
+    register,
     control,
   } = useFormContext();
 
-  const { fields, append, swap, remove } = useFieldArray({
+  const {
+    fields: rows,
+    append,
+    remove,
+  } = useFieldArray({
     name: field.id,
-    rules: { minLength: 0 },
+    rules: {
+      required: {
+        value: Boolean(field.config?.required),
+        message: 'Debe completar este campo',
+      },
+    },
   });
 
   const config = useMemo<TableFormFieldConfig | null>(
@@ -41,42 +66,142 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
     [field.config]
   );
 
+  const columns = useMemo(
+    () => ({
+      TEXT: TextColumn,
+      TEXTAREA: TextAreaColumn,
+      NUMBER: NumberColumn,
+
+      DNI: DniColumn,
+      PHONE: PhoneColumn,
+      EMAIL: EmailColumn,
+
+      CHECKBOX: CheckboxColumn,
+      SELECT: TextColumn,
+      RADIO: TextColumn,
+
+      TIME: TimeColumn,
+      DATE: DateColumn,
+      DATETIME: DateTimeColumn,
+
+      USERS: UsersColumn,
+    }),
+    []
+  );
+
   return (
-    <Paper sx={{ border: (theme) => `1px solid ${theme.palette.divider}` }}>
+    <Paper
+      sx={{
+        display: 'grid',
+        border: (theme) =>
+          errors[field.id]?.root
+            ? `1px solid ${theme.palette.error.main}`
+            : `1px solid ${theme.palette.divider}`,
+      }}
+    >
       <Toolbar
+        variant="dense"
         sx={{
-          justifyContent: 'space-between',
-          borderBottom: (theme) => `1px dashed ${theme.palette.divider}`,
+          borderBottom: (theme) =>
+            errors[field.id]?.root
+              ? `1px dashed ${theme.palette.error.main}`
+              : `1px dashed ${theme.palette.divider}`,
         }}
       >
-        <Typography>{field.title}</Typography>
+        <Badge
+          badgeContent="*"
+          invisible={!config?.required}
+          componentsProps={{ badge: { style: { top: 5, right: -5 } } }}
+          sx={{
+            ...(errors[field.id]?.root && {
+              color: (theme) => theme.palette.error.main,
+            }),
+          }}
+        >
+          <Typography>{field.title}</Typography>
+        </Badge>
       </Toolbar>
 
       <TableContainer>
         <Table size="small">
-          <caption>{field.title}</caption>
+          {(errors[field.id]?.root || field.description) && (
+            <Typography
+              component="caption"
+              sx={{
+                ...(errors[field.id]?.root && {
+                  color: (theme) => `${theme.palette.error.main} !important`,
+                }),
+              }}
+            >
+              {(errors[field.id]?.root?.message as string) || field.description}
+            </Typography>
+          )}
 
           <TableHead>
             <TableRow>
               {config?.columns.map((column) => (
-                <TableCell key={column.heading}>{column.heading}</TableCell>
+                <TableCell
+                  key={column.heading}
+                  sx={{
+                    ...(errors[field.id]?.root && {
+                      color: (theme) => theme.palette.error.main,
+                    }),
+                  }}
+                >
+                  {column.heading}
+                </TableCell>
               ))}
 
-              <TableCell>--</TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  ...(config &&
+                    config.columns.length > 0 && {
+                      borderLeft: (theme) =>
+                        errors[field.id]?.root
+                          ? `1px dashed ${theme.palette.error.main}`
+                          : `1px dashed ${theme.palette.divider}`,
+                    }),
+                }}
+              >
+                -
+              </TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {fields.map((field, index) => (
-              <TableRow key={field.id}>
+            {rows.map((row, index) => (
+              <TableRow key={row.id}>
                 {config?.columns.map((column) => (
-                  <TableCell key={column.heading}></TableCell>
+                  <TableCell key={column.heading} sx={{ minWidth: 225 }}>
+                    {columns[column.type]({
+                      field,
+                      column,
+                      row: index,
+                      isSubmitting,
+                      errors,
+                      register,
+                      control,
+                    })}
+                  </TableCell>
                 ))}
 
-                <TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    ...(config &&
+                      config.columns.length > 0 && {
+                        borderLeft: (theme) =>
+                          errors[field.id]?.root
+                            ? `1px dashed ${theme.palette.error.main}`
+                            : `1px dashed ${theme.palette.divider}`,
+                      }),
+                  }}
+                >
                   <IconButton
                     size="small"
                     color="error"
+                    disabled={isSubmitting}
                     onClick={() => remove(index)}
                   >
                     <RemoveIcon fontSize="small" />
@@ -89,15 +214,15 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
           <TableFooter>
             <TableRow>
               <TableCell
-                size="small"
-                colSpan={Number(config?.columns.length) + 1}
+                colSpan={config ? config.columns.length + 1 : 1}
                 sx={{ padding: (theme) => theme.spacing(0.25) }}
               >
                 <Button
                   fullWidth
                   size="small"
-                  variant="contained"
+                  variant="outlined"
                   color="inherit"
+                  disabled={isSubmitting}
                   onClick={() => append(undefined)}
                 >
                   <AddIcon fontSize="small" />
