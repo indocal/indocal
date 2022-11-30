@@ -1,6 +1,10 @@
 import { Fragment, useMemo, useCallback } from 'react';
-import { Paper, Stack, Divider, Typography } from '@mui/material';
-import { Save as SaveIcon } from '@mui/icons-material';
+import { Paper, Stack, Divider, Typography, Button } from '@mui/material';
+import {
+  Save as SaveIcon,
+  CheckCircle as CheckIcon,
+  RestartAlt as ResetIcon,
+} from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import { useFormContext } from 'react-hook-form';
 
@@ -33,8 +37,9 @@ export interface FormGeneratorProps {
 
 const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, isSubmitSuccessful },
     handleSubmit,
+    reset,
   } = useFormContext();
 
   const fields = useMemo(
@@ -63,60 +68,94 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
   );
 
   const handleOnSubmit = useCallback(
-    async (formData: Record<string, unknown>) => {
-      const answers: FormFieldAnswer[] = form.fields.map((field) => ({
-        field,
-        content: formData[field.id] || null,
-      }));
-
-      await onSubmit(answers);
-    },
+    async (formData: Record<string, FormFieldAnswer['content']>) =>
+      await onSubmit(
+        form.fields.map((field) => ({
+          field,
+          content: formData[field.id] || null,
+        }))
+      ),
     [form.fields, onSubmit]
   );
 
   return (
-    <Stack
-      component={Paper}
-      divider={<Divider flexItem />}
-      gap={2}
-      sx={{ padding: (theme) => theme.spacing(2) }}
-    >
-      <Stack>
-        <Typography variant="h5" align="center" fontWeight="bolder">
-          {form.title}
+    <Paper sx={{ padding: (theme) => theme.spacing(2) }}>
+      <Stack
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          display: isSubmitSuccessful ? 'flex' : 'none',
+          margin: 'auto',
+          padding: (theme) => theme.spacing(2),
+        }}
+      >
+        <CheckIcon fontSize="large" color="success" />
+
+        <Typography variant="h5" align="center" sx={{ fontWeight: 'bolder' }}>
+          Respuestas recibidas
         </Typography>
 
-        {form.description && (
-          <Typography variant="caption" align="center">
-            {form.description}
-          </Typography>
-        )}
+        <Typography variant="caption" align="center" color="text.secondary">
+          Hemos recibido sus respuestas, estaremos trabajando para brindarle la
+          mejor experiencia
+        </Typography>
+
+        <Button
+          variant="contained"
+          size="small"
+          endIcon={<ResetIcon />}
+          onClick={() => reset()}
+          sx={{ marginTop: (theme) => theme.spacing(1.5) }}
+        >
+          Enviar otra respuesta
+        </Button>
       </Stack>
 
-      {form.fields.length > 0 ? (
-        <Stack
-          component="form"
-          noValidate
-          spacing={2}
-          onSubmit={handleSubmit(handleOnSubmit)}
-        >
-          {form.fields.map((field) => (
-            <Fragment key={field.id}>{fields[field.type]({ field })}</Fragment>
-          ))}
+      <Stack
+        spacing={1}
+        divider={<Divider flexItem />}
+        sx={{ display: isSubmitSuccessful ? 'none' : 'flex' }}
+      >
+        <Stack>
+          <Typography variant="h5" align="center" fontWeight="bolder">
+            {form.title}
+          </Typography>
 
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            endIcon={<SaveIcon />}
-          >
-            Guardar respuestas
-          </LoadingButton>
+          {form.description && (
+            <Typography variant="caption" align="center">
+              {form.description}
+            </Typography>
+          )}
         </Stack>
-      ) : (
-        <NoData message="Este formulario no contiene campos" />
-      )}
-    </Stack>
+
+        {form.fields.length > 0 ? (
+          <Stack
+            component="form"
+            noValidate
+            spacing={2}
+            onSubmit={handleSubmit(handleOnSubmit)}
+            sx={{ padding: (theme) => theme.spacing(1) }}
+          >
+            {form.fields.map((field) => (
+              <Fragment key={field.id}>
+                {fields[field.type]({ field })}
+              </Fragment>
+            ))}
+
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+              endIcon={<SaveIcon />}
+            >
+              Guardar respuestas
+            </LoadingButton>
+          </Stack>
+        ) : (
+          <NoData message="Este formulario no contiene campos" />
+        )}
+      </Stack>
+    </Paper>
   );
 };
 

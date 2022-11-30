@@ -1,32 +1,29 @@
 import { useCallback } from 'react';
-import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { Container } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { useForm, UUID } from '@indocal/services';
-import { Page, Loader, NotFound, ErrorInfo } from '@indocal/ui';
+import { Form } from '@indocal/services';
+import { Page } from '@indocal/ui';
 
 import { indocal } from '@/lib';
 import { FormGenerator, FormFieldAnswer } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
-const FormPreviewPage: EnhancedNextPage = () => {
-  const router = useRouter();
+type FormPreviewPageProps = {
+  form: Form;
+};
 
+const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
   const { data: session } = useSession();
-
-  const { loading, form, error } = useForm(router.query.form_id as UUID);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const handleOnSubmit = useCallback(
     async (answers: FormFieldAnswer[]) => {
       if (!form) return;
-
-      // TODO: remove it
-      console.log(answers);
 
       const { error } = await indocal.forms.entries.create({
         answers,
@@ -54,31 +51,20 @@ const FormPreviewPage: EnhancedNextPage = () => {
   );
 
   return (
-    <Page
-      transition="right"
-      title={
-        loading
-          ? 'Cargando...'
-          : form
-          ? `Formulario: ${form.title}`
-          : 'Formulario no encontrado'
-      }
-    >
+    <Page transition="right" title={`Formulario: ${form.title}`}>
       <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-        {loading ? (
-          <Loader invisible message="Cargando datos..." />
-        ) : error ? (
-          <ErrorInfo error={error} />
-        ) : form ? (
-          <FormGenerator form={form} onSubmit={handleOnSubmit} />
-        ) : (
-          <NotFound />
-        )}
+        <FormGenerator form={form} onSubmit={handleOnSubmit} />
       </Container>
     </Page>
   );
 };
 
 FormPreviewPage.getLayout = (page) => <AdminDashboard>{page}</AdminDashboard>;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    notFound: true,
+  };
+};
 
 export default FormPreviewPage;
