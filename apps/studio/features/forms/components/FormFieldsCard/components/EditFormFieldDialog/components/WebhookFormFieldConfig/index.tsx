@@ -4,7 +4,7 @@ import { ControlledCheckbox } from '@indocal/ui';
 
 import { EditFormFieldDialogData } from '../../context';
 
-export const ApiFormFieldConfig: React.FC = () => {
+export const WebhookFormFieldConfig: React.FC = () => {
   const {
     formState: { isSubmitting },
     control,
@@ -12,12 +12,12 @@ export const ApiFormFieldConfig: React.FC = () => {
 
   return (
     <ControlledCheckbox
-      name="config.api"
-      label="¿Incluir en la respuesta?"
+      name="config.webhook"
+      label="¿Incluir en la webhook?"
       control={control}
       formControlProps={{ disabled: isSubmitting }}
     />
   );
 };
 
-export default ApiFormFieldConfig;
+export default WebhookFormFieldConfig;

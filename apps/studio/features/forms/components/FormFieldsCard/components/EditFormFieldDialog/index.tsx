@@ -46,7 +46,7 @@ import {
   DateTimeFormFieldConfig,
   UsersFormFieldConfig,
   TableFormFieldConfig,
-  // ApiFormFieldConfig, {/* TODO: implement API feature */}
+  WebhookFormFieldConfig,
 } from './components';
 
 export interface EditFormFieldDialogProps {
@@ -75,7 +75,7 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
   const enum Tabs {
     INFO = 'info',
     CONFIG = 'config',
-    API = 'api',
+    WEBHOOK = 'webhook',
   }
 
   const [tab, setTab] = useState<Tabs>(Tabs.INFO);
@@ -208,8 +208,7 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
             >
               <Tab label="Información" value={Tabs.INFO} />
               <Tab label="Configuración" value={Tabs.CONFIG} />
-              {/* TODO: implement API feature */}
-              {/* <Tab label="API" value={Tabs.API} /> */}
+              <Tab label="Webhook" value={Tabs.WEBHOOK} />
             </TabList>
 
             <TabPanel value={Tabs.INFO}>
@@ -238,10 +237,9 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
 
             <TabPanel value={Tabs.CONFIG}>{options[field.type]}</TabPanel>
 
-            {/* TODO: implement API feature */}
-            {/* <TabPanel value={Tabs.API}>
-              <ApiFormFieldConfig />
-            </TabPanel> */}
+            <TabPanel value={Tabs.WEBHOOK}>
+              <WebhookFormFieldConfig />
+            </TabPanel>
           </TabContext>
         </Stack>
       </DialogContent>

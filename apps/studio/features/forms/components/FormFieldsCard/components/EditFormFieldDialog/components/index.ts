@@ -18,4 +18,4 @@ export * from './UsersFormFieldConfig';
 
 export * from './TableFormFieldConfig';
 
-export * from './ApiFormFieldConfig';
+export * from './WebhookFormFieldConfig';
