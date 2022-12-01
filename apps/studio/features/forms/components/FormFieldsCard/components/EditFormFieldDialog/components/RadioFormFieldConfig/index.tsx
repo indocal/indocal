@@ -66,7 +66,11 @@ export const RadioFormFieldConfig: React.FC = () => {
             Opciones
           </Typography>
 
-          <IconButton size="small" onClick={() => append(undefined)}>
+          <IconButton
+            size="small"
+            disabled={isSubmitting}
+            onClick={() => append(undefined)}
+          >
             <AddIcon />
           </IconButton>
         </ListSubheader>
@@ -83,7 +87,7 @@ export const RadioFormFieldConfig: React.FC = () => {
                 <IconButton
                   edge="end"
                   size="small"
-                  disabled={index === 0}
+                  disabled={isSubmitting || index === 0}
                   onClick={() => swap(index, index - 1)}
                 >
                   <ArrowUpIcon fontSize="small" />
@@ -92,7 +96,7 @@ export const RadioFormFieldConfig: React.FC = () => {
                 <IconButton
                   edge="start"
                   size="small"
-                  disabled={fields.length - 1 === index}
+                  disabled={isSubmitting || fields.length - 1 === index}
                   onClick={() => swap(index, index + 1)}
                 >
                   <ArrowDownIcon fontSize="small" />
@@ -123,6 +127,7 @@ export const RadioFormFieldConfig: React.FC = () => {
                   edge="end"
                   size="small"
                   color="error"
+                  disabled={isSubmitting}
                   onClick={() => remove(index)}
                 >
                   <RemoveIcon fontSize="small" />
