@@ -24,6 +24,7 @@ import {
 import { useFormContext, useFieldArray } from 'react-hook-form';
 
 import { Form, TableFormFieldConfig } from '@indocal/services';
+import { NoData } from '@indocal/ui';
 
 import {
   TextColumn,
@@ -52,6 +53,11 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
     control,
   } = useFormContext();
 
+  const config = useMemo<TableFormFieldConfig | null>(
+    () => field.config as TableFormFieldConfig,
+    [field.config]
+  );
+
   const {
     fields: rows,
     append,
@@ -61,16 +67,25 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
     name: field.id,
     rules: {
       required: {
-        value: Boolean(field.config?.required),
+        value: Boolean(config?.required),
         message: 'Debe completar este campo',
       },
+
+      ...(config?.minLength && {
+        minLength: {
+          value: config.minLength,
+          message: `Debe completar un mínimo de ${config.minLength} filas`,
+        },
+      }),
+
+      ...(config?.maxLength && {
+        maxLength: {
+          value: config.maxLength,
+          message: `Debe completar un máximo de ${config.maxLength} filas`,
+        },
+      }),
     },
   });
-
-  const config = useMemo<TableFormFieldConfig | null>(
-    () => field.config as TableFormFieldConfig,
-    [field.config]
-  );
 
   const columns = useMemo(
     () => ({
@@ -132,134 +147,144 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
 
       <TableContainer sx={{ maxHeight: 500 }}>
         <Table stickyHeader size="small">
-          {(errors[field.id]?.root || field.description) && (
-            <Typography
-              component="caption"
-              sx={{
-                ...(errors[field.id]?.root && {
-                  color: (theme) => `${theme.palette.error.main} !important`,
-                }),
-              }}
-            >
-              {(errors[field.id]?.root?.message as string) || field.description}
-            </Typography>
+          {config?.columns.length &&
+            (errors[field.id]?.root || field.description) && (
+              <Typography
+                component="caption"
+                sx={{
+                  ...(errors[field.id]?.root && {
+                    color: (theme) => `${theme.palette.error.main} !important`,
+                  }),
+                }}
+              >
+                {(errors[field.id]?.root?.message as string) ||
+                  field.description}
+              </Typography>
+            )}
+
+          {config?.columns.length && (
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  align="center"
+                  sx={{
+                    borderRight: (theme) =>
+                      errors[field.id]?.root
+                        ? `1px dashed ${theme.palette.error.main}`
+                        : `1px dashed ${theme.palette.divider}`,
+                  }}
+                >
+                  -
+                </TableCell>
+
+                {config.columns.map((column) => (
+                  <TableCell
+                    key={column.heading}
+                    sx={{
+                      ...(errors[field.id]?.root && {
+                        color: (theme) => theme.palette.error.main,
+                      }),
+                    }}
+                  >
+                    {column.heading}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
           )}
 
-          <TableHead>
-            <TableRow>
-              <TableCell
-                align="center"
-                sx={{
-                  ...(config &&
-                    config.columns.length > 0 && {
+          <TableBody>
+            {config && config.columns.length > 0 ? (
+              rows.map((row, index) => (
+                <TableRow key={row.id}>
+                  <TableCell
+                    align="center"
+                    sx={{
                       borderRight: (theme) =>
                         errors[field.id]?.root
                           ? `1px dashed ${theme.palette.error.main}`
                           : `1px dashed ${theme.palette.divider}`,
-                    }),
-                }}
-              >
-                -
-              </TableCell>
+                    }}
+                  >
+                    <Stack
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={0.5}
+                    >
+                      <Stack direction="row" spacing={0.5}>
+                        <IconButton
+                          size="small"
+                          disabled={isSubmitting || index === 0}
+                          onClick={() => swap(index, index - 1)}
+                        >
+                          <ArrowUpIcon fontSize="small" />
+                        </IconButton>
 
-              {config?.columns.map((column) => (
-                <TableCell
-                  key={column.heading}
-                  sx={{
-                    ...(errors[field.id]?.root && {
-                      color: (theme) => theme.palette.error.main,
-                    }),
-                  }}
-                >
-                  {column.heading}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {rows.map((row, index) => (
-              <TableRow key={row.id}>
-                <TableCell
-                  align="center"
-                  sx={{
-                    ...(config &&
-                      config.columns.length > 0 && {
-                        borderRight: (theme) =>
-                          errors[field.id]?.root
-                            ? `1px dashed ${theme.palette.error.main}`
-                            : `1px dashed ${theme.palette.divider}`,
-                      }),
-                  }}
-                >
-                  <Stack spacing={0.5}>
-                    <Stack direction="row" spacing={0.5}>
-                      <IconButton
-                        edge="end"
-                        size="small"
-                        disabled={index === 0}
-                        onClick={() => swap(index, index - 1)}
-                      >
-                        <ArrowUpIcon fontSize="small" />
-                      </IconButton>
+                        <IconButton
+                          size="small"
+                          disabled={isSubmitting || rows.length - 1 === index}
+                          onClick={() => swap(index, index + 1)}
+                        >
+                          <ArrowDownIcon fontSize="small" />
+                        </IconButton>
+                      </Stack>
 
                       <IconButton
-                        edge="start"
                         size="small"
-                        disabled={rows.length - 1 === index}
-                        onClick={() => swap(index, index + 1)}
+                        color="error"
+                        disabled={isSubmitting}
+                        onClick={() => remove(index)}
                       >
-                        <ArrowDownIcon fontSize="small" />
+                        <RemoveIcon fontSize="small" />
                       </IconButton>
                     </Stack>
-
-                    <IconButton
-                      size="small"
-                      color="error"
-                      disabled={isSubmitting}
-                      onClick={() => remove(index)}
-                    >
-                      <RemoveIcon fontSize="small" />
-                    </IconButton>
-                  </Stack>
-                </TableCell>
-
-                {config?.columns.map((column) => (
-                  <TableCell key={column.heading} sx={{ minWidth: 225 }}>
-                    {columns[column.type]({
-                      field,
-                      column,
-                      row: index,
-                      isSubmitting,
-                      errors,
-                      register,
-                      control,
-                    })}
                   </TableCell>
-                ))}
+
+                  {config?.columns.map((column) => (
+                    <TableCell key={column.heading} sx={{ minWidth: 225 }}>
+                      {columns[column.type]({
+                        field,
+                        column,
+                        row: index,
+                        isSubmitting,
+                        errors,
+                        register,
+                        control,
+                      })}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell>
+                  <NoData message="Esta tabla no contiene columnas definidas" />
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
 
-          <TableFooter>
-            <TableRow>
-              <TableCell
-                colSpan={config ? config.columns.length + 1 : 1}
-                sx={{ padding: (theme) => theme.spacing(0.25) }}
-              >
-                <Button
-                  fullWidth
-                  size="small"
-                  variant="outlined"
-                  color="inherit"
-                  disabled={isSubmitting}
-                  onClick={() => append(undefined)}
+          {config?.columns.length && (
+            <TableFooter>
+              <TableRow>
+                <TableCell
+                  colSpan={config.columns.length + 1}
+                  sx={{ padding: (theme) => theme.spacing(0.25) }}
                 >
-                  <AddIcon fontSize="small" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableFooter>
+                  <Button
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    color="inherit"
+                    disabled={isSubmitting}
+                    onClick={() => append(undefined)}
+                  >
+                    <AddIcon fontSize="small" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       </TableContainer>
     </Paper>

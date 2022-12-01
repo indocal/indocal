@@ -96,9 +96,43 @@ export type UsersFormFieldConfig = CommonFormFieldConfig & {
 
 export type TableFormFieldConfig = CommonFormFieldConfig & {
   columns: TableFormFieldColumn[];
+  minLength: number;
+  maxLength: number;
 };
 
 export type TableFormFieldColumn = {
-  type: Exclude<FormFieldType, 'TABLE'>;
+  type: TableFormFieldColumnType;
   heading: string;
+  config: TableFormFieldColumnConfig | null;
 };
+
+export type TableFormFieldColumnType =
+  | 'TEXT'
+  | 'TEXTAREA'
+  | 'NUMBER'
+  | 'DNI'
+  | 'PHONE'
+  | 'EMAIL'
+  | 'CHECKBOX'
+  | 'SELECT'
+  | 'RADIO'
+  | 'TIME'
+  | 'DATE'
+  | 'DATETIME'
+  | 'USERS';
+
+export type TableFormFieldColumnConfig = Partial<
+  | TextFormFieldConfig
+  | TextAreaFormFieldConfig
+  | NumberFormFieldConfig
+  | DniFormFieldConfig
+  | PhoneFormFieldConfig
+  | EmailFormFieldConfig
+  | CheckboxFormFieldConfig
+  | SelectFormFieldConfig
+  | RadioFormFieldConfig
+  | TimeFormFieldConfig
+  | DateFormFieldConfig
+  | DateTimeFormFieldConfig
+  | UsersFormFieldConfig
+>;
