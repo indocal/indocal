@@ -24,15 +24,6 @@ type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    slug: zod
-      .string({
-        description: 'Slug del formulario',
-        required_error: 'Debe ingresar el slug del formulario',
-        invalid_type_error: 'Formato no válido',
-      })
-      .min(1, 'Debe ingresar el slug del formulario')
-      .trim(),
-
     title: zod
       .string({
         description: 'Título del formulario',
@@ -93,7 +84,11 @@ export const AddFormDialog: React.FC = () => {
   const onSubmit = useCallback(
     async (formData: FormData) => {
       const { form, error } = await indocal.forms.create({
-        slug: formData.slug,
+        slug: [formData.group.name, formData.title]
+          .join(' ')
+          .replaceAll(' ', '-')
+          .toLowerCase(),
+
         title: formData.title,
         ...(formData.description && { description: formData.description }),
         group: formData.group.id,
@@ -142,16 +137,6 @@ export const AddFormDialog: React.FC = () => {
 
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
-          <TextField
-            required
-            autoComplete="off"
-            label="Slug"
-            disabled={isSubmitting}
-            inputProps={register('slug')}
-            error={Boolean(errors.slug)}
-            helperText={errors.slug?.message}
-          />
-
           <TextField
             required
             autoComplete="off"
