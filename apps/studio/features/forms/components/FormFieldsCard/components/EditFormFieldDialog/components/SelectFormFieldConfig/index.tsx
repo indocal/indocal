@@ -29,7 +29,12 @@ export const SelectFormFieldConfig: React.FC = () => {
     control,
   } = useFormContext<EditFormFieldDialogData>();
 
-  const { fields, append, swap, remove } = useFieldArray({
+  const {
+    fields: options,
+    append,
+    swap,
+    remove,
+  } = useFieldArray({
     name: 'config.options',
   });
 
@@ -55,7 +60,7 @@ export const SelectFormFieldConfig: React.FC = () => {
         sx={{
           borderRadius: (theme) => theme.shape.borderRadius,
           backgroundColor: (theme) => theme.palette.background.paper,
-          ...(fields.length === 0 && {
+          ...(options.length === 0 && {
             border: (theme) => `1px solid ${theme.palette.error.main}`,
           }),
         }}
@@ -84,9 +89,9 @@ export const SelectFormFieldConfig: React.FC = () => {
           </IconButton>
         </ListSubheader>
 
-        {fields.length > 0 ? (
-          fields.map((field, index) => (
-            <ListItem key={field.id} divider>
+        {options.length > 0 ? (
+          options.map((option, index) => (
+            <ListItem key={option.id} divider>
               <ListItemIcon
                 sx={{
                   gap: (theme) => theme.spacing(0.5),
@@ -105,7 +110,7 @@ export const SelectFormFieldConfig: React.FC = () => {
                 <IconButton
                   edge="start"
                   size="small"
-                  disabled={isSubmitting || fields.length - 1 === index}
+                  disabled={isSubmitting || options.length - 1 === index}
                   onClick={() => swap(index, index + 1)}
                 >
                   <ArrowDownIcon fontSize="small" />
