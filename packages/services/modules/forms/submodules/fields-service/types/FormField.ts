@@ -96,8 +96,8 @@ export type UsersFormFieldConfig = CommonFormFieldConfig & {
 
 export type TableFormFieldConfig = CommonFormFieldConfig & {
   columns: TableFormFieldColumn[];
-  minLength: number;
-  maxLength: number;
+  minRows: number;
+  maxRows: number;
 };
 
 export type TableFormFieldColumn = {

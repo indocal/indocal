@@ -9,7 +9,10 @@ import {
 import { Control, ControllerProps } from 'react-hook-form';
 
 import { ControlledSelect } from '@indocal/ui';
-import { FormFieldType, translateFormFieldType } from '@indocal/services';
+import {
+  translateFormFieldType,
+  TableFormFieldColumnType,
+} from '@indocal/services';
 
 export interface ControlledColumnTypeSelectProps {
   name: string;
@@ -38,7 +41,7 @@ export const ControlledColumnTypeSelect: React.FC<
   inputLabelProps,
   selectProps,
 }) => {
-  const status = useMemo<Exclude<FormFieldType, 'TABLE'>[]>(
+  const status = useMemo<TableFormFieldColumnType[]>(
     () => [
       'TEXT',
       'TEXTAREA',

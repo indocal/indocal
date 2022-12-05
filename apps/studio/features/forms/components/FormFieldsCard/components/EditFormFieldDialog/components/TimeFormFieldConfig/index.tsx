@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Control } from 'react-hook-form';
 
 import { ControlledCheckbox } from '@indocal/ui';
 
@@ -14,7 +14,7 @@ export const TimeFormFieldConfig: React.FC = () => {
     <ControlledCheckbox
       name="config.required"
       label="¿Campo requerido?"
-      control={control}
+      control={control as unknown as Control}
       formControlProps={{ disabled: isSubmitting }}
     />
   );

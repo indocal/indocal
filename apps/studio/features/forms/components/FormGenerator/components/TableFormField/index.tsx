@@ -71,17 +71,17 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
         message: 'Debe completar este campo',
       },
 
-      ...(config?.minLength && {
+      ...(config?.minRows && {
         minLength: {
-          value: config.minLength,
-          message: `Debe completar un mínimo de ${config.minLength} filas`,
+          value: config.minRows,
+          message: `Debe completar un mínimo de ${config.minRows} filas`,
         },
       }),
 
-      ...(config?.maxLength && {
+      ...(config?.maxRows && {
         maxLength: {
-          value: config.maxLength,
-          message: `Debe completar un máximo de ${config.maxLength} filas`,
+          value: config.maxRows,
+          message: `Debe completar un máximo de ${config.maxRows} filas`,
         },
       }),
     },
@@ -246,6 +246,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
                         field,
                         column,
                         row: index,
+                        config: column.config,
                         isSubmitting,
                         errors,
                         register,

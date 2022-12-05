@@ -16,7 +16,7 @@ import {
   ArrowDropUp as ArrowUpIcon,
   ArrowDropDown as ArrowDownIcon,
 } from '@mui/icons-material';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, Control } from 'react-hook-form';
 
 import { NoData, ControlledCheckbox } from '@indocal/ui';
 
@@ -43,7 +43,7 @@ export const RadioFormFieldConfig: React.FC = () => {
       <ControlledCheckbox
         name="config.required"
         label="¿Campo requerido?"
-        control={control}
+        control={control as unknown as Control}
         formControlProps={{ disabled: isSubmitting }}
       />
 
@@ -51,7 +51,7 @@ export const RadioFormFieldConfig: React.FC = () => {
         sx={{
           borderRadius: (theme) => theme.shape.borderRadius,
           backgroundColor: (theme) => theme.palette.background.paper,
-          ...(options.length === 0 && {
+          ...(Boolean(errors.config?.options) && {
             border: (theme) => `1px solid ${theme.palette.error.main}`,
           }),
         }}

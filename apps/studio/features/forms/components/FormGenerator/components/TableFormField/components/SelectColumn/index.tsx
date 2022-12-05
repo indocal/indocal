@@ -2,11 +2,17 @@ import { MenuItem } from '@mui/material';
 import { Control } from 'react-hook-form';
 
 import { ControlledSelect } from '@indocal/ui';
-import { Form, TableFormFieldColumn } from '@indocal/services';
+import {
+  Form,
+  TableFormFieldColumn,
+  TableFormFieldColumnConfig,
+  SelectFormFieldConfig,
+} from '@indocal/services';
 
 export interface SelectColumnProps {
   field: Form['fields'][number];
   column: TableFormFieldColumn;
+  config: TableFormFieldColumnConfig | null;
   row: number;
   isSubmitting: boolean;
   control: Control;
@@ -15,6 +21,7 @@ export interface SelectColumnProps {
 export const SelectColumn: React.FC<SelectColumnProps> = ({
   field,
   column,
+  config,
   row,
   isSubmitting,
   control,
@@ -24,30 +31,30 @@ export const SelectColumn: React.FC<SelectColumnProps> = ({
     control={control}
     formControlProps={{
       fullWidth: true,
-      required: field.config?.required,
+      required: config?.required,
       disabled: isSubmitting,
     }}
     formHelperTextProps={{ sx: { marginX: 0 } }}
     selectProps={{
       size: 'small',
       displayEmpty: true,
-      multiple: field.config?.multiple,
+      multiple: (config as SelectFormFieldConfig)?.multiple,
     }}
     controllerProps={{
-      defaultValue: field.config?.multiple ? [] : '',
+      defaultValue: (config as SelectFormFieldConfig)?.multiple ? [] : '',
       rules: {
         required: {
-          value: Boolean(field.config?.required),
+          value: Boolean(config?.required),
           message: 'Debe completar este campo',
         },
       },
     }}
   >
-    <MenuItem value={field.config?.multiple ? [] : ''}>
-      <em>{field.config?.multiple ? 'Opciones' : 'Opción'}</em>
+    <MenuItem value={(config as SelectFormFieldConfig)?.multiple ? [] : ''}>
+      <em>{column.heading}</em>
     </MenuItem>
 
-    {['Opción 1', 'Opción 2', 'Opción 3'].map((option) => (
+    {(config as SelectFormFieldConfig)?.options.map((option) => (
       <MenuItem key={option} value={option}>
         {option}
       </MenuItem>

@@ -2,11 +2,17 @@ import { FormControlLabel, Radio } from '@mui/material';
 import { Control } from 'react-hook-form';
 
 import { ControlledRadioGroup } from '@indocal/ui';
-import { Form, TableFormFieldColumn } from '@indocal/services';
+import {
+  Form,
+  TableFormFieldColumn,
+  TableFormFieldColumnConfig,
+  RadioFormFieldConfig,
+} from '@indocal/services';
 
 export interface RadioColumnProps {
   field: Form['fields'][number];
   column: TableFormFieldColumn;
+  config: TableFormFieldColumnConfig | null;
   row: number;
   isSubmitting: boolean;
   control: Control;
@@ -15,6 +21,7 @@ export interface RadioColumnProps {
 export const RadioColumn: React.FC<RadioColumnProps> = ({
   field,
   column,
+  config,
   row,
   isSubmitting,
   control,
@@ -23,20 +30,21 @@ export const RadioColumn: React.FC<RadioColumnProps> = ({
     name={`${field.id}.${row}.${column.heading}`}
     control={control}
     formControlProps={{
-      required: field.config?.required,
+      required: config?.required,
       disabled: isSubmitting,
     }}
     formHelperTextProps={{ sx: { marginX: 0 } }}
+    radioGroupProps={{ row: true }}
     controllerProps={{
       rules: {
         required: {
-          value: Boolean(field.config?.required),
-          message: 'Debe completar este campo',
+          value: Boolean(config?.required),
+          message: 'Debe aceptar este campo',
         },
       },
     }}
   >
-    {['Opción 1', 'Opción 2', 'Opción 3'].map((option) => (
+    {(config as RadioFormFieldConfig | null)?.options.map((option) => (
       <FormControlLabel
         key={option}
         value={option}

@@ -1,12 +1,18 @@
 import { Control } from 'react-hook-form';
 
-import { Form, TableFormFieldColumn } from '@indocal/services';
+import {
+  Form,
+  TableFormFieldColumn,
+  TableFormFieldColumnConfig,
+  UsersFormFieldConfig,
+} from '@indocal/services';
 
 import { ControlledUsersAutocomplete } from '@/features';
 
 export interface UsersColumnProps {
   field: Form['fields'][number];
   column: TableFormFieldColumn;
+  config: TableFormFieldColumnConfig | null;
   row: number;
   isSubmitting: boolean;
   control: Control;
@@ -15,25 +21,26 @@ export interface UsersColumnProps {
 export const UsersColumn: React.FC<UsersColumnProps> = ({
   field,
   column,
+  config,
   row,
   isSubmitting,
   control,
 }) => (
   <ControlledUsersAutocomplete
-    required={field.config?.required}
-    // multiple={config?.multiple} // TODO: implement it
+    required={config?.required}
+    multiple={(config as UsersFormFieldConfig)?.multiple}
     name={`${field.id}.${row}.${column.heading}`}
     control={control}
     disabled={isSubmitting}
     textFieldProps={{
       size: 'small',
-      placeholder: 'multiple' ? 'Usuarios' : 'Usuario',
+      placeholder: 'Usuarios',
       FormHelperTextProps: { sx: { marginX: 0 } },
     }}
     controllerProps={{
       rules: {
         required: {
-          value: Boolean(field.config?.required),
+          value: Boolean(config?.required),
           message: 'Debe completar este campo',
         },
       },

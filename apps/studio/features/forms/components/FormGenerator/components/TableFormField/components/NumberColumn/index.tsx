@@ -1,11 +1,17 @@
 import { TextField } from '@mui/material';
 import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
 
-import { Form, TableFormFieldColumn } from '@indocal/services';
+import {
+  Form,
+  TableFormFieldColumn,
+  TableFormFieldColumnConfig,
+  NumberFormFieldConfig,
+} from '@indocal/services';
 
 export interface NumberColumnProps {
   field: Form['fields'][number];
   column: TableFormFieldColumn;
+  config: TableFormFieldColumnConfig | null;
   row: number;
   isSubmitting: boolean;
   errors: FieldErrors;
@@ -15,6 +21,7 @@ export interface NumberColumnProps {
 export const NumberColumn: React.FC<NumberColumnProps> = ({
   field,
   column,
+  config,
   row,
   isSubmitting,
   errors,
@@ -22,7 +29,7 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
 }) => (
   <TextField
     type="number"
-    required={field.config?.required}
+    required={config?.required}
     fullWidth
     size="small"
     placeholder="#"
@@ -31,9 +38,27 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
       valueAsNumber: true,
 
       required: {
-        value: Boolean(field.config?.required),
-        message: 'Debe completar este campo',
+        value: Boolean(config?.required),
+        message: 'Debe aceptar este campo',
       },
+
+      ...((config as NumberFormFieldConfig)?.min && {
+        min: {
+          value: (config as NumberFormFieldConfig).min,
+          message: `Debe ingresar un valor mayor o igual a ${
+            (config as NumberFormFieldConfig).min
+          }`,
+        },
+      }),
+
+      ...((config as NumberFormFieldConfig)?.max && {
+        max: {
+          value: (config as NumberFormFieldConfig).max,
+          message: `Debe ingresar un valor menor o igual a ${
+            (config as NumberFormFieldConfig).max
+          }`,
+        },
+      }),
     })}
     error={Boolean(
       errors[field.id] &&

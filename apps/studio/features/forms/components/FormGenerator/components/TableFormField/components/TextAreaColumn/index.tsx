@@ -1,11 +1,17 @@
 import { TextField } from '@mui/material';
 import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
 
-import { Form, TableFormFieldColumn } from '@indocal/services';
+import {
+  Form,
+  TableFormFieldColumn,
+  TableFormFieldColumnConfig,
+  TextAreaFormFieldConfig,
+} from '@indocal/services';
 
 export interface TextAreaColumnProps {
   field: Form['fields'][number];
   column: TableFormFieldColumn;
+  config: TableFormFieldColumnConfig | null;
   row: number;
   isSubmitting: boolean;
   errors: FieldErrors;
@@ -15,6 +21,7 @@ export interface TextAreaColumnProps {
 export const TextAreaColumn: React.FC<TextAreaColumnProps> = ({
   field,
   column,
+  config,
   row,
   isSubmitting,
   errors,
@@ -22,16 +29,34 @@ export const TextAreaColumn: React.FC<TextAreaColumnProps> = ({
 }) => (
   <TextField
     multiline
-    required={field.config?.required}
+    required={config?.required}
     fullWidth
     size="small"
     placeholder="abc xyz ..."
     disabled={isSubmitting}
     inputProps={register(`${field.id}.${row}.${column.heading}`, {
       required: {
-        value: Boolean(field.config?.required),
+        value: Boolean(config?.required),
         message: 'Debe completar este campo',
       },
+
+      ...((config as TextAreaFormFieldConfig)?.minLength && {
+        minLength: {
+          value: (config as TextAreaFormFieldConfig).minLength,
+          message: `Debe ingresar un mínimo de ${
+            (config as TextAreaFormFieldConfig).minLength
+          } caracteres`,
+        },
+      }),
+
+      ...((config as TextAreaFormFieldConfig)?.maxLength && {
+        maxLength: {
+          value: (config as TextAreaFormFieldConfig).maxLength,
+          message: `Debe ingresar un máximo de ${
+            (config as TextAreaFormFieldConfig).maxLength
+          } caracteres`,
+        },
+      }),
     })}
     error={Boolean(
       errors[field.id] &&

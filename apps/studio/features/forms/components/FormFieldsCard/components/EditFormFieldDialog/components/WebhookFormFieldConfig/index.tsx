@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Control } from 'react-hook-form';
 
 import { ControlledCheckbox } from '@indocal/ui';
 
@@ -13,8 +13,8 @@ export const WebhookFormFieldConfig: React.FC = () => {
   return (
     <ControlledCheckbox
       name="config.webhook"
-      label="¿Incluir en la webhook?"
-      control={control}
+      label="¿Incluir en el webhook?"
+      control={control as unknown as Control}
       formControlProps={{ disabled: isSubmitting }}
     />
   );
