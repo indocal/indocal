@@ -14,6 +14,7 @@ export type FormFieldType =
   | 'DATE'
   | 'DATETIME'
   | 'USERS'
+  | 'SECTION'
   | 'TABLE';
 
 export type FormFieldConfig = Partial<
@@ -30,6 +31,7 @@ export type FormFieldConfig = Partial<
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
   | UsersFormFieldConfig
+  | SectionFormFieldConfig
   | TableFormFieldConfig
 >;
 
@@ -93,6 +95,48 @@ export type DateTimeFormFieldConfig = CommonFormFieldConfig;
 export type UsersFormFieldConfig = CommonFormFieldConfig & {
   multiple: boolean;
 };
+
+export type SectionFormFieldConfig = CommonFormFieldConfig & {
+  items: SectionFormFieldItem[];
+};
+
+export type SectionFormFieldItem = {
+  type: SectionFormFieldItemType;
+  title: string;
+  description: string | null;
+  config: SectionFormFieldItemConfig | null;
+};
+
+export type SectionFormFieldItemType =
+  | 'TEXT'
+  | 'TEXTAREA'
+  | 'NUMBER'
+  | 'DNI'
+  | 'PHONE'
+  | 'EMAIL'
+  | 'CHECKBOX'
+  | 'SELECT'
+  | 'RADIO'
+  | 'TIME'
+  | 'DATE'
+  | 'DATETIME'
+  | 'USERS';
+
+export type SectionFormFieldItemConfig = Partial<
+  | TextFormFieldConfig
+  | TextAreaFormFieldConfig
+  | NumberFormFieldConfig
+  | DniFormFieldConfig
+  | PhoneFormFieldConfig
+  | EmailFormFieldConfig
+  | CheckboxFormFieldConfig
+  | SelectFormFieldConfig
+  | RadioFormFieldConfig
+  | TimeFormFieldConfig
+  | DateFormFieldConfig
+  | DateTimeFormFieldConfig
+  | UsersFormFieldConfig
+>;
 
 export type TableFormFieldConfig = CommonFormFieldConfig & {
   columns: TableFormFieldColumn[];

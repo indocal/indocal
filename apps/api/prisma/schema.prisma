@@ -148,6 +148,7 @@ enum FormFieldType {
 
   USERS
 
+  SECTION
   TABLE
 }
 

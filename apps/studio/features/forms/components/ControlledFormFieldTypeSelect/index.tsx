@@ -58,6 +58,7 @@ export const ControlledFormFieldTypeSelect: React.FC<
 
       'USERS',
 
+      'SECTION',
       'TABLE',
     ],
     []

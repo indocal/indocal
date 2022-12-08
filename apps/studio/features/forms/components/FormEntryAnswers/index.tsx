@@ -19,6 +19,7 @@ import {
   DateFormFieldAnswer,
   DateTimeFormFieldAnswer,
   UsersFormFieldAnswer,
+  SectionFormFieldAnswer,
   TableFormFieldAnswer,
 } from './components';
 
@@ -49,6 +50,7 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
 
       USERS: UsersFormFieldAnswer,
 
+      SECTION: SectionFormFieldAnswer,
       TABLE: TableFormFieldAnswer,
     }),
     []

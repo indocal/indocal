@@ -26,6 +26,7 @@ import {
   DateFormField,
   DateTimeFormField,
   UsersFormField,
+  SectionFormField,
   TableFormField,
 } from './components';
 import { FormFieldAnswer } from './types';
@@ -62,6 +63,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
 
       USERS: UsersFormField,
 
+      SECTION: SectionFormField,
       TABLE: TableFormField,
     }),
     []
@@ -70,6 +72,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
   const handleOnSubmit = useCallback(
     async (formData: Record<string, FormFieldAnswer['content']>) =>
       await onSubmit(
+        // TODO: verify if null
         form.fields.map((field) => ({
           field,
           content: formData[field.id] || null,

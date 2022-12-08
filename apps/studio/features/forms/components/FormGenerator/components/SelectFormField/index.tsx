@@ -42,7 +42,7 @@ export const SelectFormField: React.FC<SelectFormFieldProps> = ({ field }) => {
     >
       {!config?.multiple && <MenuItem value="">--</MenuItem>}
 
-      {config?.options.map((option) => (
+      {config?.options?.map((option) => (
         <MenuItem key={option} value={option}>
           {option}
         </MenuItem>

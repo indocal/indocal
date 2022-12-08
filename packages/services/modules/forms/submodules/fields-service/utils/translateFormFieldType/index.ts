@@ -20,6 +20,7 @@ export function translateFormFieldType(type: FormFieldType): string {
 
     USERS: 'Usuarios (INDOCAL)',
 
+    SECTION: 'Sección',
     TABLE: 'Tabla',
   };
 

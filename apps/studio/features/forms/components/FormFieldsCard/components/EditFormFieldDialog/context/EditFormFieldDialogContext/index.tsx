@@ -19,6 +19,7 @@ import {
   dateFormFieldConfigSchema,
   dateTimeFormFieldConfigSchema,
   usersFormFieldConfigSchema,
+  sectionFormFieldConfigSchema,
   tableFormFieldConfigSchema,
 } from './schemas';
 
@@ -39,6 +40,7 @@ const configSchema = zod.object({
   ...dateFormFieldConfigSchema.shape,
   ...dateTimeFormFieldConfigSchema.shape,
   ...usersFormFieldConfigSchema.shape,
+  ...sectionFormFieldConfigSchema.shape,
   ...tableFormFieldConfigSchema.shape,
 });
 
@@ -59,7 +61,6 @@ const schema = zod.object(
         required_error: 'Debe ingresar la descripción del campo',
         invalid_type_error: 'Formato no válido',
       })
-      .min(1, 'Debe ingresar la descripción del campo')
       .trim()
       .nullish(),
 

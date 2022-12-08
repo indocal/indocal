@@ -108,7 +108,7 @@ const TableFormFieldConfig: React.FC = () => {
           sx={{
             borderRadius: (theme) => theme.shape.borderRadius,
             backgroundColor: (theme) => theme.palette.background.paper,
-            ...(Boolean(errors.config?.columns) && {
+            ...(errors.config?.columns && {
               border: (theme) => `1px solid ${theme.palette.error.main}`,
             }),
           }}
@@ -167,7 +167,17 @@ const TableFormFieldConfig: React.FC = () => {
 
                 <Stack
                   spacing={2}
-                  sx={{ width: '100%', marginY: (theme) => theme.spacing(1) }}
+                  sx={{
+                    width: '100%',
+                    marginY: (theme) => theme.spacing(1),
+
+                    ...(errors?.config?.columns &&
+                      errors.config.columns[index] && {
+                        padding: (theme) => theme.spacing(2),
+                        border: (theme) =>
+                          `1px dashed ${theme.palette.error.main}`,
+                      }),
+                  }}
                 >
                   <ControlledColumnTypeSelect
                     required

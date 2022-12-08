@@ -16,6 +16,7 @@ export * from './DateTimeFormFieldConfig';
 
 export * from './UsersFormFieldConfig';
 
+export * from './SectionFormFieldConfig';
 export * from './TableFormFieldConfig';
 
 export * from './WebhookFormFieldConfig';

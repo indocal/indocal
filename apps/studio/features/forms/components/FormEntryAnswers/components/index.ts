@@ -15,4 +15,6 @@ export * from './DateFormFieldAnswer';
 export * from './DateTimeFormFieldAnswer';
 
 export * from './UsersFormFieldAnswer';
+
+export * from './SectionFormFieldAnswer';
 export * from './TableFormFieldAnswer';

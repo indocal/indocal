@@ -51,7 +51,7 @@ export const RadioFormFieldConfig: React.FC = () => {
         sx={{
           borderRadius: (theme) => theme.shape.borderRadius,
           backgroundColor: (theme) => theme.palette.background.paper,
-          ...(Boolean(errors.config?.options) && {
+          ...(errors.config?.options && {
             border: (theme) => `1px solid ${theme.palette.error.main}`,
           }),
         }}

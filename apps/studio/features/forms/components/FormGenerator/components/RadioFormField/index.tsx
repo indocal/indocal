@@ -46,7 +46,7 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
           },
         }}
       >
-        {config?.options.map((option) => (
+        {config?.options?.map((option) => (
           <FormControlLabel
             key={option}
             value={option}

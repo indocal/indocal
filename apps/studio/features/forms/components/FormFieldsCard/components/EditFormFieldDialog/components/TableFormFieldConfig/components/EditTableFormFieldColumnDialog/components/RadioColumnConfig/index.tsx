@@ -44,7 +44,6 @@ export const RadioColumnConfig: React.FC<RadioColumnConfigProps> = ({
     fields: options,
     append,
     swap,
-
     remove,
   } = useFieldArray({
     name: `config.columns.${column}.config.options`,
@@ -63,12 +62,10 @@ export const RadioColumnConfig: React.FC<RadioColumnConfigProps> = ({
         sx={{
           borderRadius: (theme) => theme.shape.borderRadius,
           backgroundColor: (theme) => theme.palette.background.paper,
-          ...(Boolean(
-            errors.config?.columns &&
-              errors.config.columns[column]?.config?.options
-          ) && {
-            border: (theme) => `1px solid ${theme.palette.error.main}`,
-          }),
+          ...(errors.config?.columns &&
+            errors.config.columns[column]?.config?.options && {
+              border: (theme) => `1px solid ${theme.palette.error.main}`,
+            }),
         }}
       >
         <ListSubheader

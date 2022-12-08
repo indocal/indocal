@@ -46,6 +46,7 @@ const schema = zod.object(
 
           'USERS',
 
+          'SECTION',
           'TABLE',
         ],
         {

@@ -45,6 +45,7 @@ import {
   DateFormFieldConfig,
   DateTimeFormFieldConfig,
   UsersFormFieldConfig,
+  SectionFormFieldConfig,
   TableFormFieldConfig,
   WebhookFormFieldConfig,
 } from './components';
@@ -100,6 +101,7 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
 
       USERS: <UsersFormFieldConfig />,
 
+      SECTION: <SectionFormFieldConfig />,
       TABLE: <TableFormFieldConfig />,
     }),
     []
@@ -107,10 +109,15 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
 
   const onSubmit = useCallback(
     async (formData: EditFormFieldDialogData) => {
+      // TODO: verify if null
       const { error } = await indocal.forms.fields.update(field.id, {
         title: formData.title,
         description: formData.description || null,
-        config: formData.config,
+        ...(formData.config && {
+          config: Object.fromEntries(
+            Object.entries(formData.config).map(([value, key]) => [value, key])
+          ),
+        }),
       });
 
       if (error) {

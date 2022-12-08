@@ -18,4 +18,5 @@ export * from './dateTimeFormFieldConfigSchema';
 
 export * from './usersFormFieldConfigSchema';
 
+export * from './sectionFormFieldConfigSchema';
 export * from './tableFormFieldConfigSchema';

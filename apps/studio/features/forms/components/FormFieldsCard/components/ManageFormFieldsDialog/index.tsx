@@ -28,6 +28,7 @@ import {
   Event as DateIcon,
   EventNote as DateTimeIcon,
   Group as UsersIcon,
+  BackupTable as SectionIcon,
   TableChart as TableIcon,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
@@ -76,6 +77,7 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
 
       USERS: <UsersIcon />,
 
+      SECTION: <SectionIcon />,
       TABLE: <TableIcon />,
     }),
     []
