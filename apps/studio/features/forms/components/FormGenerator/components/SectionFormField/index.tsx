@@ -86,11 +86,16 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
         </Typography>
       </Badge>
 
-      {config?.items?.map((item) => (
-        <Fragment key={item.title}>
-          {items[item.type]({ field, item })}
-        </Fragment>
-      ))}
+      <Stack
+        spacing={2}
+        sx={{ marginTop: (theme) => `${theme.spacing(0.75)} !important` }}
+      >
+        {config?.items?.map((item) => (
+          <Fragment key={item.title}>
+            {items[item.type]({ field, item })}
+          </Fragment>
+        ))}
+      </Stack>
 
       {field.description && (
         <Typography
