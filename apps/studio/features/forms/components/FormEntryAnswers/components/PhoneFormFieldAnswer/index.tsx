@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 import {
   FormFieldAnswer,
   PhoneFormFieldAnswer as PhoneAnswer,
-} from '@/features';
+} from '@indocal/services';
 
 export interface PhoneFormFieldAnswerProps {
   answer: FormFieldAnswer;

@@ -4,7 +4,7 @@ import { Typography, Chip } from '@mui/material';
 import {
   FormFieldAnswer,
   SelectFormFieldAnswer as SelectAnswer,
-} from '@/features';
+} from '@indocal/services';
 
 export interface SelectFormFieldAnswerProps {
   answer: FormFieldAnswer;

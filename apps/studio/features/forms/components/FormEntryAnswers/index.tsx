@@ -3,8 +3,6 @@ import { Paper, Stack, Divider } from '@mui/material';
 
 import { FormEntry } from '@indocal/services';
 
-import { FormFieldAnswer } from '@/features';
-
 import {
   TextFormFieldAnswer,
   TextAreaFormFieldAnswer,
@@ -56,7 +54,6 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
     []
   );
 
-  // TODO: remove as unknown as
   return (
     <Stack
       component={Paper}
@@ -65,10 +62,8 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
       sx={{ padding: (theme) => theme.spacing(2) }}
     >
       {entry.answers.map((answer) => (
-        <Fragment key={(answer as unknown as FormFieldAnswer).field.id}>
-          {answers[(answer as unknown as FormFieldAnswer).field.type]({
-            answer: answer as unknown as FormFieldAnswer,
-          })}
+        <Fragment key={answer.field.id}>
+          {answers[answer.field.type]({ answer })}
         </Fragment>
       ))}
     </Stack>

@@ -1,4 +1,4 @@
-import { FormFieldAnswer } from '@/features';
+import { FormFieldAnswer } from '@indocal/services';
 
 export interface DateTimeFormFieldAnswerProps {
   answer: FormFieldAnswer;

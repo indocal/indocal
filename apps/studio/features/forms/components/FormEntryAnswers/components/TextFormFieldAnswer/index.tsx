@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
 import { Typography } from '@mui/material';
 
-import { FormFieldAnswer, TextFormFieldAnswer as TextAnswer } from '@/features';
+import {
+  FormFieldAnswer,
+  TextFormFieldAnswer as TextAnswer,
+} from '@indocal/services';
 
 export interface TextFormFieldAnswerProps {
   answer: FormFieldAnswer;

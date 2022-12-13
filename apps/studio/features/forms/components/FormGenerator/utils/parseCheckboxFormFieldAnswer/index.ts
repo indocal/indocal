@@ -1,6 +1,4 @@
-import { Form } from '@indocal/services';
-
-import { FormFieldAnswer } from '../../types';
+import { Form, FormFieldAnswer } from '@indocal/services';
 
 export function parseCheckboxFormFieldAnswer(
   field: Form['fields'][number],

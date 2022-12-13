@@ -1,6 +1,9 @@
-import { Form, SectionFormFieldConfig } from '@indocal/services';
-
-import { FormFieldAnswer, SectionFormFieldAnswer } from '../../types';
+import {
+  Form,
+  SectionFormFieldConfig,
+  FormFieldAnswer,
+  SectionFormFieldAnswer,
+} from '@indocal/services';
 
 import parseTextFormFieldAnswer from '../parseTextFormFieldAnswer';
 import parseTextAreaFormFieldAnswer from '../parseTextAreaFormFieldAnswer';

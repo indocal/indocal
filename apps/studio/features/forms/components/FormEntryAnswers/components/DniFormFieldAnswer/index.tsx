@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
 import { Typography } from '@mui/material';
 
-import { FormFieldAnswer, DniFormFieldAnswer as DniAnswer } from '@/features';
+import {
+  FormFieldAnswer,
+  DniFormFieldAnswer as DniAnswer,
+} from '@indocal/services';
 
 export interface DniFormFieldAnswerProps {
   answer: FormFieldAnswer;

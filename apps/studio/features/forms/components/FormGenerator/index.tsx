@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab';
 import { useFormContext } from 'react-hook-form';
 
 import { NoData } from '@indocal/ui';
-import { UUID, Form } from '@indocal/services';
+import { UUID, Form, FormFieldAnswer } from '@indocal/services';
 
 import { FormGeneratorProvider } from './context';
 import {
@@ -46,7 +46,6 @@ import {
   parseSectionFormFieldAnswer,
   parseTableFormFieldAnswer,
 } from './utils';
-import { FormFieldAnswer } from './types';
 
 export interface FormGeneratorProps {
   form: Form;
@@ -213,9 +212,3 @@ const FormGeneratorWrapper: React.FC<FormGeneratorProps> = (props) => (
 export { FormGeneratorWrapper as FormGenerator };
 
 export default FormGeneratorWrapper;
-
-////////////////
-// Re-exports //
-////////////////
-
-export * from './types';

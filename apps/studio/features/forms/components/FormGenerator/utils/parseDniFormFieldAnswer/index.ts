@@ -1,7 +1,5 @@
 import { formatDni } from '@indocal/ui';
-import { Form } from '@indocal/services';
-
-import { FormFieldAnswer } from '../../types';
+import { Form, FormFieldAnswer } from '@indocal/services';
 
 export function parseDniFormFieldAnswer(
   field: Form['fields'][number],

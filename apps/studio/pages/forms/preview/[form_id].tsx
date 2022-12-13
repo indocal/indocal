@@ -5,11 +5,11 @@ import { getToken } from 'next-auth/jwt';
 import { Container } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { UUID, Form, INDOCAL } from '@indocal/services';
+import { INDOCAL, UUID, Form, FormFieldAnswer } from '@indocal/services';
 import { Page } from '@indocal/ui';
 
 import { indocal } from '@/lib';
-import { FormGenerator, FormFieldAnswer } from '@/features';
+import { FormGenerator } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -28,8 +28,6 @@ const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
 
   const handleOnSubmit = useCallback(
     async (answers: FormFieldAnswer[]) => {
-      if (!form) return;
-
       const { error } = await indocal.forms.entries.create({
         answers,
         form: form.id,

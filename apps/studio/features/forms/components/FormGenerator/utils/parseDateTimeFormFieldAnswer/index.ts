@@ -1,8 +1,6 @@
 import { isValid } from 'date-fns';
 
-import { Form } from '@indocal/services';
-
-import { FormFieldAnswer } from '../../types';
+import { Form, FormFieldAnswer } from '@indocal/services';
 
 export function parseDateTimeFormFieldAnswer(
   field: Form['fields'][number],
