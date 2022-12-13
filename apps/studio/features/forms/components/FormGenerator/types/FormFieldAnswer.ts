@@ -16,6 +16,7 @@ export type FormFieldAnswer = {
     | DateFormFieldAnswer
     | DateTimeFormFieldAnswer
     | UsersFormFieldAnswer
+    | SectionFormFieldAnswer
     | TableFormFieldAnswer
     | null;
 };
@@ -46,4 +47,40 @@ export type DateTimeFormFieldAnswer = Date;
 
 export type UsersFormFieldAnswer = User | User[];
 
-export type TableFormFieldAnswer = unknown[];
+export type SectionFormFieldAnswer = Record<
+  string,
+  | TextFormFieldAnswer
+  | TextAreaFormFieldAnswer
+  | NumberFormFieldAnswer
+  | DniFormFieldAnswer
+  | PhoneFormFieldAnswer
+  | EmailFormFieldAnswer
+  | CheckboxFormFieldAnswer
+  | SelectFormFieldAnswer
+  | RadioFormFieldAnswer
+  | TimeFormFieldAnswer
+  | DateFormFieldAnswer
+  | DateTimeFormFieldAnswer
+  | UsersFormFieldAnswer
+  | null
+>;
+
+export type TableFormFieldAnswer = Array<
+  Record<
+    string,
+    | TextFormFieldAnswer
+    | TextAreaFormFieldAnswer
+    | NumberFormFieldAnswer
+    | DniFormFieldAnswer
+    | PhoneFormFieldAnswer
+    | EmailFormFieldAnswer
+    | CheckboxFormFieldAnswer
+    | SelectFormFieldAnswer
+    | RadioFormFieldAnswer
+    | TimeFormFieldAnswer
+    | DateFormFieldAnswer
+    | DateTimeFormFieldAnswer
+    | UsersFormFieldAnswer
+    | null
+  >
+>;

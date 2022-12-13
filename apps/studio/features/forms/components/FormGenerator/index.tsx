@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab';
 import { useFormContext } from 'react-hook-form';
 
 import { NoData } from '@indocal/ui';
-import { Form } from '@indocal/services';
+import { UUID, Form } from '@indocal/services';
 
 import { FormGeneratorProvider } from './context';
 import {
@@ -29,6 +29,23 @@ import {
   SectionFormField,
   TableFormField,
 } from './components';
+import {
+  parseTextFormFieldAnswer,
+  parseTextAreaFormFieldAnswer,
+  parseNumberFormFieldAnswer,
+  parseDniFormFieldAnswer,
+  parsePhoneFormFieldAnswer,
+  parseEmailFormFieldAnswer,
+  parseCheckboxFormFieldAnswer,
+  parseSelectFormFieldAnswer,
+  parseRadioFormFieldAnswer,
+  parseTimeFormFieldAnswer,
+  parseDateFormFieldAnswer,
+  parseDateTimeFormFieldAnswer,
+  parseUsersFormFieldAnswer,
+  parseSectionFormFieldAnswer,
+  parseTableFormFieldAnswer,
+} from './utils';
 import { FormFieldAnswer } from './types';
 
 export interface FormGeneratorProps {
@@ -69,16 +86,41 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
     []
   );
 
+  const parsers = useMemo(
+    () => ({
+      TEXT: parseTextFormFieldAnswer,
+      TEXTAREA: parseTextAreaFormFieldAnswer,
+      NUMBER: parseNumberFormFieldAnswer,
+
+      DNI: parseDniFormFieldAnswer,
+      PHONE: parsePhoneFormFieldAnswer,
+      EMAIL: parseEmailFormFieldAnswer,
+
+      CHECKBOX: parseCheckboxFormFieldAnswer,
+      SELECT: parseSelectFormFieldAnswer,
+      RADIO: parseRadioFormFieldAnswer,
+
+      TIME: parseTimeFormFieldAnswer,
+      DATE: parseDateFormFieldAnswer,
+      DATETIME: parseDateTimeFormFieldAnswer,
+
+      USERS: parseUsersFormFieldAnswer,
+
+      SECTION: parseSectionFormFieldAnswer,
+      TABLE: parseTableFormFieldAnswer,
+    }),
+    []
+  );
+
   const handleOnSubmit = useCallback(
-    async (formData: Record<string, FormFieldAnswer['content']>) =>
+    async (formData: Record<UUID, FormFieldAnswer['content']>) => {
       await onSubmit(
-        // TODO: verify if null
-        form.fields.map((field) => ({
-          field,
-          content: formData[field.id] || null,
-        }))
-      ),
-    [form.fields, onSubmit]
+        form.fields.map((field) =>
+          parsers[field.type](field, formData[field.id])
+        )
+      );
+    },
+    [form.fields, parsers, onSubmit]
   );
 
   return (
