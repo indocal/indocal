@@ -71,7 +71,7 @@ export const getServerSideProps: GetServerSideProps<
   const token = await getToken(ctx);
 
   const indocal = new INDOCAL({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
     token: token?.access_token,
   });
 

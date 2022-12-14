@@ -50,9 +50,8 @@ export class AuthService {
     await this.nodemailerService.transporter.sendMail({
       from: process.env.NODEMAILER_FROM,
       to: user.email,
-      subject: `Recuperar contraseña: ${user.username}`,
-      html: restorePasswordEmailTemplate(user.email, user.password),
-      text: `Su contraseña es: ${user.password}`,
+      subject: `Restablecer contraseña: ${user.username}`,
+      html: restorePasswordEmailTemplate(user),
     });
   }
 

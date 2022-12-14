@@ -1,89 +1,54 @@
-// TODO: use mjml
-export const restorePasswordEmailTemplate = (
-  email: string,
-  password: string
-): string => {
-  const logo = '/assets/images/logos/logo--full.png';
-  const escapedEmail = `${email.replace(/\./g, '&#8203;.')}`;
+import { User as DBUserModel } from '@prisma/client';
+import mjml2html from 'mjml';
 
-  return `
-    <html>
-      <head>
-        <title>Recuperar contraseña</title>
+export const restorePasswordEmailTemplate = (user: DBUserModel): string => {
+  const logo =
+    'http://localhost:5000/static/assets/images/logos/logo--full.png';
 
-        <style>
-          hr {
-            margin: 1em;
-            border-color: lightgrey;
-          }
+  const output = mjml2html(
+    `
+      <mjml>
+        <mj-head>
+          <mj-title>Restablecer contraseña: ${user.username}</mj-title>
+        </mj-head>
 
-          .container {
-            margin: 2em;
-            text-align: center;
-          }
+        <mj-body>
+          <mj-section>
+            <mj-column>
+              <mj-image alt="Logo del INDOCAL" src="${logo}" />
+            </mj-column>
+          </mj-section>
 
-          .header {
-            display: grid;
-            place-content: center;
-            place-items: center;
-          }
+          <mj-section padding-top="0" padding-bottom="0">
+            <mj-column>
+              <mj-divider border-width="2px" border-color="lightgrey" />
 
-          .logo {
-            display: block;
-            width: 200px;
-            height: auto;
-          }
+              <mj-text align="center" font-weight="bold" font-size="16px" color="darkorange">
+                Si no solicitó este correo electrónico, puede ignorarlo con seguridad.
+              </mj-text>
 
-          .warn {
-            font-size: larger;
-            font-weight: bold;
-            color: darkorange;
-          }
+              <mj-divider border-width="2px" border-color="lightgrey" />
+            </mj-column>
+          </mj-section>
 
-          .footer {
-            padding: 2em;
-            font-size: x-small;
-            font-weight: bold;
-            color: graytext;
-          }
-        </style>
-      </head>
+          <mj-section padding="0">
+            <mj-column>
+              <mj-social icon-size="32px" mode="horizontal">
+                <mj-social-element name="web" />
+                <mj-social-element name="instagram" />
+              </mj-social>
 
-      <body>
-        <div class="container">
-          <header class="header">
-            <strong class="logo">
-              <img src=${logo} />
-            </strong>
-          </header>
+              <mj-text align="center" color="gray">
+                © ${new Date().getFullYear()} INDOCAL. Todos los derechos reservados
+              </mj-text>
+            </mj-column>
+          </mj-section>
+        </mj-body>
+      </mjml>
+    `
+  );
 
-          <hr />
-
-          <main>
-            <h1>Solicitud de recuperación de contraseña</h1>
-
-            <p class="credentials">
-              Su usuario es: <strong>${escapedEmail}</strong>
-
-              <br />
-
-              Su contraseña es: <strong>${password}</strong>
-            </p>
-
-            <p class="warn">Si no solicitó este correo electrónico, puede ignorarlo con seguridad.</p>
-          </main>
-
-          <hr />
-
-          <footer class="footer">
-            <strong>
-              © ${new Date().getFullYear()} - Todos los derechos reservados
-            </strong>
-          </footer>
-        </div>
-      </body
-    </html>
-  `;
+  return output.html;
 };
 
 export default restorePasswordEmailTemplate;
