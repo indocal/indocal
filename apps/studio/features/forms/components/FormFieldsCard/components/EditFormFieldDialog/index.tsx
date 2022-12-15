@@ -109,15 +109,10 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
 
   const onSubmit = useCallback(
     async (formData: EditFormFieldDialogData) => {
-      // TODO: verify if null
       const { error } = await indocal.forms.fields.update(field.id, {
         title: formData.title,
         description: formData.description || null,
-        ...(formData.config && {
-          config: Object.fromEntries(
-            Object.entries(formData.config).map(([value, key]) => [value, key])
-          ),
-        }),
+        config: formData.config,
       });
 
       if (error) {

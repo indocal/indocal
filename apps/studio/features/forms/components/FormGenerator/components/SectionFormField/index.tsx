@@ -74,14 +74,17 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
         component="legend"
         badgeContent="*"
         invisible={!config?.required}
-        componentsProps={{ badge: { style: { top: 5, right: 5 } } }}
+        componentsProps={{ badge: { style: { top: 7.5, right: 5 } } }}
         sx={{
           ...(errors[field.id] && {
             color: (theme) => theme.palette.error.main,
           }),
         }}
       >
-        <Typography sx={{ marginX: (theme) => theme.spacing(0.75) }}>
+        <Typography
+          fontWeight="bolder"
+          sx={{ marginX: (theme) => theme.spacing(1) }}
+        >
           {field.title}
         </Typography>
       </Badge>
