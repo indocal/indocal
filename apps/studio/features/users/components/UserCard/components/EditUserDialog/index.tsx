@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { User, UserStatus, ApiEndpoints } from '@indocal/services';
+import { Can, User, UserStatus, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import {
@@ -224,23 +224,27 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
             disabled={isSubmitting}
           />
 
-          <ControlledUsersRolesAutocomplete
-            required
-            multiple
-            name="roles"
-            label="Roles"
-            control={control}
-            disabled={isSubmitting}
-          />
+          <Can I="read" an="userRole">
+            <ControlledUsersRolesAutocomplete
+              required
+              multiple
+              name="roles"
+              label="Roles"
+              control={control}
+              disabled={isSubmitting}
+            />
+          </Can>
 
-          <ControlledUsersGroupsAutocomplete
-            required
-            multiple
-            name="groups"
-            label="Grupos"
-            control={control}
-            disabled={isSubmitting}
-          />
+          <Can I="read" an="userGroup">
+            <ControlledUsersGroupsAutocomplete
+              required
+              multiple
+              name="groups"
+              label="Grupos"
+              control={control}
+              disabled={isSubmitting}
+            />
+          </Can>
         </Stack>
       </DialogContent>
 

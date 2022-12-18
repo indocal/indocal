@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import {
+  Can,
   getShortUUID,
   translateFormStatus,
   translateFormVisibility,
@@ -25,8 +26,8 @@ import { Pages } from '@/config';
 export interface GenericFormsDataGridProps {
   title: string;
   forms: Form[];
-  onRefreshButtonClick?: () => void | Promise<void>;
-  onAddButtonClick?: () => void | Promise<void>;
+  onRefreshButtonClick?: false | (() => void | Promise<void>);
+  onAddButtonClick?: false | (() => void | Promise<void>);
   enhancedDataGridProps?: Omit<EnhancedDataGridProps, 'columns' | 'rows'>;
 }
 
@@ -82,22 +83,26 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
         disableExport: true,
         renderCell: ({ id }) => (
           <Stack direction="row" spacing={0.25}>
-            <IconButton
-              LinkComponent={NextLink}
-              href={`${Pages.FORMS}/${id}`}
-              size="small"
-              sx={{ display: 'flex' }}
-            >
-              <ViewDetailsIcon />
-            </IconButton>
+            <Can I="read" a="form">
+              <IconButton
+                LinkComponent={NextLink}
+                href={`${Pages.FORMS}/${id}`}
+                size="small"
+                sx={{ display: 'flex' }}
+              >
+                <ViewDetailsIcon />
+              </IconButton>
+            </Can>
 
-            <IconButton
-              size="small"
-              color="error"
-              onClick={async () => await handleDelete(id as UUID)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Can I="delete" a="form">
+              <IconButton
+                size="small"
+                color="error"
+                onClick={async () => await handleDelete(id as UUID)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Can>
           </Stack>
         ),
       },

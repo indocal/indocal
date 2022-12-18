@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useFormsEntries, Form } from '@indocal/services';
+import { useAbility, useFormsEntries, Form } from '@indocal/services';
 
 import { GenericFormsEntriesDataGrid } from '@/features';
 import { Pages } from '@/config';
@@ -12,6 +12,8 @@ export interface FormEntriesDataGridProps {
 export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
   form,
 }) => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -35,8 +37,8 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
     <GenericFormsEntriesDataGrid
       title={`Entradas (${entries.length})`}
       entries={entries}
-      onAddButtonClick={handleAdd}
-      onRefreshButtonClick={handleRefetch}
+      onAddButtonClick={ability.can('create', 'formEntry') && handleAdd}
+      onRefreshButtonClick={ability.can('read', 'formEntry') && handleRefetch}
       enhancedDataGridProps={{
         density: 'compact',
         loading: loading || validating,

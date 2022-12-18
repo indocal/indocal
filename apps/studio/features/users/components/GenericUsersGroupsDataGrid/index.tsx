@@ -11,7 +11,7 @@ import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
-import { getShortUUID, UUID, UserGroup } from '@indocal/services';
+import { Can, getShortUUID, UUID, UserGroup } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { Pages } from '@/config';
@@ -19,8 +19,8 @@ import { Pages } from '@/config';
 export interface GenericUsersGroupsDataGridProps {
   title: string;
   groups: UserGroup[];
-  onRefreshButtonClick?: () => void | Promise<void>;
-  onAddButtonClick?: () => void | Promise<void>;
+  onRefreshButtonClick?: false | (() => void | Promise<void>);
+  onAddButtonClick?: false | (() => void | Promise<void>);
   enhancedDataGridProps?: Omit<EnhancedDataGridProps, 'columns' | 'rows'>;
 }
 
@@ -78,22 +78,26 @@ export const GenericUsersGroupsDataGrid: React.FC<
         disableExport: true,
         renderCell: ({ id }) => (
           <Stack direction="row" spacing={0.25}>
-            <IconButton
-              LinkComponent={NextLink}
-              href={`${Pages.USERS_GROUPS}/${id}`}
-              size="small"
-              sx={{ display: 'flex' }}
-            >
-              <ViewDetailsIcon />
-            </IconButton>
+            <Can I="read" an="userGroup">
+              <IconButton
+                LinkComponent={NextLink}
+                href={`${Pages.USERS_GROUPS}/${id}`}
+                size="small"
+                sx={{ display: 'flex' }}
+              >
+                <ViewDetailsIcon />
+              </IconButton>
+            </Can>
 
-            <IconButton
-              size="small"
-              color="error"
-              onClick={async () => await handleDelete(id as UUID)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Can I="delete" an="userGroup">
+              <IconButton
+                size="small"
+                color="error"
+                onClick={async () => await handleDelete(id as UUID)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Can>
           </Stack>
         ),
       },

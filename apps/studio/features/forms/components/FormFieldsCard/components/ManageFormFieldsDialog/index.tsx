@@ -34,7 +34,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 
 import { NoData } from '@indocal/ui';
-import { Form, FormFieldType } from '@indocal/services';
+import { Can, Form, FormFieldType } from '@indocal/services';
 
 import { useFormFieldsCard } from '../../context';
 import { AddFormFieldDialog, EditFormFieldDialog } from '../../components';
@@ -119,9 +119,11 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
         >
           <Typography fontWeight="bolder">Campos</Typography>
 
-          <IconButton onClick={toggleAddFormFieldDialog}>
-            <AddIcon />
-          </IconButton>
+          <Can I="create" a="formField">
+            <IconButton onClick={toggleAddFormFieldDialog}>
+              <AddIcon />
+            </IconButton>
+          </Can>
         </DialogTitle>
 
         <DialogContent dividers>
@@ -133,11 +135,13 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
 
                   <ListItemText>{field.title}</ListItemText>
 
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" onClick={() => handleEdit(field)}>
-                      <SettingsIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
+                  <Can I="update" a="formField">
+                    <ListItemSecondaryAction>
+                      <IconButton edge="end" onClick={() => handleEdit(field)}>
+                        <SettingsIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </Can>
                 </ListItem>
               ))}
             </List>

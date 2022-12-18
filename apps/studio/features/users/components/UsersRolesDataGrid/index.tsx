@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useUsersRoles } from '@indocal/services';
+import { useAbility, useUsersRoles } from '@indocal/services';
 
 import { GenericUsersRolesDataGrid } from '@/features';
 
@@ -8,6 +8,8 @@ import { UsersRolesDataGridProvider, useUsersRolesDataGrid } from './context';
 import { AddUserRoleDialog } from './components';
 
 const UsersRolesDataGrid: React.FC = () => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -18,6 +20,11 @@ const UsersRolesDataGrid: React.FC = () => {
 
   const { isAddUserRoleDialogOpen, toggleAddUserRoleDialog } =
     useUsersRolesDataGrid();
+
+  const handleAdd = useCallback(
+    () => toggleAddUserRoleDialog(),
+    [toggleAddUserRoleDialog]
+  );
 
   const handleRefetch = useCallback(async () => {
     await refetch();
@@ -30,8 +37,8 @@ const UsersRolesDataGrid: React.FC = () => {
       <GenericUsersRolesDataGrid
         title={`Roles (${roles.length})`}
         roles={roles}
-        onAddButtonClick={toggleAddUserRoleDialog}
-        onRefreshButtonClick={handleRefetch}
+        onAddButtonClick={ability.can('create', 'userRole') && handleAdd}
+        onRefreshButtonClick={ability.can('read', 'userRole') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
           error: serviceError,

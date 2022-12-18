@@ -29,7 +29,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { UserRole, UserRoleAccessType, ApiEndpoints } from '@indocal/services';
+import {
+  Can,
+  UserRole,
+  UserRoleAccessType,
+  ApiEndpoints,
+} from '@indocal/services';
 
 import { indocal } from '@/lib';
 
@@ -186,59 +191,66 @@ export const ManageUserRoleConfigDialog: React.FC<
       <DialogTitle>Accesos del rol</DialogTitle>
 
       <DialogContent dividers>
-        <List disablePadding sx={{ bgcolor: 'background.paper' }}>
-          <ListSubheader disableSticky>Aplicaciones</ListSubheader>
+        <Can I="update" an="userRole" passThrough>
+          {(allowed) => (
+            <List disablePadding sx={{ bgcolor: 'background.paper' }}>
+              <ListSubheader disableSticky>Aplicaciones</ListSubheader>
 
-          {apps.map((app) => (
-            <ListItem key={app.name} divider>
-              <ListItemIcon>{app.icon}</ListItemIcon>
+              {apps.map((app) => (
+                <ListItem key={app.name} divider>
+                  <ListItemIcon>{app.icon}</ListItemIcon>
 
-              <ListItemText sx={{ display: ['none', 'inherit'] }}>
-                {app.label}
-              </ListItemText>
+                  <ListItemText sx={{ display: ['none', 'inherit'] }}>
+                    {app.label}
+                  </ListItemText>
 
-              <Controller
-                name={`access.${app.name}`}
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <ToggleButtonGroup
-                    exclusive
-                    size="small"
-                    value={value}
-                    onChange={(_, value) => onChange(value)}
-                    sx={{ marginLeft: 'auto' }}
-                  >
-                    <ToggleButton value={'NONE' as UserRoleAccessType}>
-                      <NoneAccessIcon />
-                    </ToggleButton>
+                  <Controller
+                    name={`access.${app.name}`}
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <ToggleButtonGroup
+                        exclusive
+                        size="small"
+                        value={value}
+                        disabled={!allowed}
+                        onChange={(_, value) => onChange(value)}
+                        sx={{ marginLeft: 'auto' }}
+                      >
+                        <ToggleButton value={'NONE' as UserRoleAccessType}>
+                          <NoneAccessIcon />
+                        </ToggleButton>
 
-                    <ToggleButton value={'STANDARD' as UserRoleAccessType}>
-                      <StandardAccessIcon />
-                    </ToggleButton>
+                        <ToggleButton value={'STANDARD' as UserRoleAccessType}>
+                          <StandardAccessIcon />
+                        </ToggleButton>
 
-                    <ToggleButton value={'ADMIN' as UserRoleAccessType}>
-                      <AdminAccessIcon />
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                )}
-              />
-            </ListItem>
-          ))}
-        </List>
+                        <ToggleButton value={'ADMIN' as UserRoleAccessType}>
+                          <AdminAccessIcon />
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+                    )}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </Can>
       </DialogContent>
 
-      <DialogActions>
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          color="primary"
-          loading={isSubmitting}
-          disabled={!isDirty}
-          onClick={handleSubmit(onSubmit)}
-        >
-          Actualizar
-        </LoadingButton>
-      </DialogActions>
+      <Can I="update" an="userRole">
+        <DialogActions>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            loading={isSubmitting}
+            disabled={!isDirty}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Actualizar
+          </LoadingButton>
+        </DialogActions>
+      </Can>
     </Dialog>
   );
 };

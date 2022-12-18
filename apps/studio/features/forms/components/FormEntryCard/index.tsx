@@ -1,6 +1,5 @@
 import NextLink from 'next/link';
 import {
-  Stack,
   Card,
   CardHeader,
   CardContent,
@@ -13,7 +12,13 @@ import {
 import { Launch as ViewDetailsIcon } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useFormEntry, getShortUUID, UUID, FormEntry } from '@indocal/services';
+import {
+  Can,
+  useFormEntry,
+  getShortUUID,
+  UUID,
+  FormEntry,
+} from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -53,7 +58,7 @@ export const FormEntryCard: React.FC<FormEntryCardProps> = ({
           <CardHeader
             subheader="Detalles de la entrada"
             action={
-              <Stack direction="row" alignItems="center" spacing={0.25}>
+              <Can I="read" a="formEntry">
                 <IconButton
                   LinkComponent={NextLink}
                   href={`${Pages.FORMS_ENTRIES}/${entry.id}`}
@@ -62,7 +67,7 @@ export const FormEntryCard: React.FC<FormEntryCardProps> = ({
                 >
                   <ViewDetailsIcon />
                 </IconButton>
-              </Stack>
+              </Can>
             }
             sx={{
               borderBottom: (theme) => `1px solid ${theme.palette.divider}`,

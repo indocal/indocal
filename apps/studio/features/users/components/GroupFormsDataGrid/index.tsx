@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useForms, UserGroup } from '@indocal/services';
+import { useAbility, useForms, UserGroup } from '@indocal/services';
 
 import { GenericFormsDataGrid } from '@/features';
 
@@ -12,6 +12,8 @@ export interface GroupFormsDataGridProps {
 }
 
 const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -26,6 +28,11 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
   const { isAddGroupFormDialogOpen, toggleAddGroupFormDialog } =
     useGroupFormsDataGrid();
 
+  const handleAdd = useCallback(
+    () => toggleAddGroupFormDialog(),
+    [toggleAddGroupFormDialog]
+  );
+
   const handleRefetch = useCallback(async () => {
     await refetch();
   }, [refetch]);
@@ -37,8 +44,8 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
       <GenericFormsDataGrid
         title={`Formularios del grupo (${forms.length})`}
         forms={forms}
-        onAddButtonClick={toggleAddGroupFormDialog}
-        onRefreshButtonClick={handleRefetch}
+        onAddButtonClick={ability.can('create', 'form') && handleAdd}
+        onRefreshButtonClick={ability.can('read', 'form') && handleRefetch}
         enhancedDataGridProps={{
           density: 'compact',
           loading: loading || validating,

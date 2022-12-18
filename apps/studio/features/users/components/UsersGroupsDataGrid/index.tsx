@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useUsersGroups } from '@indocal/services';
+import { useAbility, useUsersGroups } from '@indocal/services';
 
 import { GenericUsersGroupsDataGrid } from '@/features';
 
@@ -8,6 +8,8 @@ import { UsersGroupsDataGridProvider, useUsersGroupsDataGrid } from './context';
 import { AddUserGroupDialog } from './components';
 
 const UsersGroupsDataGrid: React.FC = () => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -18,6 +20,11 @@ const UsersGroupsDataGrid: React.FC = () => {
 
   const { isAddUserGroupDialogOpen, toggleAddUserGroupDialog } =
     useUsersGroupsDataGrid();
+
+  const handleAdd = useCallback(
+    () => toggleAddUserGroupDialog(),
+    [toggleAddUserGroupDialog]
+  );
 
   const handleRefetch = useCallback(async () => {
     await refetch();
@@ -30,8 +37,8 @@ const UsersGroupsDataGrid: React.FC = () => {
       <GenericUsersGroupsDataGrid
         title={`Grupos (${groups.length})`}
         groups={groups}
-        onAddButtonClick={toggleAddUserGroupDialog}
-        onRefreshButtonClick={handleRefetch}
+        onAddButtonClick={ability.can('create', 'userGroup') && handleAdd}
+        onRefreshButtonClick={ability.can('read', 'userGroup') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
           error: serviceError,

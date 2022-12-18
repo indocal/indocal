@@ -16,7 +16,7 @@ import {
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useUser, UUID, User } from '@indocal/services';
+import { Can, useUser, UUID, User } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -92,9 +92,11 @@ const UserGroupsList: React.FC<UserGroupsListProps> = ({ user: entity }) => {
                 Grupos
               </Typography>
 
-              <IconButton size="small" onClick={toggleManageUserGroupsDialog}>
-                <ManageUserGroups />
-              </IconButton>
+              <Can I="update" an="user">
+                <IconButton size="small" onClick={toggleManageUserGroupsDialog}>
+                  <ManageUserGroups />
+                </IconButton>
+              </Can>
             </ListSubheader>
 
             {user.groups.length > 0 ? (
@@ -102,16 +104,18 @@ const UserGroupsList: React.FC<UserGroupsListProps> = ({ user: entity }) => {
                 <ListItem key={group.id} divider>
                   <ListItemText>{group.name}</ListItemText>
 
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      LinkComponent={NextLink}
-                      href={`${Pages.USERS_GROUPS}/${group.id}`}
-                      size="small"
-                      sx={{ display: 'flex' }}
-                    >
-                      <ViewDetailsIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
+                  <Can I="read" an="userGroup">
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        LinkComponent={NextLink}
+                        href={`${Pages.USERS_GROUPS}/${group.id}`}
+                        size="small"
+                        sx={{ display: 'flex' }}
+                      >
+                        <ViewDetailsIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </Can>
                 </ListItem>
               ))
             ) : (

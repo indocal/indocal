@@ -16,7 +16,7 @@ import {
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useUser, UUID, User } from '@indocal/services';
+import { Can, useUser, UUID, User } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -90,9 +90,11 @@ const UserRolesList: React.FC<UserRolesListProps> = ({ user: entity }) => {
                 Roles
               </Typography>
 
-              <IconButton size="small" onClick={toggleManageUserRolesDialog}>
-                <ManageUserRoles />
-              </IconButton>
+              <Can I="update" an="user">
+                <IconButton size="small" onClick={toggleManageUserRolesDialog}>
+                  <ManageUserRoles />
+                </IconButton>
+              </Can>
             </ListSubheader>
 
             {user.roles.length > 0 ? (
@@ -100,16 +102,18 @@ const UserRolesList: React.FC<UserRolesListProps> = ({ user: entity }) => {
                 <ListItem key={role.id} dense divider>
                   <ListItemText primary={role.name} secondary={role.type} />
 
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      LinkComponent={NextLink}
-                      href={`${Pages.USERS_ROLES}/${role.id}`}
-                      size="small"
-                      sx={{ display: 'flex' }}
-                    >
-                      <ViewDetailsIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
+                  <Can I="read" an="userRole">
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        LinkComponent={NextLink}
+                        href={`${Pages.USERS_ROLES}/${role.id}`}
+                        size="small"
+                        sx={{ display: 'flex' }}
+                      >
+                        <ViewDetailsIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </Can>
                 </ListItem>
               ))
             ) : (

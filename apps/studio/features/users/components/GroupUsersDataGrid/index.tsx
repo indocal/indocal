@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useUsers, UserGroup } from '@indocal/services';
+import { useAbility, useUsers, UserGroup } from '@indocal/services';
 
 import { GenericUsersDataGrid } from '@/features';
 
@@ -12,6 +12,8 @@ export interface GroupUsersDataGridProps {
 }
 
 const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -26,6 +28,11 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
   const { isManageGroupUsersDialogOpen, toggleManageGroupUsersDialog } =
     useGroupUsersDataGrid();
 
+  const handleAdd = useCallback(
+    () => toggleManageGroupUsersDialog(),
+    [toggleManageGroupUsersDialog]
+  );
+
   const handleRefetch = useCallback(async () => {
     await refetch();
   }, [refetch]);
@@ -37,8 +44,12 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
       <GenericUsersDataGrid
         title={`Miembros del grupo (${users.length})`}
         users={users}
-        onAddButtonClick={toggleManageGroupUsersDialog}
-        onRefreshButtonClick={handleRefetch}
+        onAddButtonClick={
+          ability.can('update', 'userGroup') &&
+          ability.can('read', 'user') &&
+          handleAdd
+        }
+        onRefreshButtonClick={ability.can('read', 'user') && handleRefetch}
         enhancedDataGridProps={{
           density: 'compact',
           loading: loading || validating,

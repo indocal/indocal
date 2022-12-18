@@ -14,6 +14,7 @@ import {
   DrawerNavigationItem,
   DrawerNavigationMenu,
 } from '@indocal/ui';
+import { useAbility } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -34,6 +35,8 @@ type Navigation =
     };
 
 export function useAdminDashboardNavigation(): DrawerNavigation[] {
+  const ability = useAbility();
+
   const navigation = useMemo<Navigation[]>(
     () => [
       {
@@ -48,7 +51,7 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
       {
         type: 'ITEM',
         item: {
-          show: true,
+          show: ability.can('read', 'form'),
           label: 'Formularios',
           icon: <FormsIcon />,
           href: Pages.FORMS,
@@ -61,19 +64,19 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           icon: <UsersPanelControl />,
           items: [
             {
-              show: true,
+              show: ability.can('read', 'user'),
               label: 'Usuarios',
               icon: <UsersIcon />,
               href: Pages.USERS,
             },
             {
-              show: true,
+              show: ability.can('read', 'userRole'),
               label: 'Roles / Permisos',
               icon: <RolesIcon />,
               href: Pages.USERS_ROLES,
             },
             {
-              show: true,
+              show: ability.can('read', 'userGroup'),
               label: 'Grupos',
               icon: <GroupsIcon />,
               href: Pages.USERS_GROUPS,
@@ -91,7 +94,7 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
         },
       },
     ],
-    []
+    [ability]
   );
 
   return navigation

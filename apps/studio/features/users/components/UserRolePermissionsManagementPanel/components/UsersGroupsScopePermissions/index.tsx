@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
+import { Can } from '@indocal/services';
+
 import { useUserRolePermissionsManagementPanel } from '../../context';
 
 export const UsersGroupsScopePermissions: React.FC = () => {
@@ -62,63 +64,72 @@ export const UsersGroupsScopePermissions: React.FC = () => {
   }, [items, allChecked, togglePermission]);
 
   return (
-    <Accordion defaultExpanded>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography fontWeight="bolder" color="text.secondary">
-          Grupos
-        </Typography>
-      </AccordionSummary>
+    <Can I="update" an="userRole" passThrough>
+      {(allowed) => (
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography fontWeight="bolder" color="text.secondary">
+              Grupos
+            </Typography>
+          </AccordionSummary>
 
-      <AccordionDetails>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          spacing={1}
-        >
-          <Typography variant="caption" color="text.secondary">
-            userGroup
-          </Typography>
-
-          <Box
-            sx={{
-              flex: 1,
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          />
-
-          <Checkbox
-            disabled={validating || saving}
-            checked={allChecked}
-            onChange={toggleAll}
-          />
-        </Stack>
-
-        <Grid container justifyContent="center" alignItems="center" spacing={1}>
-          {items.map(({ label, action, checked }) => (
-            <Grid
-              key={action}
-              item
-              container
-              justifyContent="flex-start"
+          <AccordionDetails>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
               alignItems="center"
-              xs
+              spacing={1}
             >
-              <FormControlLabel
-                label={label}
-                control={
-                  <Checkbox
-                    disabled={validating || saving}
-                    checked={checked}
-                    onChange={() => togglePermission('userGroup', action)}
-                  />
-                }
+              <Typography variant="caption" color="text.secondary">
+                userGroup
+              </Typography>
+
+              <Box
+                sx={{
+                  flex: 1,
+                  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+                }}
               />
+
+              <Checkbox
+                disabled={!allowed || validating || saving}
+                checked={allChecked}
+                onChange={toggleAll}
+              />
+            </Stack>
+
+            <Grid
+              container
+              justifyContent="center"
+              alignItems="center"
+              spacing={1}
+            >
+              {items.map(({ label, action, checked }) => (
+                <Grid
+                  key={action}
+                  item
+                  container
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  xs
+                >
+                  <FormControlLabel
+                    label={label}
+                    control={
+                      <Checkbox
+                        disabled={!allowed || validating || saving}
+                        checked={checked}
+                        onChange={() => togglePermission('userGroup', action)}
+                      />
+                    }
+                  />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      </AccordionDetails>
-    </Accordion>
+          </AccordionDetails>
+        </Accordion>
+      )}
+    </Can>
   );
 };
 

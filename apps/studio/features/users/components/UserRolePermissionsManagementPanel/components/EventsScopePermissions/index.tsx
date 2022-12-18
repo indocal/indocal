@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
+import { Can } from '@indocal/services';
+
 import { useUserRolePermissionsManagementPanel } from '../../context';
 
 export const EventsScopePermissions: React.FC = () => {
@@ -103,49 +105,25 @@ export const EventsScopePermissions: React.FC = () => {
   }, [eventItems, eventGuestItems, allChecked, togglePermission]);
 
   return (
-    <Accordion defaultExpanded>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography fontWeight="bolder" color="text.secondary">
-          Eventos
-        </Typography>
-      </AccordionSummary>
+    <Can I="update" an="userRole" passThrough>
+      {(allowed) => (
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography fontWeight="bolder" color="text.secondary">
+              Eventos
+            </Typography>
+          </AccordionSummary>
 
-      <AccordionDetails>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          spacing={1}
-          sx={{ marginBottom: (theme) => theme.spacing(1) }}
-        >
-          <Typography variant="caption" color="text.secondary">
-            [ event / eventGuest ]
-          </Typography>
-
-          <Box
-            sx={{
-              flex: 1,
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          />
-
-          <Checkbox
-            disabled={validating || saving}
-            checked={allChecked}
-            onChange={toggleAll}
-          />
-        </Stack>
-
-        <Stack spacing={2}>
-          <Stack>
+          <AccordionDetails>
             <Stack
               direction="row"
               justifyContent="space-between"
               alignItems="center"
               spacing={1}
+              sx={{ marginBottom: (theme) => theme.spacing(1) }}
             >
               <Typography variant="caption" color="text.secondary">
-                event
+                [ event / eventGuest ]
               </Typography>
 
               <Box
@@ -154,89 +132,121 @@ export const EventsScopePermissions: React.FC = () => {
                   borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
                 }}
               />
-            </Stack>
 
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              {eventItems.map(({ label, action, checked }) => (
-                <Grid
-                  key={action}
-                  item
-                  container
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  xs
-                >
-                  <FormControlLabel
-                    label={label}
-                    control={
-                      <Checkbox
-                        disabled={validating || saving}
-                        checked={checked}
-                        onChange={() => togglePermission('event', action)}
-                      />
-                    }
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Stack>
-
-          <Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={1}
-            >
-              <Typography variant="caption" color="text.secondary">
-                eventGuest
-              </Typography>
-
-              <Box
-                sx={{
-                  flex: 1,
-                  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-                }}
+              <Checkbox
+                disabled={!allowed || validating || saving}
+                checked={allChecked}
+                onChange={toggleAll}
               />
             </Stack>
 
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              {eventGuestItems.map(({ label, action, checked }) => (
-                <Grid
-                  key={action}
-                  item
-                  container
-                  justifyContent="flex-start"
+            <Stack spacing={2}>
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
                   alignItems="center"
-                  xs
+                  spacing={1}
                 >
-                  <FormControlLabel
-                    label={label}
-                    control={
-                      <Checkbox
-                        disabled={validating || saving}
-                        checked={checked}
-                        onChange={() => togglePermission('eventGuest', action)}
-                      />
-                    }
+                  <Typography variant="caption" color="text.secondary">
+                    event
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
                   />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {eventItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() => togglePermission('event', action)}
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </Stack>
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+              </Stack>
+
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    eventGuest
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
+                  />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {eventGuestItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() =>
+                              togglePermission('eventGuest', action)
+                            }
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
+      )}
+    </Can>
   );
 };
 

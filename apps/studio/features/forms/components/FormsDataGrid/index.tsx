@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useForms } from '@indocal/services';
+import { useAbility, useForms } from '@indocal/services';
 
 import { GenericFormsDataGrid } from '@/features';
 
@@ -8,6 +8,8 @@ import { FormsDataGridProvider, useFormsDataGrid } from './context';
 import { AddFormDialog } from './components';
 
 const FormsDataGrid: React.FC = () => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -17,6 +19,11 @@ const FormsDataGrid: React.FC = () => {
   } = useForms({ orderBy: { title: 'asc' } });
 
   const { isAddFormDialogOpen, toggleAddFormDialog } = useFormsDataGrid();
+
+  const handleAdd = useCallback(
+    () => toggleAddFormDialog(),
+    [toggleAddFormDialog]
+  );
 
   const handleRefetch = useCallback(async () => {
     await refetch();
@@ -29,8 +36,12 @@ const FormsDataGrid: React.FC = () => {
       <GenericFormsDataGrid
         title={`Formularios (${forms.length})`}
         forms={forms}
-        onAddButtonClick={toggleAddFormDialog}
-        onRefreshButtonClick={handleRefetch}
+        onAddButtonClick={
+          ability.can('create', 'form') &&
+          ability.can('read', 'userGroup') &&
+          handleAdd
+        }
+        onRefreshButtonClick={ability.can('read', 'form') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
           error: serviceError,

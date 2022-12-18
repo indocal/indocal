@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useUsers, UserRole } from '@indocal/services';
+import { useAbility, useUsers, UserRole } from '@indocal/services';
 
 import { GenericUsersDataGrid } from '@/features';
 
@@ -12,6 +12,8 @@ export interface RoleUsersDataGridProps {
 }
 
 const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -26,6 +28,11 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
   const { isManageRoleUsersDialogOpen, toggleManageRoleUsersDialog } =
     useRoleUsersDataGrid();
 
+  const handleAdd = useCallback(
+    () => toggleManageRoleUsersDialog(),
+    [toggleManageRoleUsersDialog]
+  );
+
   const handleRefetch = useCallback(async () => {
     await refetch();
   }, [refetch]);
@@ -37,8 +44,12 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
       <GenericUsersDataGrid
         title={`Miembros del rol (${users.length})`}
         users={users}
-        onAddButtonClick={toggleManageRoleUsersDialog}
-        onRefreshButtonClick={handleRefetch}
+        onAddButtonClick={
+          ability.can('update', 'userRole') &&
+          ability.can('read', 'user') &&
+          handleAdd
+        }
+        onRefreshButtonClick={ability.can('read', 'user') && handleRefetch}
         enhancedDataGridProps={{
           density: 'compact',
           loading: loading || validating,

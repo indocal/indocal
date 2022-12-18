@@ -19,6 +19,7 @@ import {
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import {
+  Can,
   useUser,
   getShortUUID,
   translateUserStatus,
@@ -70,18 +71,22 @@ const UserCard: React.FC<UserCardProps> = ({ user: entity }) => {
             subheader="Detalles del usuario"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <IconButton
-                  LinkComponent={NextLink}
-                  href={`${Pages.USERS}/${user.id}`}
-                  size="small"
-                  sx={{ display: 'flex' }}
-                >
-                  <ViewDetailsIcon />
-                </IconButton>
+                <Can I="read" an="user">
+                  <IconButton
+                    LinkComponent={NextLink}
+                    href={`${Pages.USERS}/${user.id}`}
+                    size="small"
+                    sx={{ display: 'flex' }}
+                  >
+                    <ViewDetailsIcon />
+                  </IconButton>
+                </Can>
 
-                <IconButton size="small" onClick={toggleEditUserDialog}>
-                  <EditIcon />
-                </IconButton>
+                <Can I="update" an="user">
+                  <IconButton size="small" onClick={toggleEditUserDialog}>
+                    <EditIcon />
+                  </IconButton>
+                </Can>
               </Stack>
             }
             sx={{

@@ -17,6 +17,7 @@ import {
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import {
+  Can,
   useForm,
   getShortUUID,
   translateFormStatus,
@@ -69,18 +70,22 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
             subheader="Detalles del formulario"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <IconButton
-                  LinkComponent={NextLink}
-                  href={`${Pages.FORMS}/${form.id}`}
-                  size="small"
-                  sx={{ display: 'flex' }}
-                >
-                  <ViewDetailsIcon />
-                </IconButton>
+                <Can I="read" a="form">
+                  <IconButton
+                    LinkComponent={NextLink}
+                    href={`${Pages.FORMS}/${form.id}`}
+                    size="small"
+                    sx={{ display: 'flex' }}
+                  >
+                    <ViewDetailsIcon />
+                  </IconButton>
+                </Can>
 
-                <IconButton size="small" onClick={toggleEditFormDialog}>
-                  <EditIcon />
-                </IconButton>
+                <Can I="update" a="form">
+                  <IconButton size="small" onClick={toggleEditFormDialog}>
+                    <EditIcon />
+                  </IconButton>
+                </Can>
               </Stack>
             }
             sx={{

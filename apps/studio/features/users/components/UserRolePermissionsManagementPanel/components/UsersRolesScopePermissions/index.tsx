@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
+import { Can } from '@indocal/services';
+
 import { useUserRolePermissionsManagementPanel } from '../../context';
 
 export const UsersRolesScopePermissions: React.FC = () => {
@@ -107,49 +109,25 @@ export const UsersRolesScopePermissions: React.FC = () => {
   }, [userRoleItems, userRolePermissionItems, allChecked, togglePermission]);
 
   return (
-    <Accordion defaultExpanded>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography fontWeight="bolder" color="text.secondary">
-          Roles
-        </Typography>
-      </AccordionSummary>
+    <Can I="update" an="userRole" passThrough>
+      {(allowed) => (
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography fontWeight="bolder" color="text.secondary">
+              Roles
+            </Typography>
+          </AccordionSummary>
 
-      <AccordionDetails>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          spacing={1}
-          sx={{ marginBottom: (theme) => theme.spacing(1) }}
-        >
-          <Typography variant="caption" color="text.secondary">
-            [ userRole / userRolePermission ]
-          </Typography>
-
-          <Box
-            sx={{
-              flex: 1,
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          />
-
-          <Checkbox
-            disabled={validating || saving}
-            checked={allChecked}
-            onChange={toggleAll}
-          />
-        </Stack>
-
-        <Stack spacing={2}>
-          <Stack>
+          <AccordionDetails>
             <Stack
               direction="row"
               justifyContent="space-between"
               alignItems="center"
               spacing={1}
+              sx={{ marginBottom: (theme) => theme.spacing(1) }}
             >
               <Typography variant="caption" color="text.secondary">
-                userRole
+                [ userRole / userRolePermission ]
               </Typography>
 
               <Box
@@ -158,91 +136,123 @@ export const UsersRolesScopePermissions: React.FC = () => {
                   borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
                 }}
               />
+
+              <Checkbox
+                disabled={!allowed || validating || saving}
+                checked={allChecked}
+                onChange={toggleAll}
+              />
             </Stack>
 
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              {userRoleItems.map(({ label, action, checked }) => (
-                <Grid
-                  key={action}
-                  item
-                  container
-                  justifyContent="flex-start"
+            <Stack spacing={2}>
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
                   alignItems="center"
-                  xs
+                  spacing={1}
                 >
-                  <FormControlLabel
-                    label={label}
-                    control={
-                      <Checkbox
-                        disabled={validating || saving}
-                        checked={checked}
-                        onChange={() => togglePermission('userRole', action)}
-                      />
-                    }
+                  <Typography variant="caption" color="text.secondary">
+                    userRole
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
                   />
-                </Grid>
-              ))}
-            </Grid>
-          </Stack>
+                </Stack>
 
-          <Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={1}
-            >
-              <Typography variant="caption" color="text.secondary">
-                userRolePermission
-              </Typography>
-
-              <Box
-                sx={{
-                  flex: 1,
-                  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-                }}
-              />
-            </Stack>
-
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              {userRolePermissionItems.map(({ label, action, checked }) => (
                 <Grid
-                  key={action}
-                  item
                   container
-                  justifyContent="flex-start"
+                  justifyContent="center"
                   alignItems="center"
-                  xs
+                  spacing={1}
                 >
-                  <FormControlLabel
-                    label={label}
-                    control={
-                      <Checkbox
-                        disabled={validating || saving}
-                        checked={checked}
-                        onChange={() =>
-                          togglePermission('userRolePermission', action)
+                  {userRoleItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() =>
+                              togglePermission('userRole', action)
+                            }
+                          />
                         }
                       />
-                    }
-                  />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </Stack>
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+              </Stack>
+
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    userRolePermission
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
+                  />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {userRolePermissionItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() =>
+                              togglePermission('userRolePermission', action)
+                            }
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
+      )}
+    </Can>
   );
 };
 

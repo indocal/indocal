@@ -15,6 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import {
+  Can,
   Form,
   FormStatus,
   FormVisibility,
@@ -236,13 +237,15 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
             disabled={isSubmitting}
           />
 
-          <ControlledUsersGroupsAutocomplete
-            required
-            name="group"
-            label="Grupo"
-            control={control as unknown as Control}
-            disabled={isSubmitting}
-          />
+          <Can I="read" an="userGroup">
+            <ControlledUsersGroupsAutocomplete
+              required
+              name="group"
+              label="Grupo"
+              control={control as unknown as Control}
+              disabled={isSubmitting}
+            />
+          </Can>
         </Stack>
       </DialogContent>
 

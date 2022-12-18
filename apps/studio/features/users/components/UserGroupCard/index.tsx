@@ -16,7 +16,13 @@ import {
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useUserGroup, getShortUUID, UUID, UserGroup } from '@indocal/services';
+import {
+  Can,
+  useUserGroup,
+  getShortUUID,
+  UUID,
+  UserGroup,
+} from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -63,18 +69,22 @@ const UserGroupCard: React.FC<UserGroupCardProps> = ({ group: entity }) => {
             subheader="Detalles del grupo"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <IconButton
-                  LinkComponent={NextLink}
-                  href={`${Pages.USERS_GROUPS}/${group.id}`}
-                  size="small"
-                  sx={{ display: 'flex' }}
-                >
-                  <ViewDetailsIcon />
-                </IconButton>
+                <Can I="read" an="userGroup">
+                  <IconButton
+                    LinkComponent={NextLink}
+                    href={`${Pages.USERS_GROUPS}/${group.id}`}
+                    size="small"
+                    sx={{ display: 'flex' }}
+                  >
+                    <ViewDetailsIcon />
+                  </IconButton>
+                </Can>
 
-                <IconButton size="small" onClick={toggleEditUserGroupDialog}>
-                  <EditIcon />
-                </IconButton>
+                <Can I="update" an="userGroup">
+                  <IconButton size="small" onClick={toggleEditUserGroupDialog}>
+                    <EditIcon />
+                  </IconButton>
+                </Can>
               </Stack>
             }
             sx={{

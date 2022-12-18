@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import {
+  Can,
   getShortUUID,
   translateUserStatus,
   UUID,
@@ -24,8 +25,8 @@ import { Pages } from '@/config';
 export interface GenericUsersDataGridProps {
   title: string;
   users: User[];
-  onRefreshButtonClick?: () => void | Promise<void>;
-  onAddButtonClick?: () => void | Promise<void>;
+  onRefreshButtonClick?: false | (() => void | Promise<void>);
+  onAddButtonClick?: false | (() => void | Promise<void>);
   enhancedDataGridProps?: Omit<EnhancedDataGridProps, 'columns' | 'rows'>;
 }
 
@@ -81,22 +82,26 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
         disableExport: true,
         renderCell: ({ id }) => (
           <Stack direction="row" spacing={0.25}>
-            <IconButton
-              LinkComponent={NextLink}
-              href={`${Pages.USERS}/${id}`}
-              size="small"
-              sx={{ display: 'flex' }}
-            >
-              <ViewDetailsIcon />
-            </IconButton>
+            <Can I="read" an="user">
+              <IconButton
+                LinkComponent={NextLink}
+                href={`${Pages.USERS}/${id}`}
+                size="small"
+                sx={{ display: 'flex' }}
+              >
+                <ViewDetailsIcon />
+              </IconButton>
+            </Can>
 
-            <IconButton
-              size="small"
-              color="error"
-              onClick={async () => await handleDelete(id as UUID)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Can I="delete" an="user">
+              <IconButton
+                size="small"
+                color="error"
+                onClick={async () => await handleDelete(id as UUID)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Can>
           </Stack>
         ),
       },

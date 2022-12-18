@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
+import { Can } from '@indocal/services';
+
 import { useUserRolePermissionsManagementPanel } from '../../context';
 
 export const FormsScopePermissions: React.FC = () => {
@@ -143,49 +145,25 @@ export const FormsScopePermissions: React.FC = () => {
   }, [formItems, formFieldItems, formEntryItems, allChecked, togglePermission]);
 
   return (
-    <Accordion defaultExpanded>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography fontWeight="bolder" color="text.secondary">
-          Formularios
-        </Typography>
-      </AccordionSummary>
+    <Can I="update" an="userRole" passThrough>
+      {(allowed) => (
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography fontWeight="bolder" color="text.secondary">
+              Formularios
+            </Typography>
+          </AccordionSummary>
 
-      <AccordionDetails>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          spacing={1}
-          sx={{ marginBottom: (theme) => theme.spacing(1) }}
-        >
-          <Typography variant="caption" color="text.secondary">
-            [ form / formField / formEntry ]
-          </Typography>
-
-          <Box
-            sx={{
-              flex: 1,
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          />
-
-          <Checkbox
-            disabled={validating || saving}
-            checked={allChecked}
-            onChange={toggleAll}
-          />
-        </Stack>
-
-        <Stack spacing={2}>
-          <Stack>
+          <AccordionDetails>
             <Stack
               direction="row"
               justifyContent="space-between"
               alignItems="center"
               spacing={1}
+              sx={{ marginBottom: (theme) => theme.spacing(1) }}
             >
               <Typography variant="caption" color="text.secondary">
-                form
+                [ form / formField / formEntry ]
               </Typography>
 
               <Box
@@ -194,138 +172,173 @@ export const FormsScopePermissions: React.FC = () => {
                   borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
                 }}
               />
-            </Stack>
 
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              {formItems.map(({ label, action, checked }) => (
-                <Grid
-                  key={action}
-                  item
-                  container
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  xs
-                >
-                  <FormControlLabel
-                    label={label}
-                    control={
-                      <Checkbox
-                        disabled={validating || saving}
-                        checked={checked}
-                        onChange={() => togglePermission('form', action)}
-                      />
-                    }
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Stack>
-
-          <Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={1}
-            >
-              <Typography variant="caption" color="text.secondary">
-                formField
-              </Typography>
-
-              <Box
-                sx={{
-                  flex: 1,
-                  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-                }}
+              <Checkbox
+                disabled={!allowed || validating || saving}
+                checked={allChecked}
+                onChange={toggleAll}
               />
             </Stack>
 
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              {formFieldItems.map(({ label, action, checked }) => (
-                <Grid
-                  key={action}
-                  item
-                  container
-                  justifyContent="flex-start"
+            <Stack spacing={2}>
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
                   alignItems="center"
-                  xs
+                  spacing={1}
                 >
-                  <FormControlLabel
-                    label={label}
-                    control={
-                      <Checkbox
-                        disabled={validating || saving}
-                        checked={checked}
-                        onChange={() => togglePermission('formField', action)}
-                      />
-                    }
+                  <Typography variant="caption" color="text.secondary">
+                    form
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
                   />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {formItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() => togglePermission('form', action)}
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </Stack>
+              </Stack>
 
-          <Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={1}
-            >
-              <Typography variant="caption" color="text.secondary">
-                formEntry
-              </Typography>
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    formField
+                  </Typography>
 
-              <Box
-                sx={{
-                  flex: 1,
-                  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-                }}
-              />
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
+                  />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {formFieldItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() =>
+                              togglePermission('formField', action)
+                            }
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    formEntry
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
+                  />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {formEntryItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() =>
+                              togglePermission('formEntry', action)
+                            }
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
             </Stack>
-
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              {formEntryItems.map(({ label, action, checked }) => (
-                <Grid
-                  key={action}
-                  item
-                  container
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  xs
-                >
-                  <FormControlLabel
-                    label={label}
-                    control={
-                      <Checkbox
-                        disabled={validating || saving}
-                        checked={checked}
-                        onChange={() => togglePermission('formEntry', action)}
-                      />
-                    }
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Stack>
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+          </AccordionDetails>
+        </Accordion>
+      )}
+    </Can>
   );
 };
 

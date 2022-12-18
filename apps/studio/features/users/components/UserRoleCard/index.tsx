@@ -19,7 +19,13 @@ import {
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useUserRole, getShortUUID, UUID, UserRole } from '@indocal/services';
+import {
+  Can,
+  useUserRole,
+  getShortUUID,
+  UUID,
+  UserRole,
+} from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -74,18 +80,22 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
             subheader="Detalles del rol"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
-                <IconButton
-                  LinkComponent={NextLink}
-                  href={`${Pages.USERS_ROLES}/${role.id}`}
-                  size="small"
-                  sx={{ display: 'flex' }}
-                >
-                  <ViewDetailsIcon />
-                </IconButton>
+                <Can I="read" an="userRole">
+                  <IconButton
+                    LinkComponent={NextLink}
+                    href={`${Pages.USERS_ROLES}/${role.id}`}
+                    size="small"
+                    sx={{ display: 'flex' }}
+                  >
+                    <ViewDetailsIcon />
+                  </IconButton>
+                </Can>
 
-                <IconButton size="small" onClick={toggleEditUserRoleDialog}>
-                  <EditIcon />
-                </IconButton>
+                <Can I="update" an="userRole">
+                  <IconButton size="small" onClick={toggleEditUserRoleDialog}>
+                    <EditIcon />
+                  </IconButton>
+                </Can>
               </Stack>
             }
             sx={{
@@ -135,16 +145,18 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
             </List>
           </CardContent>
 
-          <CardActions>
-            <Button
-              fullWidth
-              variant="contained"
-              endIcon={<SecurityIcon />}
-              onClick={toggleManageUserRoleConfigDialog}
-            >
-              Configurar accesos
-            </Button>
-          </CardActions>
+          <Can I="update" an="userRole">
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                endIcon={<SecurityIcon />}
+                onClick={toggleManageUserRoleConfigDialog}
+              >
+                Configurar accesos
+              </Button>
+            </CardActions>
+          </Can>
         </>
       ) : (
         <NoData message="No se han encontrado datos del rol" />

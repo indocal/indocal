@@ -8,6 +8,7 @@ import {
 import { CloudSync as SaveIcon } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
+import { Can } from '@indocal/services';
 
 import {
   UserRolePermissionsManagementPanelProvider,
@@ -56,16 +57,18 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
               Permisos
             </Typography>
 
-            <Button
-              size="small"
-              variant="contained"
-              color="secondary"
-              disabled={validating || saving}
-              endIcon={<SaveIcon />}
-              onClick={save}
-            >
-              Guardar
-            </Button>
+            <Can I="update" an="userRole">
+              <Button
+                size="small"
+                variant="contained"
+                color="secondary"
+                disabled={validating || saving}
+                endIcon={<SaveIcon />}
+                onClick={save}
+              >
+                Guardar
+              </Button>
+            </Can>
           </Stack>
 
           <UsersScopePermissions />

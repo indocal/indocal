@@ -18,7 +18,7 @@ import {
 import { useSnackbar } from 'notistack';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useForm, UUID, Form } from '@indocal/services';
+import { Can, useForm, UUID, Form } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -147,17 +147,19 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
               />
             </ListItem>
 
-            <ListItem sx={{ marginTop: 'auto' }}>
-              <Button
-                fullWidth
-                size="small"
-                variant="contained"
-                endIcon={<ManageFormFields />}
-                onClick={toggleManageFormFieldsDialog}
-              >
-                Administrar campos
-              </Button>
-            </ListItem>
+            <Can I="update" a="form">
+              <ListItem sx={{ marginTop: 'auto' }}>
+                <Button
+                  fullWidth
+                  size="small"
+                  variant="contained"
+                  endIcon={<ManageFormFields />}
+                  onClick={toggleManageFormFieldsDialog}
+                >
+                  Administrar campos
+                </Button>
+              </ListItem>
+            </Can>
           </List>
         </>
       ) : (

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useUsers } from '@indocal/services';
+import { useAbility, useUsers } from '@indocal/services';
 
 import { GenericUsersDataGrid } from '@/features';
 
@@ -8,6 +8,8 @@ import { UsersDataGridProvider, useUsersDataGrid } from './context';
 import { AddUserDialog } from './components';
 
 const UsersDataGrid: React.FC = () => {
+  const ability = useAbility();
+
   const {
     loading,
     validating,
@@ -17,6 +19,11 @@ const UsersDataGrid: React.FC = () => {
   } = useUsers({ orderBy: { username: 'asc' } });
 
   const { isAddUserDialogOpen, toggleAddUserDialog } = useUsersDataGrid();
+
+  const handleAdd = useCallback(
+    () => toggleAddUserDialog(),
+    [toggleAddUserDialog]
+  );
 
   const handleRefetch = useCallback(async () => {
     await refetch();
@@ -29,8 +36,8 @@ const UsersDataGrid: React.FC = () => {
       <GenericUsersDataGrid
         title={`Usuarios (${users.length})`}
         users={users}
-        onAddButtonClick={toggleAddUserDialog}
-        onRefreshButtonClick={handleRefetch}
+        onAddButtonClick={ability.can('create', 'user') && handleAdd}
+        onRefreshButtonClick={ability.can('read', 'user') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
           error: serviceError,
