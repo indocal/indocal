@@ -188,13 +188,13 @@ export const ManageUserRoleConfigDialog: React.FC<
       open={isManageUserRoleConfigDialogOpen}
       onClose={handleOnClose}
     >
-      <DialogTitle>Accesos del rol</DialogTitle>
+      <DialogTitle>Configuración del rol</DialogTitle>
 
       <DialogContent dividers>
         <Can I="update" an="userRole" passThrough>
           {(allowed) => (
             <List disablePadding sx={{ bgcolor: 'background.paper' }}>
-              <ListSubheader disableSticky>Aplicaciones</ListSubheader>
+              <ListSubheader disableSticky>Accesos</ListSubheader>
 
               {apps.map((app) => (
                 <ListItem key={app.name} divider>

@@ -15,7 +15,7 @@ import {
 import {
   Launch as ViewDetailsIcon,
   Edit as EditIcon,
-  Security as SecurityIcon,
+  Handyman as SettingsIcon,
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
@@ -149,11 +149,12 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
             <CardActions>
               <Button
                 fullWidth
+                size="small"
                 variant="contained"
-                endIcon={<SecurityIcon />}
+                endIcon={<SettingsIcon />}
                 onClick={toggleManageUserRoleConfigDialog}
               >
-                Configurar accesos
+                Configuración
               </Button>
             </CardActions>
           </Can>
