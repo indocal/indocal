@@ -1,5 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsEnum, IsUUID, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsObject,
+  IsUUID,
+  IsOptional,
+} from 'class-validator';
 import {
   FormStatus as DBFormStatusEnum,
   FormVisibility as DBFormVisibilityEnum,
@@ -26,6 +32,9 @@ class UpdateFormDtoSchema {
 
   @IsEnum(DBFormVisibilityEnum)
   visibility: DBFormVisibilityEnum;
+
+  @IsObject()
+  config: object;
 
   @IsUUID()
   group: UUID;

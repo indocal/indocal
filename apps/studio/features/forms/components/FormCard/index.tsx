@@ -4,15 +4,18 @@ import {
   Card,
   CardHeader,
   CardContent,
+  CardActions,
   List,
   ListItem,
   ListItemText,
+  Button,
   IconButton,
   LinearProgress,
 } from '@mui/material';
 import {
   Launch as ViewDetailsIcon,
   Edit as EditIcon,
+  Handyman as SettingsIcon,
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
@@ -29,7 +32,7 @@ import {
 import { Pages } from '@/config';
 
 import { FormCardProvider, useFormCard } from './context';
-import { EditFormDialog } from './components';
+import { EditFormDialog, ManageFormConfigDialog } from './components';
 
 export interface FormCardProps {
   form: UUID | Form;
@@ -40,7 +43,12 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
     typeof entity === 'string' ? entity : entity.id
   );
 
-  const { isEditFormDialogOpen, toggleEditFormDialog } = useFormCard();
+  const {
+    isEditFormDialogOpen,
+    isManageFormConfigDialogOpen,
+    toggleEditFormDialog,
+    toggleManageFormConfigDialog,
+  } = useFormCard();
 
   return (
     <Card
@@ -59,6 +67,10 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
       ) : form ? (
         <>
           {isEditFormDialogOpen && <EditFormDialog form={form} />}
+
+          {isManageFormConfigDialogOpen && (
+            <ManageFormConfigDialog form={form} />
+          )}
 
           {validating && (
             <LinearProgress
@@ -147,6 +159,20 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
               </ListItem>
             </List>
           </CardContent>
+
+          <Can I="update" a="form">
+            <CardActions>
+              <Button
+                fullWidth
+                size="small"
+                variant="contained"
+                endIcon={<SettingsIcon />}
+                onClick={toggleManageFormConfigDialog}
+              >
+                Configuración
+              </Button>
+            </CardActions>
+          </Can>
         </>
       ) : (
         <NoData message="No se han encontrado datos del formulario" />

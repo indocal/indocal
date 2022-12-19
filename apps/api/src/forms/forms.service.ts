@@ -43,7 +43,10 @@ export class FormsService {
         description: updateFormDto.description,
         status: updateFormDto.status,
         visibility: updateFormDto.visibility,
-        group: { connect: { id: updateFormDto.group } },
+        config: updateFormDto.config,
+        ...(updateFormDto.group && {
+          group: { connect: { id: updateFormDto.group } },
+        }),
       },
     });
   }

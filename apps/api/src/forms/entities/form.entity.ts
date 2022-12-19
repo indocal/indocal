@@ -1,4 +1,5 @@
 import {
+  Prisma,
   Form as DBFormModel,
   FormStatus as DBFormStatusEnum,
   FormVisibility as DBFormVisibilityEnum,
@@ -39,6 +40,7 @@ export class FormEntity implements Entity, DBFormModel {
   slug: string;
   title: string;
   description: string | null;
+  config: Prisma.JsonValue;
   status: DBFormStatusEnum;
   visibility: DBFormVisibilityEnum;
 

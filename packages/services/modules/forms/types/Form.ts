@@ -23,12 +23,22 @@ type Group = {
 export type FormStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';
 export type FormVisibility = 'PUBLIC' | 'PROTECTED' | 'PRIVATE';
 
+export type FormConfig = Partial<{
+  webhooks: FormWebhook[];
+}>;
+
+export type FormWebhook = {
+  name: string;
+  url: string;
+};
+
 export interface Form extends Entity {
   slug: string;
   title: string;
   description: string | null;
   status: FormStatus;
   visibility: FormVisibility;
+  config: FormConfig | null;
   fields: Field[];
   group: Group;
   createdAt: string;

@@ -6,15 +6,17 @@ import { useReducer, useCallback, useContext, createContext } from 'react';
 
 const initialContextState: FormCardContextState = {
   isEditFormDialogOpen: false,
+  isManageFormConfigDialogOpen: false,
 };
 
 interface FormCardContextState {
   isEditFormDialogOpen: boolean;
+  isManageFormConfigDialogOpen: boolean;
 }
 
-type FormCardContextStateAction = {
-  type: 'TOGGLE_EDIT_FORM_DIALOG';
-};
+type FormCardContextStateAction =
+  | { type: 'TOGGLE_EDIT_FORM_DIALOG' }
+  | { type: 'TOGGLE_MANAGE_FORM_CONFIG_DIALOG' };
 
 function reducer(
   state: FormCardContextState,
@@ -25,6 +27,12 @@ function reducer(
       return {
         ...state,
         isEditFormDialogOpen: !state.isEditFormDialogOpen,
+      };
+
+    case 'TOGGLE_MANAGE_FORM_CONFIG_DIALOG':
+      return {
+        ...state,
+        isManageFormConfigDialogOpen: !state.isManageFormConfigDialogOpen,
       };
 
     default:
@@ -38,12 +46,18 @@ function reducer(
 
 export const initialContextValue: FormCardContextValue = {
   isEditFormDialogOpen: initialContextState.isEditFormDialogOpen,
+  isManageFormConfigDialogOpen:
+    initialContextState.isManageFormConfigDialogOpen,
+
   toggleEditFormDialog: () => undefined,
+  toggleManageFormConfigDialog: () => undefined,
 };
 
 export interface FormCardContextValue {
   isEditFormDialogOpen: boolean;
+  isManageFormConfigDialogOpen: boolean;
   toggleEditFormDialog: () => void;
+  toggleManageFormConfigDialog: () => void;
 }
 
 const FormCardContext =
@@ -59,11 +73,19 @@ export const FormCardProvider: React.FC<React.PropsWithChildren> = ({
     []
   );
 
+  const handleToggleManageFormConfigDialog = useCallback(
+    () => dispatch({ type: 'TOGGLE_MANAGE_FORM_CONFIG_DIALOG' }),
+    []
+  );
+
   return (
     <FormCardContext.Provider
       value={{
         isEditFormDialogOpen: state.isEditFormDialogOpen,
+        isManageFormConfigDialogOpen: state.isManageFormConfigDialogOpen,
+
         toggleEditFormDialog: handleToggleEditFormDialog,
+        toggleManageFormConfigDialog: handleToggleManageFormConfigDialog,
       }}
     >
       {children}

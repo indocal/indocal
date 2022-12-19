@@ -1,6 +1,6 @@
 import { UUID } from '../../../common';
 
-import { FormStatus, FormVisibility } from './Form';
+import { FormStatus, FormVisibility, FormConfig } from './Form';
 
 export type UpdateFormDto = Partial<{
   slug: string;
@@ -8,6 +8,7 @@ export type UpdateFormDto = Partial<{
   description: string | null;
   status: FormStatus;
   visibility: FormVisibility;
+  config: FormConfig;
   group: UUID;
 }>;
 

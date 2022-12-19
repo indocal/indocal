@@ -82,6 +82,8 @@ model Form {
   title       String
   description String?
 
+  config Json?
+
   status     FormStatus     @default(DRAFT)
   visibility FormVisibility @default(PRIVATE)
 

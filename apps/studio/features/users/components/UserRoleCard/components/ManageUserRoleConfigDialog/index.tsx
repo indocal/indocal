@@ -58,8 +58,8 @@ const schema = zod.object(
     ),
   },
   {
-    description: 'Accesos del rol',
-    required_error: 'Debe ingresar los accesos del rol',
+    description: 'Configuración del rol',
+    required_error: 'Debe ingresar la configuración del rol',
     invalid_type_error: 'Formato no válido',
   }
 );
