@@ -1,5 +1,5 @@
-import { EventGuest as DBEventGuestModel } from '@prisma/client';
 import { Exclude } from 'class-transformer';
+import { EventGuest as DBEventGuestModel } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 

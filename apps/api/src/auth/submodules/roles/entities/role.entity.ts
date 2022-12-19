@@ -1,5 +1,4 @@
 import {
-  Prisma,
   UserRole as DBUserRoleModel,
   UserRolePermission as DBUserRolePermissionModel,
   User as DBUserModel,
@@ -13,6 +12,12 @@ import { UserEntity } from '../../users';
 type Include = Partial<{
   permissions: DBUserRolePermissionModel[];
   users: DBUserModel[];
+}>;
+
+export type UserRoleAccessType = 'NONE' | 'STANDARD' | 'ADMIN';
+
+export type UserRoleConfig = Partial<{
+  access: Record<string, UserRoleAccessType>;
 }>;
 
 export class UserRoleEntity implements Entity, DBUserRoleModel {
@@ -37,7 +42,7 @@ export class UserRoleEntity implements Entity, DBUserRoleModel {
   type: string;
   name: string;
   description: string;
-  config: Prisma.JsonValue;
+  config: UserRoleConfig | null;
   createdAt: Date;
   updatedAt: Date;
 }

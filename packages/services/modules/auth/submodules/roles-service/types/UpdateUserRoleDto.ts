@@ -2,12 +2,14 @@ import { UUID } from '../../../../../common';
 
 import { UserRoleConfig } from './UserRole';
 
+export type UserRolePermissions = Record<string, Record<string, boolean>>;
+
 export type UpdateUserRoleDto = Partial<{
   type: string;
   name: string;
   description: string;
   config: UserRoleConfig;
-  permissions: Record<string, Record<string, boolean>>;
+  permissions: UserRolePermissions;
   users: UUID[];
 }>;
 

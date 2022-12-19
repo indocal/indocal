@@ -3,6 +3,8 @@ import { IsString, IsObject, IsOptional } from 'class-validator';
 
 import { TrimParam } from '@/common';
 
+import { FormFieldConfig } from '../entities';
+
 class UpdateFormFieldDtoSchema {
   @IsString()
   @TrimParam()
@@ -14,7 +16,7 @@ class UpdateFormFieldDtoSchema {
   description: string | null;
 
   @IsObject()
-  config: object;
+  config: FormFieldConfig;
 }
 
 export class UpdateFormFieldDto extends PartialType(UpdateFormFieldDtoSchema) {}

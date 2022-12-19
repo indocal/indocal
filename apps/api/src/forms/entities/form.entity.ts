@@ -1,12 +1,11 @@
+import { Exclude } from 'class-transformer';
 import {
-  Prisma,
   Form as DBFormModel,
   FormStatus as DBFormStatusEnum,
   FormVisibility as DBFormVisibilityEnum,
   FormField as DBFormFieldModel,
   UserGroup as DBUserGroupModel,
 } from '@prisma/client';
-import { Exclude } from 'class-transformer';
 
 import { Entity, UUID } from '@/common';
 import { UserGroupEntity } from '@/auth';
@@ -16,6 +15,15 @@ import { FormFieldEntity } from '../submodules';
 type Include = Partial<{
   fields?: DBFormFieldModel[];
   group?: DBUserGroupModel;
+}>;
+
+export type FormWebhook = {
+  name: string;
+  url: string;
+};
+
+export type FormConfig = Partial<{
+  webhooks: FormWebhook[];
 }>;
 
 export class FormEntity implements Entity, DBFormModel {
@@ -40,7 +48,7 @@ export class FormEntity implements Entity, DBFormModel {
   slug: string;
   title: string;
   description: string | null;
-  config: Prisma.JsonValue;
+  config: FormConfig | null;
   status: DBFormStatusEnum;
   visibility: DBFormVisibilityEnum;
 

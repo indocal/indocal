@@ -2,10 +2,10 @@ import { Entity, UUID } from '../../../../../common';
 
 import { User, UserStatus } from '../../../../auth';
 
-import { Form as FORM, FormStatus, FormVisibility } from '../../../types';
+import { Form, FormStatus, FormVisibility } from '../../../types';
 
 export type FormFieldAnswer = {
-  field: FORM['fields'][number];
+  field: Form['fields'][number];
   content:
     | TextFormFieldAnswer
     | TextAreaFormFieldAnswer
@@ -25,7 +25,7 @@ export type FormFieldAnswer = {
     | null;
 };
 
-type Form = {
+type EntryForm = {
   id: UUID;
   slug: string;
   title: string;
@@ -47,7 +47,7 @@ type AnsweredBy = {
 
 export interface FormEntry extends Entity {
   answers: FormFieldAnswer[];
-  form: Form;
+  form: EntryForm;
   answeredBy: AnsweredBy | null;
   createdAt: string;
   updatedAt: string;
@@ -77,11 +77,11 @@ export type SelectFormFieldAnswer = string | string[];
 
 export type RadioFormFieldAnswer = string;
 
-export type TimeFormFieldAnswer = Date;
+export type TimeFormFieldAnswer = string;
 
-export type DateFormFieldAnswer = Date;
+export type DateFormFieldAnswer = string;
 
-export type DateTimeFormFieldAnswer = Date;
+export type DateTimeFormFieldAnswer = string;
 
 export type UsersFormFieldAnswer = User | User[];
 

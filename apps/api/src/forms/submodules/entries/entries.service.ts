@@ -14,7 +14,7 @@ export class FormsEntriesService {
   ): Promise<DBFormEntryModel> {
     return await this.prismaService.formEntry.create({
       data: {
-        answers: createFormEntryDto.answers,
+        answers: createFormEntryDto.answers as object,
         form: { connect: { id: createFormEntryDto.form } },
         ...(createFormEntryDto.answeredBy && {
           answeredBy: { connect: { id: createFormEntryDto.answeredBy } },

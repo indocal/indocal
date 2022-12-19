@@ -13,6 +13,8 @@ import {
 
 import { TrimParam, UUID } from '@/common';
 
+import { FormConfig } from '../entities';
+
 class UpdateFormDtoSchema {
   @IsString()
   @TrimParam()
@@ -34,7 +36,7 @@ class UpdateFormDtoSchema {
   visibility: DBFormVisibilityEnum;
 
   @IsObject()
-  config: object;
+  config: FormConfig;
 
   @IsUUID()
   group: UUID;
