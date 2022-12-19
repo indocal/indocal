@@ -7,7 +7,13 @@ import {
 } from 'react';
 import { useSnackbar } from 'notistack';
 
-import { useUserRole, ServiceError, UUID, UserRole } from '@indocal/services';
+import {
+  useUserRole,
+  ServiceError,
+  UUID,
+  UserRole,
+  UserRolePermissions,
+} from '@indocal/services';
 
 import { indocal } from '@/lib';
 
@@ -22,7 +28,7 @@ const initialContextState: UserRolePermissionsManagementPanelContextState = {
 
 interface UserRolePermissionsManagementPanelContextState {
   saving: boolean;
-  permissions: Record<string, Record<string, boolean>> | null;
+  permissions: UserRolePermissions | null;
 }
 
 type UserRolePermissionsManagementPanelContextStateAction =
@@ -32,7 +38,7 @@ type UserRolePermissionsManagementPanelContextStateAction =
     }
   | {
       type: 'SET_PERMISSIONS';
-      permissions: Record<string, Record<string, boolean>>;
+      permissions: UserRolePermissions;
     }
   | {
       type: 'TOGGLE_PERMISSION';
@@ -98,7 +104,7 @@ export interface UserRolePermissionsManagementPanelContextValue {
   validating: boolean;
   saving: boolean;
   role: UserRole | null;
-  permissions: Record<string, Record<string, boolean>> | null;
+  permissions: UserRolePermissions | null;
   error: ServiceError | null;
   togglePermission: (scope: string, action: string) => void;
   save: () => Promise<void>;
@@ -163,17 +169,20 @@ export const UserRolePermissionsManagementPanelProvider: React.FC<
     if (!loading && role) {
       dispatch({
         type: 'SET_PERMISSIONS',
-        permissions: role.permissions.reduce((permissions, permission) => {
-          const [scope, action] = permission.action.split('::');
+        permissions: role.permissions.reduce<UserRolePermissions>(
+          (permissions, permission) => {
+            const [scope, action] = permission.action.split('::');
 
-          return {
-            ...permissions,
-            [scope]: {
-              ...permissions[scope],
-              [action]: true,
-            },
-          };
-        }, {} as Record<string, Record<string, boolean>>),
+            return {
+              ...permissions,
+              [scope]: {
+                ...permissions[scope],
+                [action]: true,
+              },
+            };
+          },
+          {}
+        ),
       });
     }
   }, [loading, role]);

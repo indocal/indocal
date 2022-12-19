@@ -3,6 +3,14 @@ import { IsString, IsObject, IsUUID } from 'class-validator';
 
 import { TrimParam, UUID } from '@/common';
 
+export type UserRoleAccessType = 'NONE' | 'STANDARD' | 'ADMIN';
+
+export type UserRoleConfig = Partial<{
+  access: Record<string, UserRoleAccessType>;
+}>;
+
+export type UserRolePermissions = Record<string, Record<string, boolean>>;
+
 class UpdateUserRoleDtoSchema {
   @IsString()
   @TrimParam()
@@ -17,10 +25,10 @@ class UpdateUserRoleDtoSchema {
   description: string;
 
   @IsObject()
-  config: object;
+  config: UserRoleConfig;
 
   @IsObject()
-  permissions: Record<string, Record<string, boolean>>;
+  permissions: UserRolePermissions;
 
   @IsUUID('all', { each: true })
   users: UUID[];

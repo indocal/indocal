@@ -13,6 +13,15 @@ import {
 
 import { TrimParam, UUID } from '@/common';
 
+export type FormWebhook = {
+  name: string;
+  url: string;
+};
+
+export type FormConfig = Partial<{
+  webhooks: FormWebhook[];
+}>;
+
 class UpdateFormDtoSchema {
   @IsString()
   @TrimParam()
@@ -34,7 +43,7 @@ class UpdateFormDtoSchema {
   visibility: DBFormVisibilityEnum;
 
   @IsObject()
-  config: object;
+  config: FormConfig;
 
   @IsUUID()
   group: UUID;
