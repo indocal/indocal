@@ -52,8 +52,14 @@ export default FormFieldEntity;
 // Config by type //
 ////////////////////
 
+export type WebhookFormFieldConfig = {
+  include: boolean;
+  key: string;
+};
+
 export type CommonFormFieldConfig = {
   required: boolean;
+  webhook: WebhookFormFieldConfig;
 };
 
 export type TextFormFieldConfig = CommonFormFieldConfig & {

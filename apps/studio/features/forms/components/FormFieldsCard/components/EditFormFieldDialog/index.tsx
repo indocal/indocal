@@ -16,12 +16,7 @@ import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
 import { useFormContext } from 'react-hook-form';
 
-import {
-  Form,
-  FormField,
-  FormFieldType,
-  ApiEndpoints,
-} from '@indocal/services';
+import { Form, FormFieldType, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
 
@@ -52,7 +47,7 @@ import {
 
 export interface EditFormFieldDialogProps {
   form: Form;
-  field: FormField;
+  field: Form['fields'][number];
 }
 
 const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
@@ -240,7 +235,7 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
             <TabPanel value={Tabs.CONFIG}>{options[field.type]}</TabPanel>
 
             <TabPanel value={Tabs.WEBHOOK}>
-              <WebhookFormFieldConfig />
+              <WebhookFormFieldConfig field={field} />
             </TabPanel>
           </TabContext>
         </Stack>

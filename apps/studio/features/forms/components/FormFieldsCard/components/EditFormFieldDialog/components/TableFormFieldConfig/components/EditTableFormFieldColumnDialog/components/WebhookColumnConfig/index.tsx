@@ -1,3 +1,4 @@
+import { Stack, TextField } from '@mui/material';
 import { useFormContext, Control } from 'react-hook-form';
 
 import { ControlledCheckbox } from '@indocal/ui';
@@ -12,17 +13,50 @@ export const WebhookColumnConfig: React.FC<WebhookColumnConfigProps> = ({
   column,
 }) => {
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
+    register,
     control,
   } = useFormContext<EditFormFieldDialogData>();
 
   return (
-    <ControlledCheckbox
-      name={`config.columns.${column}.config.webhook`}
-      label="¿Incluir en el webhook?"
-      control={control as unknown as Control}
-      formControlProps={{ disabled: isSubmitting }}
-    />
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="flex-start"
+      spacing={2}
+    >
+      <Stack flex={1}>
+        <ControlledCheckbox
+          name={`config.columns.${column}.config.webhook.include`}
+          label="¿Incluir en el webhook?"
+          control={control as unknown as Control}
+          controllerProps={{ defaultValue: false }}
+          formControlProps={{ disabled: isSubmitting }}
+        />
+      </Stack>
+
+      <Stack flex={1}>
+        <TextField
+          fullWidth
+          size="small"
+          autoComplete="off"
+          label="Key"
+          disabled={isSubmitting}
+          inputProps={register(`config.columns.${column}.config.webhook.key`)}
+          defaultValue={`column_${column}`}
+          error={
+            errors.config?.columns &&
+            errors.config.columns[column] &&
+            Boolean(errors.config.columns[column]?.config?.webhook?.key)
+          }
+          helperText={
+            errors.config?.columns &&
+            errors.config.columns[column] &&
+            errors.config.columns[column]?.config?.webhook?.key?.message
+          }
+        />
+      </Stack>
+    </Stack>
   );
 };
 
