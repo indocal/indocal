@@ -7,6 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+////////////////////////
+// Logging Management //
+////////////////////////
+
+model Log {
+  id      String @id @default(uuid())
+  context String
+  action  String // method::handler
+
+  metadata Json?
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  userId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 //////////////////////
 // Users Management //
 //////////////////////
@@ -19,6 +37,7 @@ model User {
 
   status UserStatus @default(ENABLED)
 
+  logs    Log[]
   roles   UserRole[]
   groups  UserGroup[]
   entries FormEntry[]
@@ -157,7 +176,7 @@ enum FormFieldType {
 model FormEntry {
   id String @id @default(uuid())
 
-  answers Json[] @default([]) // Array<{ field: FormField, content: unknown }>
+  answers Json[] @default([]) // Array<{ field: FormField, content: FormFieldAnswer }>
 
   form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
   formId String

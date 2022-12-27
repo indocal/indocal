@@ -1,4 +1,4 @@
-import { APP_INTERCEPTOR, APP_GUARD, APP_PIPE, APP_FILTER } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import {
   Module,
   ClassSerializerInterceptor,
@@ -6,20 +6,17 @@ import {
 } from '@nestjs/common';
 
 import { PrismaFilter } from '@/common';
-import { AuthModule, JwtAuthGuard } from '@/auth';
+import { LoggingModule } from '@/logging';
+import { AuthModule } from '@/auth';
 import { FormsModule } from '@/forms';
 import { EventsModule } from '@/events';
 
 @Module({
-  imports: [AuthModule, FormsModule, EventsModule],
+  imports: [LoggingModule, AuthModule, FormsModule, EventsModule],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
     },
     {
       provide: APP_PIPE,
