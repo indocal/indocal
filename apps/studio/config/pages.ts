@@ -10,6 +10,7 @@ export enum Pages {
   FORMS = '/forms',
   FORMS_PREVIEW = '/forms/preview',
   FORMS_ENTRIES = '/forms/entries',
+  LOGS = '/logging',
   SETTINGS = '/settings',
 }
 

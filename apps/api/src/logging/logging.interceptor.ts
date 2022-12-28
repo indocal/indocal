@@ -23,27 +23,39 @@ export class LoggingInterceptor implements NestInterceptor {
   ): Promise<Observable<unknown>> {
     const startsAt = Date.now();
 
+    const type = context.getType();
     const controller = context.getClass().name;
     const handler = context.getHandler().name;
 
-    const { method, params, body, user } = context
-      .switchToHttp()
-      .getRequest<Request>();
+    switch (type) {
+      case 'http': {
+        const { method, params, query, body, user } = context
+          .switchToHttp()
+          .getRequest<Request>();
 
-    const logger = new Logger(controller);
+        await this.loggingService.create({
+          context: controller,
+          action: `${method}::${handler}`,
+          user: (user as AuthenticatedUser) || null,
+          metadata: {
+            contextType: type,
+            ...(Object.entries(params).length > 0 && { params }),
+            ...(Object.entries(query).length > 0 && { query }),
+            ...(Object.entries(body).length > 0 && { body }),
+          },
+        });
+      }
+    }
 
-    await this.loggingService.log(
-      controller,
-      `${method}::${handler}`,
-      (user as AuthenticatedUser) || null,
-      { params, body }
+    return next.handle().pipe(
+      tap(() => {
+        const logger = new Logger(controller);
+
+        const duration = '\x1b[33m' + `+${Date.now() - startsAt}ms`;
+
+        logger.log(`(${type.toUpperCase()}) -> ${handler} ${duration}`);
+      })
     );
-
-    const total = '\x1b[33m' + `+${Date.now() - startsAt}ms`;
-
-    return next
-      .handle()
-      .pipe(tap(() => logger.log(`${method} -> ${handler} ${total}`)));
   }
 }
 

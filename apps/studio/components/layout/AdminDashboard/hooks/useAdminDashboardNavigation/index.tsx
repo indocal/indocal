@@ -6,6 +6,7 @@ import {
   AccountTree as RolesIcon,
   GroupWork as GroupsIcon,
   Feed as FormsIcon,
+  History as LogsIcon,
   Settings as SettingsIcon,
 } from '@mui/icons-material';
 
@@ -82,6 +83,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
               href: Pages.USERS_GROUPS,
             },
           ],
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'log'),
+          label: 'Registros',
+          icon: <LogsIcon />,
+          href: Pages.LOGS,
         },
       },
       {

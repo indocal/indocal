@@ -1,4 +1,7 @@
 export enum ApiEndpoints {
+  LOGS = '/logs',
+  LOGS_COUNT = '/logs/count',
+
   SIGN_IN = '/auth/local/sign-in',
   RESTORE_PASSWORD = '/auth/local/restore-password',
   ME = '/auth/me',

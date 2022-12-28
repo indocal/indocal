@@ -6,6 +6,7 @@ import {
   PrismaQuery,
 } from '@casl/prisma';
 import {
+  Log,
   User,
   UserRole,
   UserRolePermission,
@@ -30,6 +31,7 @@ export enum Action {
 }
 
 export type Subjects = PrismaSubjects<{
+  log: Log;
   user: User;
   userRole: UserRole;
   userRolePermission: UserRolePermission;
