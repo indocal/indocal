@@ -65,21 +65,22 @@ export const SignIn: React.FC = () => {
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const response = await signIn('credentials', {
-        username: formData.username,
-        password: formData.password,
-        redirect: false,
-      });
+      try {
+        const response = await signIn('credentials', {
+          username: formData.username,
+          password: formData.password,
+          redirect: false,
+        });
 
-      if (!response) return;
+        if (response?.error) {
+          enqueueSnackbar(response.error, { variant: 'error' });
+          return;
+        }
 
-      const { ok, url, error } = response;
+        if (!response?.ok) return;
 
-      if (error) enqueueSnackbar(error, { variant: 'error' });
-
-      if (ok) {
-        if (url) {
-          const { searchParams } = new URL(url);
+        if (response.url) {
+          const { searchParams } = new URL(response.url);
 
           const callbackUrl = searchParams.get('callbackUrl');
 
@@ -87,6 +88,13 @@ export const SignIn: React.FC = () => {
         } else {
           await router.push(Pages.ROOT);
         }
+      } catch (error) {
+        enqueueSnackbar(
+          error instanceof Error
+            ? error.message
+            : 'Ha ocurrido un error al iniciar sesión, inténtelo de nuevo. Si el error persiste, contacte al soporte',
+          { variant: 'error' }
+        );
       }
     },
     [router, enqueueSnackbar]
