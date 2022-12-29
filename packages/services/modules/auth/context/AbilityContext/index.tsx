@@ -12,13 +12,14 @@ export const AbilityContext = createContext(createMongoAbility());
 export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { data: me } = useSWR<AuthenticatedUser>(ApiEndpoints.ME);
+  const { data: me } = useSWR<AuthenticatedUser | null>(ApiEndpoints.ME);
 
-  const { data: roles } = useSWR<UserRole[]>(
-    () =>
-      `${ApiEndpoints.USERS_ROLES}?${qs.stringify({
-        filters: { users: { some: { id: me?.id } } },
-      })}`
+  const { data: roles } = useSWR<UserRole[]>(() =>
+    me
+      ? `${ApiEndpoints.USERS_ROLES}?${qs.stringify({
+          filters: { users: { some: { id: me.id } } },
+        })}`
+      : null
   );
 
   const ability = useRef(createMongoAbility());

@@ -5,6 +5,7 @@ import { SWRConfig, Fetcher } from 'swr';
 
 import { ThemeProvider } from '@indocal/theme';
 import { ErrorBoundary, Loader } from '@indocal/ui';
+import { AbilityProvider } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { EnhancedNextApp } from '@/types';
@@ -27,15 +28,17 @@ const App: EnhancedNextApp = ({ Component, pageProps }) => {
     <ErrorBoundary fullscreen message="Error al cargar la aplicación">
       <SessionProvider session={pageProps.session}>
         <SWRConfig value={{ fetcher }}>
-          <ThemeProvider>
-            <SnackbarProvider>
-              {boostraping ? (
-                <Loader fullscreen />
-              ) : (
-                getLayout(<Component {...pageProps} />)
-              )}
-            </SnackbarProvider>
-          </ThemeProvider>
+          <AbilityProvider>
+            <ThemeProvider>
+              <SnackbarProvider>
+                {boostraping ? (
+                  <Loader fullscreen />
+                ) : (
+                  getLayout(<Component {...pageProps} />)
+                )}
+              </SnackbarProvider>
+            </ThemeProvider>
+          </AbilityProvider>
         </SWRConfig>
       </SessionProvider>
     </ErrorBoundary>
