@@ -4,7 +4,7 @@ export enum Pages {
 
   // Sections
   ROOT = '/',
-  INVENTORY = '/inventory',
+  SUPPLIES = '/supplies',
   SUPPLIERS = '/suppliers',
 }
 

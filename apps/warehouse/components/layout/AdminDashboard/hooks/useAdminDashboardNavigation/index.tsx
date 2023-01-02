@@ -47,10 +47,10 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
       {
         type: 'ITEM',
         item: {
-          show: true, // TODO: add check
+          show: ability.can('read', 'supply'),
           label: 'Inventario',
           icon: <InventoryIcon />,
-          href: Pages.INVENTORY,
+          href: Pages.SUPPLIES,
         },
       },
       {

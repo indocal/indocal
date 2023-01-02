@@ -1,12 +1,18 @@
 import { Container, Grid } from '@mui/material';
 
 import { Page, Stat } from '@indocal/ui';
-import { useSuppliersCount } from '@indocal/services';
+import { useSuppliesCount, useSuppliersCount } from '@indocal/services';
 
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
 const DashboardPage: EnhancedNextPage = () => {
+  const {
+    loading: suppliesCountLoading,
+    validating: suppliesCountValidating,
+    count: suppliesCount,
+  } = useSuppliesCount();
+
   const {
     loading: suppliersCountLoading,
     validating: suppliersCountValidating,
@@ -17,6 +23,16 @@ const DashboardPage: EnhancedNextPage = () => {
     <Page title="Dashboard" transition="down">
       <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
         <Grid container justifyContent="center" alignItems="center" spacing={1}>
+          <Grid item>
+            <Stat
+              title="Recursos"
+              description="Recursos registrados"
+              value={suppliesCount ?? 'N/A'}
+              loading={suppliesCountLoading}
+              validating={suppliesCountValidating}
+            />
+          </Grid>
+
           <Grid item>
             <Stat
               title="Suplidores"

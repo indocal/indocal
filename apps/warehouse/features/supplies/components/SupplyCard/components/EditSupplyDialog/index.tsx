@@ -10,80 +10,105 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
-import { useForm } from 'react-hook-form';
+import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { Supplier, ApiEndpoints } from '@indocal/services';
+import { Supply, SupplyUnit, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
+import { ControlledSupplyUnitSelect } from '@/features';
 
-import { useSupplierCard } from '../../context';
+import { useSupplyCard } from '../../context';
 
 type FormData = zod.infer<typeof schema>;
 
 const schema = zod
   .object(
     {
-      name: zod
+      code: zod
         .string({
-          description: 'Nombre del suplidor',
-          required_error: 'Debe ingresar el nombre del suplidor',
+          description: 'Código del recurso',
+          required_error: 'Debe ingresar el código del recurso',
           invalid_type_error: 'Formato no válido',
         })
-        .min(1, 'Debe ingresar el título del suplidor')
+        .min(1, 'Debe ingresar el código del recurso')
+        .trim(),
+
+      name: zod
+        .string({
+          description: 'Nombre del recurso',
+          required_error: 'Debe ingresar el nombre del recurso',
+          invalid_type_error: 'Formato no válido',
+        })
+        .min(1, 'Debe ingresar el título del recurso')
         .trim(),
 
       description: zod
         .string({
-          description: 'Descripción del suplidor',
-          required_error: 'Debe ingresar la descripción del suplidor',
+          description: 'Descripción del recurso',
+          required_error: 'Debe ingresar la descripción del recurso',
           invalid_type_error: 'Formato no válido',
         })
         .trim()
         .nullable(),
+
+      unit: zod
+        .enum<string, [SupplyUnit, ...SupplyUnit[]]>(
+          ['UNIT', 'PACK', 'BOX', 'BLOCK', 'REAM', 'BALE', 'SACK', 'GALLON'],
+          {
+            description: 'Unidad del recurso',
+            required_error: 'Debe seleccionar la unidad del recurso',
+            invalid_type_error: 'Formato no válido',
+          }
+        )
+        .describe('Unidad del recurso'),
     },
     {
-      description: 'Datos del suplidor',
-      required_error: 'Debe ingresar los datos del suplidor',
+      description: 'Datos del recurso',
+      required_error: 'Debe ingresar los datos del recurso',
       invalid_type_error: 'Formato no válido',
     }
   )
   .partial();
 
-export interface EditSupplierDialogProps {
-  supplier: Supplier;
+export interface EditSupplyDialogProps {
+  supply: Supply;
 }
 
-export const EditSupplierDialog: React.FC<EditSupplierDialogProps> = ({
-  supplier,
+export const EditSupplyDialog: React.FC<EditSupplyDialogProps> = ({
+  supply,
 }) => {
   const { mutate } = useSWRConfig();
 
-  const { isEditSupplierDialogOpen, toggleEditSupplierDialog } =
-    useSupplierCard();
+  const { isEditSupplyDialogOpen, toggleEditSupplyDialog } = useSupplyCard();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
+    control,
     handleSubmit,
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: supplier.name,
-      description: supplier.description,
+      code: supply.code,
+      name: supply.name,
+      description: supply.description,
+      unit: supply.unit,
     },
   });
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { supplier: updated, error } =
-        await indocal.warehouse.suppliers.update(supplier.id, {
+      const { supply: updated, error } =
+        await indocal.warehouse.supplies.update(supply.id, {
+          code: formData.code,
           name: formData.name,
           description: formData.description || null,
+          unit: formData.unit,
         });
 
       if (error) {
@@ -97,20 +122,20 @@ export const EditSupplierDialog: React.FC<EditSupplierDialogProps> = ({
           { variant: 'error' }
         );
       } else {
-        await mutate(`${ApiEndpoints.SUPPLIERS}/${supplier.id}`, updated);
+        await mutate(`${ApiEndpoints.SUPPLIES}/${supply.id}`, updated);
 
-        enqueueSnackbar('Suplidor editado exitosamente', {
+        enqueueSnackbar('Recurso editado exitosamente', {
           variant: 'success',
-          onEntered: toggleEditSupplierDialog,
+          onEntered: toggleEditSupplyDialog,
         });
       }
     },
-    [supplier.id, mutate, toggleEditSupplierDialog, enqueueSnackbar]
+    [supply.id, mutate, toggleEditSupplyDialog, enqueueSnackbar]
   );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
-      toggleEditSupplierDialog();
+      toggleEditSupplyDialog();
     } else {
       const answer = window.confirm(
         '¿Estás seguro de que deseas cancelar esta acción?'
@@ -118,17 +143,27 @@ export const EditSupplierDialog: React.FC<EditSupplierDialogProps> = ({
 
       if (!answer) return;
 
-      toggleEditSupplierDialog();
+      toggleEditSupplyDialog();
       reset();
     }
-  }, [isDirty, reset, toggleEditSupplierDialog]);
+  }, [isDirty, reset, toggleEditSupplyDialog]);
 
   return (
-    <Dialog fullWidth open={isEditSupplierDialogOpen} onClose={handleOnClose}>
-      <DialogTitle>Editar suplidor</DialogTitle>
+    <Dialog fullWidth open={isEditSupplyDialogOpen} onClose={handleOnClose}>
+      <DialogTitle>Editar recurso</DialogTitle>
 
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
+          <TextField
+            required
+            autoComplete="off"
+            label="Código"
+            disabled={isSubmitting}
+            inputProps={register('code')}
+            error={Boolean(errors.code)}
+            helperText={errors.code?.message}
+          />
+
           <TextField
             required
             autoComplete="off"
@@ -147,6 +182,14 @@ export const EditSupplierDialog: React.FC<EditSupplierDialogProps> = ({
             inputProps={register('description')}
             error={Boolean(errors.description)}
             helperText={errors.description?.message}
+          />
+
+          <ControlledSupplyUnitSelect
+            required
+            name="unit"
+            label="Unidad"
+            control={control as unknown as Control}
+            disabled={isSubmitting}
           />
         </Stack>
       </DialogContent>
@@ -167,4 +210,4 @@ export const EditSupplierDialog: React.FC<EditSupplierDialogProps> = ({
   );
 };
 
-export default EditSupplierDialog;
+export default EditSupplyDialog;

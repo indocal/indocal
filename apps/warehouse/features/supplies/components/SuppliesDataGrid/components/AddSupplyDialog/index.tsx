@@ -10,65 +10,94 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
+import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { SupplyUnit } from '@indocal/services';
+
 import { indocal } from '@/lib';
+import { ControlledSupplyUnitSelect } from '@/features';
 import { Pages } from '@/config';
 
-import { useSuppliersDataGrid } from '../../context';
+import { useSuppliesDataGrid } from '../../context';
 
 type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    name: zod
+    code: zod
       .string({
-        description: 'Nombre del suplidor',
-        required_error: 'Debe ingresar el nombre del suplidor',
+        description: 'Código del recurso',
+        required_error: 'Debe ingresar el código del recurso',
         invalid_type_error: 'Formato no válido',
       })
-      .min(1, 'Debe ingresar el nombre del suplidor')
+      .min(1, 'Debe ingresar el código del recurso')
+      .trim(),
+
+    name: zod
+      .string({
+        description: 'Nombre del recurso',
+        required_error: 'Debe ingresar el nombre del recurso',
+        invalid_type_error: 'Formato no válido',
+      })
+      .min(1, 'Debe ingresar el nombre del recurso')
       .trim(),
 
     description: zod
       .string({
-        description: 'Descripción del suplidor',
-        required_error: 'Debe ingresar la descripción del suplidor',
+        description: 'Descripción del recurso',
+        required_error: 'Debe ingresar la descripción del recurso',
         invalid_type_error: 'Formato no válido',
       })
       .trim()
       .optional(),
+
+    unit: zod
+      .enum<string, [SupplyUnit, ...SupplyUnit[]]>(
+        ['UNIT', 'PACK', 'BOX', 'BLOCK', 'REAM', 'BALE', 'SACK', 'GALLON'],
+        {
+          description: 'Unidad del recurso',
+          required_error: 'Debe seleccionar la unidad del recurso',
+          invalid_type_error: 'Formato no válido',
+        }
+      )
+      .describe('Unidad del recurso'),
   },
   {
-    description: 'Datos del suplidor',
-    required_error: 'Debe ingresar los datos del suplidor',
+    description: 'Datos del recurso',
+    required_error: 'Debe ingresar los datos del recurso',
     invalid_type_error: 'Formato no válido',
   }
 );
 
-export const AddSupplierDialog: React.FC = () => {
+export const AddSupplyDialog: React.FC = () => {
   const router = useRouter();
 
-  const { isAddSupplierDialogOpen, toggleAddSupplierDialog } =
-    useSuppliersDataGrid();
+  const { isAddSupplyDialogOpen, toggleAddSupplyDialog } =
+    useSuppliesDataGrid();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
+    control,
     handleSubmit,
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      unit: 'UNIT',
+    },
   });
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { supplier, error } = await indocal.warehouse.suppliers.create({
+      const { supply, error } = await indocal.warehouse.supplies.create({
+        code: formData.code,
         name: formData.name,
+        unit: formData.unit,
         ...(formData.description && { description: formData.description }),
       });
 
@@ -83,20 +112,20 @@ export const AddSupplierDialog: React.FC = () => {
           { variant: 'error' }
         );
       } else {
-        await router.push(`${Pages.SUPPLIERS}/${supplier?.id}`);
+        await router.push(`${Pages.SUPPLIES}/${supply?.id}`);
 
-        enqueueSnackbar('Suplidor agregado exitosamente', {
+        enqueueSnackbar('Recurso agregado exitosamente', {
           variant: 'success',
-          onEntered: toggleAddSupplierDialog,
+          onEntered: toggleAddSupplyDialog,
         });
       }
     },
-    [router, toggleAddSupplierDialog, enqueueSnackbar]
+    [router, toggleAddSupplyDialog, enqueueSnackbar]
   );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
-      toggleAddSupplierDialog();
+      toggleAddSupplyDialog();
     } else {
       const answer = window.confirm(
         '¿Estás seguro de que deseas cancelar esta acción?'
@@ -104,17 +133,27 @@ export const AddSupplierDialog: React.FC = () => {
 
       if (!answer) return;
 
-      toggleAddSupplierDialog();
+      toggleAddSupplyDialog();
       reset();
     }
-  }, [isDirty, reset, toggleAddSupplierDialog]);
+  }, [isDirty, reset, toggleAddSupplyDialog]);
 
   return (
-    <Dialog fullWidth open={isAddSupplierDialogOpen} onClose={handleOnClose}>
-      <DialogTitle>Agregar suplidor</DialogTitle>
+    <Dialog fullWidth open={isAddSupplyDialogOpen} onClose={handleOnClose}>
+      <DialogTitle>Agregar recurso</DialogTitle>
 
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
+          <TextField
+            required
+            autoComplete="off"
+            label="Código"
+            disabled={isSubmitting}
+            inputProps={register('code')}
+            error={Boolean(errors.code)}
+            helperText={errors.code?.message}
+          />
+
           <TextField
             required
             autoComplete="off"
@@ -133,6 +172,14 @@ export const AddSupplierDialog: React.FC = () => {
             inputProps={register('description')}
             error={Boolean(errors.description)}
             helperText={errors.description?.message}
+          />
+
+          <ControlledSupplyUnitSelect
+            required
+            name="unit"
+            label="Unidad"
+            control={control as unknown as Control}
+            disabled={isSubmitting}
           />
         </Stack>
       </DialogContent>
@@ -153,4 +200,4 @@ export const AddSupplierDialog: React.FC = () => {
   );
 };
 
-export default AddSupplierDialog;
+export default AddSupplyDialog;
