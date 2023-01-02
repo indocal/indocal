@@ -4,6 +4,7 @@ import { Container, Grid } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useSupplier, UUID } from '@indocal/services';
 
+import { SupplierCard } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -37,9 +38,9 @@ const SupplierPage: EnhancedNextPage = () => {
             alignItems="center"
             spacing={1}
           >
-            <Grid item xs={12}>
+            <Grid item xs={12} md={4}>
               <Widget>
-                <pre>{JSON.stringify(supplier, null, 2)}</pre>
+                <SupplierCard supplier={supplier} />
               </Widget>
             </Grid>
           </Grid>
