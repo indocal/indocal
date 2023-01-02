@@ -16,6 +16,7 @@ import {
   FormEntry,
   Event,
   EventGuest,
+  Supply,
   Supplier,
 } from '@prisma/client';
 
@@ -42,6 +43,7 @@ export type Subjects = PrismaSubjects<{
   formEntry: FormEntry;
   event: Event;
   eventGuest: EventGuest;
+  supply: Supply;
   supplier: Supplier;
 }>;
 

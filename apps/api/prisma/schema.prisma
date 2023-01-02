@@ -245,6 +245,34 @@ model EventGuest {
 // Warehouse Management //
 //////////////////////////
 
+model Supply {
+  id   String @id @default(uuid())
+  code String
+
+  name        String
+  description String?
+
+  quantity Int @default(0)
+
+  unit SupplyUnit
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SupplyUnit {
+  UNIT
+  PACK
+  BOX
+
+  BLOCK
+  REAM
+  BALE
+
+  SACK
+  GALLON
+}
+
 model Supplier {
   id String @id @default(uuid())
 
@@ -254,3 +282,38 @@ model Supplier {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// model Order {
+//   id String @id @default(uuid())
+
+//   items OrderItem[]
+
+//   supplier    Supplier @relation(fields: [supplier_id], references: [id])
+//   supplier_id String
+
+//   receivedAt DateTime?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// enum OderStatus {
+//   PENDING
+//   RECEIVED
+//   CANCELED
+// }
+
+// model OrderItem {
+//   id String @id @default(uuid())
+
+//   quantity Int
+
+//   order   Order  @relation(fields: [orderId], references: [id])
+//   orderId String
+
+//   supply   Supply @relation(fields: [supplyId], references: [id])
+//   supplyId String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
