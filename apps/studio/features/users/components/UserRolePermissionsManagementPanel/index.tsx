@@ -21,6 +21,7 @@ import {
   UsersGroupsScopePermissions,
   FormsScopePermissions,
   EventsScopePermissions,
+  WarehouseSuppliersScopePermissions,
 } from './components';
 
 const UserRolePermissionsManagementPanel: React.FC = () => {
@@ -76,6 +77,7 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
           <UsersGroupsScopePermissions />
           <FormsScopePermissions />
           <EventsScopePermissions />
+          <WarehouseSuppliersScopePermissions />
         </Stack>
       ) : (
         <NoData message="No se han encontrado datos del rol" />

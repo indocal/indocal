@@ -245,74 +245,12 @@ model EventGuest {
 // Warehouse Management //
 //////////////////////////
 
-// model Item {
-//   id                String  @id @default(uuid())
-//   institutionalCode String  @unique
-//   governmentCode    String? @unique
+model Supplier {
+  id String @id @default(uuid())
 
-//   name        String
-//   description String?
+  name        String
+  description String?
 
-//   stock Int @default(0)
-
-//   unit ItemUnit
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
-// enum ItemUnit {
-//   UNIT
-//   PACK
-//   BOX
-
-//   BLOCK
-//   REAM
-//   BALE
-
-//   SACK
-//   GALLON
-// }
-
-// model Supplier {
-//   id String @id @default(uuid())
-
-//   name        String
-//   description String?
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
-// model Purchase {
-//   id String @id @default(uuid())
-
-//   period PurchasePeriod
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
-// enum PurchasePeriod {
-//   JANUARY_MARCH
-//   APRIL_JUNE
-//   JULY_SEPTEMBER
-//   OCTOBER_DECEMBER
-// }
-
-// model Order {
-//   id String @id @default(uuid())
-
-//   cost     Decimal
-//   quantity Int
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
-// model SalidaForm {
-//   id String @id @default(uuid())
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

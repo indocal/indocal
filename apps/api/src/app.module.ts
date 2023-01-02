@@ -10,9 +10,16 @@ import { LoggingModule } from '@/logging';
 import { AuthModule } from '@/auth';
 import { FormsModule } from '@/forms';
 import { EventsModule } from '@/events';
+import { WarehouseModule } from '@/warehouse';
 
 @Module({
-  imports: [LoggingModule, AuthModule, FormsModule, EventsModule],
+  imports: [
+    LoggingModule,
+    AuthModule,
+    FormsModule,
+    EventsModule,
+    WarehouseModule,
+  ],
   providers: [
     {
       provide: APP_INTERCEPTOR,
