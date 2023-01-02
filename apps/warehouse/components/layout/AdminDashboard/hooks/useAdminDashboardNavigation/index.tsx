@@ -1,5 +1,9 @@
 import { useMemo } from 'react';
-import { Dashboard as OverviewIcon } from '@mui/icons-material';
+import {
+  Dashboard as OverviewIcon,
+  Inventory as InventoryIcon,
+  LocalShipping as SuppliersIcon,
+} from '@mui/icons-material';
 
 import {
   DrawerNavigation,
@@ -40,8 +44,26 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           href: Pages.ROOT,
         },
       },
+      {
+        type: 'ITEM',
+        item: {
+          show: true, // TODO: add check
+          label: 'Inventario',
+          icon: <InventoryIcon />,
+          href: Pages.INVENTORY,
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'supplier'),
+          label: 'Suplidores',
+          icon: <SuppliersIcon />,
+          href: Pages.SUPPLIERS,
+        },
+      },
     ],
-    []
+    [ability]
   );
 
   return navigation
