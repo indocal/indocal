@@ -8,19 +8,19 @@ import {
 } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
-import { WarehouseSupplier } from '../../types';
+import { Supplier } from '../../types';
 
-export interface WarehouseSupplierHookReturn {
+export interface SupplierHookReturn {
   loading: boolean;
   validating: boolean;
-  supplier: WarehouseSupplier | null;
+  supplier: Supplier | null;
   error: ServiceError | null;
   refetch: () => Promise<void>;
 }
 
-export function useWarehouseSupplier(id: UUID): WarehouseSupplierHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<WarehouseSupplier>(
-    `${ApiEndpoints.WAREHOUSE_SUPPLIERS}/${id}`
+export function useSupplier(id: UUID): SupplierHookReturn {
+  const { isValidating, data, error, mutate } = useSWR<Supplier>(
+    `${ApiEndpoints.SUPPLIERS}/${id}`
   );
 
   const handleRefetch = useCallback(async () => {
@@ -36,4 +36,4 @@ export function useWarehouseSupplier(id: UUID): WarehouseSupplierHookReturn {
   };
 }
 
-export default useWarehouseSupplier;
+export default useSupplier;

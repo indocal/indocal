@@ -3,7 +3,7 @@ import { IsString, IsOptional } from 'class-validator';
 
 import { TrimParam } from '@/common';
 
-class UpdateWarehouseSupplierDtoSchema {
+class UpdateSupplierDtoSchema {
   @IsString()
   @TrimParam()
   name: string;
@@ -14,8 +14,6 @@ class UpdateWarehouseSupplierDtoSchema {
   description: string | null;
 }
 
-export class UpdateWarehouseSupplierDto extends PartialType(
-  UpdateWarehouseSupplierDtoSchema
-) {}
+export class UpdateSupplierDto extends PartialType(UpdateSupplierDtoSchema) {}
 
-export default UpdateWarehouseSupplierDto;
+export default UpdateSupplierDto;

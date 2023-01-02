@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 
 import { FindManyParams, Pagination } from '@/common';
 
-class FindManyWarehouseSuppliersParamsDtoSchema
+class FindManySuppliersParamsDtoSchema
   implements
     FindManyParams<
       Prisma.SupplierWhereInput,
@@ -26,8 +26,8 @@ class FindManyWarehouseSuppliersParamsDtoSchema
   pagination: Pagination<Prisma.SupplierWhereUniqueInput>;
 }
 
-export class FindManyWarehouseSuppliersParamsDto extends PartialType(
-  FindManyWarehouseSuppliersParamsDtoSchema
+export class FindManySuppliersParamsDto extends PartialType(
+  FindManySuppliersParamsDtoSchema
 ) {}
 
-export default FindManyWarehouseSuppliersParamsDto;
+export default FindManySuppliersParamsDto;

@@ -2,7 +2,7 @@ import { IsString, IsOptional } from 'class-validator';
 
 import { TrimParam } from '@/common';
 
-export class CreateWarehouseSupplierDto {
+export class CreateSupplierDto {
   @IsString()
   @TrimParam()
   name: string;
@@ -13,4 +13,4 @@ export class CreateWarehouseSupplierDto {
   description?: string;
 }
 
-export default CreateWarehouseSupplierDto;
+export default CreateSupplierDto;

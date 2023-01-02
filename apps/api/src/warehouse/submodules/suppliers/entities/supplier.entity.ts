@@ -1,11 +1,9 @@
-import { Supplier as DBWarehouseSupplierModel } from '@prisma/client';
+import { Supplier as DBSupplierModel } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export class WarehouseSupplierEntity
-  implements Entity, DBWarehouseSupplierModel
-{
-  constructor(supplier: DBWarehouseSupplierModel) {
+export class SupplierEntity implements Entity, DBSupplierModel {
+  constructor(supplier: DBSupplierModel) {
     Object.assign(this, supplier);
   }
 
@@ -16,4 +14,4 @@ export class WarehouseSupplierEntity
   updatedAt: Date;
 }
 
-export default WarehouseSupplierEntity;
+export default SupplierEntity;

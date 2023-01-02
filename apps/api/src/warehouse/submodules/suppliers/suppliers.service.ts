@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Supplier as DBWarehouseSupplierModel } from '@prisma/client';
+import { Prisma, Supplier as DBSupplierModel } from '@prisma/client';
 
 import { PrismaService, UUID } from '@/common';
 
-import { CreateWarehouseSupplierDto, UpdateWarehouseSupplierDto } from './dto';
+import { CreateSupplierDto, UpdateSupplierDto } from './dto';
 
 @Injectable()
-export class WarehouseSuppliersService {
+export class SuppliersService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(
-    createWarehouseSupplierDto: CreateWarehouseSupplierDto
-  ): Promise<DBWarehouseSupplierModel> {
+  async create(createSupplierDto: CreateSupplierDto): Promise<DBSupplierModel> {
     return await this.prismaService.supplier.create({
       data: {
-        name: createWarehouseSupplierDto.name,
-        description: createWarehouseSupplierDto.description,
+        name: createSupplierDto.name,
+        description: createSupplierDto.description,
       },
     });
   }
@@ -26,32 +24,32 @@ export class WarehouseSuppliersService {
 
   async findMany(
     params: Prisma.SupplierFindManyArgs
-  ): Promise<DBWarehouseSupplierModel[]> {
+  ): Promise<DBSupplierModel[]> {
     return await this.prismaService.supplier.findMany(params);
   }
 
   async findUnique(
     input: Prisma.SupplierWhereUniqueInput
-  ): Promise<DBWarehouseSupplierModel | null> {
+  ): Promise<DBSupplierModel | null> {
     return await this.prismaService.supplier.findUnique({ where: input });
   }
 
   async update(
     id: UUID,
-    updateWarehouseSupplierDto: UpdateWarehouseSupplierDto
-  ): Promise<DBWarehouseSupplierModel> {
+    updateSupplierDto: UpdateSupplierDto
+  ): Promise<DBSupplierModel> {
     return await this.prismaService.supplier.update({
       where: { id },
       data: {
-        name: updateWarehouseSupplierDto.name,
-        description: updateWarehouseSupplierDto.description,
+        name: updateSupplierDto.name,
+        description: updateSupplierDto.description,
       },
     });
   }
 
-  async delete(id: UUID): Promise<DBWarehouseSupplierModel> {
+  async delete(id: UUID): Promise<DBSupplierModel> {
     return await this.prismaService.supplier.delete({ where: { id } });
   }
 }
 
-export default WarehouseSuppliersService;
+export default SuppliersService;

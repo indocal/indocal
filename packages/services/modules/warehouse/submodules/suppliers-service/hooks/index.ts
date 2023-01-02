@@ -1,3 +1,3 @@
-export * from './useWarehouseSupplier';
-export * from './useWarehouseSuppliers';
-export * from './useWarehouseSuppliersCount';
+export * from './useSupplier';
+export * from './useSuppliers';
+export * from './useSuppliersCount';

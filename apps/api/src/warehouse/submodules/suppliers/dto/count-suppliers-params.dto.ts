@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 
 import { CountParams } from '@/common';
 
-class CountWarehouseSuppliersParamsDtoSchema
+class CountSuppliersParamsDtoSchema
   implements
     CountParams<
       Prisma.SupplierWhereInput,
@@ -18,8 +18,8 @@ class CountWarehouseSuppliersParamsDtoSchema
   distinct: Prisma.Enumerable<Prisma.SupplierScalarFieldEnum>;
 }
 
-export class CountWarehouseSuppliersParamsDto extends PartialType(
-  CountWarehouseSuppliersParamsDtoSchema
+export class CountSuppliersParamsDto extends PartialType(
+  CountSuppliersParamsDtoSchema
 ) {}
 
-export default CountWarehouseSuppliersParamsDto;
+export default CountSuppliersParamsDto;

@@ -1,12 +1,12 @@
 import { Config } from '../../config';
 
-import { WarehouseSuppliersService } from './submodules';
+import { SuppliersService } from './submodules';
 
 export class WarehouseService {
-  suppliers: WarehouseSuppliersService;
+  suppliers: SuppliersService;
 
   constructor(private config: Config) {
-    this.suppliers = new WarehouseSuppliersService(config);
+    this.suppliers = new SuppliersService(config);
   }
 }
 

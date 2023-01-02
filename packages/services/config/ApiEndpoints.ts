@@ -21,8 +21,8 @@ export enum ApiEndpoints {
   EVENTS = '/events',
   EVENTS_COUNT = '/events/count',
 
-  WAREHOUSE_SUPPLIERS = 'warehouse/suppliers',
-  WAREHOUSE_SUPPLIERS_COUNT = 'warehouse/suppliers/count',
+  SUPPLIERS = 'warehouse/suppliers',
+  SUPPLIERS_COUNT = 'warehouse/suppliers/count',
 }
 
 export default ApiEndpoints;

@@ -16,7 +16,7 @@ import { Can } from '@indocal/services';
 
 import { useUserRolePermissionsManagementPanel } from '../../context';
 
-export const WarehouseSuppliersScopePermissions: React.FC = () => {
+export const SuppliersScopePermissions: React.FC = () => {
   const { validating, permissions, saving, togglePermission } =
     useUserRolePermissionsManagementPanel();
 
@@ -133,4 +133,4 @@ export const WarehouseSuppliersScopePermissions: React.FC = () => {
   );
 };
 
-export default WarehouseSuppliersScopePermissions;
+export default SuppliersScopePermissions;

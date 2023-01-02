@@ -3,15 +3,15 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from '@/common';
 import { AuthModule } from '@/auth';
 
-import WarehouseSuppliersController from './suppliers.controller';
-import WarehouseSuppliersService from './suppliers.service';
+import SuppliersController from './suppliers.controller';
+import SuppliersService from './suppliers.service';
 
 @Module({
   imports: [AuthModule],
-  controllers: [WarehouseSuppliersController],
-  providers: [PrismaService, WarehouseSuppliersService],
-  exports: [WarehouseSuppliersService],
+  controllers: [SuppliersController],
+  providers: [PrismaService, SuppliersService],
+  exports: [SuppliersService],
 })
-export class WarehouseSuppliersModule {}
+export class SuppliersModule {}
 
-export default WarehouseSuppliersModule;
+export default SuppliersModule;
