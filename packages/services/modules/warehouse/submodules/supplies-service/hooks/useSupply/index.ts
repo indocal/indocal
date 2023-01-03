@@ -19,7 +19,7 @@ export interface SupplyHookReturn {
 }
 
 export function useSupply(id: UUID): SupplyHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<Supply>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<Supply>(
     `${ApiEndpoints.SUPPLIES}/${id}`
   );
 
@@ -28,7 +28,7 @@ export function useSupply(id: UUID): SupplyHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     supply: data ?? null,
     error: error ? createServiceError(error) : null,

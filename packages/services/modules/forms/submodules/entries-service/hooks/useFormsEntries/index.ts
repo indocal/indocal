@@ -20,7 +20,7 @@ export function useFormsEntries(
 ): FormsEntriesHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<FormEntry[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<FormEntry[]>(
     params
       ? `${ApiEndpoints.FORMS_ENTRIES}?${query}`
       : ApiEndpoints.FORMS_ENTRIES
@@ -31,7 +31,7 @@ export function useFormsEntries(
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     entries: data ?? [],
     error: error ? createServiceError(error) : null,

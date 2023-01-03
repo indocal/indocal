@@ -18,7 +18,7 @@ export interface EventsHookReturn {
 export function useEvents(params?: FindManyEventsParamsDto): EventsHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<Event[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<Event[]>(
     params ? `${ApiEndpoints.EVENTS}?${query}` : ApiEndpoints.EVENTS
   );
 
@@ -27,7 +27,7 @@ export function useEvents(params?: FindManyEventsParamsDto): EventsHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     events: data ?? [],
     error: error ? createServiceError(error) : null,

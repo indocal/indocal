@@ -18,7 +18,7 @@ export interface LogsHookReturn {
 export function useLogs(params?: FindManyLogsParamsDto): LogsHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<Log[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<Log[]>(
     params ? `${ApiEndpoints.LOGS}?${query}` : ApiEndpoints.LOGS
   );
 
@@ -27,7 +27,7 @@ export function useLogs(params?: FindManyLogsParamsDto): LogsHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     logs: data ?? [],
     error: error ? createServiceError(error) : null,

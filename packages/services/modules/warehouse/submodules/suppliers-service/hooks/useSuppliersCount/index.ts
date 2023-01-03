@@ -20,7 +20,7 @@ export function useSuppliersCount(
 ): SuppliersCountHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<number>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<number>(
     params
       ? `${ApiEndpoints.SUPPLIERS_COUNT}?${query}`
       : ApiEndpoints.SUPPLIERS_COUNT
@@ -31,7 +31,7 @@ export function useSuppliersCount(
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     count: data ?? null,
     error: error ? createServiceError(error) : null,

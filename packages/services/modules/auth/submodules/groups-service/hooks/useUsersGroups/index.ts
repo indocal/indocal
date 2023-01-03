@@ -20,7 +20,7 @@ export function useUsersGroups(
 ): UsersGroupsHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<UserGroup[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<UserGroup[]>(
     params ? `${ApiEndpoints.USERS_GROUPS}?${query}` : ApiEndpoints.USERS_GROUPS
   );
 
@@ -29,7 +29,7 @@ export function useUsersGroups(
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     groups: data ?? [],
     error: error ? createServiceError(error) : null,

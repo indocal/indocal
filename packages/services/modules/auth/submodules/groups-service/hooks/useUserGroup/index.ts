@@ -19,7 +19,7 @@ export interface UserGroupHookReturn {
 }
 
 export function useUserGroup(id: UUID): UserGroupHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<UserGroup>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<UserGroup>(
     `${ApiEndpoints.USERS_GROUPS}/${id}`
   );
 
@@ -28,7 +28,7 @@ export function useUserGroup(id: UUID): UserGroupHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     group: data ?? null,
     error: error ? createServiceError(error) : null,

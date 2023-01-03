@@ -18,7 +18,7 @@ export interface UsersHookReturn {
 export function useUsers(params?: FindManyUsersParamsDto): UsersHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<User[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<User[]>(
     params ? `${ApiEndpoints.USERS}?${query}` : ApiEndpoints.USERS
   );
 
@@ -27,7 +27,7 @@ export function useUsers(params?: FindManyUsersParamsDto): UsersHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     users: data ?? [],
     error: error ? createServiceError(error) : null,

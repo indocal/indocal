@@ -18,7 +18,7 @@ export interface LogsCountHookReturn {
 export function useLogsCount(params?: CountLogsParamsDto): LogsCountHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<number>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<number>(
     params ? `${ApiEndpoints.LOGS_COUNT}?${query}` : ApiEndpoints.LOGS_COUNT
   );
 
@@ -27,7 +27,7 @@ export function useLogsCount(params?: CountLogsParamsDto): LogsCountHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     count: data ?? null,
     error: error ? createServiceError(error) : null,

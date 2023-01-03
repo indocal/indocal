@@ -20,7 +20,7 @@ export function useFormsCount(
 ): FormsCountHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<number>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<number>(
     params ? `${ApiEndpoints.FORMS_COUNT}?${query}` : ApiEndpoints.FORMS_COUNT
   );
 
@@ -29,7 +29,7 @@ export function useFormsCount(
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     count: data ?? null,
     error: error ? createServiceError(error) : null,

@@ -15,7 +15,7 @@ export interface EventHookReturn {
 }
 
 export function useEvent(id: UUID): EventHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<Event>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<Event>(
     `${ApiEndpoints.EVENTS}/${id}`
   );
 
@@ -24,7 +24,7 @@ export function useEvent(id: UUID): EventHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     event: data ?? null,
     error: error ? createServiceError(error) : null,

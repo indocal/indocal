@@ -19,7 +19,7 @@ export interface FormEntryHookReturn {
 }
 
 export function useFormEntry(id: UUID): FormEntryHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<FormEntry>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<FormEntry>(
     `${ApiEndpoints.FORMS_ENTRIES}/${id}`
   );
 
@@ -28,7 +28,7 @@ export function useFormEntry(id: UUID): FormEntryHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     entry: data ?? null,
     error: error ? createServiceError(error) : null,

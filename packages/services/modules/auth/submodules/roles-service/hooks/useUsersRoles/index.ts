@@ -20,7 +20,7 @@ export function useUsersRoles(
 ): UsersRolesHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<UserRole[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<UserRole[]>(
     params ? `${ApiEndpoints.USERS_ROLES}?${query}` : ApiEndpoints.USERS_ROLES
   );
 
@@ -29,7 +29,7 @@ export function useUsersRoles(
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     roles: data ?? [],
     error: error ? createServiceError(error) : null,

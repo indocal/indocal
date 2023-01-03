@@ -19,7 +19,7 @@ export interface UserRoleHookReturn {
 }
 
 export function useUserRole(id: UUID): UserRoleHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<UserRole>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<UserRole>(
     `${ApiEndpoints.USERS_ROLES}/${id}`
   );
 
@@ -28,7 +28,7 @@ export function useUserRole(id: UUID): UserRoleHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     role: data ?? null,
     error: error ? createServiceError(error) : null,

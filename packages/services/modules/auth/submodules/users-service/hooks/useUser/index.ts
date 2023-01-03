@@ -19,7 +19,7 @@ export interface UserHookReturn {
 }
 
 export function useUser(id: UUID): UserHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<User>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<User>(
     `${ApiEndpoints.USERS}/${id}`
   );
 
@@ -28,7 +28,7 @@ export function useUser(id: UUID): UserHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     user: data ?? null,
     error: error ? createServiceError(error) : null,

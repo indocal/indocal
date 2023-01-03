@@ -18,7 +18,7 @@ export interface FormsHookReturn {
 export function useForms(params?: FindManyFormsParamsDto): FormsHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<Form[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<Form[]>(
     params ? `${ApiEndpoints.FORMS}?${query}` : ApiEndpoints.FORMS
   );
 
@@ -27,7 +27,7 @@ export function useForms(params?: FindManyFormsParamsDto): FormsHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     forms: data ?? [],
     error: error ? createServiceError(error) : null,

@@ -20,7 +20,7 @@ export function useSupplies(
 ): SuppliesHookReturn {
   const query = useMemo(() => qs.stringify(params), [params]);
 
-  const { isValidating, data, error, mutate } = useSWR<Supply[]>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<Supply[]>(
     params ? `${ApiEndpoints.SUPPLIES}?${query}` : ApiEndpoints.SUPPLIES
   );
 
@@ -29,7 +29,7 @@ export function useSupplies(
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     supplies: data ?? [],
     error: error ? createServiceError(error) : null,

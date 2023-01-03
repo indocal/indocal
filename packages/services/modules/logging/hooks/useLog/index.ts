@@ -15,7 +15,7 @@ export interface LogHookReturn {
 }
 
 export function useLog(id: UUID): LogHookReturn {
-  const { isValidating, data, error, mutate } = useSWR<Log>(
+  const { isLoading, isValidating, data, error, mutate } = useSWR<Log>(
     `${ApiEndpoints.LOGS}/${id}`
   );
 
@@ -24,7 +24,7 @@ export function useLog(id: UUID): LogHookReturn {
   }, [mutate]);
 
   return {
-    loading: typeof data === 'undefined' && !error,
+    loading: isLoading,
     validating: isValidating,
     log: data ?? null,
     error: error ? createServiceError(error) : null,
