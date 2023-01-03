@@ -63,6 +63,22 @@ const schema = zod.object(
         }
       )
       .describe('Unidad del recurso'),
+
+    quantity: zod
+      .nan({
+        description: 'Cantidad inicial del recurso',
+        required_error: 'Debe ingresar la cantidad inicial del recurso',
+        invalid_type_error: 'Formato no válido',
+      })
+      .or(
+        zod
+          .number({
+            description: 'Cantidad inicial del recurso',
+            required_error: 'Debe ingresar la cantidad inicial del recurso',
+            invalid_type_error: 'Formato no válido',
+          })
+          .nonnegative('Debe ingresar una cantidad válida')
+      ),
   },
   {
     description: 'Datos del recurso',
@@ -98,6 +114,7 @@ export const AddSupplyDialog: React.FC = () => {
         code: formData.code,
         name: formData.name,
         unit: formData.unit,
+        ...(formData.quantity && { quantity: formData.quantity }),
         ...(formData.description && { description: formData.description }),
       });
 
@@ -180,6 +197,20 @@ export const AddSupplyDialog: React.FC = () => {
             label="Unidad"
             control={control as unknown as Control}
             disabled={isSubmitting}
+          />
+
+          <TextField
+            type="number"
+            autoComplete="off"
+            label="Cantidad inicial"
+            disabled={isSubmitting}
+            inputProps={register('quantity', { valueAsNumber: true })}
+            error={Boolean(errors.quantity)}
+            helperText={
+              errors.quantity
+                ? errors.quantity.message
+                : 'NOTA: No se podrá ajustar la cantidad de manera manual en el futuro con el fin de asegurar la integridad de los datos en el sistema. De necesitar un ajuste, contacte al soporte.'
+            }
           />
         </Stack>
       </DialogContent>
