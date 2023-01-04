@@ -82,9 +82,73 @@ export const WarehouseScopePermissions: React.FC = () => {
     [permissions?.supplier]
   );
 
+  const orderItems = useMemo(
+    () => [
+      {
+        label: 'Contar',
+        action: 'count',
+        checked: Boolean(permissions?.order?.count),
+      },
+      {
+        label: 'Leer',
+        action: 'read',
+        checked: Boolean(permissions?.order?.read),
+      },
+      {
+        label: 'Crear',
+        action: 'create',
+        checked: Boolean(permissions?.order?.create),
+      },
+      {
+        label: 'Modificar',
+        action: 'update',
+        checked: Boolean(permissions?.order?.update),
+      },
+      {
+        label: 'Borrar',
+        action: 'delete',
+        checked: Boolean(permissions?.order?.delete),
+      },
+    ],
+    [permissions?.order]
+  );
+
+  const orderItemItems = useMemo(
+    () => [
+      {
+        label: 'Contar',
+        action: 'count',
+        checked: Boolean(permissions?.orderItem?.count),
+      },
+      {
+        label: 'Leer',
+        action: 'read',
+        checked: Boolean(permissions?.orderItem?.read),
+      },
+      {
+        label: 'Crear',
+        action: 'create',
+        checked: Boolean(permissions?.orderItem?.create),
+      },
+      {
+        label: 'Modificar',
+        action: 'update',
+        checked: Boolean(permissions?.orderItem?.update),
+      },
+      {
+        label: 'Borrar',
+        action: 'delete',
+        checked: Boolean(permissions?.orderItem?.delete),
+      },
+    ],
+    [permissions?.orderItem]
+  );
+
   const allChecked =
     supplyItems.every((item) => item.checked) &&
-    supplierItems.every((item) => item.checked);
+    supplierItems.every((item) => item.checked) &&
+    orderItems.every((item) => item.checked) &&
+    orderItemItems.every((item) => item.checked);
 
   const toggleAll = useCallback(() => {
     if (allChecked) {
@@ -92,6 +156,12 @@ export const WarehouseScopePermissions: React.FC = () => {
 
       supplierItems.forEach(({ action }) =>
         togglePermission('supplier', action)
+      );
+
+      orderItems.forEach(({ action }) => togglePermission('order', action));
+
+      orderItemItems.forEach(({ action }) =>
+        togglePermission('orderItem', action)
       );
     } else {
       supplyItems
@@ -101,8 +171,23 @@ export const WarehouseScopePermissions: React.FC = () => {
       supplierItems
         .filter(({ checked }) => !checked)
         .forEach(({ action }) => togglePermission('supplier', action));
+
+      orderItems
+        .filter(({ checked }) => !checked)
+        .forEach(({ action }) => togglePermission('order', action));
+
+      orderItemItems
+        .filter(({ checked }) => !checked)
+        .forEach(({ action }) => togglePermission('orderItem', action));
     }
-  }, [supplyItems, supplierItems, allChecked, togglePermission]);
+  }, [
+    supplyItems,
+    supplierItems,
+    orderItems,
+    orderItemItems,
+    allChecked,
+    togglePermission,
+  ]);
 
   return (
     <Can I="update" an="userRole" passThrough>
@@ -123,7 +208,7 @@ export const WarehouseScopePermissions: React.FC = () => {
               sx={{ marginBottom: (theme) => theme.spacing(1) }}
             >
               <Typography variant="caption" color="text.secondary">
-                [ supply / supplier ]
+                [ supply / supplier / order / orderItem ]
               </Typography>
 
               <Box
@@ -234,6 +319,108 @@ export const WarehouseScopePermissions: React.FC = () => {
                             checked={checked}
                             onChange={() =>
                               togglePermission('supplier', action)
+                            }
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    order
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
+                  />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {orderItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() => togglePermission('order', action)}
+                          />
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+
+              <Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    orderItem
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      borderBottom: (theme) =>
+                        `1px solid ${theme.palette.divider}`,
+                    }}
+                  />
+                </Stack>
+
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {orderItemItems.map(({ label, action, checked }) => (
+                    <Grid
+                      key={action}
+                      item
+                      container
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      xs
+                    >
+                      <FormControlLabel
+                        label={label}
+                        control={
+                          <Checkbox
+                            disabled={!allowed || validating || saving}
+                            checked={checked}
+                            onChange={() =>
+                              togglePermission('orderItem', action)
                             }
                           />
                         }

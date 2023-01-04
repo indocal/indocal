@@ -18,6 +18,8 @@ import {
   EventGuest,
   Supply,
   Supplier,
+  Order,
+  OrderItem,
 } from '@prisma/client';
 
 import { PrismaService } from '@/common';
@@ -45,6 +47,8 @@ export type Subjects = PrismaSubjects<{
   eventGuest: EventGuest;
   supply: Supply;
   supplier: Supplier;
+  order: Order;
+  orderItem: OrderItem;
 }>;
 
 export type AppAbility = PureAbility<[Action, Subjects], PrismaQuery>;
