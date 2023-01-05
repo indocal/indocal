@@ -133,7 +133,7 @@ model FormField {
   title       String
   description String?
 
-  order Int
+  order Int @default(autoincrement())
 
   config Json?
 
@@ -147,7 +147,6 @@ model FormField {
 
   @@unique([title, formId])
   @@unique([description, formId])
-  @@unique([order, formId])
 }
 
 enum FormFieldType {
