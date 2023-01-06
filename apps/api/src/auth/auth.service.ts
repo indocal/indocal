@@ -3,7 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
-import { PrismaService, NodemailerService, UUID } from '@/common';
+import { PrismaService, UUID } from '@/common';
+import { NodemailerService } from '@/mailer';
 
 import { InvalidCredentialsException, InvalidEmailException } from './errors';
 import { Session, AuthenticatedUser } from './types';
