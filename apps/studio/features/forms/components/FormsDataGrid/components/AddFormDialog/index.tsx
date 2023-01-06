@@ -14,8 +14,9 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { ControlledUsersGroupsAutocomplete } from '@indocal/forms-generator';
+
 import { indocal } from '@/lib';
-import { ControlledUsersGroupsAutocomplete } from '@/features';
 import { Pages } from '@/config';
 
 import { useFormsDataGrid } from '../../context';

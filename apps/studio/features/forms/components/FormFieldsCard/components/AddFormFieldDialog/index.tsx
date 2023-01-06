@@ -14,10 +14,10 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { ControlledFormFieldTypeSelect } from '@indocal/forms-generator';
 import { Form, FormFieldType, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
-import { ControlledFormFieldTypeSelect } from '@/features';
 
 import { useFormFieldsCard } from '../../context';
 

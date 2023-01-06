@@ -15,6 +15,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import {
+  ControlledFormStatusSelect,
+  ControlledFormVisibilitySelect,
+  ControlledUsersGroupsAutocomplete,
+} from '@indocal/forms-generator';
+import {
   Can,
   Form,
   FormStatus,
@@ -23,11 +28,6 @@ import {
 } from '@indocal/services';
 
 import { indocal } from '@/lib';
-import {
-  ControlledFormStatusSelect,
-  ControlledFormVisibilitySelect,
-  ControlledUsersGroupsAutocomplete,
-} from '@/features';
 
 import { useFormCard } from '../../context';
 

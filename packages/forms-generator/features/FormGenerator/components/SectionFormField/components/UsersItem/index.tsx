@@ -1,33 +1,40 @@
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Form, UsersFormFieldConfig } from '@indocal/services';
+import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
+import {
+  Form,
+  SectionFormFieldItem,
+  UsersFormFieldConfig,
+} from '@indocal/services';
 
-import { ControlledUsersAutocomplete } from '@/features';
-
-export interface UsersFormFieldProps {
+export interface UsersItemProps {
   field: Form['fields'][number];
+  item: SectionFormFieldItem;
 }
 
-export const UsersFormField: React.FC<UsersFormFieldProps> = ({ field }) => {
+export const UsersItem: React.FC<UsersItemProps> = ({ field, item }) => {
   const {
     formState: { isSubmitting },
     control,
   } = useFormContext();
 
   const config = useMemo<UsersFormFieldConfig | null>(
-    () => field.config as UsersFormFieldConfig,
-    [field.config]
+    () => item.config as UsersFormFieldConfig,
+    [item.config]
   );
 
   return (
     <ControlledUsersAutocomplete
       required={config?.required}
       multiple={config?.multiple}
-      name={field.id}
-      label={field.title}
+      name={`${field.id}.${item.title}`}
+      label={item.title}
       control={control}
       disabled={isSubmitting}
+      textFieldProps={{
+        size: 'small',
+      }}
       controllerProps={{
         rules: {
           required: {
@@ -40,4 +47,4 @@ export const UsersFormField: React.FC<UsersFormFieldProps> = ({ field }) => {
   );
 };
 
-export default UsersFormField;
+export default UsersItem;

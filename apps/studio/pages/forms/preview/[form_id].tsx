@@ -5,11 +5,11 @@ import { getToken } from 'next-auth/jwt';
 import { Container } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { INDOCAL, UUID, Form, FormFieldAnswer } from '@indocal/services';
 import { Page } from '@indocal/ui';
+import { FormGenerator } from '@indocal/forms-generator';
+import { INDOCAL, UUID, Form, FormFieldAnswer } from '@indocal/services';
 
 import { indocal } from '@/lib';
-import { FormGenerator } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 

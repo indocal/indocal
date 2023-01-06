@@ -14,10 +14,10 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { ControlledSupplyUnitSelect } from '@indocal/forms-generator';
 import { Supply, SupplyUnit, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
-import { ControlledSupplyUnitSelect } from '@/features';
 
 import { useSupplyCard } from '../../context';
 

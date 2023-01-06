@@ -1,13 +1,12 @@
 import { Control } from 'react-hook-form';
 
+import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
 import {
   Form,
   TableFormFieldColumn,
   TableFormFieldColumnConfig,
   UsersFormFieldConfig,
 } from '@indocal/services';
-
-import { ControlledUsersAutocomplete } from '@/features';
 
 export interface UsersColumnProps {
   field: Form['fields'][number];

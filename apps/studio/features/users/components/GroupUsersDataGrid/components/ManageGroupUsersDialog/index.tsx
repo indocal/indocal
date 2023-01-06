@@ -14,10 +14,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 import qs from 'qs';
 
+import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
 import { UserGroup, UserStatus, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
-import { ControlledUsersAutocomplete } from '@/features';
 
 import { useGroupUsersDataGrid } from '../../context';
 

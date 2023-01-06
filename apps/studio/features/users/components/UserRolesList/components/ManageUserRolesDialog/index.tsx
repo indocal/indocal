@@ -13,10 +13,10 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { ControlledUsersRolesAutocomplete } from '@indocal/forms-generator';
 import { User, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
-import { ControlledUsersRolesAutocomplete } from '@/features';
 
 import { useUserRolesList } from '../../context';
 

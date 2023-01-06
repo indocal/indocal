@@ -14,14 +14,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { Can, User, UserStatus, ApiEndpoints } from '@indocal/services';
-
-import { indocal } from '@/lib';
 import {
   ControlledUserStatusSelect,
   ControlledUsersRolesAutocomplete,
   ControlledUsersGroupsAutocomplete,
-} from '@/features';
+} from '@indocal/forms-generator';
+import { Can, User, UserStatus, ApiEndpoints } from '@indocal/services';
+
+import { indocal } from '@/lib';
 
 import { useUserCard } from '../../context';
 
