@@ -1,6 +1,14 @@
 import { useMemo, useCallback } from 'react';
 import NextLink from 'next/link';
-import { Box, Paper, Stack, Typography, IconButton } from '@mui/material';
+import {
+  Box,
+  Paper,
+  Stack,
+  Typography,
+  IconButton,
+  Chip,
+  ChipProps,
+} from '@mui/material';
 import {
   Refresh as RefreshIcon,
   AddCircle as AddIcon,
@@ -18,6 +26,8 @@ import {
   translateFormVisibility,
   UUID,
   Form,
+  FormStatus,
+  FormVisibility,
 } from '@indocal/services';
 
 import { indocal } from '@/lib';
@@ -69,6 +79,24 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
       }
     },
     [onRefreshButtonClick, enqueueSnackbar]
+  );
+
+  const statusColors: Record<FormStatus, ChipProps['color']> = useMemo(
+    () => ({
+      DRAFT: 'warning',
+      PUBLISHED: 'success',
+      HIDDEN: 'default',
+    }),
+    []
+  );
+
+  const visibilityColors: Record<FormVisibility, ChipProps['color']> = useMemo(
+    () => ({
+      PUBLIC: 'success',
+      PROTECTED: 'warning',
+      PRIVATE: 'default',
+    }),
+    []
   );
 
   const columns = useMemo<GridColumns>(
@@ -129,6 +157,13 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
         align: 'center',
         minWidth: 150,
         valueGetter: ({ value }) => translateFormStatus(value),
+        renderCell: ({ value, row }) => (
+          <Chip
+            size="small"
+            label={value}
+            color={statusColors[row.status as FormStatus] ?? 'default'}
+          />
+        ),
       },
       {
         field: 'visibility',
@@ -137,6 +172,15 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
         align: 'center',
         minWidth: 150,
         valueGetter: ({ value }) => translateFormVisibility(value),
+        renderCell: ({ value, row }) => (
+          <Chip
+            size="small"
+            label={value}
+            color={
+              visibilityColors[row.visibility as FormVisibility] ?? 'default'
+            }
+          />
+        ),
       },
       {
         field: 'fields',
@@ -155,7 +199,7 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
         valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
       },
     ],
-    [handleDelete]
+    [statusColors, visibilityColors, handleDelete]
   );
 
   const rows = useMemo<GridRowsProp>(

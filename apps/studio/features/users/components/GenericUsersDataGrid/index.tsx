@@ -1,6 +1,14 @@
 import { useMemo, useCallback } from 'react';
 import NextLink from 'next/link';
-import { Box, Paper, Stack, Typography, IconButton } from '@mui/material';
+import {
+  Box,
+  Paper,
+  Stack,
+  Typography,
+  IconButton,
+  Chip,
+  ChipProps,
+} from '@mui/material';
 import {
   Refresh as RefreshIcon,
   AddCircle as AddIcon,
@@ -17,6 +25,7 @@ import {
   translateUserStatus,
   UUID,
   User,
+  UserStatus,
 } from '@indocal/services';
 
 import { indocal } from '@/lib';
@@ -68,6 +77,14 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
       }
     },
     [onRefreshButtonClick, enqueueSnackbar]
+  );
+
+  const statusColors: Record<UserStatus, ChipProps['color']> = useMemo(
+    () => ({
+      ENABLED: 'success',
+      DISABLED: 'error',
+    }),
+    []
   );
 
   const columns = useMemo<GridColumns>(
@@ -136,6 +153,13 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
         align: 'center',
         minWidth: 175,
         valueGetter: ({ value }) => translateUserStatus(value),
+        renderCell: ({ value, row }) => (
+          <Chip
+            size="small"
+            label={value}
+            color={statusColors[row.status as UserStatus] ?? 'default'}
+          />
+        ),
       },
       {
         field: 'updatedAt',
@@ -146,7 +170,7 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
         valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
       },
     ],
-    [handleDelete]
+    [statusColors, handleDelete]
   );
 
   const rows = useMemo<GridRowsProp>(
