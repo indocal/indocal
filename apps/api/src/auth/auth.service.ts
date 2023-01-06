@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User as DBUserModel } from '@prisma/client';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService, NodemailerService, UUID } from '@/common';
@@ -30,7 +30,7 @@ export class AuthService {
   async validateUserByCredentials(
     username: string,
     password: string
-  ): Promise<DBUserModel | null> {
+  ): Promise<User | null> {
     const user = await this.prismaService.user.findUnique({
       where: { username },
     });

@@ -6,10 +6,7 @@ import {
   IsUUID,
   IsOptional,
 } from 'class-validator';
-import {
-  FormStatus as DBFormStatusEnum,
-  FormVisibility as DBFormVisibilityEnum,
-} from '@prisma/client';
+import { FormStatus, FormVisibility } from '@prisma/client';
 
 import { TrimParam, UUID } from '@/common';
 
@@ -29,11 +26,11 @@ class UpdateFormDtoSchema {
   @TrimParam()
   description: string | null;
 
-  @IsEnum(DBFormStatusEnum)
-  status: DBFormStatusEnum;
+  @IsEnum(FormStatus)
+  status: FormStatus;
 
-  @IsEnum(DBFormVisibilityEnum)
-  visibility: DBFormVisibilityEnum;
+  @IsEnum(FormVisibility)
+  visibility: FormVisibility;
 
   @IsObject()
   config: FormConfig;

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 
-import { UsersService } from '../../submodules';
+import { PrismaService } from '@/common';
 
 import { JWT_MODULE_OPTIONS } from '../../config';
 import { AuthenticatedUser } from '../../types';
@@ -13,7 +13,7 @@ import {
 
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy) {
-  constructor(private usersService: UsersService) {
+  constructor(private prismaService: PrismaService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: JWT_MODULE_OPTIONS.secret,
@@ -22,7 +22,9 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: AuthenticatedUser): Promise<AuthenticatedUser> {
-    const user = await this.usersService.findUnique({ id: payload.id });
+    const user = await this.prismaService.user.findUnique({
+      where: { id: payload.id },
+    });
 
     if (!user) throw new InvalidCredentialsException();
     if (user.status === 'DISABLED') throw new DisabledUserException();

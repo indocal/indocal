@@ -1,23 +1,14 @@
 import { Request } from 'express';
 import { Exclude } from 'class-transformer';
-import { Log as DBLogModel, User as DBUserModel } from '@prisma/client';
+import { Log } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
-import { UserEntity } from '@/auth';
-
-type Include = Partial<{
-  user?: DBUserModel | null;
-}>;
 
 export type LogMetadata = HTTPLogMetadata;
 
-export class LogEntity implements Entity, DBLogModel {
-  user?: UserEntity | null;
-
-  constructor(log: DBLogModel, include?: Include) {
+export class LogEntity implements Entity, Log {
+  constructor(log: Log) {
     Object.assign(this, log);
-
-    this.user = include?.user ? new UserEntity(include.user) : null;
   }
 
   id: UUID;

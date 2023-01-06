@@ -1,10 +1,10 @@
 import { Exclude } from 'class-transformer';
-import { EventGuest as DBEventGuestModel } from '@prisma/client';
+import { EventGuest } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export class EventGuestEntity implements Entity, DBEventGuestModel {
-  constructor(guest: DBEventGuestModel) {
+export class EventGuestEntity implements Entity, EventGuest {
+  constructor(guest: EventGuest) {
     Object.assign(this, guest);
   }
 

@@ -1,11 +1,11 @@
 import { IsEnum, IsString, IsOptional } from 'class-validator';
-import { FormFieldType as DBFormFieldTypeEnum } from '@prisma/client';
+import { FormFieldType } from '@prisma/client';
 
 import { TrimParam } from '@/common';
 
 export class CreateFormFieldDto {
-  @IsEnum(DBFormFieldTypeEnum)
-  type: DBFormFieldTypeEnum;
+  @IsEnum(FormFieldType)
+  type: FormFieldType;
 
   @IsString()
   @TrimParam()

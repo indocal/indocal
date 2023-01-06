@@ -15,7 +15,7 @@ type Role = {
 type Group = {
   id: UUID;
   name: string;
-  description: string;
+  description: string | null;
   createdAt: string;
   updatedAt: string;
 };

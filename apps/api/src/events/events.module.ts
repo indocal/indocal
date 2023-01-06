@@ -4,15 +4,13 @@ import { PrismaService } from '@/common';
 import { AuthModule } from '@/auth';
 
 import EventsController from './events.controller';
-import EventsService from './events.service';
 
 import { EventsGuestsModule } from './submodules';
 
 @Module({
   imports: [AuthModule, EventsGuestsModule],
   controllers: [EventsController],
-  providers: [PrismaService, EventsService],
-  exports: [EventsService],
+  providers: [PrismaService],
 })
 export class EventsModule {}
 

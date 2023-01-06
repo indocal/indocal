@@ -1,12 +1,9 @@
-import {
-  Supply as DBSupplyModel,
-  SupplyUnit as DBSupplyUnitEnum,
-} from '@prisma/client';
+import { Supply, SupplyUnit } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export class SupplyEntity implements Entity, DBSupplyModel {
-  constructor(supply: DBSupplyModel) {
+export class SupplyEntity implements Entity, Supply {
+  constructor(supply: Supply) {
     Object.assign(this, supply);
   }
 
@@ -15,7 +12,7 @@ export class SupplyEntity implements Entity, DBSupplyModel {
   name: string;
   description: string | null;
   quantity: number;
-  unit: DBSupplyUnitEnum;
+  unit: SupplyUnit;
   createdAt: Date;
   updatedAt: Date;
 }

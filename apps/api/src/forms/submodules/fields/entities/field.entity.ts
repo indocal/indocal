@@ -1,8 +1,5 @@
 import { Exclude } from 'class-transformer';
-import {
-  FormField as DBFormFieldModel,
-  FormFieldType as DBFormFieldTypeEnum,
-} from '@prisma/client';
+import { FormField, FormFieldType } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
@@ -24,13 +21,13 @@ export type FormFieldConfig = Partial<
   | TableFormFieldConfig
 >;
 
-export class FormFieldEntity implements Entity, DBFormFieldModel {
-  constructor(field: DBFormFieldModel) {
+export class FormFieldEntity implements Entity, FormField {
+  constructor(field: FormField) {
     Object.assign(this, field);
   }
 
   id: UUID;
-  type: DBFormFieldTypeEnum;
+  type: FormFieldType;
   title: string;
   description: string | null;
 

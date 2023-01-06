@@ -1,4 +1,18 @@
-import { Entity } from '../../../../../common';
+import { Entity, UUID } from '../../../../../common';
+
+import { FormStatus, FormVisibility, FormConfig } from '../../../types';
+
+type Form = {
+  id: UUID;
+  slug: string;
+  title: string;
+  description: string | null;
+  status: FormStatus;
+  visibility: FormVisibility;
+  config: FormConfig | null;
+  createdAt: string;
+  updatedAt: string;
+};
 
 export type FormFieldType =
   | 'TEXT'
@@ -40,6 +54,7 @@ export interface FormField extends Entity {
   title: string;
   description: string | null;
   config: FormFieldConfig | null;
+  form: Form;
   createdAt: string;
   updatedAt: string;
 }

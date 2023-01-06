@@ -11,7 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { PrismaService, UUID } from '@/common';
+import { UserEntity } from '@/auth';
 
 import {
   PoliciesGuard,
@@ -19,9 +20,6 @@ import {
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
-import UsersService from '../users/users.service';
-
-import UsersGroupsService from './groups.service';
 import { UserGroupEntity } from './entities';
 import {
   FindManyUsersGroupsParamsDto,
@@ -30,32 +28,38 @@ import {
   UpdateUserGroupDto,
 } from './dto';
 
+class EnhancedUserGroup extends UserGroupEntity {
+  members: UserEntity[];
+}
+
 @Controller('auth/groups')
 @UseGuards(PoliciesGuard)
 export class UsersGroupsController {
-  constructor(
-    private usersGroupsService: UsersGroupsService,
-    private usersService: UsersService
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'userGroup'))
   async create(
-    @Body() createUserGroupDto: CreateUserGroupDto
-  ): Promise<UserGroupEntity> {
-    const group = await this.usersGroupsService.create(createUserGroupDto);
-
-    const members = await this.usersService.findMany({
-      where: { groups: { some: { id: group.id } } },
+    @Body() createGroupDto: CreateUserGroupDto
+  ): Promise<EnhancedUserGroup> {
+    const { members, ...rest } = await this.prismaService.userGroup.create({
+      data: {
+        name: createGroupDto.name,
+        description: createGroupDto.description,
+      },
+      include: { members: true },
     });
 
-    return new UserGroupEntity(group, { members });
+    const group = new EnhancedUserGroup(rest);
+    group.members = members.map((member) => new UserEntity(member));
+
+    return group;
   }
 
   @Get('count')
   @CheckPolicies((ability) => ability.can(Action.COUNT, 'userGroup'))
   async count(@Query() query: CountUsersGroupsParamsDto): Promise<number> {
-    return await this.usersGroupsService.count({
+    return await this.prismaService.userGroup.count({
       where: query.filters,
       distinct: query.distinct,
     });
@@ -65,66 +69,88 @@ export class UsersGroupsController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'userGroup'))
   async findMany(
     @Query() query: FindManyUsersGroupsParamsDto
-  ): Promise<UserGroupEntity[]> {
-    const groups = await this.usersGroupsService.findMany({
+  ): Promise<EnhancedUserGroup[]> {
+    const groups = await this.prismaService.userGroup.findMany({
       where: query.filters,
       distinct: query.distinct,
       orderBy: query.orderBy,
       skip: query.pagination?.skip && Number(query.pagination.skip),
       take: query.pagination?.take && Number(query.pagination.take),
       cursor: query.pagination?.cursor,
+      include: { members: true },
     });
 
-    return await Promise.all(
-      groups.map(async (group) => {
-        const members = await this.usersService.findMany({
-          where: { groups: { some: { id: group.id } } },
-        });
+    return groups.map(({ members, ...rest }) => {
+      const group = new EnhancedUserGroup(rest);
+      group.members = members.map((member) => new UserEntity(member));
 
-        return new UserGroupEntity(group, { members });
-      })
-    );
+      return group;
+    });
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'userGroup'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<UserGroupEntity | null> {
-    const group = await this.usersGroupsService.findUnique({ id });
-
-    const members = await this.usersService.findMany({
-      where: { groups: { some: { id } } },
+  ): Promise<EnhancedUserGroup | null> {
+    const response = await this.prismaService.userGroup.findUnique({
+      where: { id },
+      include: { members: true },
     });
 
-    return group ? new UserGroupEntity(group, { members }) : null;
+    if (response) {
+      const { members, ...rest } = response;
+
+      const group = new EnhancedUserGroup(rest);
+      group.members = members.map((member) => new UserEntity(member));
+
+      return group;
+    }
+
+    return null;
   }
 
   @Patch(':id')
   @CheckPolicies((ability) => ability.can(Action.UPDATE, 'userGroup'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
-    @Body() updateUserGroupDto: UpdateUserGroupDto
-  ): Promise<UserGroupEntity> {
-    const group = await this.usersGroupsService.update(id, updateUserGroupDto);
+    @Body() updateGroupDto: UpdateUserGroupDto
+  ): Promise<EnhancedUserGroup> {
+    const { members, ...rest } = await this.prismaService.userGroup.update({
+      where: { id },
+      data: {
+        name: updateGroupDto.name,
+        description: updateGroupDto.description,
 
-    const members = await this.usersService.findMany({
-      where: { groups: { some: { id: group.id } } },
+        ...(updateGroupDto.members && {
+          members: {
+            set: updateGroupDto.members.map((member) => ({ id: member })),
+          },
+        }),
+      },
+      include: { members: true },
     });
 
-    return new UserGroupEntity(group, { members });
+    const group = new EnhancedUserGroup(rest);
+    group.members = members.map((member) => new UserEntity(member));
+
+    return group;
   }
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'userGroup'))
-  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<UserGroupEntity> {
-    const group = await this.usersGroupsService.delete(id);
-
-    const members = await this.usersService.findMany({
-      where: { groups: { some: { id: group.id } } },
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<EnhancedUserGroup> {
+    const { members, ...rest } = await this.prismaService.userGroup.delete({
+      where: { id },
+      include: { members: true },
     });
 
-    return new UserGroupEntity(group, { members });
+    const group = new EnhancedUserGroup(rest);
+    group.members = members.map((member) => new UserEntity(member));
+
+    return group;
   }
 }
 

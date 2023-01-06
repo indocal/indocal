@@ -6,7 +6,7 @@ import {
   IsEnum,
   IsOptional,
 } from 'class-validator';
-import { SupplyUnit as DBSupplyUnitEnum } from '@prisma/client';
+import { SupplyUnit } from '@prisma/client';
 
 import { TrimParam } from '@/common';
 
@@ -28,8 +28,8 @@ class UpdateSupplyDtoSchema {
   @IsPositive()
   quantity: number;
 
-  @IsEnum(DBSupplyUnitEnum)
-  unit: DBSupplyUnitEnum;
+  @IsEnum(SupplyUnit)
+  unit: SupplyUnit;
 }
 
 export class UpdateSupplyDto extends PartialType(UpdateSupplyDtoSchema) {}

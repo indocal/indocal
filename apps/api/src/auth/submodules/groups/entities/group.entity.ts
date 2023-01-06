@@ -1,25 +1,10 @@
-import {
-  UserGroup as DBUserGroupModel,
-  User as DBUserModel,
-} from '@prisma/client';
+import { UserGroup } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-import { UserEntity } from '../../users';
-
-type Include = Partial<{
-  members: DBUserModel[];
-}>;
-
-export class UserGroupEntity implements Entity, DBUserGroupModel {
-  members?: UserEntity[];
-
-  constructor(group: DBUserGroupModel, include?: Include) {
+export class UserGroupEntity implements Entity, UserGroup {
+  constructor(group: UserGroup) {
     Object.assign(this, group);
-
-    if (include?.members) {
-      this.members = include.members.map((member) => new UserEntity(member));
-    }
   }
 
   id: UUID;

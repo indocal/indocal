@@ -11,7 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { PrismaService, UUID } from '@/common';
+import { UserRolePermissionEntity, UserEntity } from '@/auth';
 
 import {
   PoliciesGuard,
@@ -19,10 +20,6 @@ import {
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
-import UsersRolesPermissionsService from '../permissions/permissions.service';
-import UsersService from '../users/users.service';
-
-import UsersRolesService from './roles.service';
 import { UserRoleEntity } from './entities';
 import {
   FindManyUsersRolesParamsDto,
@@ -31,36 +28,46 @@ import {
   UpdateUserRoleDto,
 } from './dto';
 
+class EnhancedUserRole extends UserRoleEntity {
+  permissions: UserRolePermissionEntity[];
+  users: UserEntity[];
+}
+
 @Controller('auth/roles')
 @UseGuards(PoliciesGuard)
 export class UsersRolesController {
-  constructor(
-    private usersRolesService: UsersRolesService,
-    private usersRolesPermissionsService: UsersRolesPermissionsService,
-    private usersService: UsersService
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'userRole'))
   async create(
-    @Body() createUserRoleDto: CreateUserRoleDto
-  ): Promise<UserRoleEntity> {
-    const role = await this.usersRolesService.create(createUserRoleDto);
+    @Body() createRoleDto: CreateUserRoleDto
+  ): Promise<EnhancedUserRole> {
+    const { permissions, users, ...rest } =
+      await this.prismaService.userRole.create({
+        data: {
+          type: createRoleDto.type,
+          name: createRoleDto.name,
+          description: createRoleDto.description,
+        },
+        include: { permissions: true, users: true },
+      });
 
-    const [permissions, users] = await Promise.all([
-      this.usersRolesPermissionsService.findAll(role),
-      this.usersService.findMany({
-        where: { roles: { some: { id: role.id } } },
-      }),
-    ]);
+    const role = new EnhancedUserRole(rest);
 
-    return new UserRoleEntity(role, { permissions, users });
+    role.permissions = permissions.map(
+      (permission) => new UserRolePermissionEntity(permission)
+    );
+
+    role.users = users.map((user) => new UserEntity(user));
+
+    return role;
   }
 
   @Get('count')
   @CheckPolicies((ability) => ability.can(Action.COUNT, 'userRole'))
   async count(@Query() query: CountUsersRolesParamsDto): Promise<number> {
-    return await this.usersRolesService.count({
+    return await this.prismaService.userRole.count({
       where: query.filters,
       distinct: query.distinct,
     });
@@ -70,78 +77,143 @@ export class UsersRolesController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'userRole'))
   async findMany(
     @Query() query: FindManyUsersRolesParamsDto
-  ): Promise<UserRoleEntity[]> {
-    const roles = await this.usersRolesService.findMany({
+  ): Promise<EnhancedUserRole[]> {
+    const roles = await this.prismaService.userRole.findMany({
       where: query.filters,
       distinct: query.distinct,
       orderBy: query.orderBy,
       skip: query.pagination?.skip && Number(query.pagination.skip),
       take: query.pagination?.take && Number(query.pagination.take),
       cursor: query.pagination?.cursor,
+      include: { permissions: true, users: true },
     });
 
-    return await Promise.all(
-      roles.map(async (role) => {
-        const [permissions, users] = await Promise.all([
-          this.usersRolesPermissionsService.findAll(role),
-          this.usersService.findMany({
-            where: { roles: { some: { id: role.id } } },
-          }),
-        ]);
+    return roles.map(({ permissions, users, ...rest }) => {
+      const role = new EnhancedUserRole(rest);
 
-        return new UserRoleEntity(role, { permissions, users });
-      })
-    );
+      role.permissions = permissions.map(
+        (permission) => new UserRolePermissionEntity(permission)
+      );
+
+      role.users = users.map((user) => new UserEntity(user));
+
+      return role;
+    });
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'userRole'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<UserRoleEntity | null> {
-    const role = await this.usersRolesService.findUnique({ id });
+  ): Promise<EnhancedUserRole | null> {
+    const response = await this.prismaService.userRole.findUnique({
+      where: { id },
+      include: { permissions: true, users: true },
+    });
 
-    const [permissions, users] = await Promise.all([
-      this.usersRolesPermissionsService.findAll(id),
-      this.usersService.findMany({
-        where: { roles: { some: { id } } },
-      }),
-    ]);
+    if (response) {
+      const { permissions, users, ...rest } = response;
 
-    return role ? new UserRoleEntity(role, { permissions, users }) : null;
+      const role = new EnhancedUserRole(rest);
+
+      role.permissions = permissions.map(
+        (permission) => new UserRolePermissionEntity(permission)
+      );
+
+      role.users = users.map((user) => new UserEntity(user));
+
+      return role;
+    }
+
+    return null;
   }
 
   @Patch(':id')
   @CheckPolicies((ability) => ability.can(Action.UPDATE, 'userRole'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
-    @Body() updateUserRoleDto: UpdateUserRoleDto
-  ): Promise<UserRoleEntity> {
-    const role = await this.usersRolesService.update(id, updateUserRoleDto);
+    @Body() updateRoleDto: UpdateUserRoleDto
+  ): Promise<EnhancedUserRole> {
+    const { permissions, users, ...rest } =
+      await this.prismaService.userRole.update({
+        where: { id },
+        data: {
+          type: updateRoleDto.type,
+          name: updateRoleDto.name,
+          description: updateRoleDto.description,
+          config: updateRoleDto.config,
 
-    const [permissions, users] = await Promise.all([
-      this.usersRolesPermissionsService.findAll(role),
-      this.usersService.findMany({
-        where: { roles: { some: { id: role.id } } },
-      }),
-    ]);
+          ...(updateRoleDto.permissions && {
+            permissions: {
+              createMany: {
+                skipDuplicates: true,
+                data: Object.entries(updateRoleDto.permissions)
+                  .map(([scope, permissions]) => {
+                    const actions = Object.entries(permissions).filter(
+                      ([, value]) => value === true
+                    );
 
-    return new UserRoleEntity(role, { permissions, users });
+                    return actions.map(([action]) => ({
+                      action: `${scope}::${action}`,
+                    }));
+                  })
+                  .flat(),
+              },
+
+              deleteMany: Object.entries(updateRoleDto.permissions)
+                .map(([scope, permissions]) => {
+                  const actions = Object.entries(permissions).filter(
+                    ([, value]) => value === false
+                  );
+
+                  return actions.map(([action]) => ({
+                    action: `${scope}::${action}`,
+                  }));
+                })
+                .flat(),
+            },
+          }),
+
+          ...(updateRoleDto.users && {
+            users: {
+              set: updateRoleDto.users.map((user) => ({ id: user })),
+            },
+          }),
+        },
+        include: { permissions: true, users: true },
+      });
+
+    const role = new EnhancedUserRole(rest);
+
+    role.permissions = permissions.map(
+      (permission) => new UserRolePermissionEntity(permission)
+    );
+
+    role.users = users.map((user) => new UserEntity(user));
+
+    return role;
   }
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'userRole'))
-  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<UserRoleEntity> {
-    const role = await this.usersRolesService.delete(id);
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<EnhancedUserRole> {
+    const { permissions, users, ...rest } =
+      await this.prismaService.userRole.delete({
+        where: { id },
+        include: { permissions: true, users: true },
+      });
 
-    const [permissions, users] = await Promise.all([
-      this.usersRolesPermissionsService.findAll(role),
-      this.usersService.findMany({
-        where: { roles: { some: { id: role.id } } },
-      }),
-    ]);
+    const role = new EnhancedUserRole(rest);
 
-    return new UserRoleEntity(role, { permissions, users });
+    role.permissions = permissions.map(
+      (permission) => new UserRolePermissionEntity(permission)
+    );
+
+    role.users = users.map((user) => new UserEntity(user));
+
+    return role;
   }
 }
 

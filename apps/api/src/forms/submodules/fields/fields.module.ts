@@ -4,13 +4,11 @@ import { PrismaService } from '@/common';
 import { AuthModule } from '@/auth';
 
 import FormsFieldsController from './fields.controller';
-import FormsFieldsService from './fields.service';
 
 @Module({
   imports: [AuthModule],
   controllers: [FormsFieldsController],
-  providers: [PrismaService, FormsFieldsService],
-  exports: [FormsFieldsService],
+  providers: [PrismaService],
 })
 export class FormsFieldsModule {}
 

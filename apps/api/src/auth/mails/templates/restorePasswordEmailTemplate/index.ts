@@ -1,7 +1,7 @@
-import { User as DBUserModel } from '@prisma/client';
+import { User } from '@prisma/client';
 import mjml2html from 'mjml';
 
-export const restorePasswordEmailTemplate = (user: DBUserModel): string => {
+export const restorePasswordEmailTemplate = (user: User): string => {
   const logo =
     'http://localhost:5000/static/assets/images/logos/logo--full.png';
 

@@ -1,40 +1,26 @@
 import { Exclude } from 'class-transformer';
-import {
-  FormEntry as DBFormEntryModel,
-  Form as DBFormModel,
-  FormFieldType as DBFormFieldTypeEnum,
-  User as DBUserModel,
-  UserStatus as DBUserStatusEnum,
-} from '@prisma/client';
+import { FormEntry, FormFieldType, UserStatus } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
-import { UserEntity } from '@/auth';
-
-import { FormEntity } from '../../../entities';
 
 import { FormFieldConfig } from '../../fields';
-
-type Include = Partial<{
-  form?: DBFormModel;
-  answeredBy?: DBUserModel | null;
-}>;
-
-type FormField = {
-  id: UUID;
-  type: DBFormFieldTypeEnum;
-  title: string;
-  description: string | null;
-  config: FormFieldConfig | null;
-  createdAt: string;
-  updatedAt: string;
-};
 
 type User = {
   id: UUID;
   username: string;
   email: string;
   password: string;
-  status: DBUserStatusEnum;
+  status: UserStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type FormField = {
+  id: UUID;
+  type: FormFieldType;
+  title: string;
+  description: string | null;
+  config: FormFieldConfig | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -60,20 +46,9 @@ export type FormFieldAnswer = {
     | null;
 };
 
-export class FormEntryEntity implements Entity, DBFormEntryModel {
-  form?: FormEntity;
-  answeredBy?: UserEntity | null;
-
-  constructor(entry: DBFormEntryModel, include?: Include) {
+export class FormEntryEntity implements Entity, FormEntry {
+  constructor(entry: FormEntry) {
     Object.assign(this, entry);
-
-    if (include?.form) {
-      this.form = new FormEntity(include.form);
-    }
-
-    this.answeredBy = include?.answeredBy
-      ? new UserEntity(include.answeredBy)
-      : null;
   }
 
   id: UUID;

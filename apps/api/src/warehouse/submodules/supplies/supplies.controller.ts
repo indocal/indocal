@@ -11,10 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { PrismaService, UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 
-import SuppliesService from './supplies.service';
 import { SupplyEntity } from './entities';
 import {
   FindManySuppliesParamsDto,
@@ -26,14 +25,22 @@ import {
 @Controller('warehouse/supplies')
 @UseGuards(PoliciesGuard)
 export class SuppliesController {
-  constructor(private suppliesService: SuppliesService) {}
+  constructor(private prismaService: PrismaService) {}
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'supply'))
   async create(
     @Body() createSupplyDto: CreateSupplyDto
   ): Promise<SupplyEntity> {
-    const supply = await this.suppliesService.create(createSupplyDto);
+    const supply = await this.prismaService.supply.create({
+      data: {
+        code: createSupplyDto.code,
+        name: createSupplyDto.name,
+        description: createSupplyDto.description,
+        quantity: createSupplyDto.quantity,
+        unit: createSupplyDto.unit,
+      },
+    });
 
     return new SupplyEntity(supply);
   }
@@ -41,7 +48,7 @@ export class SuppliesController {
   @Get('count')
   @CheckPolicies((ability) => ability.can(Action.COUNT, 'supply'))
   async count(@Query() query: CountSuppliesParamsDto): Promise<number> {
-    return await this.suppliesService.count({
+    return await this.prismaService.supply.count({
       where: query.filters,
       distinct: query.distinct,
     });
@@ -52,7 +59,7 @@ export class SuppliesController {
   async findMany(
     @Query() query: FindManySuppliesParamsDto
   ): Promise<SupplyEntity[]> {
-    const supplies = await this.suppliesService.findMany({
+    const supplies = await this.prismaService.supply.findMany({
       where: query.filters,
       distinct: query.distinct,
       orderBy: query.orderBy,
@@ -69,7 +76,9 @@ export class SuppliesController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SupplyEntity | null> {
-    const supply = await this.suppliesService.findUnique({ id });
+    const supply = await this.prismaService.supply.findUnique({
+      where: { id },
+    });
 
     return supply ? new SupplyEntity(supply) : null;
   }
@@ -80,7 +89,16 @@ export class SuppliesController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateSupplyDto: UpdateSupplyDto
   ): Promise<SupplyEntity> {
-    const supply = await this.suppliesService.update(id, updateSupplyDto);
+    const supply = await this.prismaService.supply.update({
+      where: { id },
+      data: {
+        code: updateSupplyDto.code,
+        name: updateSupplyDto.name,
+        description: updateSupplyDto.description,
+        quantity: updateSupplyDto.quantity,
+        unit: updateSupplyDto.unit,
+      },
+    });
 
     return new SupplyEntity(supply);
   }
@@ -88,7 +106,7 @@ export class SuppliesController {
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'supply'))
   async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<SupplyEntity> {
-    const supply = await this.suppliesService.delete(id);
+    const supply = await this.prismaService.supply.delete({ where: { id } });
 
     return new SupplyEntity(supply);
   }

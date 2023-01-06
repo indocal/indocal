@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Log as DBLogModel } from '@prisma/client';
 
 import { PrismaService } from '@/common';
 import { AuthenticatedUser } from '@/auth';
@@ -17,26 +16,7 @@ export type CreateLogArgs = {
 export class LoggingService {
   constructor(private prismaService: PrismaService) {}
 
-  async count(params: Prisma.LogCountArgs): Promise<number> {
-    return await this.prismaService.log.count(params);
-  }
-
-  async findMany(params: Prisma.LogFindManyArgs): Promise<DBLogModel[]> {
-    return await this.prismaService.log.findMany(params);
-  }
-
-  async findUnique(
-    input: Prisma.LogWhereUniqueInput
-  ): Promise<DBLogModel | null> {
-    return await this.prismaService.log.findUnique({ where: input });
-  }
-
-  async create({
-    context,
-    action,
-    user,
-    metadata,
-  }: CreateLogArgs): Promise<void> {
+  async log({ context, action, user, metadata }: CreateLogArgs): Promise<void> {
     await this.prismaService.log.create({
       data: {
         context,

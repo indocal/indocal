@@ -2,7 +2,7 @@ import { Entity, UUID } from '../../../../../common';
 
 import { User, UserStatus } from '../../../../auth';
 
-import { Form, FormStatus, FormVisibility } from '../../../types';
+import { Form, FormStatus, FormVisibility, FormConfig } from '../../../types';
 
 export type FormFieldAnswer = {
   field: Form['fields'][number];
@@ -32,6 +32,7 @@ type EntryForm = {
   description: string | null;
   status: FormStatus;
   visibility: FormVisibility;
+  config: FormConfig | null;
   createdAt: string;
   updatedAt: string;
 };

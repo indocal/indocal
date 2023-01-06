@@ -7,25 +7,25 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action, UsersService } from '@/auth';
+import { PrismaService, UUID } from '@/common';
+import { PoliciesGuard, CheckPolicies, Action, UserEntity } from '@/auth';
 
-import LoggingService from './logging.service';
 import { LogEntity } from './entities';
 import { FindManyLogsParamsDto, CountLogsParamsDto } from './dto';
+
+class EnhancedLog extends LogEntity {
+  user: UserEntity | null;
+}
 
 @Controller('logs')
 @UseGuards(PoliciesGuard)
 export class LoggingController {
-  constructor(
-    private loggingService: LoggingService,
-    private usersService: UsersService
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
   @Get('count')
   @CheckPolicies((ability) => ability.can(Action.COUNT, 'log'))
   async count(@Query() query: CountLogsParamsDto): Promise<number> {
-    return await this.loggingService.count({
+    return await this.prismaService.log.count({
       where: query.filters,
       distinct: query.distinct,
     });
@@ -33,45 +33,47 @@ export class LoggingController {
 
   @Get()
   @CheckPolicies((ability) => ability.can(Action.READ, 'log'))
-  async findMany(@Query() query: FindManyLogsParamsDto): Promise<LogEntity[]> {
-    const logs = await this.loggingService.findMany({
+  async findMany(
+    @Query() query: FindManyLogsParamsDto
+  ): Promise<EnhancedLog[]> {
+    const logs = await this.prismaService.log.findMany({
       where: query.filters,
       distinct: query.distinct,
       orderBy: query.orderBy,
       skip: query.pagination?.skip && Number(query.pagination.skip),
       take: query.pagination?.take && Number(query.pagination.take),
       cursor: query.pagination?.cursor,
+      include: { user: true },
     });
 
-    return await Promise.all(
-      logs.map(async (log) => {
-        if (log.userId) {
-          const user = await this.usersService.findUnique({ id: log.userId });
+    return logs.map(({ user, ...rest }) => {
+      const log = new EnhancedLog(rest);
+      log.user = user ? new UserEntity(user) : null;
 
-          return new LogEntity(log, { ...(user && { user }) });
-        }
-
-        return new LogEntity(log);
-      })
-    );
+      return log;
+    });
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'log'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<LogEntity | null> {
-    const log = await this.loggingService.findUnique({ id });
+  ): Promise<EnhancedLog | null> {
+    const response = await this.prismaService.log.findUnique({
+      where: { id },
+      include: { user: true },
+    });
 
-    if (!log) return null;
+    if (response) {
+      const { user, ...rest } = response;
 
-    if (log.userId) {
-      const user = await this.usersService.findUnique({ id: log.userId });
+      const log = new EnhancedLog(rest);
+      log.user = user ? new UserEntity(user) : null;
 
-      return new LogEntity(log, { ...(user && { user }) });
+      return log;
     }
 
-    return new LogEntity(log);
+    return null;
   }
 }
 

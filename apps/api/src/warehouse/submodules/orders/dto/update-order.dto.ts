@@ -1,4 +1,4 @@
-import { OrderStatus as DBOrderStatusEnum } from '@prisma/client';
+import { OrderStatus } from '@prisma/client';
 import { PartialType } from '@nestjs/mapped-types';
 import { IsString, IsEnum } from 'class-validator';
 
@@ -9,8 +9,8 @@ class UpdateOrderDtoSchema {
   @TrimParam()
   code: string;
 
-  @IsEnum(DBOrderStatusEnum)
-  status: DBOrderStatusEnum;
+  @IsEnum(OrderStatus)
+  status: OrderStatus;
 }
 
 export class UpdateOrderDto extends PartialType(UpdateOrderDtoSchema) {}

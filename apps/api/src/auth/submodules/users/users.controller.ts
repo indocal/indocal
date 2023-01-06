@@ -10,8 +10,10 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
-import { UUID } from '@/common';
+import { PrismaService, UUID } from '@/common';
+import { UserRoleEntity, UserGroupEntity } from '@/auth';
 
 import {
   PoliciesGuard,
@@ -19,10 +21,6 @@ import {
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
-import UsersRolesService from '../roles/roles.service';
-import UsersGroupsService from '../groups/groups.service';
-
-import UsersService from './users.service';
 import { UserEntity } from './entities';
 import {
   FindManyUsersParamsDto,
@@ -31,36 +29,42 @@ import {
   UpdateUserDto,
 } from './dto';
 
+class EnhancedUser extends UserEntity {
+  roles: UserRoleEntity[];
+  groups: UserGroupEntity[];
+}
+
 @Controller('auth/users')
 @UseGuards(PoliciesGuard)
 export class UsersController {
-  constructor(
-    private usersService: UsersService,
-    private usersRolesService: UsersRolesService,
-    private usersGroupsService: UsersGroupsService
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'user'))
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
-    const user = await this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<EnhancedUser> {
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(createUserDto.password, salt);
 
-    const [roles, groups] = await Promise.all([
-      this.usersRolesService.findMany({
-        where: { users: { some: { id: user.id } } },
-      }),
-      this.usersGroupsService.findMany({
-        where: { members: { some: { id: user.id } } },
-      }),
-    ]);
+    const { roles, groups, ...rest } = await this.prismaService.user.create({
+      data: {
+        username: createUserDto.username,
+        email: createUserDto.email,
+        password: hash,
+      },
+      include: { roles: true, groups: true },
+    });
 
-    return new UserEntity(user, { roles, groups });
+    const user = new EnhancedUser(rest);
+    user.roles = roles.map((role) => new UserRoleEntity(role));
+    user.groups = groups.map((group) => new UserGroupEntity(group));
+
+    return user;
   }
 
   @Get('count')
   @CheckPolicies((ability) => ability.can(Action.COUNT, 'user'))
   async count(@Query() query: CountUsersParamsDto): Promise<number> {
-    return await this.usersService.count({
+    return await this.prismaService.user.count({
       where: query.filters,
       distinct: query.distinct,
     });
@@ -70,49 +74,47 @@ export class UsersController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'user'))
   async findMany(
     @Query() query: FindManyUsersParamsDto
-  ): Promise<UserEntity[]> {
-    const users = await this.usersService.findMany({
+  ): Promise<EnhancedUser[]> {
+    const users = await this.prismaService.user.findMany({
       where: query.filters,
       distinct: query.distinct,
       orderBy: query.orderBy,
       skip: query.pagination?.skip && Number(query.pagination.skip),
       take: query.pagination?.take && Number(query.pagination.take),
       cursor: query.pagination?.cursor,
+      include: { roles: true, groups: true },
     });
 
-    return await Promise.all(
-      users.map(async (user) => {
-        const [roles, groups] = await Promise.all([
-          this.usersRolesService.findMany({
-            where: { users: { some: { id: user.id } } },
-          }),
-          this.usersGroupsService.findMany({
-            where: { members: { some: { id: user.id } } },
-          }),
-        ]);
+    return users.map(({ roles, groups, ...rest }) => {
+      const user = new EnhancedUser(rest);
+      user.roles = roles.map((role) => new UserRoleEntity(role));
+      user.groups = groups.map((group) => new UserGroupEntity(group));
 
-        return new UserEntity(user, { roles, groups });
-      })
-    );
+      return user;
+    });
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'user'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<UserEntity | null> {
-    const user = await this.usersService.findUnique({ id });
+  ): Promise<EnhancedUser | null> {
+    const response = await this.prismaService.user.findUnique({
+      where: { id },
+      include: { roles: true, groups: true },
+    });
 
-    const [roles, groups] = await Promise.all([
-      this.usersRolesService.findMany({
-        where: { users: { some: { id } } },
-      }),
-      this.usersGroupsService.findMany({
-        where: { members: { some: { id } } },
-      }),
-    ]);
+    if (response) {
+      const { roles, groups, ...rest } = response;
 
-    return user ? new UserEntity(user, { roles, groups }) : null;
+      const user = new EnhancedUser(rest);
+      user.roles = roles.map((role) => new UserRoleEntity(role));
+      user.groups = groups.map((group) => new UserGroupEntity(group));
+
+      return user;
+    }
+
+    return null;
   }
 
   @Patch(':id')
@@ -120,36 +122,45 @@ export class UsersController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateUserDto: UpdateUserDto
-  ): Promise<UserEntity> {
-    const user = await this.usersService.update(id, updateUserDto);
+  ): Promise<EnhancedUser> {
+    const { roles, groups, ...rest } = await this.prismaService.user.update({
+      where: { id },
+      data: {
+        username: updateUserDto.username,
+        email: updateUserDto.email,
+        status: updateUserDto.status,
 
-    const [roles, groups] = await Promise.all([
-      this.usersRolesService.findMany({
-        where: { users: { some: { id: user.id } } },
-      }),
-      this.usersGroupsService.findMany({
-        where: { members: { some: { id: user.id } } },
-      }),
-    ]);
+        ...(updateUserDto.roles && {
+          roles: { set: updateUserDto.roles.map((role) => ({ id: role })) },
+        }),
 
-    return new UserEntity(user, { roles, groups });
+        ...(updateUserDto.groups && {
+          groups: { set: updateUserDto.groups.map((group) => ({ id: group })) },
+        }),
+      },
+      include: { roles: true, groups: true },
+    });
+
+    const user = new EnhancedUser(rest);
+    user.roles = roles.map((role) => new UserRoleEntity(role));
+    user.groups = groups.map((group) => new UserGroupEntity(group));
+
+    return user;
   }
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'user'))
-  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<UserEntity> {
-    const user = await this.usersService.delete(id);
+  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<EnhancedUser> {
+    const { roles, groups, ...rest } = await this.prismaService.user.delete({
+      where: { id },
+      include: { roles: true, groups: true },
+    });
 
-    const [roles, groups] = await Promise.all([
-      this.usersRolesService.findMany({
-        where: { users: { some: { id: user.id } } },
-      }),
-      this.usersGroupsService.findMany({
-        where: { members: { some: { id: user.id } } },
-      }),
-    ]);
+    const user = new EnhancedUser(rest);
+    user.roles = roles.map((role) => new UserRoleEntity(role));
+    user.groups = groups.map((group) => new UserGroupEntity(group));
 
-    return new UserEntity(user, { roles, groups });
+    return user;
   }
 }
 

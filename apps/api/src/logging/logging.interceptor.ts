@@ -33,7 +33,7 @@ export class LoggingInterceptor implements NestInterceptor {
           .switchToHttp()
           .getRequest<Request>();
 
-        await this.loggingService.create({
+        await this.loggingService.log({
           context: controller,
           action: `${method}::${handler}`,
           user: (user as AuthenticatedUser) || null,

@@ -4,13 +4,11 @@ import { PrismaService } from '@/common';
 import { AuthModule } from '@/auth';
 
 import SuppliersController from './suppliers.controller';
-import SuppliersService from './suppliers.service';
 
 @Module({
   imports: [AuthModule],
   controllers: [SuppliersController],
-  providers: [PrismaService, SuppliersService],
-  exports: [SuppliersService],
+  providers: [PrismaService],
 })
 export class SuppliersModule {}
 

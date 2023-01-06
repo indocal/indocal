@@ -1,13 +1,10 @@
 import { Exclude } from 'class-transformer';
-import {
-  OrderItem as DBOrderItemModel,
-  OrderItemDeliveryStatus as DBOrderItemDeliveryStatusEnum,
-} from '@prisma/client';
+import { OrderItem, OrderItemDeliveryStatus } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export class OrderItemEntity implements Entity, DBOrderItemModel {
-  constructor(item: DBOrderItemModel) {
+export class OrderItemEntity implements Entity, OrderItem {
+  constructor(item: OrderItem) {
     Object.assign(this, item);
   }
 
@@ -15,7 +12,7 @@ export class OrderItemEntity implements Entity, DBOrderItemModel {
   price: number;
   quantity: number;
   received: number[];
-  deliveryStatus: DBOrderItemDeliveryStatusEnum;
+  deliveryStatus: OrderItemDeliveryStatus;
 
   @Exclude()
   orderId: string;

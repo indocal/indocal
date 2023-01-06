@@ -14,7 +14,6 @@ type User = {
 export type LogMetadata = HTTPLogMetadata;
 
 export interface Log extends Entity {
-  id: UUID;
   context: string;
   action: string;
   metadata: LogMetadata | null;

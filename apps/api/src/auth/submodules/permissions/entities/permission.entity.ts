@@ -1,12 +1,10 @@
 import { Exclude } from 'class-transformer';
-import { UserRolePermission as DBUserRolePermissionModel } from '@prisma/client';
+import { UserRolePermission } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export class UserRolePermissionEntity
-  implements Entity, DBUserRolePermissionModel
-{
-  constructor(permission: DBUserRolePermissionModel) {
+export class UserRolePermissionEntity implements Entity, UserRolePermission {
+  constructor(permission: UserRolePermission) {
     Object.assign(this, permission);
   }
 
