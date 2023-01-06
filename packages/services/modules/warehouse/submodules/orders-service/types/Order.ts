@@ -39,7 +39,7 @@ export interface Order extends Entity {
   code: string;
   status: OrderStatus;
   deliveryAt: string[];
-  item: OrderItem[];
+  items: OrderItem[];
   supplier: Supplier;
   createdAt: string;
   updatedAt: string;
