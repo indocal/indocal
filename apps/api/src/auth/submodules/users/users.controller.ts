@@ -12,8 +12,9 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-import { PrismaService, UUID } from '@/common';
+import { UUID } from '@/common';
 import { UserRoleEntity, UserGroupEntity } from '@/auth';
+import { PrismaService } from '@/prisma';
 
 import {
   PoliciesGuard,

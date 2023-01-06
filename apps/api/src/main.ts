@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { PrismaService } from '@/common';
+import { PrismaService } from '@/prisma';
 
 import { AppModule } from './app.module';
 

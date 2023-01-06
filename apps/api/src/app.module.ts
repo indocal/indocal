@@ -5,12 +5,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { PrismaFilter } from '@/common';
 import { LoggingModule } from '@/logging';
 import { AuthModule } from '@/auth';
 import { FormsModule } from '@/forms';
 import { EventsModule } from '@/events';
 import { WarehouseModule } from '@/warehouse';
+import { PrismaFilter } from '@/prisma';
 
 @Module({
   imports: [

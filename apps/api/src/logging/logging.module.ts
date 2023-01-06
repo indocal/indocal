@@ -1,8 +1,8 @@
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 
-import { PrismaService } from '@/common';
 import { AuthModule } from '@/auth';
+import { PrismaService } from '@/prisma';
 
 import LoggingController from './logging.controller';
 import LoggingService from './logging.service';

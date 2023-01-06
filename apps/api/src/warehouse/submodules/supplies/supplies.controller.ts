@@ -11,8 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { PrismaService, UUID } from '@/common';
+import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PrismaService } from '@/prisma';
 
 import { SupplyEntity } from './entities';
 import {

@@ -7,8 +7,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { PrismaService, UUID } from '@/common';
+import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action, UserEntity } from '@/auth';
+import { PrismaService } from '@/prisma';
 
 import { LogEntity } from './entities';
 import { FindManyLogsParamsDto, CountLogsParamsDto } from './dto';

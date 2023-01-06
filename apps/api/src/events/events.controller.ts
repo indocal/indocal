@@ -11,9 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { PrismaService, UUID } from '@/common';
+import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { EventGuestEntity } from '@/events';
+import { PrismaService } from '@/prisma';
 
 import { EventEntity } from './entities';
 import {

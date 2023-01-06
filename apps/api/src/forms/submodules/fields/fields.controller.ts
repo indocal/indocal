@@ -10,9 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { PrismaService, UUID } from '@/common';
+import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { FormEntity } from '@/forms';
+import { PrismaService } from '@/prisma';
 
 import { FormFieldEntity } from './entities';
 import { CreateFormFieldDto, UpdateFormFieldDto } from './dto';

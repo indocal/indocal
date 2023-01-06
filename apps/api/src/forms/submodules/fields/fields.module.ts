@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { PrismaService } from '@/common';
 import { AuthModule } from '@/auth';
+import { PrismaService } from '@/prisma';
 
 import FormsFieldsController from './fields.controller';
 

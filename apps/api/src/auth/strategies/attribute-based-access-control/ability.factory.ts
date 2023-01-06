@@ -22,7 +22,7 @@ import {
   OrderItem,
 } from '@prisma/client';
 
-import { PrismaService } from '@/common';
+import { PrismaService } from '@/prisma';
 
 import { AuthenticatedUser } from '../../types';
 
