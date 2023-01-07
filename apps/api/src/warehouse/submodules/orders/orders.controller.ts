@@ -54,7 +54,7 @@ export class OrdersController {
 
     order.items = items.map(({ supply, ...rest }) => {
       const item = new EnhancedOrderItem(rest);
-      item.supply = supply;
+      item.supply = new SupplyEntity(supply);
 
       return item;
     });
@@ -93,7 +93,7 @@ export class OrdersController {
 
       order.items = items.map(({ supply, ...rest }) => {
         const item = new EnhancedOrderItem(rest);
-        item.supply = supply;
+        item.supply = new SupplyEntity(supply);
 
         return item;
       });
@@ -121,7 +121,7 @@ export class OrdersController {
 
       order.items = items.map(({ supply, ...rest }) => {
         const item = new EnhancedOrderItem(rest);
-        item.supply = supply;
+        item.supply = new SupplyEntity(supply);
 
         return item;
       });
@@ -152,7 +152,7 @@ export class OrdersController {
 
     order.items = items.map(({ supply, ...rest }) => {
       const item = new EnhancedOrderItem(rest);
-      item.supply = supply;
+      item.supply = new SupplyEntity(supply);
 
       return item;
     });
@@ -174,7 +174,7 @@ export class OrdersController {
 
     order.items = items.map(({ supply, ...rest }) => {
       const item = new EnhancedOrderItem(rest);
-      item.supply = supply;
+      item.supply = new SupplyEntity(supply);
 
       return item;
     });
