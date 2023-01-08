@@ -1,4 +1,8 @@
-import Pagination from './pagination.interface';
+export interface Pagination<WhereUniqueInput> {
+  skip: number;
+  take: number;
+  cursor: WhereUniqueInput;
+}
 
 export interface FindManyParams<
   WhereInput,

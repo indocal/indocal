@@ -5,6 +5,7 @@ import {
   ServiceError,
   createServiceError,
   UUID,
+  SingleEntityResponse,
 } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
@@ -19,9 +20,9 @@ export interface UserRoleHookReturn {
 }
 
 export function useUserRole(id: UUID): UserRoleHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<UserRole>(
-    `${ApiEndpoints.USERS_ROLES}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<UserRole>
+  >(`${ApiEndpoints.USERS_ROLES}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

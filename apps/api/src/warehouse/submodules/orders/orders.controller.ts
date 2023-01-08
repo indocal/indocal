@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { SupplyEntity, SupplierEntity } from '@/warehouse';
 import { OrderItemEntity } from '../orders-items'; // Error if it's imported from @/warehouse
@@ -41,7 +41,9 @@ export class OrdersController {
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'order'))
-  async create(@Body() createOrderDto: CreateOrderDto): Promise<EnhancedOrder> {
+  async create(
+    @Body() createOrderDto: CreateOrderDto
+  ): Promise<SingleEntityResponse<EnhancedOrder>> {
     const { items, supplier, ...rest } = await this.prismaService.order.create({
       data: {
         code: createOrderDto.code,
@@ -77,38 +79,47 @@ export class OrdersController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'order'))
   async findMany(
     @Query() query: FindManyOrdersParamsDto
-  ): Promise<EnhancedOrder[]> {
-    const orders = await this.prismaService.order.findMany({
-      where: query.filters,
-      distinct: query.distinct,
-      orderBy: query.orderBy,
-      skip: query.pagination?.skip && Number(query.pagination.skip),
-      take: query.pagination?.take && Number(query.pagination.take),
-      cursor: query.pagination?.cursor,
-      include: { items: { include: { supply: true } }, supplier: true },
-    });
+  ): Promise<MultipleEntitiesResponse<EnhancedOrder>> {
+    const [orders, count] = await this.prismaService.$transaction([
+      this.prismaService.order.findMany({
+        where: query.filters,
+        distinct: query.distinct,
+        orderBy: query.orderBy,
+        skip: query.pagination?.skip && Number(query.pagination.skip),
+        take: query.pagination?.take && Number(query.pagination.take),
+        cursor: query.pagination?.cursor,
+        include: { items: { include: { supply: true } }, supplier: true },
+      }),
+      this.prismaService.order.count({
+        where: query.filters,
+        distinct: query.distinct,
+      }),
+    ]);
 
-    return orders.map(({ items, supplier, ...rest }) => {
-      const order = new EnhancedOrder(rest);
+    return {
+      count,
+      entities: orders.map(({ items, supplier, ...rest }) => {
+        const order = new EnhancedOrder(rest);
 
-      order.items = items.map(({ supply, ...rest }) => {
-        const item = new EnhancedOrderItem(rest);
-        item.supply = new SupplyEntity(supply);
+        order.items = items.map(({ supply, ...rest }) => {
+          const item = new EnhancedOrderItem(rest);
+          item.supply = new SupplyEntity(supply);
 
-        return item;
-      });
+          return item;
+        });
 
-      order.supplier = new SupplierEntity(supplier);
+        order.supplier = new SupplierEntity(supplier);
 
-      return order;
-    });
+        return order;
+      }),
+    };
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'order'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedOrder | null> {
+  ): Promise<SingleEntityResponse<EnhancedOrder | null>> {
     const response = await this.prismaService.order.findUnique({
       where: { id },
       include: { items: { include: { supply: true } }, supplier: true },
@@ -138,7 +149,7 @@ export class OrdersController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateOrderDto: UpdateOrderDto
-  ): Promise<EnhancedOrder> {
+  ): Promise<SingleEntityResponse<EnhancedOrder>> {
     const { items, supplier, ...rest } = await this.prismaService.order.update({
       where: { id },
       data: {
@@ -164,7 +175,9 @@ export class OrdersController {
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'order'))
-  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<EnhancedOrder> {
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<EnhancedOrder>> {
     const { items, supplier, ...rest } = await this.prismaService.order.delete({
       where: { id },
       include: { items: { include: { supply: true } }, supplier: true },

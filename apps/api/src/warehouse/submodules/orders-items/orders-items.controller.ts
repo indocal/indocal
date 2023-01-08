@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { OrderEntity, SupplyEntity } from '@/warehouse';
 import { PrismaService } from '@/prisma';
@@ -33,7 +33,7 @@ export class OrdersItemsController {
   async create(
     @Param('order_id') orderId: UUID,
     @Body() createItemDto: CreateOrderItemDto
-  ): Promise<EnhancedOrderItem> {
+  ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
     const { order, supply, ...rest } =
       await this.prismaService.orderItem.create({
         data: {
@@ -64,26 +64,34 @@ export class OrdersItemsController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'orderItem'))
   async findAll(
     @Param('order_id') orderId: UUID
-  ): Promise<EnhancedOrderItem[]> {
-    const items = await this.prismaService.orderItem.findMany({
-      where: { order: { id: orderId } },
-      include: { order: true, supply: true },
-    });
+  ): Promise<MultipleEntitiesResponse<EnhancedOrderItem>> {
+    const [items, count] = await this.prismaService.$transaction([
+      this.prismaService.orderItem.findMany({
+        where: { order: { id: orderId } },
+        include: { order: true, supply: true },
+      }),
+      this.prismaService.orderItem.count({
+        where: { order: { id: orderId } },
+      }),
+    ]);
 
-    return items.map(({ order, supply, ...rest }) => {
-      const item = new EnhancedOrderItem(rest);
-      item.order = new OrderEntity(order);
-      item.supply = new SupplyEntity(supply);
+    return {
+      count,
+      entities: items.map(({ order, supply, ...rest }) => {
+        const item = new EnhancedOrderItem(rest);
+        item.order = new OrderEntity(order);
+        item.supply = new SupplyEntity(supply);
 
-      return item;
-    });
+        return item;
+      }),
+    };
   }
 
   @Get('warehouse/orders/items/:id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'orderItem'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedOrderItem | null> {
+  ): Promise<SingleEntityResponse<EnhancedOrderItem | null>> {
     const response = await this.prismaService.orderItem.findUnique({
       where: { id },
       include: { order: true, supply: true },
@@ -107,7 +115,7 @@ export class OrdersItemsController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateItemDto: UpdateOrderItemDto
-  ): Promise<EnhancedOrderItem> {
+  ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
     const { order, supply, ...rest } =
       await this.prismaService.orderItem.update({
         where: { id },
@@ -130,7 +138,7 @@ export class OrdersItemsController {
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'orderItem'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedOrderItem> {
+  ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
     const { order, supply, ...rest } =
       await this.prismaService.orderItem.delete({
         where: { id },

@@ -5,6 +5,7 @@ import {
   ServiceError,
   createServiceError,
   UUID,
+  SingleEntityResponse,
 } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
@@ -19,9 +20,9 @@ export interface UserHookReturn {
 }
 
 export function useUser(id: UUID): UserHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<User>(
-    `${ApiEndpoints.USERS}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<User>
+  >(`${ApiEndpoints.USERS}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

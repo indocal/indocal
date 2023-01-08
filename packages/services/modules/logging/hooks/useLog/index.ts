@@ -1,7 +1,12 @@
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+} from '../../../../common';
 import { ApiEndpoints } from '../../../../config';
 
 import { Log } from '../../types';
@@ -15,9 +20,9 @@ export interface LogHookReturn {
 }
 
 export function useLog(id: UUID): LogHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<Log>(
-    `${ApiEndpoints.LOGS}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<Log>
+  >(`${ApiEndpoints.LOGS}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

@@ -1,10 +1,14 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useLogs } from '@indocal/services';
+import { useAbility, useLogs, User } from '@indocal/services';
 
 import { GenericLogsDataGrid } from '@/features';
 
-export const LogsDataGrid: React.FC = () => {
+export interface UserLogsDataGridProps {
+  user: User;
+}
+
+export const UserLogsDataGrid: React.FC<UserLogsDataGridProps> = ({ user }) => {
   const ability = useAbility();
 
   const [search, setSearch] = useState('');
@@ -18,15 +22,17 @@ export const LogsDataGrid: React.FC = () => {
     error: serviceError,
     refetch,
   } = useLogs({
-    ...(search && {
-      filters: {
+    filters: {
+      user: { id: user.id },
+      ...(search && {
         OR: [
           { context: { mode: 'insensitive', contains: search } },
           { action: { mode: 'insensitive', contains: search } },
           { user: { username: { mode: 'insensitive', contains: search } } },
         ],
-      },
-    }),
+      }),
+    },
+
     pagination: {
       skip: pagination.page * pagination.pageSize,
       take: pagination.pageSize,
@@ -40,7 +46,7 @@ export const LogsDataGrid: React.FC = () => {
 
   return (
     <GenericLogsDataGrid
-      title={`Registros (${count})`}
+      title={`Registros del usuario (${count})`}
       logs={logs}
       onRefreshButtonClick={ability.can('read', 'log') && handleRefetch}
       enhancedDataGridProps={{
@@ -66,4 +72,4 @@ export const LogsDataGrid: React.FC = () => {
   );
 };
 
-export default LogsDataGrid;
+export default UserLogsDataGrid;

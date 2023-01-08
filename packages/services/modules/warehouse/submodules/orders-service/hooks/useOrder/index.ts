@@ -5,6 +5,7 @@ import {
   ServiceError,
   createServiceError,
   UUID,
+  SingleEntityResponse,
 } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
@@ -19,9 +20,9 @@ export interface OrderHookReturn {
 }
 
 export function useOrder(id: UUID): OrderHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<Order>(
-    `${ApiEndpoints.ORDERS}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<Order>
+  >(`${ApiEndpoints.ORDERS}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

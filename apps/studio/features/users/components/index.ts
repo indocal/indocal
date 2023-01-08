@@ -1,3 +1,5 @@
+export * from './UserLogsDataGrid';
+
 export * from './UserCard';
 export * from './UsersDataGrid';
 export * from './GenericUsersDataGrid';

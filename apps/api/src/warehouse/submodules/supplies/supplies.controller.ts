@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { PrismaService } from '@/prisma';
 
@@ -32,7 +32,7 @@ export class SuppliesController {
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'supply'))
   async create(
     @Body() createSupplyDto: CreateSupplyDto
-  ): Promise<SupplyEntity> {
+  ): Promise<SingleEntityResponse<SupplyEntity>> {
     const supply = await this.prismaService.supply.create({
       data: {
         code: createSupplyDto.code,
@@ -59,24 +59,33 @@ export class SuppliesController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
   async findMany(
     @Query() query: FindManySuppliesParamsDto
-  ): Promise<SupplyEntity[]> {
-    const supplies = await this.prismaService.supply.findMany({
-      where: query.filters,
-      distinct: query.distinct,
-      orderBy: query.orderBy,
-      skip: query.pagination?.skip && Number(query.pagination.skip),
-      take: query.pagination?.take && Number(query.pagination.take),
-      cursor: query.pagination?.cursor,
-    });
+  ): Promise<MultipleEntitiesResponse<SupplyEntity>> {
+    const [supplies, count] = await this.prismaService.$transaction([
+      this.prismaService.supply.findMany({
+        where: query.filters,
+        distinct: query.distinct,
+        orderBy: query.orderBy,
+        skip: query.pagination?.skip && Number(query.pagination.skip),
+        take: query.pagination?.take && Number(query.pagination.take),
+        cursor: query.pagination?.cursor,
+      }),
+      this.prismaService.supply.count({
+        where: query.filters,
+        distinct: query.distinct,
+      }),
+    ]);
 
-    return supplies.map((supply) => new SupplyEntity(supply));
+    return {
+      count,
+      entities: supplies.map((supply) => new SupplyEntity(supply)),
+    };
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<SupplyEntity | null> {
+  ): Promise<SingleEntityResponse<SupplyEntity | null>> {
     const supply = await this.prismaService.supply.findUnique({
       where: { id },
     });
@@ -89,7 +98,7 @@ export class SuppliesController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateSupplyDto: UpdateSupplyDto
-  ): Promise<SupplyEntity> {
+  ): Promise<SingleEntityResponse<SupplyEntity>> {
     const supply = await this.prismaService.supply.update({
       where: { id },
       data: {
@@ -106,7 +115,9 @@ export class SuppliesController {
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'supply'))
-  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<SupplyEntity> {
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<SupplyEntity>> {
     const supply = await this.prismaService.supply.delete({ where: { id } });
 
     return new SupplyEntity(supply);

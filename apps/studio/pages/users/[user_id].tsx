@@ -8,7 +8,7 @@ import {
   UserCard,
   UserRolesList,
   UserGroupsList,
-  LogsDataGrid,
+  UserLogsDataGrid,
 } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -61,7 +61,7 @@ const UserPage: EnhancedNextPage = () => {
 
             <Grid item xs={12}>
               <Widget height={500}>
-                <LogsDataGrid user={user} />
+                <UserLogsDataGrid user={user} />
               </Widget>
             </Grid>
           </Grid>

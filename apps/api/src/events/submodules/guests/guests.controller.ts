@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { EventEntity } from '@/events';
 import { PrismaService } from '@/prisma';
@@ -32,7 +32,7 @@ export class EventsGuestsController {
   async create(
     @Param('event_id') eventId: UUID,
     @Body() createGuestDto: CreateEventGuestDto
-  ): Promise<EnhancedEventGuest> {
+  ): Promise<SingleEntityResponse<EnhancedEventGuest>> {
     const { event, ...rest } = await this.prismaService.eventGuest.create({
       data: {
         dni: createGuestDto.dni,
@@ -66,25 +66,33 @@ export class EventsGuestsController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'eventGuest'))
   async findAll(
     @Param('event_id') eventId: UUID
-  ): Promise<EnhancedEventGuest[]> {
-    const guests = await this.prismaService.eventGuest.findMany({
-      where: { event: { id: eventId } },
-      include: { event: true },
-    });
+  ): Promise<MultipleEntitiesResponse<EnhancedEventGuest>> {
+    const [guests, count] = await this.prismaService.$transaction([
+      this.prismaService.eventGuest.findMany({
+        where: { event: { id: eventId } },
+        include: { event: true },
+      }),
+      this.prismaService.eventGuest.count({
+        where: { event: { id: eventId } },
+      }),
+    ]);
 
-    return guests.map(({ event, ...rest }) => {
-      const guest = new EnhancedEventGuest(rest);
-      guest.event = new EventEntity(event);
+    return {
+      count,
+      entities: guests.map(({ event, ...rest }) => {
+        const guest = new EnhancedEventGuest(rest);
+        guest.event = new EventEntity(event);
 
-      return guest;
-    });
+        return guest;
+      }),
+    };
   }
 
   @Get('events/guests/:id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'eventGuest'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedEventGuest | null> {
+  ): Promise<SingleEntityResponse<EnhancedEventGuest | null>> {
     const response = await this.prismaService.eventGuest.findUnique({
       where: { id },
       include: { event: true },
@@ -107,7 +115,7 @@ export class EventsGuestsController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateGuestDto: UpdateEventGuestDto
-  ): Promise<EnhancedEventGuest> {
+  ): Promise<SingleEntityResponse<EnhancedEventGuest>> {
     const { event, ...rest } = await this.prismaService.eventGuest.update({
       where: { id },
       data: {
@@ -131,7 +139,7 @@ export class EventsGuestsController {
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'eventGuest'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedEventGuest> {
+  ): Promise<SingleEntityResponse<EnhancedEventGuest>> {
     const { event, ...rest } = await this.prismaService.eventGuest.delete({
       where: { id },
       include: { event: true },

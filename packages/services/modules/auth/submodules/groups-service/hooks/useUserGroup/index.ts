@@ -5,6 +5,7 @@ import {
   ServiceError,
   createServiceError,
   UUID,
+  SingleEntityResponse,
 } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
@@ -19,9 +20,9 @@ export interface UserGroupHookReturn {
 }
 
 export function useUserGroup(id: UUID): UserGroupHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<UserGroup>(
-    `${ApiEndpoints.USERS_GROUPS}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<UserGroup>
+  >(`${ApiEndpoints.USERS_GROUPS}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

@@ -5,6 +5,7 @@ import {
   ServiceError,
   createServiceError,
   UUID,
+  SingleEntityResponse,
 } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
@@ -19,9 +20,9 @@ export interface SupplierHookReturn {
 }
 
 export function useSupplier(id: UUID): SupplierHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<Supplier>(
-    `${ApiEndpoints.SUPPLIERS}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<Supplier>
+  >(`${ApiEndpoints.SUPPLIERS}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

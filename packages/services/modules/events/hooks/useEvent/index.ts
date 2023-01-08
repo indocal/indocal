@@ -1,7 +1,12 @@
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+} from '../../../../common';
 import { ApiEndpoints } from '../../../../config';
 
 import { Event } from '../../types';
@@ -15,9 +20,9 @@ export interface EventHookReturn {
 }
 
 export function useEvent(id: UUID): EventHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<Event>(
-    `${ApiEndpoints.EVENTS}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<Event>
+  >(`${ApiEndpoints.EVENTS}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

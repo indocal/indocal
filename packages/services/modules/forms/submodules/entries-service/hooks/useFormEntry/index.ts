@@ -5,6 +5,7 @@ import {
   ServiceError,
   createServiceError,
   UUID,
+  SingleEntityResponse,
 } from '../../../../../../common';
 import { ApiEndpoints } from '../../../../../../config';
 
@@ -19,9 +20,9 @@ export interface FormEntryHookReturn {
 }
 
 export function useFormEntry(id: UUID): FormEntryHookReturn {
-  const { isLoading, isValidating, data, error, mutate } = useSWR<FormEntry>(
-    `${ApiEndpoints.FORMS_ENTRIES}/${id}`
-  );
+  const { isLoading, isValidating, data, error, mutate } = useSWR<
+    SingleEntityResponse<FormEntry>
+  >(`${ApiEndpoints.FORMS_ENTRIES}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();

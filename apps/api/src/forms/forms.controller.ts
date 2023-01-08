@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action, UserGroupEntity } from '@/auth';
 import { FormFieldEntity } from '@/forms';
 import { PrismaService } from '@/prisma';
@@ -36,7 +36,9 @@ export class FormsController {
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'form'))
-  async create(@Body() createFormDto: CreateFormDto): Promise<EnhancedForm> {
+  async create(
+    @Body() createFormDto: CreateFormDto
+  ): Promise<SingleEntityResponse<EnhancedForm>> {
     const { fields, group, ...rest } = await this.prismaService.form.create({
       data: {
         slug: createFormDto.slug,
@@ -67,31 +69,40 @@ export class FormsController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'form'))
   async findMany(
     @Query() query: FindManyFormsParamsDto
-  ): Promise<EnhancedForm[]> {
-    const forms = await this.prismaService.form.findMany({
-      where: query.filters,
-      distinct: query.distinct,
-      orderBy: query.orderBy,
-      skip: query.pagination?.skip && Number(query.pagination.skip),
-      take: query.pagination?.take && Number(query.pagination.take),
-      cursor: query.pagination?.cursor,
-      include: { fields: true, group: true },
-    });
+  ): Promise<MultipleEntitiesResponse<EnhancedForm>> {
+    const [forms, count] = await this.prismaService.$transaction([
+      this.prismaService.form.findMany({
+        where: query.filters,
+        distinct: query.distinct,
+        orderBy: query.orderBy,
+        skip: query.pagination?.skip && Number(query.pagination.skip),
+        take: query.pagination?.take && Number(query.pagination.take),
+        cursor: query.pagination?.cursor,
+        include: { fields: true, group: true },
+      }),
+      this.prismaService.form.count({
+        where: query.filters,
+        distinct: query.distinct,
+      }),
+    ]);
 
-    return forms.map(({ fields, group, ...rest }) => {
-      const form = new EnhancedForm(rest);
-      form.fields = fields.map((field) => new FormFieldEntity(field));
-      form.group = new UserGroupEntity(group);
+    return {
+      count,
+      entities: forms.map(({ fields, group, ...rest }) => {
+        const form = new EnhancedForm(rest);
+        form.fields = fields.map((field) => new FormFieldEntity(field));
+        form.group = new UserGroupEntity(group);
 
-      return form;
-    });
+        return form;
+      }),
+    };
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'form'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedForm | null> {
+  ): Promise<SingleEntityResponse<EnhancedForm | null>> {
     const response = await this.prismaService.form.findUnique({
       where: { id },
       include: { fields: true, group: true },
@@ -115,7 +126,7 @@ export class FormsController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateFormDto: UpdateFormDto
-  ): Promise<EnhancedForm> {
+  ): Promise<SingleEntityResponse<EnhancedForm>> {
     const { fields, group, ...rest } = await this.prismaService.form.update({
       where: { id },
       data: {
@@ -141,7 +152,9 @@ export class FormsController {
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'form'))
-  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<EnhancedForm> {
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<EnhancedForm>> {
     const { fields, group, ...rest } = await this.prismaService.form.delete({
       where: { id },
       include: { fields: true, group: true },

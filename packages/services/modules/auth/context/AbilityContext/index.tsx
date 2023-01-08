@@ -4,6 +4,7 @@ import { createMongoAbility, MongoAbility } from '@casl/ability';
 import { useAbility as useCASLAbility } from '@casl/react';
 import qs from 'qs';
 
+import { MultipleEntitiesResponse } from '../../../../common';
 import { AuthenticatedUser, UserRole } from '../../../../modules';
 import { ApiEndpoints } from '../../../../config';
 
@@ -14,7 +15,7 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const { data: me } = useSWR<AuthenticatedUser | null>(ApiEndpoints.ME);
 
-  const { data: roles } = useSWR<UserRole[]>(() =>
+  const { data: roles } = useSWR<MultipleEntitiesResponse<UserRole>>(() =>
     me
       ? `${ApiEndpoints.USERS_ROLES}?${qs.stringify({
           filters: { users: { some: { id: me.id } } },
@@ -25,9 +26,9 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
   const ability = useRef(createMongoAbility());
 
   useEffect(() => {
-    if (roles) {
+    if (roles?.entities) {
       ability.current.update(
-        roles
+        roles.entities
           .map((role) =>
             role.permissions.map((permission) => {
               const [scope, action] = permission.action.split('::');
@@ -38,7 +39,7 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
           .flat()
       );
     }
-  }, [roles]);
+  }, [roles?.entities]);
 
   return (
     <AbilityContext.Provider value={ability.current}>

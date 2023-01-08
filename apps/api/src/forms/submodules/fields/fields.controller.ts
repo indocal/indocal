@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { FormEntity } from '@/forms';
 import { PrismaService } from '@/prisma';
@@ -32,7 +32,7 @@ export class FormsFieldsController {
   async create(
     @Param('form_id') formId: UUID,
     @Body() createFieldDto: CreateFormFieldDto
-  ): Promise<EnhancedFormField> {
+  ): Promise<SingleEntityResponse<EnhancedFormField>> {
     const { form, ...rest } = await this.prismaService.formField.create({
       data: {
         type: createFieldDto.type,
@@ -59,25 +59,35 @@ export class FormsFieldsController {
 
   @Get('forms/:form_id/fields')
   @CheckPolicies((ability) => ability.can(Action.READ, 'formField'))
-  async findAll(@Param('form_id') formId: UUID): Promise<EnhancedFormField[]> {
-    const fields = await this.prismaService.formField.findMany({
-      where: { form: { id: formId } },
-      include: { form: true },
-    });
+  async findAll(
+    @Param('form_id') formId: UUID
+  ): Promise<MultipleEntitiesResponse<EnhancedFormField>> {
+    const [fields, count] = await this.prismaService.$transaction([
+      this.prismaService.formField.findMany({
+        where: { form: { id: formId } },
+        include: { form: true },
+      }),
+      this.prismaService.formField.count({
+        where: { form: { id: formId } },
+      }),
+    ]);
 
-    return fields.map(({ form, ...rest }) => {
-      const field = new EnhancedFormField(rest);
-      field.form = new FormEntity(form);
+    return {
+      count,
+      entities: fields.map(({ form, ...rest }) => {
+        const field = new EnhancedFormField(rest);
+        field.form = new FormEntity(form);
 
-      return field;
-    });
+        return field;
+      }),
+    };
   }
 
   @Get('forms/fields/:id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'formField'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedFormField | null> {
+  ): Promise<SingleEntityResponse<EnhancedFormField | null>> {
     const response = await this.prismaService.formField.findUnique({
       where: { id },
       include: { form: true },
@@ -100,7 +110,7 @@ export class FormsFieldsController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateFieldDto: UpdateFormFieldDto
-  ): Promise<EnhancedFormField> {
+  ): Promise<SingleEntityResponse<EnhancedFormField>> {
     const { form, ...rest } = await this.prismaService.formField.update({
       where: { id },
       data: {
@@ -121,7 +131,7 @@ export class FormsFieldsController {
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'formField'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedFormField> {
+  ): Promise<SingleEntityResponse<EnhancedFormField>> {
     const { form, ...rest } = await this.prismaService.formField.delete({
       where: { id },
       include: { form: true },

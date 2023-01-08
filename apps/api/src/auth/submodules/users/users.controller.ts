@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { UserRoleEntity, UserGroupEntity } from '@/auth';
 import { PrismaService } from '@/prisma';
 
@@ -42,7 +42,9 @@ export class UsersController {
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'user'))
-  async create(@Body() createUserDto: CreateUserDto): Promise<EnhancedUser> {
+  async create(
+    @Body() createUserDto: CreateUserDto
+  ): Promise<SingleEntityResponse<EnhancedUser>> {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createUserDto.password, salt);
 
@@ -75,31 +77,40 @@ export class UsersController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'user'))
   async findMany(
     @Query() query: FindManyUsersParamsDto
-  ): Promise<EnhancedUser[]> {
-    const users = await this.prismaService.user.findMany({
-      where: query.filters,
-      distinct: query.distinct,
-      orderBy: query.orderBy,
-      skip: query.pagination?.skip && Number(query.pagination.skip),
-      take: query.pagination?.take && Number(query.pagination.take),
-      cursor: query.pagination?.cursor,
-      include: { roles: true, groups: true },
-    });
+  ): Promise<MultipleEntitiesResponse<EnhancedUser>> {
+    const [users, count] = await this.prismaService.$transaction([
+      this.prismaService.user.findMany({
+        where: query.filters,
+        distinct: query.distinct,
+        orderBy: query.orderBy,
+        skip: query.pagination?.skip && Number(query.pagination.skip),
+        take: query.pagination?.take && Number(query.pagination.take),
+        cursor: query.pagination?.cursor,
+        include: { roles: true, groups: true },
+      }),
+      this.prismaService.user.count({
+        where: query.filters,
+        distinct: query.distinct,
+      }),
+    ]);
 
-    return users.map(({ roles, groups, ...rest }) => {
-      const user = new EnhancedUser(rest);
-      user.roles = roles.map((role) => new UserRoleEntity(role));
-      user.groups = groups.map((group) => new UserGroupEntity(group));
+    return {
+      count,
+      entities: users.map(({ roles, groups, ...rest }) => {
+        const user = new EnhancedUser(rest);
+        user.roles = roles.map((role) => new UserRoleEntity(role));
+        user.groups = groups.map((group) => new UserGroupEntity(group));
 
-      return user;
-    });
+        return user;
+      }),
+    };
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'user'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedUser | null> {
+  ): Promise<SingleEntityResponse<EnhancedUser | null>> {
     const response = await this.prismaService.user.findUnique({
       where: { id },
       include: { roles: true, groups: true },
@@ -123,7 +134,7 @@ export class UsersController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateUserDto: UpdateUserDto
-  ): Promise<EnhancedUser> {
+  ): Promise<SingleEntityResponse<EnhancedUser>> {
     const { roles, groups, ...rest } = await this.prismaService.user.update({
       where: { id },
       data: {
@@ -151,7 +162,9 @@ export class UsersController {
 
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'user'))
-  async delete(@Param('id', ParseUUIDPipe) id: UUID): Promise<EnhancedUser> {
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<EnhancedUser>> {
     const { roles, groups, ...rest } = await this.prismaService.user.delete({
       where: { id },
       include: { roles: true, groups: true },

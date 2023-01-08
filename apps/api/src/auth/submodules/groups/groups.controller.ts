@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { UUID } from '@/common';
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { UserEntity } from '@/auth';
 import { PrismaService } from '@/prisma';
 
@@ -42,7 +42,7 @@ export class UsersGroupsController {
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'userGroup'))
   async create(
     @Body() createGroupDto: CreateUserGroupDto
-  ): Promise<EnhancedUserGroup> {
+  ): Promise<SingleEntityResponse<EnhancedUserGroup>> {
     const { members, ...rest } = await this.prismaService.userGroup.create({
       data: {
         name: createGroupDto.name,
@@ -70,30 +70,39 @@ export class UsersGroupsController {
   @CheckPolicies((ability) => ability.can(Action.READ, 'userGroup'))
   async findMany(
     @Query() query: FindManyUsersGroupsParamsDto
-  ): Promise<EnhancedUserGroup[]> {
-    const groups = await this.prismaService.userGroup.findMany({
-      where: query.filters,
-      distinct: query.distinct,
-      orderBy: query.orderBy,
-      skip: query.pagination?.skip && Number(query.pagination.skip),
-      take: query.pagination?.take && Number(query.pagination.take),
-      cursor: query.pagination?.cursor,
-      include: { members: true },
-    });
+  ): Promise<MultipleEntitiesResponse<EnhancedUserGroup>> {
+    const [groups, count] = await this.prismaService.$transaction([
+      this.prismaService.userGroup.findMany({
+        where: query.filters,
+        distinct: query.distinct,
+        orderBy: query.orderBy,
+        skip: query.pagination?.skip && Number(query.pagination.skip),
+        take: query.pagination?.take && Number(query.pagination.take),
+        cursor: query.pagination?.cursor,
+        include: { members: true },
+      }),
+      this.prismaService.userGroup.count({
+        where: query.filters,
+        distinct: query.distinct,
+      }),
+    ]);
 
-    return groups.map(({ members, ...rest }) => {
-      const group = new EnhancedUserGroup(rest);
-      group.members = members.map((member) => new UserEntity(member));
+    return {
+      count,
+      entities: groups.map(({ members, ...rest }) => {
+        const group = new EnhancedUserGroup(rest);
+        group.members = members.map((member) => new UserEntity(member));
 
-      return group;
-    });
+        return group;
+      }),
+    };
   }
 
   @Get(':id')
   @CheckPolicies((ability) => ability.can(Action.READ, 'userGroup'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedUserGroup | null> {
+  ): Promise<SingleEntityResponse<EnhancedUserGroup | null>> {
     const response = await this.prismaService.userGroup.findUnique({
       where: { id },
       include: { members: true },
@@ -116,7 +125,7 @@ export class UsersGroupsController {
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateGroupDto: UpdateUserGroupDto
-  ): Promise<EnhancedUserGroup> {
+  ): Promise<SingleEntityResponse<EnhancedUserGroup>> {
     const { members, ...rest } = await this.prismaService.userGroup.update({
       where: { id },
       data: {
@@ -142,7 +151,7 @@ export class UsersGroupsController {
   @CheckPolicies((ability) => ability.can(Action.DELETE, 'userGroup'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<EnhancedUserGroup> {
+  ): Promise<SingleEntityResponse<EnhancedUserGroup>> {
     const { members, ...rest } = await this.prismaService.userGroup.delete({
       where: { id },
       include: { members: true },
