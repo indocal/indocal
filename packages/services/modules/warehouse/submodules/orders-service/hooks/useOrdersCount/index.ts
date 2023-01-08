@@ -21,7 +21,7 @@ export function useOrdersCount(
   const query = useMemo(() => qs.stringify(params), [params]);
 
   const { isLoading, isValidating, data, error, mutate } = useSWR<number>(
-    params ? `${ApiEndpoints.ORDERS_COUNT}?${query}` : ApiEndpoints.ORDERS
+    params ? `${ApiEndpoints.ORDERS_COUNT}?${query}` : ApiEndpoints.ORDERS_COUNT
   );
 
   const handleRefetch = useCallback(async () => {
