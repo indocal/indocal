@@ -3,6 +3,7 @@ import {
   Dashboard as OverviewIcon,
   Inventory as InventoryIcon,
   LocalShipping as SuppliersIcon,
+  LocalMall as OrdersIcon,
 } from '@mui/icons-material';
 
 import {
@@ -42,6 +43,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'order'),
+          label: 'Ordenes',
+          icon: <OrdersIcon />,
+          href: Pages.ORDERS,
         },
       },
       {

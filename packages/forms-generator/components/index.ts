@@ -8,3 +8,5 @@ export * from './ControlledFormVisibilitySelect';
 export * from './ControlledFormFieldTypeSelect';
 
 export * from './ControlledSupplyUnitSelect';
+export * from './ControlledSuppliesAutocomplete';
+export * from './ControlledSuppliersAutocomplete';
