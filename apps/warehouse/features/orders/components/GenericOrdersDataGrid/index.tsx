@@ -124,8 +124,8 @@ export const GenericOrdersDataGrid: React.FC<GenericOrdersDataGridProps> = ({
         valueGetter: ({ value }) => value.name,
       },
       {
-        field: 'updatedAt',
-        headerName: 'Última modificación',
+        field: 'createdAt',
+        headerName: 'Fecha de creación',
         headerAlign: 'right',
         align: 'right',
         minWidth: 175,
