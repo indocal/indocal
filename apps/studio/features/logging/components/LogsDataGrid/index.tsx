@@ -21,9 +21,11 @@ export const LogsDataGrid: React.FC = () => {
     ...(search && {
       filters: {
         OR: [
+          { id: { mode: 'insensitive', contains: search } },
           { context: { mode: 'insensitive', contains: search } },
           { action: { mode: 'insensitive', contains: search } },
           { user: { username: { mode: 'insensitive', contains: search } } },
+          { user: { email: { mode: 'insensitive', contains: search } } },
         ],
       },
     }),

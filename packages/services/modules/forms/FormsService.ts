@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../common';
 import { Config, ApiEndpoints } from '../../config';
 
 import {
@@ -25,6 +31,7 @@ export interface CountFormsReturn {
 
 export interface FindManyFormsReturn {
   forms: Form[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -55,8 +62,8 @@ export class FormsService {
   async create(data: CreateFormDto): Promise<CreateFormReturn> {
     try {
       const response = await this.config.axios.post<
-        Form,
-        AxiosResponse<Form, CreateFormDto>,
+        SingleEntityResponse<Form>,
+        AxiosResponse<SingleEntityResponse<Form>, CreateFormDto>,
         CreateFormDto
       >(ApiEndpoints.FORMS, data);
 
@@ -95,17 +102,21 @@ export class FormsService {
     params?: FindManyFormsParamsDto
   ): Promise<FindManyFormsReturn> {
     try {
-      const response = await this.config.axios.get<Form[]>(ApiEndpoints.FORMS, {
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<Form>
+      >(ApiEndpoints.FORMS, {
         params,
       });
 
       return {
-        forms: response.data,
+        forms: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         forms: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -113,9 +124,9 @@ export class FormsService {
 
   async findOneByUUID(id: UUID): Promise<FindOneFormByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<Form | null>(
-        `${ApiEndpoints.FORMS}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<Form | null>
+      >(`${ApiEndpoints.FORMS}/${id}`);
 
       return {
         form: response.data || null,
@@ -132,8 +143,8 @@ export class FormsService {
   async update(id: UUID, data: UpdateFormDto): Promise<UpdateFormReturn> {
     try {
       const response = await this.config.axios.patch<
-        Form,
-        AxiosResponse<Form, UpdateFormDto>,
+        SingleEntityResponse<Form>,
+        AxiosResponse<SingleEntityResponse<Form>, UpdateFormDto>,
         UpdateFormDto
       >(`${ApiEndpoints.FORMS}/${id}`, data);
 
@@ -151,9 +162,9 @@ export class FormsService {
 
   async delete(id: UUID): Promise<DeleteFormReturn> {
     try {
-      const response = await this.config.axios.delete<Form>(
-        `${ApiEndpoints.FORMS}/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<Form>
+      >(`${ApiEndpoints.FORMS}/${id}`);
 
       return {
         form: response.data,

@@ -1,4 +1,10 @@
-import { ServiceError, createServiceError, UUID } from '../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../common';
 import { Config, ApiEndpoints } from '../../config';
 
 import { Log, CountLogsParamsDto, FindManyLogsParamsDto } from './types';
@@ -10,6 +16,7 @@ export interface CountLogsReturn {
 
 export interface FindManyLogsReturn {
   logs: Log[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -42,17 +49,21 @@ export class LogsService {
 
   async findMany(params?: FindManyLogsParamsDto): Promise<FindManyLogsReturn> {
     try {
-      const response = await this.config.axios.get<Log[]>(ApiEndpoints.LOGS, {
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<Log>
+      >(ApiEndpoints.LOGS, {
         params,
       });
 
       return {
-        logs: response.data,
+        logs: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         logs: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -60,9 +71,9 @@ export class LogsService {
 
   async findOneByUUID(id: UUID): Promise<FindOneLogByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<Log | null>(
-        `${ApiEndpoints.LOGS}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<Log | null>
+      >(`${ApiEndpoints.LOGS}/${id}`);
 
       return {
         log: response.data || null,

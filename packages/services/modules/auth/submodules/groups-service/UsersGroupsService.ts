@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../../../common';
 import { Config, ApiEndpoints } from '../../../../config';
 
 import {
@@ -23,6 +29,7 @@ export interface CountUsersGroupsReturn {
 
 export interface FindManyUsersGroupsReturn {
   groups: UserGroup[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -47,8 +54,8 @@ export class UsersGroupsService {
   async create(data: CreateUserGroupDto): Promise<CreateUserGroupReturn> {
     try {
       const response = await this.config.axios.post<
-        UserGroup,
-        AxiosResponse<UserGroup, CreateUserGroupDto>,
+        SingleEntityResponse<UserGroup>,
+        AxiosResponse<SingleEntityResponse<UserGroup>, CreateUserGroupDto>,
         CreateUserGroupDto
       >(ApiEndpoints.USERS_GROUPS, data);
 
@@ -89,18 +96,19 @@ export class UsersGroupsService {
     params?: FindManyUsersGroupsParamsDto
   ): Promise<FindManyUsersGroupsReturn> {
     try {
-      const response = await this.config.axios.get<UserGroup[]>(
-        ApiEndpoints.USERS_GROUPS,
-        { params }
-      );
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<UserGroup>
+      >(ApiEndpoints.USERS_GROUPS, { params });
 
       return {
-        groups: response.data,
+        groups: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         groups: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -108,9 +116,9 @@ export class UsersGroupsService {
 
   async findOneByUUID(id: UUID): Promise<FindOneUserGroupByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<UserGroup | null>(
-        `${ApiEndpoints.USERS_GROUPS}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<UserGroup | null>
+      >(`${ApiEndpoints.USERS_GROUPS}/${id}`);
 
       return {
         group: response.data || null,
@@ -130,8 +138,8 @@ export class UsersGroupsService {
   ): Promise<UpdateUserGroupReturn> {
     try {
       const response = await this.config.axios.patch<
-        UserGroup,
-        AxiosResponse<UserGroup, UpdateUserGroupDto>,
+        SingleEntityResponse<UserGroup>,
+        AxiosResponse<SingleEntityResponse<UserGroup>, UpdateUserGroupDto>,
         UpdateUserGroupDto
       >(`${ApiEndpoints.USERS_GROUPS}/${id}`, data);
 
@@ -149,9 +157,9 @@ export class UsersGroupsService {
 
   async delete(id: UUID): Promise<DeleteUserGroupReturn> {
     try {
-      const response = await this.config.axios.delete<UserGroup>(
-        `${ApiEndpoints.USERS_GROUPS}/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<UserGroup>
+      >(`${ApiEndpoints.USERS_GROUPS}/${id}`);
 
       return {
         group: response.data,

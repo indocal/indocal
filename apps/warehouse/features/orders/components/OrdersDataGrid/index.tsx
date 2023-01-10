@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import { useAbility, useOrders } from '@indocal/services';
 
@@ -10,13 +10,28 @@ import { AddOrderDialog } from './components';
 const OrdersDataGrid: React.FC = () => {
   const ability = useAbility();
 
+  const [search, setSearch] = useState('');
+  const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });
+
   const {
     loading,
     validating,
     orders,
+    count,
     error: serviceError,
     refetch,
-  } = useOrders({ orderBy: { createdAt: 'desc' } });
+  } = useOrders({
+    ...(search && {
+      filters: {
+        OR: [
+          { id: { mode: 'insensitive', contains: search } },
+          { code: { mode: 'insensitive', contains: search } },
+          { supplier: { name: { mode: 'insensitive', contains: search } } },
+        ],
+      },
+    }),
+    orderBy: { createdAt: 'desc' },
+  });
 
   const { isAddOrderDialogOpen, toggleAddOrderDialog } = useOrdersDataGrid();
 
@@ -34,14 +49,28 @@ const OrdersDataGrid: React.FC = () => {
       {isAddOrderDialogOpen && <AddOrderDialog />}
 
       <GenericOrdersDataGrid
-        title={`Ordenes (${orders.length})`}
+        title={`Ordenes (${count})`}
         orders={orders}
         onAddButtonClick={ability.can('create', 'order') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'order') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
           error: serviceError,
+
           quickFilterProps: { placeholder: 'Buscar...' },
+          filterMode: 'server',
+          onFilterModelChange: ({ quickFilterValues }) =>
+            setSearch((prev) =>
+              quickFilterValues ? quickFilterValues.join(' ') : prev
+            ),
+
+          paginationMode: 'server',
+          rowCount: count,
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
+          onPageSizeChange: (pageSize) =>
+            setPagination((prev) => ({ ...prev, pageSize })),
         }}
       />
     </>

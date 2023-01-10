@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../../../common';
 import { Config, ApiEndpoints } from '../../../../config';
 
 import { Event } from '../../types';
@@ -19,6 +25,7 @@ export interface CountEventGuestsReturn {
 
 export interface FindAllEventGuestsReturn {
   guests: EventGuest[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -50,8 +57,8 @@ export class EventsGuestsService {
   ): Promise<CreateEventGuestReturn> {
     try {
       const response = await this.config.axios.post<
-        EventGuest,
-        AxiosResponse<EventGuest, CreateEventGuestDto>,
+        SingleEntityResponse<EventGuest>,
+        AxiosResponse<SingleEntityResponse<EventGuest>, CreateEventGuestDto>,
         CreateEventGuestDto
       >(`${ApiEndpoints.EVENTS}/${this.getUUID(event)}/guests`, data);
 
@@ -87,17 +94,19 @@ export class EventsGuestsService {
 
   async findAll(event: UUID | Event): Promise<FindAllEventGuestsReturn> {
     try {
-      const response = await this.config.axios.get<EventGuest[]>(
-        `${ApiEndpoints.EVENTS}/${this.getUUID(event)}/guests`
-      );
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<EventGuest>
+      >(`${ApiEndpoints.EVENTS}/${this.getUUID(event)}/guests`);
 
       return {
-        guests: response.data,
+        guests: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         guests: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -105,9 +114,9 @@ export class EventsGuestsService {
 
   async findOneByUUID(id: UUID): Promise<FindOneEventGuestByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<EventGuest | null>(
-        `${ApiEndpoints.EVENTS}/guests/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<EventGuest | null>
+      >(`${ApiEndpoints.EVENTS}/guests/${id}`);
 
       return {
         guest: response.data || null,
@@ -127,8 +136,8 @@ export class EventsGuestsService {
   ): Promise<UpdateEventGuestReturn> {
     try {
       const response = await this.config.axios.patch<
-        EventGuest,
-        AxiosResponse<EventGuest, UpdateEventGuestDto>,
+        SingleEntityResponse<EventGuest>,
+        AxiosResponse<SingleEntityResponse<EventGuest>, UpdateEventGuestDto>,
         UpdateEventGuestDto
       >(`${ApiEndpoints.EVENTS}/guests/${id}`, data);
 
@@ -146,9 +155,9 @@ export class EventsGuestsService {
 
   async delete(id: UUID): Promise<DeleteEventGuestReturn> {
     try {
-      const response = await this.config.axios.delete<EventGuest>(
-        `${ApiEndpoints.EVENTS}/guests/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<EventGuest>
+      >(`${ApiEndpoints.EVENTS}/guests/${id}`);
 
       return {
         guest: response.data,

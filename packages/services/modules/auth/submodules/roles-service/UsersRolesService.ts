@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../../../common';
 import { Config, ApiEndpoints } from '../../../../config';
 
 import { UsersRolesPermissionsService } from '../permissions-service';
@@ -25,6 +31,7 @@ export interface CountUsersRolesReturn {
 
 export interface FindManyUsersRolesReturn {
   roles: UserRole[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -53,8 +60,8 @@ export class UsersRolesService {
   async create(data: CreateUserRoleDto): Promise<CreateUserRoleReturn> {
     try {
       const response = await this.config.axios.post<
-        UserRole,
-        AxiosResponse<UserRole, CreateUserRoleDto>,
+        SingleEntityResponse<UserRole>,
+        AxiosResponse<SingleEntityResponse<UserRole>, CreateUserRoleDto>,
         CreateUserRoleDto
       >(ApiEndpoints.USERS_ROLES, data);
 
@@ -95,18 +102,19 @@ export class UsersRolesService {
     params?: FindManyUsersRolesParamsDto
   ): Promise<FindManyUsersRolesReturn> {
     try {
-      const response = await this.config.axios.get<UserRole[]>(
-        ApiEndpoints.USERS_ROLES,
-        { params }
-      );
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<UserRole>
+      >(ApiEndpoints.USERS_ROLES, { params });
 
       return {
-        roles: response.data,
+        roles: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         roles: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -114,9 +122,9 @@ export class UsersRolesService {
 
   async findOneByUUID(id: UUID): Promise<FindOneUserRoleByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<UserRole | null>(
-        `${ApiEndpoints.USERS_ROLES}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<UserRole | null>
+      >(`${ApiEndpoints.USERS_ROLES}/${id}`);
 
       return {
         role: response.data || null,
@@ -136,8 +144,8 @@ export class UsersRolesService {
   ): Promise<UpdateUserRoleReturn> {
     try {
       const response = await this.config.axios.patch<
-        UserRole,
-        AxiosResponse<UserRole, UpdateUserRoleDto>,
+        SingleEntityResponse<UserRole>,
+        AxiosResponse<SingleEntityResponse<UserRole>, UpdateUserRoleDto>,
         UpdateUserRoleDto
       >(`${ApiEndpoints.USERS_ROLES}/${id}`, data);
 
@@ -155,9 +163,9 @@ export class UsersRolesService {
 
   async delete(id: UUID): Promise<DeleteUserRoleReturn> {
     try {
-      const response = await this.config.axios.delete<UserRole>(
-        `${ApiEndpoints.USERS_ROLES}/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<UserRole>
+      >(`${ApiEndpoints.USERS_ROLES}/${id}`);
 
       return {
         role: response.data,

@@ -26,13 +26,12 @@ export const UserLogsDataGrid: React.FC<UserLogsDataGridProps> = ({ user }) => {
       user: { id: user.id },
       ...(search && {
         OR: [
+          { id: { mode: 'insensitive', contains: search } },
           { context: { mode: 'insensitive', contains: search } },
           { action: { mode: 'insensitive', contains: search } },
-          { user: { username: { mode: 'insensitive', contains: search } } },
         ],
       }),
     },
-
     pagination: {
       skip: pagination.page * pagination.pageSize,
       take: pagination.pageSize,
@@ -50,6 +49,7 @@ export const UserLogsDataGrid: React.FC<UserLogsDataGridProps> = ({ user }) => {
       logs={logs}
       onRefreshButtonClick={ability.can('read', 'log') && handleRefetch}
       enhancedDataGridProps={{
+        density: 'compact',
         loading: loading || validating,
         error: serviceError,
 

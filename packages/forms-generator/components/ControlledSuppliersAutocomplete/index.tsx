@@ -59,6 +59,7 @@ export const ControlledSuppliersAutocomplete: React.FC<
   } = useSuppliers({
     filters: {
       OR: [
+        { id: { mode: 'insensitive', contains: input } },
         { name: { mode: 'insensitive', contains: input } },
         { description: { mode: 'insensitive', contains: input } },
       ],

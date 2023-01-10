@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../../../common';
 import { Config, ApiEndpoints } from '../../../../config';
 
 import {
@@ -23,6 +29,7 @@ export interface CountSuppliesServiceReturn {
 
 export interface FindManySuppliesServiceReturn {
   supplies: Supply[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -47,8 +54,8 @@ export class SuppliesService {
   async create(data: CreateSupplyDto): Promise<CreateSupplyReturn> {
     try {
       const response = await this.config.axios.post<
-        Supply,
-        AxiosResponse<Supply, CreateSupplyDto>,
+        SingleEntityResponse<Supply>,
+        AxiosResponse<SingleEntityResponse<Supply>, CreateSupplyDto>,
         CreateSupplyDto
       >(ApiEndpoints.SUPPLIES, data);
 
@@ -89,18 +96,19 @@ export class SuppliesService {
     params?: FindManySuppliesParamsDto
   ): Promise<FindManySuppliesServiceReturn> {
     try {
-      const response = await this.config.axios.get<Supply[]>(
-        ApiEndpoints.SUPPLIES,
-        { params }
-      );
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<Supply>
+      >(ApiEndpoints.SUPPLIES, { params });
 
       return {
-        supplies: response.data,
+        supplies: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         supplies: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -108,9 +116,9 @@ export class SuppliesService {
 
   async findOneByUUID(id: UUID): Promise<FindOneSupplyByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<Supply | null>(
-        `${ApiEndpoints.SUPPLIES}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<Supply | null>
+      >(`${ApiEndpoints.SUPPLIES}/${id}`);
 
       return {
         supply: response.data || null,
@@ -127,8 +135,8 @@ export class SuppliesService {
   async update(id: UUID, data: UpdateSupplyDto): Promise<UpdateSupplyReturn> {
     try {
       const response = await this.config.axios.patch<
-        Supply,
-        AxiosResponse<Supply, UpdateSupplyDto>,
+        SingleEntityResponse<Supply>,
+        AxiosResponse<SingleEntityResponse<Supply>, UpdateSupplyDto>,
         UpdateSupplyDto
       >(`${ApiEndpoints.SUPPLIES}/${id}`, data);
 
@@ -146,9 +154,9 @@ export class SuppliesService {
 
   async delete(id: UUID): Promise<DeleteSupplyReturn> {
     try {
-      const response = await this.config.axios.delete<Supply>(
-        `${ApiEndpoints.SUPPLIES}/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<Supply>
+      >(`${ApiEndpoints.SUPPLIES}/${id}`);
 
       return {
         supply: response.data,

@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../../../common';
 import { Config, ApiEndpoints } from '../../../../config';
 
 import {
@@ -25,6 +31,7 @@ export interface CountOrdersReturn {
 
 export interface FindManyOrdersReturn {
   orders: Order[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -53,8 +60,8 @@ export class OrdersService {
   async create(data: CreateOrderDto): Promise<CreateOrderReturn> {
     try {
       const response = await this.config.axios.post<
-        Order,
-        AxiosResponse<Order, CreateOrderDto>,
+        SingleEntityResponse<Order>,
+        AxiosResponse<SingleEntityResponse<Order>, CreateOrderDto>,
         CreateOrderDto
       >(ApiEndpoints.ORDERS, data);
 
@@ -93,18 +100,19 @@ export class OrdersService {
     params?: FindManyOrdersParamsDto
   ): Promise<FindManyOrdersReturn> {
     try {
-      const response = await this.config.axios.get<Order[]>(
-        ApiEndpoints.ORDERS,
-        { params }
-      );
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<Order>
+      >(ApiEndpoints.ORDERS, { params });
 
       return {
-        orders: response.data,
+        orders: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         orders: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -112,9 +120,9 @@ export class OrdersService {
 
   async findOneByUUID(id: UUID): Promise<FindOneOrderByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<Order | null>(
-        `${ApiEndpoints.ORDERS}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<Order | null>
+      >(`${ApiEndpoints.ORDERS}/${id}`);
 
       return {
         order: response.data || null,
@@ -131,8 +139,8 @@ export class OrdersService {
   async update(id: UUID, data: UpdateOrderDto): Promise<UpdateOrderReturn> {
     try {
       const response = await this.config.axios.patch<
-        Order,
-        AxiosResponse<Order, UpdateOrderDto>,
+        SingleEntityResponse<Order>,
+        AxiosResponse<SingleEntityResponse<Order>, UpdateOrderDto>,
         UpdateOrderDto
       >(`${ApiEndpoints.ORDERS}/${id}`, data);
 
@@ -150,9 +158,9 @@ export class OrdersService {
 
   async delete(id: UUID): Promise<DeleteOrderReturn> {
     try {
-      const response = await this.config.axios.delete<Order>(
-        `${ApiEndpoints.ORDERS}/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<Order>
+      >(`${ApiEndpoints.ORDERS}/${id}`);
 
       return {
         order: response.data,

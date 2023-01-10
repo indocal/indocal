@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import { useAbility, useUsers, UserGroup } from '@indocal/services';
 
@@ -14,14 +14,27 @@ export interface GroupUsersDataGridProps {
 const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
   const ability = useAbility();
 
+  const [search, setSearch] = useState('');
+  const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });
+
   const {
     loading,
     validating,
     users,
+    count,
     error: serviceError,
     refetch,
   } = useUsers({
-    filters: { groups: { some: { id: group.id } } },
+    filters: {
+      groups: { some: { id: group.id } },
+      ...(search && {
+        OR: [
+          { id: { mode: 'insensitive', contains: search } },
+          { username: { mode: 'insensitive', contains: search } },
+          { email: { mode: 'insensitive', contains: search } },
+        ],
+      }),
+    },
     orderBy: { username: 'asc' },
   });
 
@@ -42,7 +55,7 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
       {isManageGroupUsersDialogOpen && <ManageGroupUsersDialog group={group} />}
 
       <GenericUsersDataGrid
-        title={`Miembros del grupo (${users.length})`}
+        title={`Miembros del grupo (${count})`}
         users={users}
         onAddButtonClick={
           ability.can('update', 'userGroup') &&
@@ -54,7 +67,21 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
           density: 'compact',
           loading: loading || validating,
           error: serviceError,
+
           quickFilterProps: { placeholder: 'Buscar...' },
+          filterMode: 'server',
+          onFilterModelChange: ({ quickFilterValues }) =>
+            setSearch((prev) =>
+              quickFilterValues ? quickFilterValues.join(' ') : prev
+            ),
+
+          paginationMode: 'server',
+          rowCount: count,
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
+          onPageSizeChange: (pageSize) =>
+            setPagination((prev) => ({ ...prev, pageSize })),
         }}
       />
     </>

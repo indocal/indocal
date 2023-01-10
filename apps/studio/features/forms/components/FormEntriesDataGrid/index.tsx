@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import { useAbility, useFormsEntries, Form } from '@indocal/services';
 
@@ -14,14 +14,38 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
 }) => {
   const ability = useAbility();
 
+  const [search, setSearch] = useState('');
+  const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });
+
   const {
     loading,
     validating,
     entries,
+    count,
     error: serviceError,
     refetch,
   } = useFormsEntries({
-    filters: { form: { id: form.id } },
+    filters: {
+      form: { id: form.id },
+      ...(search && {
+        OR: [
+          { id: { mode: 'insensitive', contains: search } },
+          { answeredBy: { email: { mode: 'insensitive', contains: search } } },
+          {
+            answeredBy: {
+              username: {
+                mode: 'insensitive',
+                contains: search,
+              },
+            },
+          },
+        ],
+      }),
+    },
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -35,7 +59,7 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
 
   return (
     <GenericFormsEntriesDataGrid
-      title={`Entradas (${entries.length})`}
+      title={`Entradas (${count})`}
       entries={entries}
       onAddButtonClick={ability.can('create', 'formEntry') && handleAdd}
       onRefreshButtonClick={ability.can('read', 'formEntry') && handleRefetch}
@@ -43,7 +67,21 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
         density: 'compact',
         loading: loading || validating,
         error: serviceError,
+
         quickFilterProps: { placeholder: 'Buscar...' },
+        filterMode: 'server',
+        onFilterModelChange: ({ quickFilterValues }) =>
+          setSearch((prev) =>
+            quickFilterValues ? quickFilterValues.join(' ') : prev
+          ),
+
+        paginationMode: 'server',
+        rowCount: count,
+        page: pagination.page,
+        pageSize: pagination.pageSize,
+        onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
+        onPageSizeChange: (pageSize) =>
+          setPagination((prev) => ({ ...prev, pageSize })),
       }}
     />
   );

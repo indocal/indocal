@@ -59,6 +59,7 @@ export const ControlledUsersAutocomplete: React.FC<
   } = useUsers({
     filters: {
       OR: [
+        { id: { mode: 'insensitive', contains: input } },
         { username: { mode: 'insensitive', contains: input } },
         { email: { mode: 'insensitive', contains: input } },
       ],

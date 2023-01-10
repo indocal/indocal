@@ -59,6 +59,7 @@ export const ControlledSuppliesAutocomplete: React.FC<
   } = useSupplies({
     filters: {
       OR: [
+        { id: { mode: 'insensitive', contains: input } },
         { code: { mode: 'insensitive', contains: input } },
         { name: { mode: 'insensitive', contains: input } },
         { description: { mode: 'insensitive', contains: input } },

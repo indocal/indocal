@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../../../common';
 import { Config, ApiEndpoints } from '../../../../config';
 
 import {
@@ -23,6 +29,7 @@ export interface CountUsersReturn {
 
 export interface FindManyUsersReturn {
   users: User[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -47,8 +54,8 @@ export class UsersService {
   async create(data: CreateUserDto): Promise<CreateUserReturn> {
     try {
       const response = await this.config.axios.post<
-        User,
-        AxiosResponse<User, CreateUserDto>,
+        SingleEntityResponse<User>,
+        AxiosResponse<SingleEntityResponse<User>, CreateUserDto>,
         CreateUserDto
       >(ApiEndpoints.USERS, data);
 
@@ -87,17 +94,21 @@ export class UsersService {
     params?: FindManyUsersParamsDto
   ): Promise<FindManyUsersReturn> {
     try {
-      const response = await this.config.axios.get<User[]>(ApiEndpoints.USERS, {
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<User>
+      >(ApiEndpoints.USERS, {
         params,
       });
 
       return {
-        users: response.data,
+        users: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         users: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -105,9 +116,9 @@ export class UsersService {
 
   async findOneByUUID(id: UUID): Promise<FindOneUserByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<User | null>(
-        `${ApiEndpoints.USERS}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<User | null>
+      >(`${ApiEndpoints.USERS}/${id}`);
 
       return {
         user: response.data || null,
@@ -124,8 +135,8 @@ export class UsersService {
   async update(id: UUID, data: UpdateUserDto): Promise<UpdateUserReturn> {
     try {
       const response = await this.config.axios.patch<
-        User,
-        AxiosResponse<User, UpdateUserDto>,
+        SingleEntityResponse<User>,
+        AxiosResponse<SingleEntityResponse<User>, UpdateUserDto>,
         UpdateUserDto
       >(`${ApiEndpoints.USERS}/${id}`, data);
 
@@ -143,9 +154,9 @@ export class UsersService {
 
   async delete(id: UUID): Promise<DeleteUserReturn> {
     try {
-      const response = await this.config.axios.delete<User>(
-        `${ApiEndpoints.USERS}/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<User>
+      >(`${ApiEndpoints.USERS}/${id}`);
 
       return {
         user: response.data,

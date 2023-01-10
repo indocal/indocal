@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import { useAbility, useForms, UserGroup } from '@indocal/services';
 
@@ -14,14 +14,27 @@ export interface GroupFormsDataGridProps {
 const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
   const ability = useAbility();
 
+  const [search, setSearch] = useState('');
+  const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });
+
   const {
     loading,
     validating,
     forms,
+    count,
     error: serviceError,
     refetch,
   } = useForms({
-    filters: { group: { id: group.id } },
+    filters: {
+      group: { id: group.id },
+      ...(search && {
+        OR: [
+          { id: { mode: 'insensitive', contains: search } },
+          { title: { mode: 'insensitive', contains: search } },
+          { description: { mode: 'insensitive', contains: search } },
+        ],
+      }),
+    },
     orderBy: { title: 'asc' },
   });
 
@@ -42,7 +55,7 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
       {isAddGroupFormDialogOpen && <AddGroupFormDialog group={group} />}
 
       <GenericFormsDataGrid
-        title={`Formularios del grupo (${forms.length})`}
+        title={`Formularios del grupo (${count})`}
         forms={forms}
         onAddButtonClick={ability.can('create', 'form') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'form') && handleRefetch}
@@ -50,7 +63,21 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
           density: 'compact',
           loading: loading || validating,
           error: serviceError,
+
           quickFilterProps: { placeholder: 'Buscar...' },
+          filterMode: 'server',
+          onFilterModelChange: ({ quickFilterValues }) =>
+            setSearch((prev) =>
+              quickFilterValues ? quickFilterValues.join(' ') : prev
+            ),
+
+          paginationMode: 'server',
+          rowCount: count,
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
+          onPageSizeChange: (pageSize) =>
+            setPagination((prev) => ({ ...prev, pageSize })),
         }}
       />
     </>

@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios';
 
-import { ServiceError, createServiceError, UUID } from '../../common';
+import {
+  ServiceError,
+  createServiceError,
+  UUID,
+  SingleEntityResponse,
+  MultipleEntitiesResponse,
+} from '../../common';
 import { Config, ApiEndpoints } from '../../config';
 
 import {
@@ -25,6 +31,7 @@ export interface CountEventsReturn {
 
 export interface FindManyEventsReturn {
   events: Event[];
+  count: number;
   error: ServiceError | null;
 }
 
@@ -53,8 +60,8 @@ export class EventsService {
   async create(data: CreateEventDto): Promise<CreateEventReturn> {
     try {
       const response = await this.config.axios.post<
-        Event,
-        AxiosResponse<Event, CreateEventDto>,
+        SingleEntityResponse<Event>,
+        AxiosResponse<SingleEntityResponse<Event>, CreateEventDto>,
         CreateEventDto
       >(ApiEndpoints.EVENTS, data);
 
@@ -93,18 +100,19 @@ export class EventsService {
     params?: FindManyEventsParamsDto
   ): Promise<FindManyEventsReturn> {
     try {
-      const response = await this.config.axios.get<Event[]>(
-        ApiEndpoints.EVENTS,
-        { params }
-      );
+      const response = await this.config.axios.get<
+        MultipleEntitiesResponse<Event>
+      >(ApiEndpoints.EVENTS, { params });
 
       return {
-        events: response.data,
+        events: response.data.entities,
+        count: response.data.count,
         error: null,
       };
     } catch (error) {
       return {
         events: [],
+        count: 0,
         error: createServiceError(error),
       };
     }
@@ -112,9 +120,9 @@ export class EventsService {
 
   async findOneByUUID(id: UUID): Promise<FindOneEventByUUIDReturn> {
     try {
-      const response = await this.config.axios.get<Event | null>(
-        `${ApiEndpoints.EVENTS}/${id}`
-      );
+      const response = await this.config.axios.get<
+        SingleEntityResponse<Event | null>
+      >(`${ApiEndpoints.EVENTS}/${id}`);
 
       return {
         event: response.data || null,
@@ -131,8 +139,8 @@ export class EventsService {
   async update(id: UUID, data: UpdateEventDto): Promise<UpdateEventReturn> {
     try {
       const response = await this.config.axios.patch<
-        Event,
-        AxiosResponse<Event, UpdateEventDto>,
+        SingleEntityResponse<Event>,
+        AxiosResponse<SingleEntityResponse<Event>, UpdateEventDto>,
         UpdateEventDto
       >(`${ApiEndpoints.EVENTS}/${id}`, data);
 
@@ -150,9 +158,9 @@ export class EventsService {
 
   async delete(id: UUID): Promise<DeleteEventReturn> {
     try {
-      const response = await this.config.axios.delete<Event>(
-        `${ApiEndpoints.EVENTS}/${id}`
-      );
+      const response = await this.config.axios.delete<
+        SingleEntityResponse<Event>
+      >(`${ApiEndpoints.EVENTS}/${id}`);
 
       return {
         event: response.data,

@@ -12,7 +12,6 @@ import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
-import qs from 'qs';
 
 import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
 import { UserGroup, UserStatus, ApiEndpoints } from '@indocal/services';
@@ -97,15 +96,7 @@ export const ManageGroupUsersDialog: React.FC<ManageGroupUsersDialogProps> = ({
           { variant: 'error' }
         );
       } else {
-        const query = qs.stringify({
-          filters: { groups: { some: { id: group.id } } },
-          orderBy: { username: 'asc' },
-        });
-
-        await Promise.all([
-          mutate(`${ApiEndpoints.USERS_GROUPS}/${group.id}`, updated),
-          mutate(`${ApiEndpoints.USERS}?${query}`),
-        ]);
+        await mutate(`${ApiEndpoints.USERS_GROUPS}/${group.id}`, updated);
 
         enqueueSnackbar('Miembros actualizados exitosamente', {
           variant: 'success',

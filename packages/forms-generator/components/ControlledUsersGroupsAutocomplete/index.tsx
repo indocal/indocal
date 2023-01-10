@@ -59,6 +59,7 @@ export const ControlledUsersGroupsAutocomplete: React.FC<
   } = useUsersGroups({
     filters: {
       OR: [
+        { id: { mode: 'insensitive', contains: input } },
         { name: { mode: 'insensitive', contains: input } },
         { description: { mode: 'insensitive', contains: input } },
       ],
