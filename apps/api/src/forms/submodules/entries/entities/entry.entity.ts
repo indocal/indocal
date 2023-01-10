@@ -9,6 +9,7 @@ type User = {
   id: UUID;
   username: string;
   email: string;
+  name: string;
   password: string;
   status: UserStatus;
   createdAt: string;

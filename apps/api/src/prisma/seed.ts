@@ -4,10 +4,19 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  const { ROOT_USER_USERNAME, ROOT_USER_EMAIL, ROOT_USER_PASSWORD } =
-    process.env;
+  const {
+    ROOT_USER_USERNAME,
+    ROOT_USER_EMAIL,
+    ROOT_USER_NAME,
+    ROOT_USER_PASSWORD,
+  } = process.env;
 
-  if (!ROOT_USER_USERNAME || !ROOT_USER_EMAIL || !ROOT_USER_PASSWORD)
+  if (
+    !ROOT_USER_USERNAME ||
+    !ROOT_USER_EMAIL ||
+    !ROOT_USER_NAME ||
+    !ROOT_USER_PASSWORD
+  )
     throw new Error('Missing ROOT_USER env vars');
 
   const models = Object.keys(prisma).filter((key) => !key.startsWith('_'));
@@ -15,10 +24,12 @@ async function main() {
   const salt = await bcrypt.genSalt();
   const hash = await bcrypt.hash(ROOT_USER_PASSWORD, salt);
 
+  // TODO: refactor seed, role-permission-panel and CASL
   await prisma.user.create({
     data: {
       username: ROOT_USER_USERNAME,
       email: ROOT_USER_EMAIL,
+      name: ROOT_USER_NAME,
       password: hash,
       roles: {
         create: {

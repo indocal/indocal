@@ -11,6 +11,7 @@ export class UserEntity implements Entity, User {
   id: UUID;
   username: string;
   email: string;
+  name: string;
 
   @Exclude()
   password: string;

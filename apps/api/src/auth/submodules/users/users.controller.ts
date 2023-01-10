@@ -52,6 +52,7 @@ export class UsersController {
       data: {
         username: createUserDto.username,
         email: createUserDto.email,
+        name: createUserDto.name,
         password: hash,
       },
       include: { roles: true, groups: true },
@@ -140,6 +141,7 @@ export class UsersController {
       data: {
         username: updateUserDto.username,
         email: updateUserDto.email,
+        name: updateUserDto.name,
         status: updateUserDto.status,
 
         ...(updateUserDto.roles && {

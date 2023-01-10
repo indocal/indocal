@@ -11,6 +11,10 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
+  @TrimParam()
+  name: string;
+
+  @IsString()
   password: string;
 }
 

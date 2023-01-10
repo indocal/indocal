@@ -12,6 +12,10 @@ class UpdateUserDtoSchema {
   @IsEmail()
   email: string;
 
+  @IsString()
+  @TrimParam()
+  name: string;
+
   @IsEnum(UserStatus)
   status: UserStatus;
 

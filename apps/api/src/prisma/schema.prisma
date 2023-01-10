@@ -33,6 +33,7 @@ model User {
   id       String @id @default(uuid())
   username String @unique
   email    String @unique
+  name     String
   password String
 
   status UserStatus @default(ENABLED)
