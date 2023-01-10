@@ -1,7 +1,12 @@
 import { Container, Grid } from '@mui/material';
 
 import { Page, Stat } from '@indocal/ui';
-import { useUsersCount, useFormsCount } from '@indocal/services';
+import {
+  useUsersCount,
+  useUsersRolesCount,
+  useUsersGroupsCount,
+  useFormsCount,
+} from '@indocal/services';
 
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -12,6 +17,18 @@ const DashboardPage: EnhancedNextPage = () => {
     validating: usersCountValidating,
     count: usersCount,
   } = useUsersCount();
+
+  const {
+    loading: rolesCountLoading,
+    validating: rolesCountValidating,
+    count: rolesCount,
+  } = useUsersRolesCount();
+
+  const {
+    loading: groupsCountLoading,
+    validating: groupsCountValidating,
+    count: groupsCount,
+  } = useUsersGroupsCount();
 
   const {
     loading: formsCountLoading,
@@ -30,6 +47,26 @@ const DashboardPage: EnhancedNextPage = () => {
               value={usersCount ?? 'N/A'}
               loading={usersCountLoading}
               validating={usersCountValidating}
+            />
+          </Grid>
+
+          <Grid item>
+            <Stat
+              title="Roles"
+              description="Roles definidos"
+              value={rolesCount ?? 'N/A'}
+              loading={rolesCountLoading}
+              validating={rolesCountValidating}
+            />
+          </Grid>
+
+          <Grid item>
+            <Stat
+              title="Grupos"
+              description="Grupos definidos"
+              value={groupsCount ?? 'N/A'}
+              loading={groupsCountLoading}
+              validating={groupsCountValidating}
             />
           </Grid>
 

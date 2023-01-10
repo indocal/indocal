@@ -1,6 +1,14 @@
 import { useMemo, useCallback } from 'react';
 import NextLink from 'next/link';
-import { Box, Paper, Stack, Typography, IconButton } from '@mui/material';
+import {
+  Box,
+  Paper,
+  Stack,
+  Typography,
+  IconButton,
+  Chip,
+  ChipProps,
+} from '@mui/material';
 import {
   Refresh as RefreshIcon,
   AddCircle as AddIcon,
@@ -11,7 +19,14 @@ import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
-import { Can, getShortUUID, UUID, Order } from '@indocal/services';
+import {
+  Can,
+  getShortUUID,
+  translateOrderStatus,
+  UUID,
+  Order,
+  OrderStatus,
+} from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { Pages } from '@/config';
@@ -62,6 +77,16 @@ export const GenericOrdersDataGrid: React.FC<GenericOrdersDataGridProps> = ({
       }
     },
     [onRefreshButtonClick, enqueueSnackbar]
+  );
+
+  const statusColors: Record<OrderStatus, ChipProps['color']> = useMemo(
+    () => ({
+      PENDING: 'error',
+      PARTIAL: 'warning',
+      COMPLETED: 'success',
+      CANCELLED: 'error',
+    }),
+    []
   );
 
   const columns = useMemo<GridColumns>(
@@ -124,6 +149,21 @@ export const GenericOrdersDataGrid: React.FC<GenericOrdersDataGridProps> = ({
         valueGetter: ({ value }) => value.name,
       },
       {
+        field: 'status',
+        headerName: 'Estado',
+        headerAlign: 'center',
+        align: 'center',
+        minWidth: 150,
+        valueGetter: ({ value }) => translateOrderStatus(value),
+        renderCell: ({ value, row }) => (
+          <Chip
+            size="small"
+            label={value}
+            color={statusColors[row.status as OrderStatus] ?? 'default'}
+          />
+        ),
+      },
+      {
         field: 'createdAt',
         headerName: 'Fecha de creación',
         headerAlign: 'right',
@@ -132,7 +172,7 @@ export const GenericOrdersDataGrid: React.FC<GenericOrdersDataGridProps> = ({
         valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
       },
     ],
-    [handleDelete]
+    [statusColors, handleDelete]
   );
 
   const rows = useMemo<GridRowsProp>(
@@ -141,6 +181,7 @@ export const GenericOrdersDataGrid: React.FC<GenericOrdersDataGridProps> = ({
         id: order.id,
         code: order.code,
         supplier: order.supplier,
+        status: order.status,
         createdAt: order.createdAt,
       })),
     [orders]
