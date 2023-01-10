@@ -62,6 +62,7 @@ export const ControlledUsersAutocomplete: React.FC<
         { id: { mode: 'insensitive', contains: input } },
         { username: { mode: 'insensitive', contains: input } },
         { email: { mode: 'insensitive', contains: input } },
+        { name: { mode: 'insensitive', contains: input } },
       ],
     },
     orderBy: { username: 'asc' },
@@ -86,7 +87,7 @@ export const ControlledUsersAutocomplete: React.FC<
           onChange={(_, value) => onChange(value)}
           onInputChange={(_, value) => setInput(value)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
-          getOptionLabel={(option) => option.username}
+          getOptionLabel={(option) => `${option.name} (${option.username})`}
           renderInput={(params) => (
             <TextField
               {...params}

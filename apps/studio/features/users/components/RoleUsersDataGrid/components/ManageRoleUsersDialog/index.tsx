@@ -30,6 +30,7 @@ const schema = zod.object(
           id: zod.string().uuid(),
           username: zod.string(),
           email: zod.string().email(),
+          name: zod.string(),
           status: zod.enum<string, [UserStatus, ...UserStatus[]]>([
             'ENABLED',
             'DISABLED',

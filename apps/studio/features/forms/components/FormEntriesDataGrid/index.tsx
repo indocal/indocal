@@ -31,6 +31,7 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
         OR: [
           { id: { mode: 'insensitive', contains: search } },
           { answeredBy: { email: { mode: 'insensitive', contains: search } } },
+          { answeredBy: { name: { mode: 'insensitive', contains: search } } },
           {
             answeredBy: {
               username: {

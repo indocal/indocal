@@ -48,6 +48,15 @@ const schema = zod
         .email('Debe ingresar un correo electrónico válido')
         .trim(),
 
+      name: zod
+        .string({
+          description: 'Nombre del usuario',
+          required_error: 'Debe ingresar el nombre del usuario',
+          invalid_type_error: 'Formato no válido',
+        })
+        .min(1, 'Debe ingresar el nombre del usuario')
+        .trim(),
+
       status: zod
         .enum<string, [UserStatus, ...UserStatus[]]>(['ENABLED', 'DISABLED'], {
           description: 'Estado del usuario',
@@ -121,6 +130,7 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
     defaultValues: {
       username: user.username,
       email: user.email,
+      name: user.name,
       status: user.status,
       roles: user.roles,
       groups: user.groups,
@@ -140,6 +150,7 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
         {
           username: formData.username,
           email: formData.email,
+          name: formData.name,
           status: formData.status,
 
           ...(formData.roles && {
@@ -214,6 +225,16 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
             inputProps={register('email')}
             error={Boolean(errors.email)}
             helperText={errors.email?.message}
+          />
+
+          <TextField
+            required
+            autoComplete="off"
+            label="Nombre"
+            disabled={isSubmitting}
+            inputProps={register('name')}
+            error={Boolean(errors.name)}
+            helperText={errors.name?.message}
           />
 
           <ControlledUserStatusSelect

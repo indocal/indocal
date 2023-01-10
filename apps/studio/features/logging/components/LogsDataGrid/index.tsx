@@ -26,6 +26,7 @@ export const LogsDataGrid: React.FC = () => {
           { action: { mode: 'insensitive', contains: search } },
           { user: { username: { mode: 'insensitive', contains: search } } },
           { user: { email: { mode: 'insensitive', contains: search } } },
+          { user: { name: { mode: 'insensitive', contains: search } } },
         ],
       },
     }),

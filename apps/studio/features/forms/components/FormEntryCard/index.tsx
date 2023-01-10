@@ -103,7 +103,11 @@ export const FormEntryCard: React.FC<FormEntryCardProps> = ({
               <ListItem disablePadding>
                 <ListItemText
                   primary="Respondido por"
-                  secondary={entry.answeredBy?.username || 'Anónimo'}
+                  secondary={
+                    entry.answeredBy
+                      ? `${entry.answeredBy.name} (${entry.answeredBy.username})`
+                      : 'Anónimo'
+                  }
                 />
               </ListItem>
 

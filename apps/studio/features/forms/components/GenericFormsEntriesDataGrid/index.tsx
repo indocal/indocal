@@ -123,8 +123,9 @@ export const GenericFormsEntriesDataGrid: React.FC<
         headerName: 'Usuario',
         headerAlign: 'center',
         align: 'center',
-        minWidth: 225,
-        valueGetter: ({ value }) => (value ? value.username : 'Anónimo'),
+        minWidth: 300,
+        valueGetter: ({ value }) =>
+          value ? `${value.name} (${value.username})` : 'Anónimo',
       },
       {
         field: 'createdAt',

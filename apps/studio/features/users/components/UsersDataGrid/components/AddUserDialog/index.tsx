@@ -43,6 +43,15 @@ const schema = zod.object(
       .email('Debe ingresar un correo electrónico válido')
       .trim(),
 
+    name: zod
+      .string({
+        description: 'Nombre del usuario',
+        required_error: 'Debe ingresar el nombre del usuario',
+        invalid_type_error: 'Formato no válido',
+      })
+      .min(1, 'Debe ingresar el nombre del usuario')
+      .trim(),
+
     password: zod
       .string({
         description: 'Contraseña del usuario',
@@ -79,6 +88,7 @@ export const AddUserDialog: React.FC = () => {
       const { user, error } = await indocal.auth.users.create({
         username: formData.username,
         email: formData.email,
+        name: formData.name,
         password: formData.password,
       });
 
@@ -144,6 +154,16 @@ export const AddUserDialog: React.FC = () => {
             inputProps={register('email')}
             error={Boolean(errors.email)}
             helperText={errors.email?.message}
+          />
+
+          <TextField
+            required
+            autoComplete="off"
+            label="Nombre"
+            disabled={isSubmitting}
+            inputProps={register('name')}
+            error={Boolean(errors.name)}
+            helperText={errors.name?.message}
           />
 
           <PasswordTextField

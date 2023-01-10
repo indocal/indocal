@@ -111,6 +111,10 @@ const UserCard: React.FC<UserCardProps> = ({ user: entity }) => {
               </ListItem>
 
               <ListItem disablePadding>
+                <ListItemText primary="Nombre" secondary={user.name} />
+              </ListItem>
+
+              <ListItem disablePadding>
                 <ListItemText
                   primary="Correo electrónico"
                   secondary={user.email}

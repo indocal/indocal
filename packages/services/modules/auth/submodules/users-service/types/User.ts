@@ -25,6 +25,7 @@ export type UserStatus = 'ENABLED' | 'DISABLED';
 export interface User extends Entity {
   username: string;
   email: string;
+  name: string;
   status: UserStatus;
   roles: Role[];
   groups: Group[];

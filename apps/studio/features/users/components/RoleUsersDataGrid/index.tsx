@@ -32,6 +32,7 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
           { id: { mode: 'insensitive', contains: search } },
           { username: { mode: 'insensitive', contains: search } },
           { email: { mode: 'insensitive', contains: search } },
+          { name: { mode: 'insensitive', contains: search } },
         ],
       }),
     },

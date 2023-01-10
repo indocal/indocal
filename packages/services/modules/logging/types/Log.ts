@@ -6,6 +6,7 @@ type User = {
   id: UUID;
   username: string;
   email: string;
+  name: string;
   status: UserStatus;
   createdAt: string;
   updatedAt: string;
