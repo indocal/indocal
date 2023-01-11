@@ -20,6 +20,7 @@ const itemSchema = zod.object(
         required_error: 'Debe ingresar la cantidad solicitada',
         invalid_type_error: 'Formato no válido',
       })
+      .int('Debe ingresar una cantidad válida')
       .positive('Debe ingresar una cantidad válida'),
 
     supply: zod.object(

@@ -52,7 +52,7 @@ const AddOrderDialog: React.FC = () => {
         supplier: formData.supplier.id,
         items: formData.items.map((item) => ({
           price: item.price,
-          quantity: item.quantity,
+          quantity: Math.abs(Math.trunc(item.quantity)),
           supply: item.supply.id,
         })),
       });

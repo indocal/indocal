@@ -21,6 +21,7 @@ import {
 } from '@mui/icons-material';
 import { useFormContext, useFieldArray, Control } from 'react-hook-form';
 
+import { NoData } from '@indocal/ui';
 import { ControlledSuppliesAutocomplete } from '@indocal/forms-generator';
 
 import { AddOrderDialogData } from '../../context';
@@ -53,7 +54,7 @@ export const OrderItemsTable: React.FC = () => {
             : `1px solid ${theme.palette.divider}`,
       }}
     >
-      <TableContainer sx={{ maxHeight: 300 }}>
+      <TableContainer sx={{ maxHeight: 350 }}>
         <Table stickyHeader size="small">
           {errors.items?.message && (
             <Typography
@@ -116,112 +117,120 @@ export const OrderItemsTable: React.FC = () => {
           </TableHead>
 
           <TableBody>
-            {rows.map((row, index) => (
-              <TableRow key={row.id}>
-                <TableCell
-                  align="center"
-                  sx={{
-                    width: 75,
-                    borderRight: (theme) =>
-                      errors.items?.message
-                        ? `1px dashed ${theme.palette.error.main}`
-                        : `1px dashed ${theme.palette.divider}`,
-                  }}
-                >
-                  <Stack
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={0.5}
+            {rows.length > 0 ? (
+              rows.map((row, index) => (
+                <TableRow key={row.id}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      width: 75,
+                      borderRight: (theme) =>
+                        errors.items?.message
+                          ? `1px dashed ${theme.palette.error.main}`
+                          : `1px dashed ${theme.palette.divider}`,
+                    }}
                   >
-                    <Stack direction="row" spacing={0.5}>
-                      <IconButton
-                        size="small"
-                        disabled={isSubmitting || index === 0}
-                        onClick={() => swap(index, index - 1)}
-                      >
-                        <ArrowUpIcon fontSize="small" />
-                      </IconButton>
+                    <Stack
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={0.5}
+                    >
+                      <Stack direction="row" spacing={0.5}>
+                        <IconButton
+                          size="small"
+                          disabled={isSubmitting || index === 0}
+                          onClick={() => swap(index, index - 1)}
+                        >
+                          <ArrowUpIcon fontSize="small" />
+                        </IconButton>
+
+                        <IconButton
+                          size="small"
+                          disabled={isSubmitting || rows.length - 1 === index}
+                          onClick={() => swap(index, index + 1)}
+                        >
+                          <ArrowDownIcon fontSize="small" />
+                        </IconButton>
+                      </Stack>
 
                       <IconButton
                         size="small"
-                        disabled={isSubmitting || rows.length - 1 === index}
-                        onClick={() => swap(index, index + 1)}
+                        color="error"
+                        disabled={isSubmitting}
+                        onClick={() => remove(index)}
                       >
-                        <ArrowDownIcon fontSize="small" />
+                        <RemoveIcon fontSize="small" />
                       </IconButton>
                     </Stack>
+                  </TableCell>
 
-                    <IconButton
-                      size="small"
-                      color="error"
+                  <TableCell align="center" sx={{ minWidth: 300 }}>
+                    <ControlledSuppliesAutocomplete
+                      required
+                      name={`items.${index}.supply`}
+                      control={control as unknown as Control}
                       disabled={isSubmitting}
-                      onClick={() => remove(index)}
-                    >
-                      <RemoveIcon fontSize="small" />
-                    </IconButton>
-                  </Stack>
-                </TableCell>
+                      textFieldProps={{
+                        size: 'small',
+                        placeholder: 'Recurso',
+                      }}
+                    />
+                  </TableCell>
 
-                <TableCell align="center" sx={{ minWidth: 300 }}>
-                  <ControlledSuppliesAutocomplete
-                    required
-                    name={`items.${index}.supply`}
-                    control={control as unknown as Control}
-                    disabled={isSubmitting}
-                    textFieldProps={{
-                      size: 'small',
-                      placeholder: 'Recurso',
-                    }}
-                  />
-                </TableCell>
+                  <TableCell align="center" sx={{ width: 175 }}>
+                    <TextField
+                      size="small"
+                      type="number"
+                      autoComplete="off"
+                      placeholder="#"
+                      disabled={isSubmitting}
+                      inputProps={register(`items.${index}.quantity`, {
+                        valueAsNumber: true,
+                      })}
+                      error={
+                        errors.items &&
+                        errors.items[index] &&
+                        Boolean(errors.items[index]?.quantity)
+                      }
+                      helperText={
+                        errors.items &&
+                        errors.items[index] &&
+                        errors.items[index]?.quantity?.message
+                      }
+                    />
+                  </TableCell>
 
-                <TableCell align="center" sx={{ width: 175 }}>
-                  <TextField
-                    size="small"
-                    type="number"
-                    autoComplete="off"
-                    placeholder="#"
-                    disabled={isSubmitting}
-                    inputProps={register(`items.${index}.quantity`, {
-                      valueAsNumber: true,
-                    })}
-                    error={
-                      errors.items &&
-                      errors.items[index] &&
-                      Boolean(errors.items[index]?.quantity)
-                    }
-                    helperText={
-                      errors.items &&
-                      errors.items[index] &&
-                      errors.items[index]?.quantity?.message
-                    }
-                  />
-                </TableCell>
-
-                <TableCell align="center" sx={{ width: 175 }}>
-                  <TextField
-                    size="small"
-                    type="number"
-                    autoComplete="off"
-                    placeholder="#.##"
-                    disabled={isSubmitting}
-                    inputProps={register(`items.${index}.price`, {
-                      valueAsNumber: true,
-                    })}
-                    error={
-                      errors.items &&
-                      errors.items[index] &&
-                      Boolean(errors.items[index]?.price)
-                    }
-                    helperText={
-                      errors.items &&
-                      errors.items[index] &&
-                      errors.items[index]?.price?.message
-                    }
-                  />
+                  <TableCell align="center" sx={{ width: 175 }}>
+                    <TextField
+                      size="small"
+                      type="number"
+                      autoComplete="off"
+                      placeholder="#.##"
+                      disabled={isSubmitting}
+                      inputProps={register(`items.${index}.price`, {
+                        valueAsNumber: true,
+                      })}
+                      error={
+                        errors.items &&
+                        errors.items[index] &&
+                        Boolean(errors.items[index]?.price)
+                      }
+                      helperText={
+                        errors.items &&
+                        errors.items[index] &&
+                        errors.items[index]?.price?.message
+                      }
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <NoData message="Sin artículos" />
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
 
           <TableFooter>
