@@ -48,6 +48,16 @@ export class OrdersController {
       data: {
         code: createOrderDto.code,
         supplier: { connect: { id: createOrderDto.supplier } },
+        items: {
+          createMany: {
+            skipDuplicates: true,
+            data: createOrderDto.items.map((item) => ({
+              price: item.price,
+              quantity: item.quantity,
+              supplyId: item.supply,
+            })),
+          },
+        },
       },
       include: { items: { include: { supply: true } }, supplier: true },
     });
