@@ -83,26 +83,27 @@ export const OrderItemDetails: React.FC<OrderItemDetailsProps> = ({
 
                 <TableBody>
                   {order.deliveryAt.length > 0 ? (
-                    order.deliveryAt
-                      .filter((_, index) => item.received[index])
-                      .map((deliveryAt, index) => (
-                        <TableRow key={deliveryAt}>
-                          <TableCell sx={{ border: 'none' }}>
-                            {new Date(deliveryAt).toLocaleString()}
-                          </TableCell>
+                    order.deliveryAt.map(
+                      (deliveryAt, index) =>
+                        item.received[index] > 0 && (
+                          <TableRow key={deliveryAt}>
+                            <TableCell sx={{ border: 'none' }}>
+                              {new Date(deliveryAt).toLocaleString()}
+                            </TableCell>
 
-                          <TableCell
-                            align="center"
-                            sx={{
-                              border: 'none',
-                              borderLeft: (theme) =>
-                                `1px solid ${theme.palette.divider}`,
-                            }}
-                          >
-                            {item.received[index]}
-                          </TableCell>
-                        </TableRow>
-                      ))
+                            <TableCell
+                              align="center"
+                              sx={{
+                                border: 'none',
+                                borderLeft: (theme) =>
+                                  `1px solid ${theme.palette.divider}`,
+                              }}
+                            >
+                              {item.received[index]}
+                            </TableCell>
+                          </TableRow>
+                        )
+                    )
                   ) : (
                     <TableRow>
                       <TableCell colSpan={2} sx={{ border: 'none' }}>

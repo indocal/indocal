@@ -23,7 +23,9 @@ import {
   CountOrdersParamsDto,
   CreateOrderDto,
   UpdateOrderDto,
+  ReceiveOrderItemsDto,
 } from './dto';
+import { InvalidReceivedQuantityException } from './errors';
 
 class EnhancedOrderItem extends OrderItemEntity {
   supply: SupplyEntity;
@@ -151,7 +153,8 @@ export class OrdersController {
 
       return order;
     }
-    return null;
+
+    return null; // TODO: inverted condition
   }
 
   @Patch(':id')
@@ -192,6 +195,109 @@ export class OrdersController {
       where: { id },
       include: { items: { include: { supply: true } }, supplier: true },
     });
+
+    const order = new EnhancedOrder(rest);
+
+    order.items = items.map(({ supply, ...rest }) => {
+      const item = new EnhancedOrderItem(rest);
+      item.supply = new SupplyEntity(supply);
+
+      return item;
+    });
+
+    order.supplier = new SupplierEntity(supplier);
+
+    return order;
+  }
+
+  @Patch(':id/receive-items')
+  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'order'))
+  async receiveItems(
+    @Param('id', ParseUUIDPipe) id: UUID,
+    @Body() receiveOrderItemsDto: ReceiveOrderItemsDto
+  ): Promise<SingleEntityResponse<EnhancedOrder>> {
+    const { items, supplier, ...rest } = await this.prismaService.$transaction(
+      async (tx) => {
+        const order = await tx.order.findUniqueOrThrow({
+          where: { id },
+          include: { items: { include: { supply: true } }, supplier: true },
+        });
+
+        const received = order.items.reduce<Record<UUID, number>>(
+          (prev, current) => ({
+            ...prev,
+            [current.id]:
+              receiveOrderItemsDto.received.find(
+                (target) => target.item === current.id
+              )?.quantity ?? 0,
+          }),
+          {}
+        );
+
+        const targets = order.items.map((item) => {
+          const remaining =
+            item.quantity -
+            item.received.reduce((total, current) => total + current, 0);
+
+          if (received[item.id] > remaining)
+            throw new InvalidReceivedQuantityException(
+              item.supply.name,
+              remaining,
+              received[item.id]
+            );
+
+          return {
+            item: item.id,
+            quantity: item.quantity,
+            received: received[item.id],
+            remaining,
+          };
+        });
+
+        await Promise.all(
+          targets.map(async (target) => {
+            const allItemsDelivered = target.remaining - target.received === 0;
+
+            const someItemDelivered =
+              target.quantity !== target.remaining - target.received;
+
+            await tx.orderItem.update({
+              where: { id: target.item },
+              data: {
+                received: { push: target.received },
+
+                deliveryStatus: allItemsDelivered
+                  ? 'COMPLETED'
+                  : someItemDelivered
+                  ? 'PARTIAL'
+                  : 'PENDING',
+
+                supply: {
+                  update: {
+                    quantity: {
+                      increment: target.received,
+                    },
+                  },
+                },
+              },
+            });
+          })
+        );
+
+        const allItemsDelivered = targets.every(
+          ({ received, remaining }) => remaining - received === 0
+        );
+
+        return await tx.order.update({
+          where: { id },
+          data: {
+            status: allItemsDelivered ? 'COMPLETED' : 'PARTIAL',
+            deliveryAt: { push: new Date() },
+          },
+          include: { items: { include: { supply: true } }, supplier: true },
+        });
+      }
+    );
 
     const order = new EnhancedOrder(rest);
 
