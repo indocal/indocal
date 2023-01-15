@@ -86,15 +86,21 @@ export const OrderItemsDetails: React.FC<OrderItemsDetailsProps> = ({
                     secondary={`Costo total: ${item.quantity * item.price}`}
                   />
 
-                  {order.status !== 'CANCELLED' && (
-                    <ListItemSecondaryAction>
-                      <Chip
-                        size="small"
-                        color={statusColors[deliveryStatus] ?? 'default'}
-                        label={translateOrderItemDeliveryStatus(deliveryStatus)}
-                      />
-                    </ListItemSecondaryAction>
-                  )}
+                  <ListItemSecondaryAction>
+                    <Chip
+                      size="small"
+                      color={
+                        order.status !== 'CANCELLED'
+                          ? statusColors[deliveryStatus] ?? 'default'
+                          : 'default'
+                      }
+                      label={
+                        order.status !== 'CANCELLED'
+                          ? translateOrderItemDeliveryStatus(deliveryStatus)
+                          : 'Orden cancelada'
+                      }
+                    />
+                  </ListItemSecondaryAction>
                 </ListItem>
               ))}
             </List>
