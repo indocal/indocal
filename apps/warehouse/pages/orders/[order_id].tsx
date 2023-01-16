@@ -60,7 +60,7 @@ const OrderPage: EnhancedNextPage = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Widget>
+              <Widget disableDefaultSizes>
                 <OrderItemsTable order={order} />
               </Widget>
             </Grid>
