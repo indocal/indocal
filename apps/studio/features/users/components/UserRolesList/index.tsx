@@ -44,7 +44,7 @@ const UserRolesList: React.FC<UserRolesListProps> = ({ user: entity }) => {
       }}
     >
       {loading ? (
-        <Loader message="Cargando roles..." />
+        <Loader invisible message="Cargando roles..." />
       ) : error ? (
         <ErrorInfo error={error} />
       ) : user ? (

@@ -44,7 +44,7 @@ const UserGroupsList: React.FC<UserGroupsListProps> = ({ user: entity }) => {
       }}
     >
       {loading ? (
-        <Loader message="Cargando grupos..." />
+        <Loader invisible message="Cargando grupos..." />
       ) : error ? (
         <ErrorInfo error={error} />
       ) : user ? (
