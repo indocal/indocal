@@ -18,3 +18,7 @@ export const Chart: React.FC<ApexChartProps> = ({ options, ...rest }) => {
 };
 
 export default Chart;
+
+export type { ApexChartProps as ChartProps };
+export type ChartSeries = ApexOptions['series'];
+export type { ApexOptions as ChartOptions };

@@ -4,7 +4,11 @@ import { Container, Grid } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useSupply, UUID } from '@indocal/services';
 
-import { SupplyCard, SupplyOrdersDataGrid } from '@/features';
+import {
+  SupplyCard,
+  SupplyPriceChartCard,
+  SupplyOrdersDataGrid,
+} from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -42,18 +46,20 @@ const SupplyPage: EnhancedNextPage = () => {
               </Widget>
             </Grid>
 
-            <Grid item xs={12} md={4}>
-              <Widget>{/* {TODO: ADD price chart} */}</Widget>
+            <Grid item xs={12} md={8}>
+              <Widget>
+                <SupplyPriceChartCard supply={supply} />
+              </Widget>
             </Grid>
 
-            <Grid item xs={12} md={4}>
-              <Widget>{/* TODO: Add movements */}</Widget>
-            </Grid>
-
-            <Grid item xs={12}>
+            <Grid item xs={12} md={8}>
               <Widget>
                 <SupplyOrdersDataGrid supply={supply} />
               </Widget>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Widget>{/* TODO: add movements */}</Widget>
             </Grid>
           </Grid>
         ) : (
