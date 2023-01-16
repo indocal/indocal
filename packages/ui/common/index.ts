@@ -5,4 +5,6 @@ export * from './NotFound';
 export * from './ErrorInfo';
 export * from './ErrorBoundary';
 export * from './EnhancedDataGrid';
+
+export * from './Chart';
 export * from './Stat';
