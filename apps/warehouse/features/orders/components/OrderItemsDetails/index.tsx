@@ -83,7 +83,9 @@ export const OrderItemsDetails: React.FC<OrderItemsDetailsProps> = ({
                 <ListItem key={item.id} disablePadding divider>
                   <ListItemText
                     primary={`${item.supply.name} (${item.quantity})`}
-                    secondary={`Costo total: ${item.quantity * item.price}`}
+                    secondary={`Costo total: ${Intl.NumberFormat('es-do', {
+                      minimumFractionDigits: 2,
+                    }).format(item.quantity * item.price)}`}
                   />
 
                   <ListItemSecondaryAction>

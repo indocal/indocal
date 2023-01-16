@@ -46,7 +46,11 @@ export const OrderItemDetails: React.FC<OrderItemDetailsProps> = ({
           {item.received.reduce((total, current) => total + current, 0)}
         </TableCell>
 
-        <TableCell align="center">{item.price.toFixed(2)}</TableCell>
+        <TableCell align="center">
+          {Intl.NumberFormat('es-do', {
+            minimumFractionDigits: 2,
+          }).format(item.price)}
+        </TableCell>
       </TableRow>
 
       <TableRow>
