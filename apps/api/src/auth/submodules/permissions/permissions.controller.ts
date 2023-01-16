@@ -100,16 +100,14 @@ export class UsersRolesPermissionsController {
       include: { role: true },
     });
 
-    if (response) {
-      const { role, ...rest } = response;
+    if (!response) return null;
 
-      const permission = new EnhancedUserRolePermission(rest);
-      permission.role = new UserRoleEntity(role);
+    const { role, ...rest } = response;
 
-      return permission;
-    }
+    const permission = new EnhancedUserRolePermission(rest);
+    permission.role = new UserRoleEntity(role);
 
-    return null;
+    return permission;
   }
 
   @Patch('auth/roles/permissions/:id')

@@ -93,16 +93,14 @@ export class FormsFieldsController {
       include: { form: true },
     });
 
-    if (response) {
-      const { form, ...rest } = response;
+    if (!response) return null;
 
-      const field = new EnhancedFormField(rest);
-      field.form = new FormEntity(form);
+    const { form, ...rest } = response;
 
-      return field;
-    }
+    const field = new EnhancedFormField(rest);
+    field.form = new FormEntity(form);
 
-    return null;
+    return field;
   }
 
   @Patch('forms/fields/:id')

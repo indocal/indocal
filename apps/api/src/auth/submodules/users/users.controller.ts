@@ -117,17 +117,15 @@ export class UsersController {
       include: { roles: true, groups: true },
     });
 
-    if (response) {
-      const { roles, groups, ...rest } = response;
+    if (!response) return null;
 
-      const user = new EnhancedUser(rest);
-      user.roles = roles.map((role) => new UserRoleEntity(role));
-      user.groups = groups.map((group) => new UserGroupEntity(group));
+    const { roles, groups, ...rest } = response;
 
-      return user;
-    }
+    const user = new EnhancedUser(rest);
+    user.roles = roles.map((role) => new UserRoleEntity(role));
+    user.groups = groups.map((group) => new UserGroupEntity(group));
 
-    return null;
+    return user;
   }
 
   @Patch(':id')

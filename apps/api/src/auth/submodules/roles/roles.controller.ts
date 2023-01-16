@@ -121,21 +121,19 @@ export class UsersRolesController {
       include: { permissions: true, users: true },
     });
 
-    if (response) {
-      const { permissions, users, ...rest } = response;
+    if (!response) return null;
 
-      const role = new EnhancedUserRole(rest);
+    const { permissions, users, ...rest } = response;
 
-      role.permissions = permissions.map(
-        (permission) => new UserRolePermissionEntity(permission)
-      );
+    const role = new EnhancedUserRole(rest);
 
-      role.users = users.map((user) => new UserEntity(user));
+    role.permissions = permissions.map(
+      (permission) => new UserRolePermissionEntity(permission)
+    );
 
-      return role;
-    }
+    role.users = users.map((user) => new UserEntity(user));
 
-    return null;
+    return role;
   }
 
   @Patch(':id')

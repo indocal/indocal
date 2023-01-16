@@ -97,17 +97,15 @@ export class OrdersItemsController {
       include: { order: true, supply: true },
     });
 
-    if (response) {
-      const { order, supply, ...rest } = response;
+    if (!response) return null;
 
-      const item = new EnhancedOrderItem(rest);
-      item.order = new OrderEntity(order);
-      item.supply = new SupplyEntity(supply);
+    const { order, supply, ...rest } = response;
 
-      return item;
-    }
+    const item = new EnhancedOrderItem(rest);
+    item.order = new OrderEntity(order);
+    item.supply = new SupplyEntity(supply);
 
-    return null;
+    return item;
   }
 
   @Patch('warehouse/orders/items/:id')

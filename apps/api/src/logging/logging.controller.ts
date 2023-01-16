@@ -74,16 +74,14 @@ export class LoggingController {
       include: { user: true },
     });
 
-    if (response) {
-      const { user, ...rest } = response;
+    if (!response) return null;
 
-      const log = new EnhancedLog(rest);
-      log.user = user ? new UserEntity(user) : null;
+    const { user, ...rest } = response;
 
-      return log;
-    }
+    const log = new EnhancedLog(rest);
+    log.user = user ? new UserEntity(user) : null;
 
-    return null;
+    return log;
   }
 }
 

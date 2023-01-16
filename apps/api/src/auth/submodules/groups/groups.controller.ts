@@ -108,16 +108,14 @@ export class UsersGroupsController {
       include: { members: true },
     });
 
-    if (response) {
-      const { members, ...rest } = response;
+    if (!response) return null;
 
-      const group = new EnhancedUserGroup(rest);
-      group.members = members.map((member) => new UserEntity(member));
+    const { members, ...rest } = response;
 
-      return group;
-    }
+    const group = new EnhancedUserGroup(rest);
+    group.members = members.map((member) => new UserEntity(member));
 
-    return null;
+    return group;
   }
 
   @Patch(':id')

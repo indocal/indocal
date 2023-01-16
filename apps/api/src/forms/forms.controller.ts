@@ -108,17 +108,15 @@ export class FormsController {
       include: { fields: true, group: true },
     });
 
-    if (response) {
-      const { fields, group, ...rest } = response;
+    if (!response) return null;
 
-      const form = new EnhancedForm(rest);
-      form.fields = fields.map((field) => new FormFieldEntity(field));
-      form.group = new UserGroupEntity(group);
+    const { fields, group, ...rest } = response;
 
-      return form;
-    }
+    const form = new EnhancedForm(rest);
+    form.fields = fields.map((field) => new FormFieldEntity(field));
+    form.group = new UserGroupEntity(group);
 
-    return null;
+    return form;
   }
 
   @Patch(':id')

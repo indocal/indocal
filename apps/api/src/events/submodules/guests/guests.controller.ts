@@ -98,16 +98,14 @@ export class EventsGuestsController {
       include: { event: true },
     });
 
-    if (response) {
-      const { event, ...rest } = response;
+    if (!response) return null;
 
-      const guest = new EnhancedEventGuest(rest);
-      guest.event = new EventEntity(event);
+    const { event, ...rest } = response;
 
-      return guest;
-    }
+    const guest = new EnhancedEventGuest(rest);
+    guest.event = new EventEntity(event);
 
-    return null;
+    return guest;
   }
 
   @Patch('events/guests/:id')

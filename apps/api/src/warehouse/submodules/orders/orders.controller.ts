@@ -137,24 +137,22 @@ export class OrdersController {
       include: { items: { include: { supply: true } }, supplier: true },
     });
 
-    if (response) {
-      const { items, supplier, ...rest } = response;
+    if (!response) return null;
 
-      const order = new EnhancedOrder(rest);
+    const { items, supplier, ...rest } = response;
 
-      order.items = items.map(({ supply, ...rest }) => {
-        const item = new EnhancedOrderItem(rest);
-        item.supply = new SupplyEntity(supply);
+    const order = new EnhancedOrder(rest);
 
-        return item;
-      });
+    order.items = items.map(({ supply, ...rest }) => {
+      const item = new EnhancedOrderItem(rest);
+      item.supply = new SupplyEntity(supply);
 
-      order.supplier = new SupplierEntity(supplier);
+      return item;
+    });
 
-      return order;
-    }
+    order.supplier = new SupplierEntity(supplier);
 
-    return null; // TODO: inverted condition
+    return order;
   }
 
   @Patch(':id')

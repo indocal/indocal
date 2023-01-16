@@ -108,17 +108,15 @@ export class FormsEntriesController {
       include: { form: true, answeredBy: true },
     });
 
-    if (response) {
-      const { form, answeredBy, ...rest } = response;
+    if (!response) return null;
 
-      const entry = new EnhancedFormEntry(rest);
-      entry.form = new FormEntity(form);
-      entry.answeredBy = answeredBy ? new UserEntity(answeredBy) : null;
+    const { form, answeredBy, ...rest } = response;
 
-      return entry;
-    }
+    const entry = new EnhancedFormEntry(rest);
+    entry.form = new FormEntity(form);
+    entry.answeredBy = answeredBy ? new UserEntity(answeredBy) : null;
 
-    return null;
+    return entry;
   }
 
   @Delete(':id')

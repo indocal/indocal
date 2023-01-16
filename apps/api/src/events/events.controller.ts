@@ -105,16 +105,14 @@ export class EventsController {
       include: { guests: true },
     });
 
-    if (response) {
-      const { guests, ...rest } = response;
+    if (!response) return null;
 
-      const event = new EnhancedEvent(rest);
-      event.guests = guests.map((guest) => new EventGuestEntity(guest));
+    const { guests, ...rest } = response;
 
-      return event;
-    }
+    const event = new EnhancedEvent(rest);
+    event.guests = guests.map((guest) => new EventGuestEntity(guest));
 
-    return null;
+    return event;
   }
 
   @Patch(':id')
