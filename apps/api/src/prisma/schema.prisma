@@ -43,6 +43,9 @@ model User {
   groups  UserGroup[]
   entries FormEntry[]
 
+  assignedSupplies   SupplyMovement[] @relation("assignedSupplies")
+  dischargedSupplies SupplyMovement[] @relation("dischargedSupplies")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -256,6 +259,8 @@ model Supply {
 
   unit SupplyUnit
 
+  movements SupplyMovement[]
+
   orderHistory OrderItem[]
 
   createdAt DateTime @default(now())
@@ -273,6 +278,33 @@ enum SupplyUnit {
 
   SACK
   GALLON
+}
+
+model SupplyMovement {
+  id       String @id @default(uuid())
+  quantity Int
+
+  type SupplyMovementType
+
+  supply   Supply @relation(fields: [supplyId], references: [id])
+  supplyId String
+
+  origin   User?   @relation(name: "dischargedSupplies", fields: [originId], references: [id])
+  originId String?
+
+  destination   User?   @relation(name: "assignedSupplies", fields: [destinationId], references: [id])
+  destinationId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SupplyMovementType {
+  ADJUSTMENT
+  INPUT
+  OUTPUT
+  TRANSFER
+  DISCHARGE
 }
 
 model Supplier {

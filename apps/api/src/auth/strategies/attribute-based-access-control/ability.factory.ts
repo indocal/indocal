@@ -17,6 +17,7 @@ import {
   Event,
   EventGuest,
   Supply,
+  SupplyMovement,
   Supplier,
   Order,
   OrderItem,
@@ -46,6 +47,7 @@ export type Subjects = PrismaSubjects<{
   event: Event;
   eventGuest: EventGuest;
   supply: Supply;
+  supplyMovement: SupplyMovement;
   supplier: Supplier;
   order: Order;
   orderItem: OrderItem;
