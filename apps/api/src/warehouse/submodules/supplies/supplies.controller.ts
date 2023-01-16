@@ -22,6 +22,7 @@ import {
   CreateSupplyDto,
   UpdateSupplyDto,
 } from './dto';
+import { SupplyPrice } from './types';
 
 @Controller('warehouse/supplies')
 @UseGuards(PoliciesGuard)
@@ -121,6 +122,19 @@ export class SuppliesController {
     const supply = await this.prismaService.supply.delete({ where: { id } });
 
     return new SupplyEntity(supply);
+  }
+
+  @Get(':id/prices')
+  @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
+  async prices(@Param('id', ParseUUIDPipe) id: UUID): Promise<SupplyPrice[]> {
+    const orders = await this.prismaService.orderItem.findMany({
+      where: { supply: { id } },
+    });
+
+    return orders.map((order) => ({
+      date: order.createdAt.toISOString(),
+      price: order.price,
+    }));
   }
 }
 

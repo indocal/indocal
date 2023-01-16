@@ -15,6 +15,7 @@ import {
   UpdateSupplyDto,
   CountSuppliesParamsDto,
   FindManySuppliesParamsDto,
+  SupplyPrice,
 } from './types';
 
 export interface CreateSupplyReturn {
@@ -48,8 +49,17 @@ export interface DeleteSupplyReturn {
   error: ServiceError | null;
 }
 
+export interface SupplyPricesReturn {
+  prices: SupplyPrice[];
+  error: ServiceError | null;
+}
+
 export class SuppliesService {
   constructor(private config: Config) {}
+
+  private getUUID(supply: UUID | Supply): UUID {
+    return typeof supply === 'string' ? supply : supply.id;
+  }
 
   async create(data: CreateSupplyDto): Promise<CreateSupplyReturn> {
     try {
@@ -165,6 +175,24 @@ export class SuppliesService {
     } catch (error) {
       return {
         supply: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async prices(supply: UUID | Supply): Promise<SupplyPricesReturn> {
+    try {
+      const response = await this.config.axios.get<SupplyPrice[]>(
+        `${ApiEndpoints.SUPPLIES}/${this.getUUID(supply)}/prices`
+      );
+
+      return {
+        prices: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        prices: [],
         error: createServiceError(error),
       };
     }
