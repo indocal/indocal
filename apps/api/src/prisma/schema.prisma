@@ -43,6 +43,9 @@ model User {
   groups  UserGroup[]
   entries FormEntry[]
 
+  assignmentHistory InventoryMovement[] @relation("assignmentHistory")
+  dischargeHistory  InventoryMovement[] @relation("dischargeHistory")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -256,7 +259,8 @@ model Supply {
 
   unit SupplyUnit
 
-  orderHistory OrderItem[]
+  movementHistory InventoryMovementSupply[]
+  orderHistory    OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -273,6 +277,48 @@ enum SupplyUnit {
 
   SACK
   GALLON
+}
+
+model InventoryMovement {
+  id String @id @default(uuid())
+
+  type InventoryMovementType
+
+  supplies InventoryMovementSupply[]
+
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  orderId String?
+
+  origin   User?   @relation(name: "dischargeHistory", fields: [originId], references: [id])
+  originId String?
+
+  destination   User?   @relation(name: "assignmentHistory", fields: [destinationId], references: [id])
+  destinationId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum InventoryMovementType {
+  ADJUSTMENT
+  INPUT
+  OUTPUT
+  TRANSFER
+  DISCHARGE
+}
+
+model InventoryMovementSupply {
+  id       String @id @default(uuid())
+  quantity Int
+
+  supply   Supply @relation(fields: [supplyId], references: [id], onDelete: Restrict)
+  supplyId String
+
+  inventoryMovement   InventoryMovement @relation(fields: [inventoryMovementId], references: [id], onDelete: Cascade)
+  inventoryMovementId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Supplier {
@@ -294,6 +340,8 @@ model Order {
   status OrderStatus @default(PENDING)
 
   items OrderItem[]
+
+  movements InventoryMovement[]
 
   supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Restrict)
   supplierId String
