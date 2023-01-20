@@ -20,6 +20,8 @@ import {
   Supplier,
   Order,
   OrderItem,
+  InventoryMovement,
+  InventoryMovementItem,
 } from '@prisma/client';
 
 import { PrismaService } from '@/prisma';
@@ -49,6 +51,8 @@ export type Subjects = PrismaSubjects<{
   supplier: Supplier;
   order: Order;
   orderItem: OrderItem;
+  inventoryMovement: InventoryMovement;
+  inventoryMovementItem: InventoryMovementItem;
 }>;
 
 export type AppAbility = PureAbility<[Action, Subjects], PrismaQuery>;
@@ -60,6 +64,7 @@ export class AbilityFactory {
   async build(user: AuthenticatedUser): Promise<AppAbility> {
     const { can, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
 
+    // TODO: use plain rules instead Prisma Intregation
     const permissions = await this.prismaService.userRolePermission.findMany({
       where: {
         role: {

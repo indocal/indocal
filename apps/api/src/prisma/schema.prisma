@@ -181,11 +181,11 @@ model FormEntry {
 
   answers Json[] @default([]) // Array<{ field: FormField, content: FormFieldAnswer }>
 
-  form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
-  formId String
-
   answeredBy   User?   @relation(fields: [answeredById], references: [id], onDelete: Restrict)
   answeredById String?
+
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
+  formId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -249,9 +249,8 @@ model EventGuest {
 //////////////////////////
 
 model Supply {
-  id   String @id @default(uuid())
-  code String
-
+  id          String  @id @default(uuid())
+  code        String
   name        String
   description String?
 
@@ -259,7 +258,7 @@ model Supply {
 
   unit SupplyUnit
 
-  movementHistory InventoryMovementSupply[]
+  movementHistory InventoryMovementItem[]
   orderHistory    OrderItem[]
 
   createdAt DateTime @default(now())
@@ -279,51 +278,8 @@ enum SupplyUnit {
   GALLON
 }
 
-model InventoryMovement {
-  id String @id @default(uuid())
-
-  type InventoryMovementType
-
-  supplies InventoryMovementSupply[]
-
-  order   Order?  @relation(fields: [orderId], references: [id], onDelete: Restrict)
-  orderId String?
-
-  origin   User?   @relation(name: "dischargeHistory", fields: [originId], references: [id])
-  originId String?
-
-  destination   User?   @relation(name: "assignmentHistory", fields: [destinationId], references: [id])
-  destinationId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum InventoryMovementType {
-  ADJUSTMENT
-  INPUT
-  OUTPUT
-  TRANSFER
-  DISCHARGE
-}
-
-model InventoryMovementSupply {
-  id       String @id @default(uuid())
-  quantity Int
-
-  supply   Supply @relation(fields: [supplyId], references: [id], onDelete: Restrict)
-  supplyId String
-
-  inventoryMovement   InventoryMovement @relation(fields: [inventoryMovementId], references: [id], onDelete: Cascade)
-  inventoryMovementId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Supplier {
-  id String @id @default(uuid())
-
+  id          String  @id @default(uuid())
   name        String
   description String?
 
@@ -368,11 +324,11 @@ model OrderItem {
 
   deliveryStatus OrderItemDeliveryStatus @default(PENDING)
 
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId String
-
   supply   Supply @relation(fields: [supplyId], references: [id], onDelete: Restrict)
   supplyId String
+
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -382,4 +338,47 @@ enum OrderItemDeliveryStatus {
   PENDING
   PARTIAL
   COMPLETED
+}
+
+model InventoryMovement {
+  id      String  @id @default(uuid())
+  concept String?
+
+  type InventoryMovementType
+
+  items InventoryMovementItem[]
+
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  orderId String?
+
+  origin   User?   @relation(name: "dischargeHistory", fields: [originId], references: [id])
+  originId String?
+
+  destination   User?   @relation(name: "assignmentHistory", fields: [destinationId], references: [id])
+  destinationId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum InventoryMovementType {
+  ADJUSTMENT
+  INPUT
+  OUTPUT
+  TRANSFER
+  DISCHARGE
+}
+
+model InventoryMovementItem {
+  id       String @id @default(uuid())
+  quantity Int
+
+  supply   Supply @relation(fields: [supplyId], references: [id], onDelete: Restrict)
+  supplyId String
+
+  movement   InventoryMovement @relation(fields: [movementId], references: [id], onDelete: Cascade)
+  movementId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

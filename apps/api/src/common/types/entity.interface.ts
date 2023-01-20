@@ -1,7 +1,9 @@
 export type UUID = string;
 
 export interface Entity {
-  readonly id: UUID;
+  id: UUID;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default Entity;

@@ -1,0 +1,244 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Query,
+  Body,
+  ParseUUIDPipe,
+  UseGuards,
+} from '@nestjs/common';
+
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
+import { PoliciesGuard, CheckPolicies, Action, UserEntity } from '@/auth';
+import { SupplyEntity, SupplierEntity } from '@/warehouse';
+import { InventoryMovementItemEntity } from '../inventory-movements-items'; // Error if it's imported from @/warehouse
+import { OrderEntity } from '../orders'; // Error if it's imported from @/warehouse // TODO: refactor al imports
+import { PrismaService } from '@/prisma';
+
+import { InventoryMovementEntity } from './entities';
+import {
+  FindManyInventoryMovementsParamsDto,
+  CountInventoryMovementsParamsDto,
+  CreateInventoryMovementDto,
+} from './dto';
+
+class EnhancedInventoryMovementItem extends InventoryMovementItemEntity {
+  supply: SupplyEntity;
+}
+
+class EnhancedOrder extends OrderEntity {
+  supplier: SupplierEntity;
+}
+
+class EnhancedInventoryMovement extends InventoryMovementEntity {
+  items: EnhancedInventoryMovementItem[];
+  order: EnhancedOrder | null;
+  origin: UserEntity | null;
+  destination: UserEntity | null;
+}
+
+@Controller('warehouse/movements')
+@UseGuards(PoliciesGuard)
+export class InventoryMovementsController {
+  constructor(private prismaService: PrismaService) {}
+
+  // TODO: implement-it for all controller
+  createEnhancedInventoryMovement({
+    items,
+    order,
+    origin,
+    destination,
+    ...rest
+  }: EnhancedInventoryMovement): EnhancedInventoryMovement {
+    const movement = new EnhancedInventoryMovement(rest);
+
+    if (order) {
+      movement.order = new EnhancedOrder(order);
+      movement.order.supplier = new SupplierEntity(order.supplier);
+    } else {
+      movement.order = null;
+    }
+
+    movement.origin = origin ? new UserEntity(origin) : null;
+    movement.destination = destination ? new UserEntity(destination) : null;
+
+    movement.items = items.map(({ supply, ...rest }) => {
+      const item = new EnhancedInventoryMovementItem(rest);
+      item.supply = new SupplyEntity(supply);
+
+      return item;
+    });
+
+    return movement;
+  }
+
+  @Post()
+  @CheckPolicies((ability) => ability.can(Action.CREATE, 'inventoryMovement'))
+  async create(
+    @Body() createInventoryMovementDto: CreateInventoryMovementDto
+  ): Promise<SingleEntityResponse<EnhancedInventoryMovement>> {
+    const movement = await this.prismaService.$transaction(async (tx) => {
+      const movement = await tx.inventoryMovement.create({
+        data: {
+          type: createInventoryMovementDto.type,
+          concept: createInventoryMovementDto.concept,
+          items: {
+            createMany: {
+              skipDuplicates: true,
+              data: createInventoryMovementDto.items.map((item) => ({
+                quantity: item.quantity,
+                supplyId: item.supply,
+              })),
+            },
+          },
+
+          ...(createInventoryMovementDto.order && {
+            order: {
+              connect: { id: createInventoryMovementDto.order },
+            },
+          }),
+
+          ...(createInventoryMovementDto.origin && {
+            origin: {
+              connect: { id: createInventoryMovementDto.origin },
+            },
+          }),
+
+          ...(createInventoryMovementDto.destination && {
+            destination: {
+              connect: { id: createInventoryMovementDto.destination },
+            },
+          }),
+        },
+        include: {
+          items: { include: { supply: true } },
+          order: { include: { supplier: true } },
+          origin: true,
+          destination: true,
+        },
+      });
+
+      switch (movement.type) {
+        case 'ADJUSTMENT': {
+          await Promise.all(
+            movement.items.map(async (item) => {
+              await tx.supply.update({
+                where: { id: item.supply.id },
+                data: {
+                  quantity: {
+                    ...(Math.sign(item.quantity)
+                      ? { increment: Math.abs(item.quantity) }
+                      : { decrement: Math.abs(item.quantity) }),
+                  },
+                },
+              });
+            })
+          );
+          break;
+        }
+
+        case 'INPUT': {
+          await Promise.all(
+            movement.items.map(async (item) => {
+              await tx.supply.update({
+                where: { id: item.supply.id },
+                data: {
+                  quantity: {
+                    increment: item.quantity,
+                  },
+                },
+              });
+            })
+          );
+          break;
+        }
+
+        case 'OUTPUT': {
+          await Promise.all(
+            movement.items.map(async (item) => {
+              await tx.supply.update({
+                where: { id: item.supply.id },
+                data: {
+                  quantity: {
+                    decrement: item.quantity,
+                  },
+                },
+              });
+            })
+          );
+          break;
+        }
+      }
+
+      return movement;
+    });
+
+    return this.createEnhancedInventoryMovement(movement);
+  }
+
+  @Get('count')
+  @CheckPolicies((ability) => ability.can(Action.COUNT, 'inventoryMovement'))
+  async count(
+    @Query() query: CountInventoryMovementsParamsDto
+  ): Promise<number> {
+    return await this.prismaService.inventoryMovement.count({
+      where: query.filters,
+      distinct: query.distinct,
+    });
+  }
+
+  @Get()
+  @CheckPolicies((ability) => ability.can(Action.READ, 'inventoryMovement'))
+  async findMany(
+    @Query() query: FindManyInventoryMovementsParamsDto
+  ): Promise<MultipleEntitiesResponse<EnhancedInventoryMovement>> {
+    const [movements, count] = await this.prismaService.$transaction([
+      this.prismaService.inventoryMovement.findMany({
+        where: query.filters,
+        distinct: query.distinct,
+        orderBy: query.orderBy,
+        skip: query.pagination?.skip && Number(query.pagination.skip),
+        take: query.pagination?.take && Number(query.pagination.take),
+        cursor: query.pagination?.cursor,
+        include: {
+          items: { include: { supply: true } },
+          order: { include: { supplier: true } },
+          origin: true,
+          destination: true,
+        },
+      }),
+      this.prismaService.inventoryMovement.count({
+        where: query.filters,
+        distinct: query.distinct,
+      }),
+    ]);
+
+    return {
+      count,
+      entities: movements.map((movement) =>
+        this.createEnhancedInventoryMovement(movement)
+      ),
+    };
+  }
+
+  @Get(':id')
+  @CheckPolicies((ability) => ability.can(Action.READ, 'inventoryMovement'))
+  async findOneByUUID(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<EnhancedInventoryMovement | null>> {
+    const movement = await this.prismaService.inventoryMovement.findUnique({
+      where: { id },
+      include: {
+        items: { include: { supply: true } },
+        order: { include: { supplier: true } },
+        origin: true,
+        destination: true,
+      },
+    });
+
+    return movement ? this.createEnhancedInventoryMovement(movement) : null;
+  }
+}
+
+export default InventoryMovementsController;

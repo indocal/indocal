@@ -5,10 +5,19 @@ import {
   SuppliersModule,
   OrdersModule,
   OrdersItemsModule,
+  InventoryMovementsModule,
+  InventoryMovementsItemsModule,
 } from './submodules';
 
 @Module({
-  imports: [SuppliesModule, SuppliersModule, OrdersModule, OrdersItemsModule],
+  imports: [
+    SuppliesModule,
+    SuppliersModule,
+    OrdersModule,
+    OrdersItemsModule,
+    InventoryMovementsModule,
+    InventoryMovementsItemsModule,
+  ],
 })
 export class WarehouseModule {}
 
