@@ -40,7 +40,7 @@ export const AdminDashboardDrawerFooter: React.FC = () => {
 
   return (
     <Tooltip
-      title={!isDrawerOpen ? 'Cerrar sesión' : ''}
+      title={!isDrawerOpen && 'Cerrar sesión'}
       placement={drawerPosition === 'left' ? 'right' : 'left'}
     >
       <ListItemButton onClick={handleSignOut}>

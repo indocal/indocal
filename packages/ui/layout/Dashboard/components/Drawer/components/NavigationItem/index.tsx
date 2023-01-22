@@ -62,7 +62,7 @@ export const DashboardDrawerNavigationItem: React.FC<
       underline="none"
     >
       <Tooltip
-        title={!isDrawerOpen ? item.label : ''}
+        title={!isDrawerOpen && item.label}
         placement={drawerPosition === 'left' ? 'right' : 'left'}
       >
         <ListItemButton
