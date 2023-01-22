@@ -211,6 +211,7 @@ export class OrdersController {
 
         return {
           item: item.id,
+          supply: item.supply.id,
           quantity: item.quantity,
           received: received[item.id],
           remaining,
@@ -246,6 +247,23 @@ export class OrdersController {
           });
         })
       );
+
+      // TODO: implement it correctly
+      await tx.inventoryMovement.create({
+        data: {
+          type: 'INPUT',
+          order: { connect: { id: order.id } },
+          items: {
+            createMany: {
+              skipDuplicates: true,
+              data: targets.map((target) => ({
+                quantity: target.received,
+                supplyId: target.supply,
+              })),
+            },
+          },
+        },
+      });
 
       const allItemsDelivered = targets.every(
         ({ received, remaining }) => remaining - received === 0

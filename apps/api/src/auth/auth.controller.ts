@@ -9,7 +9,7 @@ import {
 import { Request as ExpressRequest } from 'express';
 
 import AuthService from './auth.service';
-import { LocalAuthGuard, JwtAuthGuard } from './strategies';
+import { LocalAuthGuard } from './strategies';
 import { SkipAuthentication } from './decorators';
 import { Session, AuthenticatedUser, RestorePasswordDto } from './types';
 
@@ -35,8 +35,6 @@ export class AuthController {
   }
 
   @Get('me')
-  @SkipAuthentication()
-  @UseGuards(JwtAuthGuard)
   me(@Request() req: ExpressRequest): AuthenticatedUser {
     return req.user as AuthenticatedUser;
   }

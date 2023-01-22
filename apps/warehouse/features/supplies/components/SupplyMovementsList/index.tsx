@@ -4,16 +4,12 @@ import {
   Box,
   List,
   ListSubheader,
-  Typography,
-  IconButton,
   Pagination,
   LinearProgress,
 } from '@mui/material';
-import { AddCircle as AddIcon } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import {
-  Can,
   useInventoryMovements,
   UUID,
   Supply,
@@ -42,7 +38,9 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
       filters: {
         items: {
           some: {
-            supply: { id: typeof supply === 'string' ? supply : supply.id },
+            supply: {
+              id: typeof supply === 'string' ? supply : supply.id,
+            },
           },
         },
       },
@@ -103,23 +101,10 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
           >
             <ListSubheader
               sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: (theme) => theme.spacing(1),
-                padding: (theme) => theme.spacing(1.5, 2),
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
               }}
             >
-              <Typography variant="caption" fontWeight="bolder">
-                Movimientos
-              </Typography>
-
-              <Can I="create" an="inventoryMovement">
-                <IconButton size="small">
-                  <AddIcon />
-                </IconButton>
-              </Can>
+              Movimientos
             </ListSubheader>
 
             {loading ? (
@@ -127,18 +112,27 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
             ) : movements.length > 0 ? (
               <>
                 <Box sx={{ overflow: 'auto' }}>
-                  {movements.map((movement) => (
-                    <Fragment key={movement.id}>
-                      {options[movement.type]({
-                        movement,
-                        item: movement.items.find(
+                  {movements
+                    .filter(
+                      (movement) =>
+                        movement.items.find(
                           (item) =>
                             item.supply.id ===
                             (typeof supply === 'string' ? supply : supply.id)
-                        ) as InventoryMovement['items'][number],
-                      })}
-                    </Fragment>
-                  ))}
+                        )?.quantity !== 0
+                    )
+                    .map((movement) => (
+                      <Fragment key={movement.id}>
+                        {options[movement.type]({
+                          movement,
+                          item: movement.items.find(
+                            (item) =>
+                              item.supply.id ===
+                              (typeof supply === 'string' ? supply : supply.id)
+                          ) as InventoryMovement['items'][number],
+                        })}
+                      </Fragment>
+                    ))}
                 </Box>
 
                 <Box
@@ -147,7 +141,7 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
                     placeContent: 'center',
                     placeItems: 'center',
                     marginTop: 'auto',
-                    padding: (theme) => theme.spacing(0.9),
+                    padding: (theme) => theme.spacing(0.75),
                     borderTop: (theme) => `1px solid ${theme.palette.divider}`,
                     backgroundColor: (theme) => theme.palette.background.paper,
                   }}
