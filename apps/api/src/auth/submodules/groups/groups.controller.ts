@@ -10,9 +10,9 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { UserGroup, User } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { UserEntity } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import {
@@ -20,6 +20,8 @@ import {
   Action,
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
+
+import { UserEntity } from '../users/entities';
 
 import { UserGroupEntity } from './entities';
 import {
@@ -33,17 +35,31 @@ class EnhancedUserGroup extends UserGroupEntity {
   members: UserEntity[];
 }
 
+type CreateEnhancedUserGroup = UserGroup & {
+  members: User[];
+};
+
 @Controller('auth/groups')
 @UseGuards(PoliciesGuard)
 export class UsersGroupsController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedUserGroup({
+    members,
+    ...rest
+  }: CreateEnhancedUserGroup): EnhancedUserGroup {
+    const group = new EnhancedUserGroup(rest);
+    group.members = members.map((member) => new UserEntity(member));
+
+    return group;
+  }
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'userGroup'))
   async create(
     @Body() createGroupDto: CreateUserGroupDto
   ): Promise<SingleEntityResponse<EnhancedUserGroup>> {
-    const { members, ...rest } = await this.prismaService.userGroup.create({
+    const group = await this.prismaService.userGroup.create({
       data: {
         name: createGroupDto.name,
         description: createGroupDto.description,
@@ -51,10 +67,7 @@ export class UsersGroupsController {
       include: { members: true },
     });
 
-    const group = new EnhancedUserGroup(rest);
-    group.members = members.map((member) => new UserEntity(member));
-
-    return group;
+    return this.createEnhancedUserGroup(group);
   }
 
   @Get('count')
@@ -89,12 +102,7 @@ export class UsersGroupsController {
 
     return {
       count,
-      entities: groups.map(({ members, ...rest }) => {
-        const group = new EnhancedUserGroup(rest);
-        group.members = members.map((member) => new UserEntity(member));
-
-        return group;
-      }),
+      entities: groups.map((group) => this.createEnhancedUserGroup(group)),
     };
   }
 
@@ -103,19 +111,12 @@ export class UsersGroupsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserGroup | null>> {
-    const response = await this.prismaService.userGroup.findUnique({
+    const group = await this.prismaService.userGroup.findUnique({
       where: { id },
       include: { members: true },
     });
 
-    if (!response) return null;
-
-    const { members, ...rest } = response;
-
-    const group = new EnhancedUserGroup(rest);
-    group.members = members.map((member) => new UserEntity(member));
-
-    return group;
+    return group ? this.createEnhancedUserGroup(group) : null;
   }
 
   @Patch(':id')
@@ -124,7 +125,7 @@ export class UsersGroupsController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateGroupDto: UpdateUserGroupDto
   ): Promise<SingleEntityResponse<EnhancedUserGroup>> {
-    const { members, ...rest } = await this.prismaService.userGroup.update({
+    const group = await this.prismaService.userGroup.update({
       where: { id },
       data: {
         name: updateGroupDto.name,
@@ -139,10 +140,7 @@ export class UsersGroupsController {
       include: { members: true },
     });
 
-    const group = new EnhancedUserGroup(rest);
-    group.members = members.map((member) => new UserEntity(member));
-
-    return group;
+    return this.createEnhancedUserGroup(group);
   }
 
   @Delete(':id')
@@ -150,15 +148,12 @@ export class UsersGroupsController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserGroup>> {
-    const { members, ...rest } = await this.prismaService.userGroup.delete({
+    const group = await this.prismaService.userGroup.delete({
       where: { id },
       include: { members: true },
     });
 
-    const group = new EnhancedUserGroup(rest);
-    group.members = members.map((member) => new UserEntity(member));
-
-    return group;
+    return this.createEnhancedUserGroup(group);
   }
 }
 

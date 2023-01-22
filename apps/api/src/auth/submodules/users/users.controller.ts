@@ -10,10 +10,10 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { User, UserRole, UserGroup } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { UserRoleEntity, UserGroupEntity } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import {
@@ -21,6 +21,9 @@ import {
   Action,
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
+
+import { UserRoleEntity } from '../roles/entities';
+import { UserGroupEntity } from '../groups/entities';
 
 import { UserEntity } from './entities';
 import {
@@ -35,10 +38,27 @@ class EnhancedUser extends UserEntity {
   groups: UserGroupEntity[];
 }
 
+type CreateEnhancedUser = User & {
+  roles: UserRole[];
+  groups: UserGroup[];
+};
+
 @Controller('auth/users')
 @UseGuards(PoliciesGuard)
 export class UsersController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedUser({
+    roles,
+    groups,
+    ...rest
+  }: CreateEnhancedUser): EnhancedUser {
+    const user = new EnhancedUser(rest);
+    user.roles = roles.map((role) => new UserRoleEntity(role));
+    user.groups = groups.map((group) => new UserGroupEntity(group));
+
+    return user;
+  }
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'user'))
@@ -48,7 +68,7 @@ export class UsersController {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createUserDto.password, salt);
 
-    const { roles, groups, ...rest } = await this.prismaService.user.create({
+    const user = await this.prismaService.user.create({
       data: {
         username: createUserDto.username,
         email: createUserDto.email,
@@ -58,11 +78,7 @@ export class UsersController {
       include: { roles: true, groups: true },
     });
 
-    const user = new EnhancedUser(rest);
-    user.roles = roles.map((role) => new UserRoleEntity(role));
-    user.groups = groups.map((group) => new UserGroupEntity(group));
-
-    return user;
+    return this.createEnhancedUser(user);
   }
 
   @Get('count')
@@ -97,13 +113,7 @@ export class UsersController {
 
     return {
       count,
-      entities: users.map(({ roles, groups, ...rest }) => {
-        const user = new EnhancedUser(rest);
-        user.roles = roles.map((role) => new UserRoleEntity(role));
-        user.groups = groups.map((group) => new UserGroupEntity(group));
-
-        return user;
-      }),
+      entities: users.map((user) => this.createEnhancedUser(user)),
     };
   }
 
@@ -112,20 +122,12 @@ export class UsersController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUser | null>> {
-    const response = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { id },
       include: { roles: true, groups: true },
     });
 
-    if (!response) return null;
-
-    const { roles, groups, ...rest } = response;
-
-    const user = new EnhancedUser(rest);
-    user.roles = roles.map((role) => new UserRoleEntity(role));
-    user.groups = groups.map((group) => new UserGroupEntity(group));
-
-    return user;
+    return user ? this.createEnhancedUser(user) : null;
   }
 
   @Patch(':id')
@@ -134,7 +136,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateUserDto: UpdateUserDto
   ): Promise<SingleEntityResponse<EnhancedUser>> {
-    const { roles, groups, ...rest } = await this.prismaService.user.update({
+    const user = await this.prismaService.user.update({
       where: { id },
       data: {
         username: updateUserDto.username,
@@ -153,11 +155,7 @@ export class UsersController {
       include: { roles: true, groups: true },
     });
 
-    const user = new EnhancedUser(rest);
-    user.roles = roles.map((role) => new UserRoleEntity(role));
-    user.groups = groups.map((group) => new UserGroupEntity(group));
-
-    return user;
+    return this.createEnhancedUser(user);
   }
 
   @Delete(':id')
@@ -165,16 +163,12 @@ export class UsersController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUser>> {
-    const { roles, groups, ...rest } = await this.prismaService.user.delete({
+    const user = await this.prismaService.user.delete({
       where: { id },
       include: { roles: true, groups: true },
     });
 
-    const user = new EnhancedUser(rest);
-    user.roles = roles.map((role) => new UserRoleEntity(role));
-    user.groups = groups.map((group) => new UserGroupEntity(group));
-
-    return user;
+    return this.createEnhancedUser(user);
   }
 }
 

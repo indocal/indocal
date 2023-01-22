@@ -10,11 +10,14 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { Form, FormField, UserGroup } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action, UserGroupEntity } from '@/auth';
-import { FormFieldEntity } from '@/forms';
+import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { PrismaService } from '@/prisma';
+
+import { FormFieldEntity } from './submodules/fields/entities';
+import { UserGroupEntity } from '../auth/submodules/groups/entities';
 
 import { FormEntity } from './entities';
 import {
@@ -29,17 +32,34 @@ class EnhancedForm extends FormEntity {
   group: UserGroupEntity;
 }
 
+type CreateEnhancedForm = Form & {
+  fields: FormField[];
+  group: UserGroup;
+};
+
 @Controller('forms')
 @UseGuards(PoliciesGuard)
 export class FormsController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedForm({
+    fields,
+    group,
+    ...rest
+  }: CreateEnhancedForm): EnhancedForm {
+    const form = new EnhancedForm(rest);
+    form.fields = fields.map((field) => new FormFieldEntity(field));
+    form.group = new UserGroupEntity(group);
+
+    return form;
+  }
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'form'))
   async create(
     @Body() createFormDto: CreateFormDto
   ): Promise<SingleEntityResponse<EnhancedForm>> {
-    const { fields, group, ...rest } = await this.prismaService.form.create({
+    const form = await this.prismaService.form.create({
       data: {
         slug: createFormDto.slug,
         title: createFormDto.title,
@@ -49,11 +69,7 @@ export class FormsController {
       include: { fields: true, group: true },
     });
 
-    const form = new EnhancedForm(rest);
-    form.fields = fields.map((field) => new FormFieldEntity(field));
-    form.group = new UserGroupEntity(group);
-
-    return form;
+    return this.createEnhancedForm(form);
   }
 
   @Get('count')
@@ -88,13 +104,7 @@ export class FormsController {
 
     return {
       count,
-      entities: forms.map(({ fields, group, ...rest }) => {
-        const form = new EnhancedForm(rest);
-        form.fields = fields.map((field) => new FormFieldEntity(field));
-        form.group = new UserGroupEntity(group);
-
-        return form;
-      }),
+      entities: forms.map((form) => this.createEnhancedForm(form)),
     };
   }
 
@@ -103,20 +113,12 @@ export class FormsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedForm | null>> {
-    const response = await this.prismaService.form.findUnique({
+    const form = await this.prismaService.form.findUnique({
       where: { id },
       include: { fields: true, group: true },
     });
 
-    if (!response) return null;
-
-    const { fields, group, ...rest } = response;
-
-    const form = new EnhancedForm(rest);
-    form.fields = fields.map((field) => new FormFieldEntity(field));
-    form.group = new UserGroupEntity(group);
-
-    return form;
+    return form ? this.createEnhancedForm(form) : null;
   }
 
   @Patch(':id')
@@ -125,7 +127,7 @@ export class FormsController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateFormDto: UpdateFormDto
   ): Promise<SingleEntityResponse<EnhancedForm>> {
-    const { fields, group, ...rest } = await this.prismaService.form.update({
+    const form = await this.prismaService.form.update({
       where: { id },
       data: {
         slug: updateFormDto.slug,
@@ -141,11 +143,7 @@ export class FormsController {
       include: { fields: true, group: true },
     });
 
-    const form = new EnhancedForm(rest);
-    form.fields = fields.map((field) => new FormFieldEntity(field));
-    form.group = new UserGroupEntity(group);
-
-    return form;
+    return this.createEnhancedForm(form);
   }
 
   @Delete(':id')
@@ -153,16 +151,12 @@ export class FormsController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedForm>> {
-    const { fields, group, ...rest } = await this.prismaService.form.delete({
+    const form = await this.prismaService.form.delete({
       where: { id },
       include: { fields: true, group: true },
     });
 
-    const form = new EnhancedForm(rest);
-    form.fields = fields.map((field) => new FormFieldEntity(field));
-    form.group = new UserGroupEntity(group);
-
-    return form;
+    return this.createEnhancedForm(form);
   }
 }
 

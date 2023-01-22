@@ -124,7 +124,7 @@ export class SuppliesController {
     return new SupplyEntity(supply);
   }
 
-  @Get(':id/prices')
+  @Get(':id/prices') // TODO: check?
   @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
   async prices(@Param('id', ParseUUIDPipe) id: UUID): Promise<SupplyPrice[]> {
     const orders = await this.prismaService.orderItem.findMany({

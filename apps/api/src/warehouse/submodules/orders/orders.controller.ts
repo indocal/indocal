@@ -10,12 +10,15 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { Order, OrderItem, Supply, Supplier } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
-import { SupplyEntity, SupplierEntity } from '@/warehouse';
-import { OrderItemEntity } from '../orders-items'; // Error if it's imported from @/warehouse
 import { PrismaService } from '@/prisma';
+
+import { OrderItemEntity } from '../orders-items/entities';
+import { SupplyEntity } from '../supplies/entities';
+import { SupplierEntity } from '../suppliers/entities';
 
 import { OrderEntity } from './entities';
 import {
@@ -36,17 +39,41 @@ class EnhancedOrder extends OrderEntity {
   supplier: SupplierEntity;
 }
 
+type CreateEnhancedOrder = Order & {
+  items: (OrderItem & { supply: Supply })[];
+  supplier: Supplier;
+};
+
 @Controller('warehouse/orders')
 @UseGuards(PoliciesGuard)
 export class OrdersController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedOrder({
+    items,
+    supplier,
+    ...rest
+  }: CreateEnhancedOrder): EnhancedOrder {
+    const order = new EnhancedOrder(rest);
+
+    order.items = items.map(({ supply, ...rest }) => {
+      const item = new EnhancedOrderItem(rest);
+      item.supply = new SupplyEntity(supply);
+
+      return item;
+    });
+
+    order.supplier = new SupplierEntity(supplier);
+
+    return order;
+  }
 
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'order'))
   async create(
     @Body() createOrderDto: CreateOrderDto
   ): Promise<SingleEntityResponse<EnhancedOrder>> {
-    const { items, supplier, ...rest } = await this.prismaService.order.create({
+    const order = await this.prismaService.order.create({
       data: {
         code: createOrderDto.code,
         supplier: { connect: { id: createOrderDto.supplier } },
@@ -64,18 +91,7 @@ export class OrdersController {
       include: { items: { include: { supply: true } }, supplier: true },
     });
 
-    const order = new EnhancedOrder(rest);
-
-    order.items = items.map(({ supply, ...rest }) => {
-      const item = new EnhancedOrderItem(rest);
-      item.supply = new SupplyEntity(supply);
-
-      return item;
-    });
-
-    order.supplier = new SupplierEntity(supplier);
-
-    return order;
+    return this.createEnhancedOrder(order);
   }
 
   @Get('count')
@@ -110,20 +126,7 @@ export class OrdersController {
 
     return {
       count,
-      entities: orders.map(({ items, supplier, ...rest }) => {
-        const order = new EnhancedOrder(rest);
-
-        order.items = items.map(({ supply, ...rest }) => {
-          const item = new EnhancedOrderItem(rest);
-          item.supply = new SupplyEntity(supply);
-
-          return item;
-        });
-
-        order.supplier = new SupplierEntity(supplier);
-
-        return order;
-      }),
+      entities: orders.map((order) => this.createEnhancedOrder(order)),
     };
   }
 
@@ -132,27 +135,12 @@ export class OrdersController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedOrder | null>> {
-    const response = await this.prismaService.order.findUnique({
+    const order = await this.prismaService.order.findUnique({
       where: { id },
       include: { items: { include: { supply: true } }, supplier: true },
     });
 
-    if (!response) return null;
-
-    const { items, supplier, ...rest } = response;
-
-    const order = new EnhancedOrder(rest);
-
-    order.items = items.map(({ supply, ...rest }) => {
-      const item = new EnhancedOrderItem(rest);
-      item.supply = new SupplyEntity(supply);
-
-      return item;
-    });
-
-    order.supplier = new SupplierEntity(supplier);
-
-    return order;
+    return order ? this.createEnhancedOrder(order) : null;
   }
 
   @Patch(':id')
@@ -161,7 +149,7 @@ export class OrdersController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateOrderDto: UpdateOrderDto
   ): Promise<SingleEntityResponse<EnhancedOrder>> {
-    const { items, supplier, ...rest } = await this.prismaService.order.update({
+    const order = await this.prismaService.order.update({
       where: { id },
       data: {
         code: updateOrderDto.code,
@@ -170,18 +158,7 @@ export class OrdersController {
       include: { items: { include: { supply: true } }, supplier: true },
     });
 
-    const order = new EnhancedOrder(rest);
-
-    order.items = items.map(({ supply, ...rest }) => {
-      const item = new EnhancedOrderItem(rest);
-      item.supply = new SupplyEntity(supply);
-
-      return item;
-    });
-
-    order.supplier = new SupplierEntity(supplier);
-
-    return order;
+    return this.createEnhancedOrder(order);
   }
 
   @Delete(':id')
@@ -189,126 +166,102 @@ export class OrdersController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedOrder>> {
-    const { items, supplier, ...rest } = await this.prismaService.order.delete({
+    const order = await this.prismaService.order.delete({
       where: { id },
       include: { items: { include: { supply: true } }, supplier: true },
     });
 
-    const order = new EnhancedOrder(rest);
-
-    order.items = items.map(({ supply, ...rest }) => {
-      const item = new EnhancedOrderItem(rest);
-      item.supply = new SupplyEntity(supply);
-
-      return item;
-    });
-
-    order.supplier = new SupplierEntity(supplier);
-
-    return order;
+    return this.createEnhancedOrder(order);
   }
 
-  @Patch(':id/receive-items')
+  @Patch(':id/receive-items') // TODO: check?
   @CheckPolicies((ability) => ability.can(Action.UPDATE, 'order'))
   async receiveItems(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() receiveOrderItemsDto: ReceiveOrderItemsDto
   ): Promise<SingleEntityResponse<EnhancedOrder>> {
-    const { items, supplier, ...rest } = await this.prismaService.$transaction(
-      async (tx) => {
-        const order = await tx.order.findUniqueOrThrow({
-          where: { id },
-          include: { items: { include: { supply: true } }, supplier: true },
-        });
+    const order = await this.prismaService.$transaction(async (tx) => {
+      const order = await tx.order.findUniqueOrThrow({
+        where: { id },
+        include: { items: { include: { supply: true } }, supplier: true },
+      });
 
-        const received = order.items.reduce<Record<UUID, number>>(
-          (prev, current) => ({
-            ...prev,
-            [current.id]:
-              receiveOrderItemsDto.received.find(
-                (target) => target.item === current.id
-              )?.quantity ?? 0,
-          }),
-          {}
-        );
+      const received = order.items.reduce<Record<UUID, number>>(
+        (prev, current) => ({
+          ...prev,
+          [current.id]:
+            receiveOrderItemsDto.received.find(
+              (target) => target.item === current.id
+            )?.quantity ?? 0,
+        }),
+        {}
+      );
 
-        const targets = order.items.map((item) => {
-          const remaining =
-            item.quantity -
-            item.received.reduce((total, current) => total + current, 0);
+      const targets = order.items.map((item) => {
+        const remaining =
+          item.quantity -
+          item.received.reduce((total, current) => total + current, 0);
 
-          if (received[item.id] > remaining)
-            throw new InvalidReceivedQuantityException(
-              item.supply.name,
-              remaining,
-              received[item.id]
-            );
-
-          return {
-            item: item.id,
-            quantity: item.quantity,
-            received: received[item.id],
+        if (received[item.id] > remaining)
+          throw new InvalidReceivedQuantityException(
+            item.supply.name,
             remaining,
-          };
-        });
+            received[item.id]
+          );
 
-        await Promise.all(
-          targets.map(async (target) => {
-            const allItemsDelivered = target.remaining - target.received === 0;
+        return {
+          item: item.id,
+          quantity: item.quantity,
+          received: received[item.id],
+          remaining,
+        };
+      });
 
-            const someItemDelivered =
-              target.quantity !== target.remaining - target.received;
+      await Promise.all(
+        targets.map(async (target) => {
+          const allItemsDelivered = target.remaining - target.received === 0;
 
-            await tx.orderItem.update({
-              where: { id: target.item },
-              data: {
-                received: { push: target.received },
+          const someItemDelivered =
+            target.quantity !== target.remaining - target.received;
 
-                deliveryStatus: allItemsDelivered
-                  ? 'COMPLETED'
-                  : someItemDelivered
-                  ? 'PARTIAL'
-                  : 'PENDING',
+          await tx.orderItem.update({
+            where: { id: target.item },
+            data: {
+              received: { push: target.received },
 
-                supply: {
-                  update: {
-                    quantity: {
-                      increment: target.received,
-                    },
+              deliveryStatus: allItemsDelivered
+                ? 'COMPLETED'
+                : someItemDelivered
+                ? 'PARTIAL'
+                : 'PENDING',
+
+              supply: {
+                update: {
+                  quantity: {
+                    increment: target.received,
                   },
                 },
               },
-            });
-          })
-        );
+            },
+          });
+        })
+      );
 
-        const allItemsDelivered = targets.every(
-          ({ received, remaining }) => remaining - received === 0
-        );
+      const allItemsDelivered = targets.every(
+        ({ received, remaining }) => remaining - received === 0
+      );
 
-        return await tx.order.update({
-          where: { id },
-          data: {
-            status: allItemsDelivered ? 'COMPLETED' : 'PARTIAL',
-            deliveryAt: { push: new Date() },
-          },
-          include: { items: { include: { supply: true } }, supplier: true },
-        });
-      }
-    );
-
-    const order = new EnhancedOrder(rest);
-
-    order.items = items.map(({ supply, ...rest }) => {
-      const item = new EnhancedOrderItem(rest);
-      item.supply = new SupplyEntity(supply);
-
-      return item;
+      return await tx.order.update({
+        where: { id },
+        data: {
+          status: allItemsDelivered ? 'COMPLETED' : 'PARTIAL',
+          deliveryAt: { push: new Date() },
+        },
+        include: { items: { include: { supply: true } }, supplier: true },
+      });
     });
 
-    order.supplier = new SupplierEntity(supplier);
-
-    return order;
+    return this.createEnhancedOrder(order);
   }
 }
 

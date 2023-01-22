@@ -8,13 +8,24 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import {
+  InventoryMovement,
+  InventoryMovementItem,
+  Supply,
+  Order,
+  Supplier,
+  User,
+} from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action, UserEntity } from '@/auth';
-import { SupplyEntity, SupplierEntity } from '@/warehouse';
-import { InventoryMovementItemEntity } from '../inventory-movements-items'; // Error if it's imported from @/warehouse
-import { OrderEntity } from '../orders'; // Error if it's imported from @/warehouse // TODO: refactor al imports
+import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { PrismaService } from '@/prisma';
+
+import { InventoryMovementItemEntity } from '../inventory-movements-items/entities';
+import { SupplyEntity } from '../supplies/entities';
+import { OrderEntity } from '../orders/entities';
+import { SupplierEntity } from '../suppliers/entities';
+import { UserEntity } from '../../../auth/submodules/users/entities';
 
 import { InventoryMovementEntity } from './entities';
 import {
@@ -38,19 +49,25 @@ class EnhancedInventoryMovement extends InventoryMovementEntity {
   destination: UserEntity | null;
 }
 
+type CreateEnhancedInventoryMovement = InventoryMovement & {
+  items: (InventoryMovementItem & { supply: Supply })[];
+  order: (Order & { supplier: Supplier }) | null;
+  origin: User | null;
+  destination: User | null;
+};
+
 @Controller('warehouse/movements')
 @UseGuards(PoliciesGuard)
 export class InventoryMovementsController {
   constructor(private prismaService: PrismaService) {}
 
-  // TODO: implement-it for all controller
   createEnhancedInventoryMovement({
     items,
     order,
     origin,
     destination,
     ...rest
-  }: EnhancedInventoryMovement): EnhancedInventoryMovement {
+  }: CreateEnhancedInventoryMovement): EnhancedInventoryMovement {
     const movement = new EnhancedInventoryMovement(rest);
 
     if (order) {

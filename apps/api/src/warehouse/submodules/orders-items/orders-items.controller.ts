@@ -9,24 +9,44 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { OrderItem, Supply, Order } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
-import { OrderEntity, SupplyEntity } from '@/warehouse';
 import { PrismaService } from '@/prisma';
+
+import { SupplyEntity } from '../supplies/entities';
+import { OrderEntity } from '../orders/entities';
 
 import { OrderItemEntity } from './entities';
 import { CreateOrderItemDto, UpdateOrderItemDto } from './dto';
 
 class EnhancedOrderItem extends OrderItemEntity {
-  order: OrderEntity;
   supply: SupplyEntity;
+  order: OrderEntity;
 }
+
+type CreateEnhancedOrderItem = OrderItem & {
+  supply: Supply;
+  order: Order;
+};
 
 @Controller()
 @UseGuards(PoliciesGuard)
 export class OrdersItemsController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedOrderItem({
+    order,
+    supply,
+    ...rest
+  }: CreateEnhancedOrderItem): EnhancedOrderItem {
+    const item = new EnhancedOrderItem(rest);
+    item.supply = new SupplyEntity(supply);
+    item.order = new OrderEntity(order);
+
+    return item;
+  }
 
   @Post('warehouse/orders/:order_id/items')
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'orderItem'))
@@ -34,22 +54,17 @@ export class OrdersItemsController {
     @Param('order_id') orderId: UUID,
     @Body() createItemDto: CreateOrderItemDto
   ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
-    const { order, supply, ...rest } =
-      await this.prismaService.orderItem.create({
-        data: {
-          price: createItemDto.price,
-          quantity: createItemDto.quantity,
-          supply: { connect: { id: createItemDto.supply } },
-          order: { connect: { id: orderId } },
-        },
-        include: { order: true, supply: true },
-      });
+    const item = await this.prismaService.orderItem.create({
+      data: {
+        price: createItemDto.price,
+        quantity: createItemDto.quantity,
+        supply: { connect: { id: createItemDto.supply } },
+        order: { connect: { id: orderId } },
+      },
+      include: { order: true, supply: true },
+    });
 
-    const item = new EnhancedOrderItem(rest);
-    item.order = new OrderEntity(order);
-    item.supply = new SupplyEntity(supply);
-
-    return item;
+    return this.createEnhancedOrderItem(item);
   }
 
   @Get('warehouse/orders/:order_id/items/count')
@@ -77,13 +92,7 @@ export class OrdersItemsController {
 
     return {
       count,
-      entities: items.map(({ order, supply, ...rest }) => {
-        const item = new EnhancedOrderItem(rest);
-        item.order = new OrderEntity(order);
-        item.supply = new SupplyEntity(supply);
-
-        return item;
-      }),
+      entities: items.map((item) => this.createEnhancedOrderItem(item)),
     };
   }
 
@@ -92,20 +101,12 @@ export class OrdersItemsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedOrderItem | null>> {
-    const response = await this.prismaService.orderItem.findUnique({
+    const item = await this.prismaService.orderItem.findUnique({
       where: { id },
       include: { order: true, supply: true },
     });
 
-    if (!response) return null;
-
-    const { order, supply, ...rest } = response;
-
-    const item = new EnhancedOrderItem(rest);
-    item.order = new OrderEntity(order);
-    item.supply = new SupplyEntity(supply);
-
-    return item;
+    return item ? this.createEnhancedOrderItem(item) : null;
   }
 
   @Patch('warehouse/orders/items/:id')
@@ -114,22 +115,17 @@ export class OrdersItemsController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateItemDto: UpdateOrderItemDto
   ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
-    const { order, supply, ...rest } =
-      await this.prismaService.orderItem.update({
-        where: { id },
-        data: {
-          price: updateItemDto.price,
-          quantity: updateItemDto.quantity,
-          received: updateItemDto.received,
-        },
-        include: { order: true, supply: true },
-      });
+    const item = await this.prismaService.orderItem.update({
+      where: { id },
+      data: {
+        price: updateItemDto.price,
+        quantity: updateItemDto.quantity,
+        received: updateItemDto.received,
+      },
+      include: { order: true, supply: true },
+    });
 
-    const item = new EnhancedOrderItem(rest);
-    item.order = new OrderEntity(order);
-    item.supply = new SupplyEntity(supply);
-
-    return item;
+    return this.createEnhancedOrderItem(item);
   }
 
   @Delete('warehouse/orders/items/:id')
@@ -137,17 +133,12 @@ export class OrdersItemsController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
-    const { order, supply, ...rest } =
-      await this.prismaService.orderItem.delete({
-        where: { id },
-        include: { order: true, supply: true },
-      });
+    const item = await this.prismaService.orderItem.delete({
+      where: { id },
+      include: { order: true, supply: true },
+    });
 
-    const item = new EnhancedOrderItem(rest);
-    item.order = new OrderEntity(order);
-    item.supply = new SupplyEntity(supply);
-
-    return item;
+    return this.createEnhancedOrderItem(item);
   }
 }
 

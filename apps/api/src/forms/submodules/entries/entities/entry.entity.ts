@@ -56,10 +56,10 @@ export class FormEntryEntity implements Entity, FormEntry {
   answers: FormFieldAnswer[];
 
   @Exclude()
-  formId: string;
+  answeredById: string | null;
 
   @Exclude()
-  answeredById: string | null;
+  formId: string;
 
   createdAt: Date;
   updatedAt: Date;

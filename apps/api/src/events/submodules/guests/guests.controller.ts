@@ -9,11 +9,13 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { EventGuest, Event } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
-import { EventEntity } from '@/events';
 import { PrismaService } from '@/prisma';
+
+import { EventEntity } from '../../entities';
 
 import { EventGuestEntity } from './entities';
 import { CreateEventGuestDto, UpdateEventGuestDto } from './dto';
@@ -22,10 +24,24 @@ class EnhancedEventGuest extends EventGuestEntity {
   event: EventEntity;
 }
 
+type CreateEnhancedEventGuest = EventGuest & {
+  event: Event;
+};
+
 @Controller()
 @UseGuards(PoliciesGuard)
 export class EventsGuestsController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedEventGuest({
+    event,
+    ...rest
+  }: CreateEnhancedEventGuest): EnhancedEventGuest {
+    const guest = new EnhancedEventGuest(rest);
+    guest.event = new EventEntity(event);
+
+    return guest;
+  }
 
   @Post('events/:event_id/guests')
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'eventGuest'))
@@ -33,7 +49,7 @@ export class EventsGuestsController {
     @Param('event_id') eventId: UUID,
     @Body() createGuestDto: CreateEventGuestDto
   ): Promise<SingleEntityResponse<EnhancedEventGuest>> {
-    const { event, ...rest } = await this.prismaService.eventGuest.create({
+    const guest = await this.prismaService.eventGuest.create({
       data: {
         dni: createGuestDto.dni,
         name: createGuestDto.name,
@@ -48,10 +64,7 @@ export class EventsGuestsController {
       include: { event: true },
     });
 
-    const guest = new EnhancedEventGuest(rest);
-    guest.event = new EventEntity(event);
-
-    return guest;
+    return this.createEnhancedEventGuest(guest);
   }
 
   @Get('events/:event_id/guests/count')
@@ -79,12 +92,7 @@ export class EventsGuestsController {
 
     return {
       count,
-      entities: guests.map(({ event, ...rest }) => {
-        const guest = new EnhancedEventGuest(rest);
-        guest.event = new EventEntity(event);
-
-        return guest;
-      }),
+      entities: guests.map((guest) => this.createEnhancedEventGuest(guest)),
     };
   }
 
@@ -93,19 +101,12 @@ export class EventsGuestsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedEventGuest | null>> {
-    const response = await this.prismaService.eventGuest.findUnique({
+    const guest = await this.prismaService.eventGuest.findUnique({
       where: { id },
       include: { event: true },
     });
 
-    if (!response) return null;
-
-    const { event, ...rest } = response;
-
-    const guest = new EnhancedEventGuest(rest);
-    guest.event = new EventEntity(event);
-
-    return guest;
+    return guest ? this.createEnhancedEventGuest(guest) : null;
   }
 
   @Patch('events/guests/:id')
@@ -114,7 +115,7 @@ export class EventsGuestsController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateGuestDto: UpdateEventGuestDto
   ): Promise<SingleEntityResponse<EnhancedEventGuest>> {
-    const { event, ...rest } = await this.prismaService.eventGuest.update({
+    const guest = await this.prismaService.eventGuest.update({
       where: { id },
       data: {
         dni: updateGuestDto.dni,
@@ -127,10 +128,7 @@ export class EventsGuestsController {
       include: { event: true },
     });
 
-    const guest = new EnhancedEventGuest(rest);
-    guest.event = new EventEntity(event);
-
-    return guest;
+    return this.createEnhancedEventGuest(guest);
   }
 
   @Delete('events/guests/:id')
@@ -138,15 +136,12 @@ export class EventsGuestsController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedEventGuest>> {
-    const { event, ...rest } = await this.prismaService.eventGuest.delete({
+    const guest = await this.prismaService.eventGuest.delete({
       where: { id },
       include: { event: true },
     });
 
-    const guest = new EnhancedEventGuest(rest);
-    guest.event = new EventEntity(event);
-
-    return guest;
+    return this.createEnhancedEventGuest(guest);
   }
 }
 

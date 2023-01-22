@@ -10,9 +10,9 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { UserRole, UserRolePermission, User } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { UserRolePermissionEntity, UserEntity } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import {
@@ -20,6 +20,9 @@ import {
   Action,
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
+
+import { UserRolePermissionEntity } from '../permissions/entities';
+import { UserEntity } from '../users/entities';
 
 import { UserRoleEntity } from './entities';
 import {
@@ -34,26 +37,21 @@ class EnhancedUserRole extends UserRoleEntity {
   users: UserEntity[];
 }
 
+type CreateEnhancedUserRole = UserRole & {
+  permissions: UserRolePermission[];
+  users: User[];
+};
+
 @Controller('auth/roles')
 @UseGuards(PoliciesGuard)
 export class UsersRolesController {
   constructor(private prismaService: PrismaService) {}
 
-  @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'userRole'))
-  async create(
-    @Body() createRoleDto: CreateUserRoleDto
-  ): Promise<SingleEntityResponse<EnhancedUserRole>> {
-    const { permissions, users, ...rest } =
-      await this.prismaService.userRole.create({
-        data: {
-          type: createRoleDto.type,
-          name: createRoleDto.name,
-          description: createRoleDto.description,
-        },
-        include: { permissions: true, users: true },
-      });
-
+  createEnhancedUserRole({
+    permissions,
+    users,
+    ...rest
+  }: CreateEnhancedUserRole): EnhancedUserRole {
     const role = new EnhancedUserRole(rest);
 
     role.permissions = permissions.map(
@@ -63,6 +61,23 @@ export class UsersRolesController {
     role.users = users.map((user) => new UserEntity(user));
 
     return role;
+  }
+
+  @Post()
+  @CheckPolicies((ability) => ability.can(Action.CREATE, 'userRole'))
+  async create(
+    @Body() createRoleDto: CreateUserRoleDto
+  ): Promise<SingleEntityResponse<EnhancedUserRole>> {
+    const role = await this.prismaService.userRole.create({
+      data: {
+        type: createRoleDto.type,
+        name: createRoleDto.name,
+        description: createRoleDto.description,
+      },
+      include: { permissions: true, users: true },
+    });
+
+    return this.createEnhancedUserRole(role);
   }
 
   @Get('count')
@@ -97,17 +112,7 @@ export class UsersRolesController {
 
     return {
       count,
-      entities: roles.map(({ permissions, users, ...rest }) => {
-        const role = new EnhancedUserRole(rest);
-
-        role.permissions = permissions.map(
-          (permission) => new UserRolePermissionEntity(permission)
-        );
-
-        role.users = users.map((user) => new UserEntity(user));
-
-        return role;
-      }),
+      entities: roles.map((role) => this.createEnhancedUserRole(role)),
     };
   }
 
@@ -116,24 +121,12 @@ export class UsersRolesController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserRole | null>> {
-    const response = await this.prismaService.userRole.findUnique({
+    const role = await this.prismaService.userRole.findUnique({
       where: { id },
       include: { permissions: true, users: true },
     });
 
-    if (!response) return null;
-
-    const { permissions, users, ...rest } = response;
-
-    const role = new EnhancedUserRole(rest);
-
-    role.permissions = permissions.map(
-      (permission) => new UserRolePermissionEntity(permission)
-    );
-
-    role.users = users.map((user) => new UserEntity(user));
-
-    return role;
+    return role ? this.createEnhancedUserRole(role) : null;
   }
 
   @Patch(':id')
@@ -142,36 +135,22 @@ export class UsersRolesController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateRoleDto: UpdateUserRoleDto
   ): Promise<SingleEntityResponse<EnhancedUserRole>> {
-    const { permissions, users, ...rest } =
-      await this.prismaService.userRole.update({
-        where: { id },
-        data: {
-          type: updateRoleDto.type,
-          name: updateRoleDto.name,
-          description: updateRoleDto.description,
-          config: updateRoleDto.config,
+    const role = await this.prismaService.userRole.update({
+      where: { id },
+      data: {
+        type: updateRoleDto.type,
+        name: updateRoleDto.name,
+        description: updateRoleDto.description,
+        config: updateRoleDto.config,
 
-          ...(updateRoleDto.permissions && {
-            permissions: {
-              createMany: {
-                skipDuplicates: true,
-                data: Object.entries(updateRoleDto.permissions)
-                  .map(([scope, permissions]) => {
-                    const actions = Object.entries(permissions).filter(
-                      ([, value]) => value === true
-                    );
-
-                    return actions.map(([action]) => ({
-                      action: `${scope}::${action}`,
-                    }));
-                  })
-                  .flat(),
-              },
-
-              deleteMany: Object.entries(updateRoleDto.permissions)
+        ...(updateRoleDto.permissions && {
+          permissions: {
+            createMany: {
+              skipDuplicates: true,
+              data: Object.entries(updateRoleDto.permissions)
                 .map(([scope, permissions]) => {
                   const actions = Object.entries(permissions).filter(
-                    ([, value]) => value === false
+                    ([, value]) => value === true
                   );
 
                   return actions.map(([action]) => ({
@@ -180,26 +159,31 @@ export class UsersRolesController {
                 })
                 .flat(),
             },
-          }),
 
-          ...(updateRoleDto.users && {
-            users: {
-              set: updateRoleDto.users.map((user) => ({ id: user })),
-            },
-          }),
-        },
-        include: { permissions: true, users: true },
-      });
+            deleteMany: Object.entries(updateRoleDto.permissions)
+              .map(([scope, permissions]) => {
+                const actions = Object.entries(permissions).filter(
+                  ([, value]) => value === false
+                );
 
-    const role = new EnhancedUserRole(rest);
+                return actions.map(([action]) => ({
+                  action: `${scope}::${action}`,
+                }));
+              })
+              .flat(),
+          },
+        }),
 
-    role.permissions = permissions.map(
-      (permission) => new UserRolePermissionEntity(permission)
-    );
+        ...(updateRoleDto.users && {
+          users: {
+            set: updateRoleDto.users.map((user) => ({ id: user })),
+          },
+        }),
+      },
+      include: { permissions: true, users: true },
+    });
 
-    role.users = users.map((user) => new UserEntity(user));
-
-    return role;
+    return this.createEnhancedUserRole(role);
   }
 
   @Delete(':id')
@@ -207,21 +191,12 @@ export class UsersRolesController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserRole>> {
-    const { permissions, users, ...rest } =
-      await this.prismaService.userRole.delete({
-        where: { id },
-        include: { permissions: true, users: true },
-      });
+    const role = await this.prismaService.userRole.delete({
+      where: { id },
+      include: { permissions: true, users: true },
+    });
 
-    const role = new EnhancedUserRole(rest);
-
-    role.permissions = permissions.map(
-      (permission) => new UserRolePermissionEntity(permission)
-    );
-
-    role.users = users.map((user) => new UserEntity(user));
-
-    return role;
+    return this.createEnhancedUserRole(role);
   }
 }
 

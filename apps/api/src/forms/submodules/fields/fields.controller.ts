@@ -9,11 +9,13 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { FormField, Form } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
-import { FormEntity } from '@/forms';
 import { PrismaService } from '@/prisma';
+
+import { FormEntity } from '../../entities';
 
 import { FormFieldEntity } from './entities';
 import { CreateFormFieldDto, UpdateFormFieldDto } from './dto';
@@ -22,10 +24,24 @@ class EnhancedFormField extends FormFieldEntity {
   form: FormEntity;
 }
 
+type CreateEnhancedFormField = FormField & {
+  form: Form;
+};
+
 @Controller()
 @UseGuards(PoliciesGuard)
 export class FormsFieldsController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedFormField({
+    form,
+    ...rest
+  }: CreateEnhancedFormField): EnhancedFormField {
+    const field = new EnhancedFormField(rest);
+    field.form = new FormEntity(form);
+
+    return field;
+  }
 
   @Post('forms/:form_id/fields')
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'formField'))
@@ -33,7 +49,7 @@ export class FormsFieldsController {
     @Param('form_id') formId: UUID,
     @Body() createFieldDto: CreateFormFieldDto
   ): Promise<SingleEntityResponse<EnhancedFormField>> {
-    const { form, ...rest } = await this.prismaService.formField.create({
+    const field = await this.prismaService.formField.create({
       data: {
         type: createFieldDto.type,
         title: createFieldDto.title,
@@ -43,10 +59,7 @@ export class FormsFieldsController {
       include: { form: true },
     });
 
-    const field = new EnhancedFormField(rest);
-    field.form = new FormEntity(form);
-
-    return field;
+    return this.createEnhancedFormField(field);
   }
 
   @Get('forms/:form_id/fields/count')
@@ -74,12 +87,7 @@ export class FormsFieldsController {
 
     return {
       count,
-      entities: fields.map(({ form, ...rest }) => {
-        const field = new EnhancedFormField(rest);
-        field.form = new FormEntity(form);
-
-        return field;
-      }),
+      entities: fields.map((field) => this.createEnhancedFormField(field)),
     };
   }
 
@@ -88,19 +96,12 @@ export class FormsFieldsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFormField | null>> {
-    const response = await this.prismaService.formField.findUnique({
+    const field = await this.prismaService.formField.findUnique({
       where: { id },
       include: { form: true },
     });
 
-    if (!response) return null;
-
-    const { form, ...rest } = response;
-
-    const field = new EnhancedFormField(rest);
-    field.form = new FormEntity(form);
-
-    return field;
+    return field ? this.createEnhancedFormField(field) : null;
   }
 
   @Patch('forms/fields/:id')
@@ -109,7 +110,7 @@ export class FormsFieldsController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateFieldDto: UpdateFormFieldDto
   ): Promise<SingleEntityResponse<EnhancedFormField>> {
-    const { form, ...rest } = await this.prismaService.formField.update({
+    const field = await this.prismaService.formField.update({
       where: { id },
       data: {
         title: updateFieldDto.title,
@@ -119,10 +120,7 @@ export class FormsFieldsController {
       include: { form: true },
     });
 
-    const field = new EnhancedFormField(rest);
-    field.form = new FormEntity(form);
-
-    return field;
+    return this.createEnhancedFormField(field);
   }
 
   @Delete('forms/fields/:id')
@@ -130,15 +128,12 @@ export class FormsFieldsController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFormField>> {
-    const { form, ...rest } = await this.prismaService.formField.delete({
+    const field = await this.prismaService.formField.delete({
       where: { id },
       include: { form: true },
     });
 
-    const field = new EnhancedFormField(rest);
-    field.form = new FormEntity(form);
-
-    return field;
+    return this.createEnhancedFormField(field);
   }
 }
 

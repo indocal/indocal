@@ -35,6 +35,7 @@ export class AuthController {
   }
 
   @Get('me')
+  @SkipAuthentication()
   @UseGuards(JwtAuthGuard)
   me(@Request() req: ExpressRequest): AuthenticatedUser {
     return req.user as AuthenticatedUser;

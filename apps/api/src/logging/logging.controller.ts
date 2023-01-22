@@ -6,10 +6,13 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { Log, User } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action, UserEntity } from '@/auth';
+import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { PrismaService } from '@/prisma';
+
+import { UserEntity } from '../auth/submodules/users/entities';
 
 import { LogEntity } from './entities';
 import { FindManyLogsParamsDto, CountLogsParamsDto } from './dto';
@@ -18,10 +21,21 @@ class EnhancedLog extends LogEntity {
   user: UserEntity | null;
 }
 
+type CreateEnhancedLog = Log & {
+  user: User | null;
+};
+
 @Controller('logs')
 @UseGuards(PoliciesGuard)
 export class LoggingController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedLog({ user, ...rest }: CreateEnhancedLog): EnhancedLog {
+    const log = new EnhancedLog(rest);
+    log.user = user ? new UserEntity(user) : null;
+
+    return log;
+  }
 
   @Get('count')
   @CheckPolicies((ability) => ability.can(Action.COUNT, 'log'))
@@ -55,12 +69,7 @@ export class LoggingController {
 
     return {
       count,
-      entities: logs.map(({ user, ...rest }) => {
-        const log = new EnhancedLog(rest);
-        log.user = user ? new UserEntity(user) : null;
-
-        return log;
-      }),
+      entities: logs.map((log) => this.createEnhancedLog(log)),
     };
   }
 
@@ -69,19 +78,12 @@ export class LoggingController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedLog | null>> {
-    const response = await this.prismaService.log.findUnique({
+    const log = await this.prismaService.log.findUnique({
       where: { id },
       include: { user: true },
     });
 
-    if (!response) return null;
-
-    const { user, ...rest } = response;
-
-    const log = new EnhancedLog(rest);
-    log.user = user ? new UserEntity(user) : null;
-
-    return log;
+    return log ? this.createEnhancedLog(log) : null;
   }
 }
 

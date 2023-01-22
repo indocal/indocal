@@ -15,10 +15,10 @@ export class OrderItemEntity implements Entity, OrderItem {
   deliveryStatus: OrderItemDeliveryStatus;
 
   @Exclude()
-  orderId: string;
+  supplyId: string;
 
   @Exclude()
-  supplyId: string;
+  orderId: string;
 
   createdAt: Date;
   updatedAt: Date;

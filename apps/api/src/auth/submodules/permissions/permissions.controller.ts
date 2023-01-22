@@ -9,9 +9,9 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { UserRolePermission, UserRole } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { UserRoleEntity } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import {
@@ -19,6 +19,8 @@ import {
   Action,
 } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
+
+import { UserRoleEntity } from '../roles/entities';
 
 import { UserRolePermissionEntity } from './entities';
 import {
@@ -30,10 +32,24 @@ class EnhancedUserRolePermission extends UserRolePermissionEntity {
   role: UserRoleEntity;
 }
 
+type CreateEnhancedUserRolePermission = UserRolePermission & {
+  role: UserRole;
+};
+
 @Controller()
 @UseGuards(PoliciesGuard)
 export class UsersRolesPermissionsController {
   constructor(private prismaService: PrismaService) {}
+
+  createEnhancedUserRolePermission({
+    role,
+    ...rest
+  }: CreateEnhancedUserRolePermission): EnhancedUserRolePermission {
+    const permission = new EnhancedUserRolePermission(rest);
+    permission.role = new UserRoleEntity(role);
+
+    return permission;
+  }
 
   @Post('auth/roles/:role_id/permissions')
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'userRolePermission'))
@@ -41,19 +57,15 @@ export class UsersRolesPermissionsController {
     @Param('role_id') roleId: UUID,
     @Body() createPermissionDto: CreateUserRolePermissionDto
   ): Promise<SingleEntityResponse<EnhancedUserRolePermission>> {
-    const { role, ...rest } =
-      await this.prismaService.userRolePermission.create({
-        data: {
-          action: createPermissionDto.action,
-          role: { connect: { id: roleId } },
-        },
-        include: { role: true },
-      });
+    const permission = await this.prismaService.userRolePermission.create({
+      data: {
+        action: createPermissionDto.action,
+        role: { connect: { id: roleId } },
+      },
+      include: { role: true },
+    });
 
-    const permission = new EnhancedUserRolePermission(rest);
-    permission.role = new UserRoleEntity(role);
-
-    return permission;
+    return this.createEnhancedUserRolePermission(permission);
   }
 
   @Get('auth/roles/:role_id/permissions/count')
@@ -81,12 +93,9 @@ export class UsersRolesPermissionsController {
 
     return {
       count,
-      entities: permissions.map(({ role, ...rest }) => {
-        const permission = new EnhancedUserRolePermission(rest);
-        permission.role = new UserRoleEntity(role);
-
-        return permission;
-      }),
+      entities: permissions.map((permission) =>
+        this.createEnhancedUserRolePermission(permission)
+      ),
     };
   }
 
@@ -95,19 +104,14 @@ export class UsersRolesPermissionsController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserRolePermission | null>> {
-    const response = await this.prismaService.userRolePermission.findUnique({
+    const permission = await this.prismaService.userRolePermission.findUnique({
       where: { id },
       include: { role: true },
     });
 
-    if (!response) return null;
-
-    const { role, ...rest } = response;
-
-    const permission = new EnhancedUserRolePermission(rest);
-    permission.role = new UserRoleEntity(role);
-
-    return permission;
+    return permission
+      ? this.createEnhancedUserRolePermission(permission)
+      : null;
   }
 
   @Patch('auth/roles/permissions/:id')
@@ -116,17 +120,13 @@ export class UsersRolesPermissionsController {
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updatePermissionDto: UpdateUserRolePermissionDto
   ): Promise<SingleEntityResponse<EnhancedUserRolePermission>> {
-    const { role, ...rest } =
-      await this.prismaService.userRolePermission.update({
-        where: { id },
-        data: { action: updatePermissionDto.action },
-        include: { role: true },
-      });
+    const permission = await this.prismaService.userRolePermission.update({
+      where: { id },
+      data: { action: updatePermissionDto.action },
+      include: { role: true },
+    });
 
-    const permission = new EnhancedUserRolePermission(rest);
-    permission.role = new UserRoleEntity(role);
-
-    return permission;
+    return this.createEnhancedUserRolePermission(permission);
   }
 
   @Delete('auth/roles/permissions/:id')
@@ -134,16 +134,12 @@ export class UsersRolesPermissionsController {
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserRolePermission>> {
-    const { role, ...rest } =
-      await this.prismaService.userRolePermission.delete({
-        where: { id },
-        include: { role: true },
-      });
+    const permission = await this.prismaService.userRolePermission.delete({
+      where: { id },
+      include: { role: true },
+    });
 
-    const permission = new EnhancedUserRolePermission(rest);
-    permission.role = new UserRoleEntity(role);
-
-    return permission;
+    return this.createEnhancedUserRolePermission(permission);
   }
 }
 

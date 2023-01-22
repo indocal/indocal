@@ -2,18 +2,20 @@ import {
   Controller,
   Get,
   Post,
-  Delete,
   Param,
   Query,
   Body,
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { FormEntry, User, Form } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action, UserEntity } from '@/auth';
-import { FormEntity } from '@/forms';
+import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { PrismaService } from '@/prisma';
+
+import { UserEntity } from '../../../auth/submodules/users/entities';
+import { FormEntity } from '../../entities';
 
 import { FormEntryEntity } from './entities';
 import {
@@ -23,37 +25,49 @@ import {
 } from './dto';
 
 class EnhancedFormEntry extends FormEntryEntity {
-  form: FormEntity;
   answeredBy: UserEntity | null;
+  form: FormEntity;
 }
+
+type CreateEnhancedFormEntry = FormEntry & {
+  answeredBy: User | null;
+  form: Form;
+};
 
 @Controller('entries')
 @UseGuards(PoliciesGuard)
 export class FormsEntriesController {
   constructor(private prismaService: PrismaService) {}
 
+  createEnhancedFormEntry({
+    form,
+    answeredBy,
+    ...rest
+  }: CreateEnhancedFormEntry): EnhancedFormEntry {
+    const entry = new EnhancedFormEntry(rest);
+    entry.answeredBy = answeredBy ? new UserEntity(answeredBy) : null;
+    entry.form = new FormEntity(form);
+
+    return entry;
+  }
+
   @Post()
   @CheckPolicies((ability) => ability.can(Action.CREATE, 'formEntry'))
   async create(
     @Body() createEntryDto: CreateFormEntryDto
   ): Promise<SingleEntityResponse<EnhancedFormEntry>> {
-    const { form, answeredBy, ...rest } =
-      await this.prismaService.formEntry.create({
-        data: {
-          answers: createEntryDto.answers,
-          form: { connect: { id: createEntryDto.form } },
-          ...(createEntryDto.answeredBy && {
-            answeredBy: { connect: { id: createEntryDto.answeredBy } },
-          }),
-        },
-        include: { form: true, answeredBy: true },
-      });
+    const entry = await this.prismaService.formEntry.create({
+      data: {
+        answers: createEntryDto.answers,
+        form: { connect: { id: createEntryDto.form } },
+        ...(createEntryDto.answeredBy && {
+          answeredBy: { connect: { id: createEntryDto.answeredBy } },
+        }),
+      },
+      include: { answeredBy: true, form: true },
+    });
 
-    const entry = new EnhancedFormEntry(rest);
-    entry.form = new FormEntity(form);
-    entry.answeredBy = answeredBy ? new UserEntity(answeredBy) : null;
-
-    return entry;
+    return this.createEnhancedFormEntry(entry);
   }
 
   @Get('count')
@@ -78,7 +92,7 @@ export class FormsEntriesController {
         skip: query.pagination?.skip && Number(query.pagination.skip),
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
-        include: { form: true, answeredBy: true },
+        include: { answeredBy: true, form: true },
       }),
       this.prismaService.formEntry.count({
         where: query.filters,
@@ -88,13 +102,7 @@ export class FormsEntriesController {
 
     return {
       count,
-      entities: entries.map(({ form, answeredBy, ...rest }) => {
-        const entry = new EnhancedFormEntry(rest);
-        entry.form = new FormEntity(form);
-        entry.answeredBy = answeredBy ? new UserEntity(answeredBy) : null;
-
-        return entry;
-      }),
+      entities: entries.map((entry) => this.createEnhancedFormEntry(entry)),
     };
   }
 
@@ -103,38 +111,12 @@ export class FormsEntriesController {
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFormEntry | null>> {
-    const response = await this.prismaService.formEntry.findUnique({
+    const entry = await this.prismaService.formEntry.findUnique({
       where: { id },
-      include: { form: true, answeredBy: true },
+      include: { answeredBy: true, form: true },
     });
 
-    if (!response) return null;
-
-    const { form, answeredBy, ...rest } = response;
-
-    const entry = new EnhancedFormEntry(rest);
-    entry.form = new FormEntity(form);
-    entry.answeredBy = answeredBy ? new UserEntity(answeredBy) : null;
-
-    return entry;
-  }
-
-  @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'formEntry'))
-  async delete(
-    @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<SingleEntityResponse<EnhancedFormEntry>> {
-    const { form, answeredBy, ...rest } =
-      await this.prismaService.formEntry.delete({
-        where: { id },
-        include: { form: true, answeredBy: true },
-      });
-
-    const entry = new EnhancedFormEntry(rest);
-    entry.form = new FormEntity(form);
-    entry.answeredBy = answeredBy ? new UserEntity(answeredBy) : null;
-
-    return entry;
+    return entry ? this.createEnhancedFormEntry(entry) : null;
   }
 }
 
