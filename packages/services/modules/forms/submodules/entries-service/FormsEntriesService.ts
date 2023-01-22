@@ -37,11 +37,6 @@ export interface FindOneFormEntryByUUIDReturn {
   error: ServiceError | null;
 }
 
-export interface DeleteFormEntryReturn {
-  entry: FormEntry | null;
-  error: ServiceError | null;
-}
-
 export class FormsEntriesService {
   constructor(private config: Config) {}
 
@@ -116,24 +111,6 @@ export class FormsEntriesService {
 
       return {
         entry: response.data || null,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        entry: null,
-        error: createServiceError(error),
-      };
-    }
-  }
-
-  async delete(id: UUID): Promise<DeleteFormEntryReturn> {
-    try {
-      const response = await this.config.axios.delete<
-        SingleEntityResponse<FormEntry>
-      >(`${ApiEndpoints.FORMS_ENTRIES}/${id}`);
-
-      return {
-        entry: response.data,
         error: null,
       };
     } catch (error) {

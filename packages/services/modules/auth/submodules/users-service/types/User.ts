@@ -29,8 +29,6 @@ export interface User extends Entity {
   status: UserStatus;
   roles: Role[];
   groups: Group[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default User;

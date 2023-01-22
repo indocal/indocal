@@ -19,8 +19,6 @@ export interface Log extends Entity {
   action: string;
   metadata: LogMetadata | null;
   user: User | null;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default Log;

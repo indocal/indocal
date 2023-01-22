@@ -3,15 +3,6 @@ import { Entity, UUID } from '../../../../../common';
 import { OrderStatus } from '../../orders-service';
 import { SupplyUnit } from '../../supplies-service';
 
-type Order = {
-  id: UUID;
-  code: string;
-  status: OrderStatus;
-  deliveryAt: string[];
-  createdAt: string;
-  updatedAt: string;
-};
-
 type Supply = {
   id: UUID;
   code: string;
@@ -23,6 +14,15 @@ type Supply = {
   updatedAt: string;
 };
 
+type Order = {
+  id: UUID;
+  code: string;
+  status: OrderStatus;
+  deliveryAt: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type OrderItemDeliveryStatus = 'PENDING' | 'PARTIAL' | 'COMPLETED';
 
 export interface OrderItem extends Entity {
@@ -30,10 +30,8 @@ export interface OrderItem extends Entity {
   quantity: number;
   received: number[];
   deliveryStatus: OrderItemDeliveryStatus;
-  order: Order;
   supply: Supply;
-  createdAt: string;
-  updatedAt: string;
+  order: Order;
 }
 
 export default OrderItem;

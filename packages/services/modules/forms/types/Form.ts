@@ -41,8 +41,6 @@ export interface Form extends Entity {
   config: FormConfig | null;
   fields: Field[];
   group: Group;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default Form;

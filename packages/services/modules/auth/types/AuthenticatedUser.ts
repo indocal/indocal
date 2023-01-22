@@ -1,6 +1,7 @@
-import { Entity } from '../../../common';
+import { UUID } from '../../../common';
 
-export interface AuthenticatedUser extends Entity {
+export interface AuthenticatedUser {
+  id: UUID;
   username: string;
   email: string;
 }

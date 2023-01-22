@@ -179,6 +179,7 @@ export class OrdersService {
     }
   }
 
+  // TODO: check?
   async receiveItems(
     order: UUID | Order,
     data: ReceiveOrderItemsDto

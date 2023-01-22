@@ -11,6 +11,7 @@ export class WarehouseService {
     this.supplies = new SuppliesService(config);
     this.suppliers = new SuppliersService(config);
     this.orders = new OrdersService(config);
+    // TODO: add movements
   }
 }
 

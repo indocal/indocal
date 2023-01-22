@@ -32,8 +32,6 @@ export interface UserRole extends Entity {
   config: UserRoleConfig | null;
   permissions: Permission[];
   users: User[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default UserRole;

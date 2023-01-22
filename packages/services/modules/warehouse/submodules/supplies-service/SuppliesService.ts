@@ -180,6 +180,7 @@ export class SuppliesService {
     }
   }
 
+  // TODO: check?
   async prices(supply: UUID | Supply): Promise<SupplyPricesReturn> {
     try {
       const response = await this.config.axios.get<SupplyPrice[]>(

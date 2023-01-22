@@ -16,8 +16,6 @@ export interface Supply extends Entity {
   description: string | null;
   quantity: number;
   unit: SupplyUnit;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default Supply;

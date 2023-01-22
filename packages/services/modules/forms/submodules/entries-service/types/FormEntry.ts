@@ -25,6 +25,16 @@ export type FormFieldAnswer = {
     | null;
 };
 
+type AnsweredBy = {
+  id: UUID;
+  username: string;
+  email: string;
+  name: string;
+  status: UserStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type EntryForm = {
   id: UUID;
   slug: string;
@@ -37,22 +47,10 @@ type EntryForm = {
   updatedAt: string;
 };
 
-type AnsweredBy = {
-  id: UUID;
-  username: string;
-  email: string;
-  name: string;
-  status: UserStatus;
-  createdAt: string;
-  updatedAt: string;
-};
-
 export interface FormEntry extends Entity {
   answers: FormFieldAnswer[];
-  form: EntryForm;
   answeredBy: AnsweredBy | null;
-  createdAt: string;
-  updatedAt: string;
+  form: EntryForm;
 }
 
 export default FormEntry;

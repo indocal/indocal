@@ -27,6 +27,8 @@ export enum ApiEndpoints {
   SUPPLIERS_COUNT = 'warehouse/suppliers/count',
   ORDERS = 'warehouse/orders',
   ORDERS_COUNT = 'warehouse/orders/count',
+  INVENTORY_MOVEMENTS = 'warehouse/movements',
+  INVENTORY_MOVEMENTS_COUNT = 'warehouse/movements/count',
 }
 
 export default ApiEndpoints;

@@ -55,8 +55,6 @@ export interface FormField extends Entity {
   description: string | null;
   config: FormFieldConfig | null;
   form: Form;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default FormField;

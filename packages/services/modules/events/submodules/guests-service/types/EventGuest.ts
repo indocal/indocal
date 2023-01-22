@@ -21,8 +21,6 @@ export interface EventGuest extends Entity {
   from: string;
   position: string;
   event: Event;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default EventGuest;

@@ -21,8 +21,6 @@ export interface Event extends Entity {
   status: EventStatus;
   guests: Guest[];
   scheduledAt: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default Event;

@@ -15,8 +15,6 @@ type Role = {
 export interface UserRolePermission extends Entity {
   action: string;
   role: Role;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default UserRolePermission;

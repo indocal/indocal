@@ -41,8 +41,6 @@ export interface Order extends Entity {
   deliveryAt: string[];
   items: OrderItem[];
   supplier: Supplier;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default Order;

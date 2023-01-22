@@ -16,8 +16,6 @@ export interface UserGroup extends Entity {
   name: string;
   description: string | null;
   members: Member[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default UserGroup;
