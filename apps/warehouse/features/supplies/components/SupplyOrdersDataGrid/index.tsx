@@ -55,6 +55,10 @@ export const SupplyOrdersDataGrid: React.FC<SupplyOrdersDataGridProps> = ({
         ],
       }),
     },
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { createdAt: 'desc' },
   });
 

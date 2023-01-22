@@ -33,6 +33,10 @@ export const SupplierOrdersDataGrid: React.FC<SupplierOrdersDataGridProps> = ({
         ],
       }),
     },
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { createdAt: 'desc' },
   });
 

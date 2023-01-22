@@ -31,6 +31,10 @@ const UsersDataGrid: React.FC = () => {
         ],
       },
     }),
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { username: 'asc' },
   });
 

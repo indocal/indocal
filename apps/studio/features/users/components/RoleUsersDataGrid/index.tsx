@@ -36,6 +36,10 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
         ],
       }),
     },
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { username: 'asc' },
   });
 

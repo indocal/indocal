@@ -30,6 +30,10 @@ const FormsDataGrid: React.FC = () => {
         ],
       },
     }),
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { title: 'asc' },
   });
 

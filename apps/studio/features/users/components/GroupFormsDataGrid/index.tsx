@@ -35,6 +35,10 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
         ],
       }),
     },
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { title: 'asc' },
   });
 

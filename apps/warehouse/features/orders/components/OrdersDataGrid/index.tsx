@@ -30,6 +30,10 @@ const OrdersDataGrid: React.FC = () => {
         ],
       },
     }),
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { createdAt: 'desc' },
   });
 

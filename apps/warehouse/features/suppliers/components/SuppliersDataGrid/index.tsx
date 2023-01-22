@@ -30,6 +30,10 @@ const SuppliersDataGrid: React.FC = () => {
         ],
       },
     }),
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { name: 'asc' },
   });
 

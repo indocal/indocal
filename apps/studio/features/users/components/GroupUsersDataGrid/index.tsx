@@ -36,6 +36,10 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
         ],
       }),
     },
+    pagination: {
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+    },
     orderBy: { username: 'asc' },
   });
 
