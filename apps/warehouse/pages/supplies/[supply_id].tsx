@@ -8,6 +8,7 @@ import {
   SupplyCard,
   SupplyPriceChartCard,
   SupplyOrdersDataGrid,
+  SupplyMovementsList,
 } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -52,14 +53,16 @@ const SupplyPage: EnhancedNextPage = () => {
               </Widget>
             </Grid>
 
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={7}>
               <Widget>
                 <SupplyOrdersDataGrid supply={supply} />
               </Widget>
             </Grid>
 
-            <Grid item xs={12} md={4}>
-              <Widget>{/* TODO: add movements */}</Widget>
+            <Grid item xs={12} md={5}>
+              <Widget>
+                <SupplyMovementsList supply={supply} />
+              </Widget>
             </Grid>
           </Grid>
         ) : (

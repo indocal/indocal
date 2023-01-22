@@ -4,3 +4,4 @@ export * from './GenericSuppliesDataGrid';
 export * from './SupplyOrdersDataGrid';
 
 export * from './SupplyPriceChartCard';
+export * from './SupplyMovementsList';
