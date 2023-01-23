@@ -17,6 +17,7 @@ import {
   Person as StandardAccessIcon,
   AdminPanelSettings as AdminAccessIcon,
   Dashboard as StudioAppIcon,
+  Hub as HubIcon,
   SupportAgent as NobuAppIcon,
   Event as EventsAppIcon,
   CardMembership as TrainingsAppIcon,
@@ -88,6 +89,7 @@ export const ManageUserRoleConfigDialog: React.FC<
     defaultValues: {
       access: {
         studio: role.config?.access?.studio || 'NONE',
+        hub: role.config?.access?.hub || 'NONE',
         nobu: role.config?.access?.nobu || 'NONE',
         events: role.config?.access?.events || 'NONE',
         trainings: role.config?.access?.trainings || 'NONE',
@@ -102,6 +104,11 @@ export const ManageUserRoleConfigDialog: React.FC<
         name: 'studio',
         label: 'Studio',
         icon: <StudioAppIcon />,
+      },
+      {
+        name: 'hub',
+        label: 'Hub',
+        icon: <HubIcon />,
       },
       {
         name: 'nobu',

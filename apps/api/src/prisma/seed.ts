@@ -39,6 +39,7 @@ async function main() {
           config: {
             access: {
               studio: 'ADMIN',
+              hub: 'ADMIN',
               nobu: 'ADMIN',
               events: 'ADMIN',
               trainings: 'ADMIN',
