@@ -4,4 +4,4 @@ export * from './UpdateSupplyDto';
 export * from './CountSuppliesParamsDto';
 export * from './FindManySuppliesParamsDto';
 
-export * from './SupplyPrice';
+export * from './SupplyPrices';

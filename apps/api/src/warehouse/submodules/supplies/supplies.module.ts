@@ -3,11 +3,11 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '@/auth';
 import { PrismaService } from '@/prisma';
 
-import SuppliesController from './supplies.controller';
+import { SuppliesCRUDController, SuppliesStatsController } from './controllers';
 
 @Module({
   imports: [AuthModule],
-  controllers: [SuppliesController],
+  controllers: [SuppliesCRUDController, SuppliesStatsController],
   providers: [PrismaService],
 })
 export class SuppliesModule {}

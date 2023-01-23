@@ -11,20 +11,20 @@ import {
 } from '@indocal/ui';
 import { useSupplyPrices, UUID, Supply } from '@indocal/services';
 
-export interface SupplyPriceChartCardProps {
+export interface SupplyPricesChartCardProps {
   supply: UUID | Supply;
 }
 
-export const SupplyPriceChartCard: React.FC<SupplyPriceChartCardProps> = ({
+export const SupplyPricesChartCard: React.FC<SupplyPricesChartCardProps> = ({
   supply: entity,
 }) => {
-  const { loading, validating, prices, error } = useSupplyPrices(
+  const { loading, validating, supplyPrices, error } = useSupplyPrices(
     typeof entity === 'string' ? entity : entity.id
   );
 
   const options: ChartOptions = useMemo(
     () => ({
-      chart: { id: SupplyPriceChartCard.name, toolbar: { show: false } },
+      chart: { id: SupplyPricesChartCard.name, toolbar: { show: false } },
       title: {
         text: 'Historial de precios',
         style: {
@@ -33,22 +33,22 @@ export const SupplyPriceChartCard: React.FC<SupplyPriceChartCardProps> = ({
         },
       },
       xaxis: {
-        categories: prices.map(({ date }) =>
-          new Date(date).toLocaleDateString()
+        categories: supplyPrices?.priceHistory.map(({ timestamp }) =>
+          new Date(timestamp).toLocaleDateString()
         ),
       },
     }),
-    [prices]
+    [supplyPrices]
   );
 
   const series: ChartSeries = useMemo(
     () => [
       {
         name: 'Precio',
-        data: prices.map(({ price }) => price),
+        data: supplyPrices?.priceHistory.map(({ price }) => price) ?? [],
       },
     ],
-    [prices]
+    [supplyPrices]
   );
 
   return (
@@ -63,7 +63,7 @@ export const SupplyPriceChartCard: React.FC<SupplyPriceChartCardProps> = ({
         <Loader invisible message="Consultando precios..." />
       ) : error ? (
         <ErrorInfo error={error} />
-      ) : prices.length > 0 ? (
+      ) : supplyPrices && supplyPrices.priceHistory.length > 0 ? (
         <>
           {validating && (
             <LinearProgress
@@ -102,4 +102,4 @@ export const SupplyPriceChartCard: React.FC<SupplyPriceChartCardProps> = ({
   );
 };
 
-export default SupplyPriceChartCard;
+export default SupplyPricesChartCard;

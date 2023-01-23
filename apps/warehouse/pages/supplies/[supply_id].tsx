@@ -6,7 +6,7 @@ import { useSupply, UUID } from '@indocal/services';
 
 import {
   SupplyCard,
-  SupplyPriceChartCard,
+  SupplyPricesChartCard,
   SupplyOrdersDataGrid,
   SupplyMovementsList,
 } from '@/features';
@@ -49,7 +49,7 @@ const SupplyPage: EnhancedNextPage = () => {
 
             <Grid item xs={12} md={8}>
               <Widget>
-                <SupplyPriceChartCard supply={supply} />
+                <SupplyPricesChartCard supply={supply} />
               </Widget>
             </Grid>
 

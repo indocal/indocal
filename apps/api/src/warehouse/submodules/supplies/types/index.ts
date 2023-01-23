@@ -1,1 +1,1 @@
-export * from './SupplyPrice';
+export * from './SupplyPrices';

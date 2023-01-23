@@ -15,7 +15,7 @@ import {
   UpdateSupplyDto,
   CountSuppliesParamsDto,
   FindManySuppliesParamsDto,
-  SupplyPrice,
+  SupplyPrices,
 } from './types';
 
 export interface CreateSupplyReturn {
@@ -49,8 +49,13 @@ export interface DeleteSupplyReturn {
   error: ServiceError | null;
 }
 
+export interface SuppliesPricesReturn {
+  suppliesPrices: SupplyPrices[];
+  error: ServiceError | null;
+}
+
 export interface SupplyPricesReturn {
-  prices: SupplyPrice[];
+  supplyPrices: SupplyPrices | null;
   error: ServiceError | null;
 }
 
@@ -180,20 +185,37 @@ export class SuppliesService {
     }
   }
 
-  // TODO: check?
-  async prices(supply: UUID | Supply): Promise<SupplyPricesReturn> {
+  async suppliesPrices(): Promise<SuppliesPricesReturn> {
     try {
-      const response = await this.config.axios.get<SupplyPrice[]>(
-        `${ApiEndpoints.SUPPLIES}/${this.getUUID(supply)}/prices`
+      const response = await this.config.axios.get<SupplyPrices[]>(
+        `${ApiEndpoints.SUPPLIES}/stats/prices`
       );
 
       return {
-        prices: response.data,
+        suppliesPrices: response.data,
         error: null,
       };
     } catch (error) {
       return {
-        prices: [],
+        suppliesPrices: [],
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async supplyPrices(supply: UUID | Supply): Promise<SupplyPricesReturn> {
+    try {
+      const response = await this.config.axios.get<SupplyPrices>(
+        `${ApiEndpoints.SUPPLIES}/${this.getUUID(supply)}/stats/prices`
+      );
+
+      return {
+        supplyPrices: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        supplyPrices: null,
         error: createServiceError(error),
       };
     }

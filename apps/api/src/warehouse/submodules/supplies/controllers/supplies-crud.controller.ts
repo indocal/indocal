@@ -15,18 +15,17 @@ import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
 import { PrismaService } from '@/prisma';
 
-import { SupplyEntity } from './entities';
+import { SupplyEntity } from '../entities';
 import {
   FindManySuppliesParamsDto,
   CountSuppliesParamsDto,
   CreateSupplyDto,
   UpdateSupplyDto,
-} from './dto';
-import { SupplyPrice } from './types';
+} from '../dto';
 
 @Controller('warehouse/supplies')
 @UseGuards(PoliciesGuard)
-export class SuppliesController {
+export class SuppliesCRUDController {
   constructor(private prismaService: PrismaService) {}
 
   @Post()
@@ -123,19 +122,6 @@ export class SuppliesController {
 
     return new SupplyEntity(supply);
   }
-
-  @Get(':id/prices') // TODO: check?
-  @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
-  async prices(@Param('id', ParseUUIDPipe) id: UUID): Promise<SupplyPrice[]> {
-    const orders = await this.prismaService.orderItem.findMany({
-      where: { supply: { id } },
-    });
-
-    return orders.map((order) => ({
-      date: order.createdAt.toISOString(),
-      price: order.price,
-    }));
-  }
 }
 
-export default SuppliesController;
+export default SuppliesCRUDController;
