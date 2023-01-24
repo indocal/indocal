@@ -64,15 +64,15 @@ export const ReceiveOrderItemsDialog: React.FC<
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { order: updated, error } =
-        await indocal.warehouse.orders.receiveItems(order.id, {
-          received: order.items.map((item, index) => ({
-            item: item.id,
-            quantity: formData.received[index]
-              ? Math.trunc(formData.received[index])
-              : 0,
-          })),
-        });
+      const { error } = await indocal.warehouse.receiveItems({
+        order: order.id,
+        received: order.items.map((item, index) => ({
+          item: item.id,
+          quantity: formData.received[index]
+            ? Math.trunc(formData.received[index])
+            : 0,
+        })),
+      });
 
       if (error) {
         enqueueSnackbar(
@@ -85,7 +85,7 @@ export const ReceiveOrderItemsDialog: React.FC<
           { variant: 'error' }
         );
       } else {
-        await mutate(`${ApiEndpoints.ORDERS}/${order.id}`, updated);
+        await mutate(`${ApiEndpoints.ORDERS}/${order.id}`);
 
         enqueueSnackbar('Artículos recibidos exitosamente', {
           variant: 'success',

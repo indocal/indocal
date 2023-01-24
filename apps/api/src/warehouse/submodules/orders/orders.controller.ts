@@ -26,9 +26,7 @@ import {
   CountOrdersParamsDto,
   CreateOrderDto,
   UpdateOrderDto,
-  ReceiveOrderItemsDto,
 } from './dto';
-import { InvalidReceivedQuantityException } from './errors';
 
 class EnhancedOrderItem extends OrderItemEntity {
   supply: SupplyEntity;
@@ -169,114 +167,6 @@ export class OrdersController {
     const order = await this.prismaService.order.delete({
       where: { id },
       include: { items: { include: { supply: true } }, supplier: true },
-    });
-
-    return this.createEnhancedOrder(order);
-  }
-
-  @Patch(':id/receive-items') // TODO: check?
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'order'))
-  async receiveItems(
-    @Param('id', ParseUUIDPipe) id: UUID,
-    @Body() receiveOrderItemsDto: ReceiveOrderItemsDto
-  ): Promise<SingleEntityResponse<EnhancedOrder>> {
-    const order = await this.prismaService.$transaction(async (tx) => {
-      const order = await tx.order.findUniqueOrThrow({
-        where: { id },
-        include: { items: { include: { supply: true } }, supplier: true },
-      });
-
-      const received = order.items.reduce<Record<UUID, number>>(
-        (prev, current) => ({
-          ...prev,
-          [current.id]:
-            receiveOrderItemsDto.received.find(
-              (target) => target.item === current.id
-            )?.quantity ?? 0,
-        }),
-        {}
-      );
-
-      const targets = order.items.map((item) => {
-        const remaining =
-          item.quantity -
-          item.received.reduce((total, current) => total + current, 0);
-
-        if (received[item.id] > remaining)
-          throw new InvalidReceivedQuantityException(
-            item.supply.name,
-            remaining,
-            received[item.id]
-          );
-
-        return {
-          item: item.id,
-          supply: item.supply.id,
-          quantity: item.quantity,
-          received: received[item.id],
-          remaining,
-        };
-      });
-
-      await Promise.all(
-        targets.map(async (target) => {
-          const allItemsDelivered = target.remaining - target.received === 0;
-
-          const someItemDelivered =
-            target.quantity !== target.remaining - target.received;
-
-          await tx.orderItem.update({
-            where: { id: target.item },
-            data: {
-              received: { push: target.received },
-
-              deliveryStatus: allItemsDelivered
-                ? 'COMPLETED'
-                : someItemDelivered
-                ? 'PARTIAL'
-                : 'PENDING',
-
-              supply: {
-                update: {
-                  quantity: {
-                    increment: target.received,
-                  },
-                },
-              },
-            },
-          });
-        })
-      );
-
-      // TODO: implement it correctly
-      await tx.inventoryMovement.create({
-        data: {
-          type: 'INPUT',
-          order: { connect: { id: order.id } },
-          items: {
-            createMany: {
-              skipDuplicates: true,
-              data: targets.map((target) => ({
-                quantity: target.received,
-                supplyId: target.supply,
-              })),
-            },
-          },
-        },
-      });
-
-      const allItemsDelivered = targets.every(
-        ({ received, remaining }) => remaining - received === 0
-      );
-
-      return await tx.order.update({
-        where: { id },
-        data: {
-          status: allItemsDelivered ? 'COMPLETED' : 'PARTIAL',
-          deliveryAt: { push: new Date() },
-        },
-        include: { items: { include: { supply: true } }, supplier: true },
-      });
     });
 
     return this.createEnhancedOrder(order);

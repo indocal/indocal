@@ -15,7 +15,6 @@ import {
   UpdateOrderDto,
   CountOrdersParamsDto,
   FindManyOrdersParamsDto,
-  ReceiveOrderItemsDto,
 } from './types';
 
 import { OrdersItemsService } from '../orders-items-service';
@@ -166,30 +165,6 @@ export class OrdersService {
       const response = await this.config.axios.delete<
         SingleEntityResponse<Order>
       >(`${ApiEndpoints.ORDERS}/${id}`);
-
-      return {
-        order: response.data,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        order: null,
-        error: createServiceError(error),
-      };
-    }
-  }
-
-  // TODO: check?
-  async receiveItems(
-    order: UUID | Order,
-    data: ReceiveOrderItemsDto
-  ): Promise<UpdateOrderReturn> {
-    try {
-      const response = await this.config.axios.patch<
-        SingleEntityResponse<Order>,
-        AxiosResponse<SingleEntityResponse<Order>, ReceiveOrderItemsDto>,
-        ReceiveOrderItemsDto
-      >(`${ApiEndpoints.ORDERS}/${this.getUUID(order)}/receive-items`, data);
 
       return {
         order: response.data,
