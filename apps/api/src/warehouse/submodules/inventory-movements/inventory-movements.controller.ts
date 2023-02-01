@@ -103,10 +103,12 @@ export class InventoryMovementsController {
           items: {
             createMany: {
               skipDuplicates: true,
-              data: createInventoryMovementDto.items.map((item) => ({
-                quantity: item.quantity,
-                supplyId: item.supply,
-              })),
+              data: createInventoryMovementDto.items
+                .filter((item) => item.quantity > 0)
+                .map((item) => ({
+                  quantity: item.quantity,
+                  supplyId: item.supply,
+                })),
             },
           },
 

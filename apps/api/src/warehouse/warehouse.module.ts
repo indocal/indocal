@@ -1,5 +1,10 @@
 import { Module } from '@nestjs/common';
 
+import { AuthModule } from '@/auth';
+import { PrismaService } from '@/prisma';
+
+import WarehouseController from './warehouse.controller';
+
 import {
   SuppliesModule,
   SuppliersModule,
@@ -11,6 +16,7 @@ import {
 
 @Module({
   imports: [
+    AuthModule,
     SuppliesModule,
     SuppliersModule,
     OrdersModule,
@@ -18,6 +24,8 @@ import {
     InventoryMovementsModule,
     InventoryMovementsItemsModule,
   ],
+  controllers: [WarehouseController],
+  providers: [PrismaService],
 })
 export class WarehouseModule {}
 

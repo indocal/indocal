@@ -1,19 +1,16 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import NextLink from 'next/link';
 import { Box, Paper, Stack, Typography, IconButton } from '@mui/material';
 import {
   Refresh as RefreshIcon,
   AddCircle as AddIcon,
   Launch as ViewDetailsIcon,
-  Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
-import { useSnackbar } from 'notistack';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
-import { Can, getShortUUID, UUID, FormEntry } from '@indocal/services';
+import { Can, getShortUUID, FormEntry } from '@indocal/services';
 
-import { indocal } from '@/lib';
 import { Pages } from '@/config';
 
 export interface GenericFormsEntriesDataGridProps {
@@ -33,39 +30,6 @@ export const GenericFormsEntriesDataGrid: React.FC<
   onAddButtonClick,
   enhancedDataGridProps,
 }) => {
-  const { enqueueSnackbar } = useSnackbar();
-
-  const handleDelete = useCallback(
-    async (id: UUID) => {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas eliminar esta entrada?'
-      );
-
-      if (!answer) return;
-
-      const { error } = await indocal.forms.entries.delete(id);
-
-      if (error) {
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      } else {
-        if (onRefreshButtonClick) await onRefreshButtonClick();
-
-        enqueueSnackbar('Entrada eliminada exitosamente', {
-          variant: 'success',
-        });
-      }
-    },
-    [onRefreshButtonClick, enqueueSnackbar]
-  );
-
   const columns = useMemo<GridColumns>(
     () => [
       {
@@ -86,16 +50,6 @@ export const GenericFormsEntriesDataGrid: React.FC<
                 sx={{ display: 'flex' }}
               >
                 <ViewDetailsIcon />
-              </IconButton>
-            </Can>
-
-            <Can I="delete" a="formEntry">
-              <IconButton
-                size="small"
-                color="error"
-                onClick={async () => await handleDelete(id as UUID)}
-              >
-                <DeleteIcon />
               </IconButton>
             </Can>
           </Stack>
@@ -136,7 +90,7 @@ export const GenericFormsEntriesDataGrid: React.FC<
         valueFormatter: ({ value }) => new Date(value).toLocaleString(),
       },
     ],
-    [handleDelete]
+    []
   );
 
   const rows = useMemo<GridRowsProp>(

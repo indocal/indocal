@@ -112,27 +112,18 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
             ) : movements.length > 0 ? (
               <>
                 <Box sx={{ overflow: 'auto' }}>
-                  {movements
-                    .filter(
-                      (movement) =>
-                        movement.items.find(
-                          (item) =>
-                            item.supply.id ===
-                            (typeof supply === 'string' ? supply : supply.id)
-                        )?.quantity !== 0
-                    )
-                    .map((movement) => (
-                      <Fragment key={movement.id}>
-                        {options[movement.type]({
-                          movement,
-                          item: movement.items.find(
-                            (item) =>
-                              item.supply.id ===
-                              (typeof supply === 'string' ? supply : supply.id)
-                          ) as InventoryMovement['items'][number],
-                        })}
-                      </Fragment>
-                    ))}
+                  {movements.map((movement) => (
+                    <Fragment key={movement.id}>
+                      {options[movement.type]({
+                        movement,
+                        item: movement.items.find((item) =>
+                          typeof supply === 'string'
+                            ? item.supply.id === supply
+                            : item.supply.id === supply.id
+                        ) as InventoryMovement['items'][number],
+                      })}
+                    </Fragment>
+                  ))}
                 </Box>
 
                 <Box

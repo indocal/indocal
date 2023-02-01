@@ -78,11 +78,13 @@ export class OrdersController {
         items: {
           createMany: {
             skipDuplicates: true,
-            data: createOrderDto.items.map((item) => ({
-              price: item.price,
-              quantity: item.quantity,
-              supplyId: item.supply,
-            })),
+            data: createOrderDto.items
+              .filter((item) => item.quantity > 0)
+              .map((item) => ({
+                price: item.price,
+                quantity: item.quantity,
+                supplyId: item.supply,
+              })),
           },
         },
       },
