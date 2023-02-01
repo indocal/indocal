@@ -12,7 +12,7 @@ import {
 import { EventGuest, Event } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { EventEntity } from '../../entities';
@@ -44,7 +44,7 @@ export class EventsGuestsController {
   }
 
   @Post('events/:event_id/guests')
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'eventGuest'))
+  @CheckPolicies((ability) => ability.can('create', 'eventGuest'))
   async create(
     @Param('event_id') eventId: UUID,
     @Body() createGuestDto: CreateEventGuestDto
@@ -68,7 +68,7 @@ export class EventsGuestsController {
   }
 
   @Get('events/:event_id/guests/count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'eventGuest'))
+  @CheckPolicies((ability) => ability.can('count', 'eventGuest'))
   async count(@Param('event_id') eventId: UUID): Promise<number> {
     return await this.prismaService.eventGuest.count({
       where: { event: { id: eventId } },
@@ -76,7 +76,7 @@ export class EventsGuestsController {
   }
 
   @Get('events/:event_id/guests')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'eventGuest'))
+  @CheckPolicies((ability) => ability.can('read', 'eventGuest'))
   async findAll(
     @Param('event_id') eventId: UUID
   ): Promise<MultipleEntitiesResponse<EnhancedEventGuest>> {
@@ -97,7 +97,7 @@ export class EventsGuestsController {
   }
 
   @Get('events/guests/:id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'eventGuest'))
+  @CheckPolicies((ability) => ability.can('read', 'eventGuest'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedEventGuest | null>> {
@@ -110,7 +110,7 @@ export class EventsGuestsController {
   }
 
   @Patch('events/guests/:id')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'eventGuest'))
+  @CheckPolicies((ability) => ability.can('update', 'eventGuest'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateGuestDto: UpdateEventGuestDto
@@ -132,7 +132,7 @@ export class EventsGuestsController {
   }
 
   @Delete('events/guests/:id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'eventGuest'))
+  @CheckPolicies((ability) => ability.can('delete', 'eventGuest'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedEventGuest>> {

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { UUID } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { SupplyEntity } from '../entities';
@@ -19,10 +19,10 @@ export class SuppliesStatsController {
   constructor(private prismaService: PrismaService) {}
 
   @Get('warehouse/supplies/stats/prices')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
+  @CheckPolicies((ability) => ability.can('get-prices', 'supply'))
   async suppliesPrices(): Promise<SupplyPrices[]> {
     const supplies = await this.prismaService.supply.findMany({
-      include: { orderHistory: true },
+      include: { orderHistory: { orderBy: { createdAt: 'asc' } } },
     });
 
     return supplies.map(({ orderHistory, ...supply }) => ({
@@ -35,14 +35,14 @@ export class SuppliesStatsController {
   }
 
   @Get('warehouse/supplies/:id/stats/prices')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
+  @CheckPolicies((ability) => ability.can('get-prices', 'supply'))
   async supplyPrices(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SupplyPrices> {
     const { orderHistory, ...supply } =
       await this.prismaService.supply.findUniqueOrThrow({
         where: { id },
-        include: { orderHistory: true },
+        include: { orderHistory: { orderBy: { createdAt: 'asc' } } },
       });
 
     return {

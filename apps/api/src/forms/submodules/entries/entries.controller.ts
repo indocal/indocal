@@ -11,7 +11,7 @@ import {
 import { FormEntry, User, Form } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { UserEntity } from '../../../auth/submodules/users/entities';
@@ -52,7 +52,7 @@ export class FormsEntriesController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'formEntry'))
+  @CheckPolicies((ability) => ability.can('create', 'formEntry'))
   async create(
     @Body() createEntryDto: CreateFormEntryDto
   ): Promise<SingleEntityResponse<EnhancedFormEntry>> {
@@ -71,7 +71,7 @@ export class FormsEntriesController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'formEntry'))
+  @CheckPolicies((ability) => ability.can('count', 'formEntry'))
   async count(@Query() query: CountFormsEntriesParamsDto): Promise<number> {
     return await this.prismaService.formEntry.count({
       where: query.filters,
@@ -80,7 +80,7 @@ export class FormsEntriesController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'formEntry'))
+  @CheckPolicies((ability) => ability.can('read', 'formEntry'))
   async findMany(
     @Query() query: FindManyFormsEntriesParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedFormEntry>> {
@@ -107,7 +107,7 @@ export class FormsEntriesController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'formEntry'))
+  @CheckPolicies((ability) => ability.can('read', 'formEntry'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFormEntry | null>> {

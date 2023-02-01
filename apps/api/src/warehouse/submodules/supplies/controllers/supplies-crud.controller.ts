@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { SupplyEntity } from '../entities';
@@ -29,7 +29,7 @@ export class SuppliesCRUDController {
   constructor(private prismaService: PrismaService) {}
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'supply'))
+  @CheckPolicies((ability) => ability.can('create', 'supply'))
   async create(
     @Body() createSupplyDto: CreateSupplyDto
   ): Promise<SingleEntityResponse<SupplyEntity>> {
@@ -47,7 +47,7 @@ export class SuppliesCRUDController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'supply'))
+  @CheckPolicies((ability) => ability.can('count', 'supply'))
   async count(@Query() query: CountSuppliesParamsDto): Promise<number> {
     return await this.prismaService.supply.count({
       where: query.filters,
@@ -56,7 +56,7 @@ export class SuppliesCRUDController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
+  @CheckPolicies((ability) => ability.can('read', 'supply'))
   async findMany(
     @Query() query: FindManySuppliesParamsDto
   ): Promise<MultipleEntitiesResponse<SupplyEntity>> {
@@ -82,7 +82,7 @@ export class SuppliesCRUDController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'supply'))
+  @CheckPolicies((ability) => ability.can('read', 'supply'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<SupplyEntity | null>> {
@@ -94,7 +94,7 @@ export class SuppliesCRUDController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'supply'))
+  @CheckPolicies((ability) => ability.can('update', 'supply'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateSupplyDto: UpdateSupplyDto
@@ -114,7 +114,7 @@ export class SuppliesCRUDController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'supply'))
+  @CheckPolicies((ability) => ability.can('delete', 'supply'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<SupplyEntity>> {

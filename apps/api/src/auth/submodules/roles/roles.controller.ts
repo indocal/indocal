@@ -15,10 +15,7 @@ import { UserRole, UserRolePermission, User } from '@prisma/client';
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PrismaService } from '@/prisma';
 
-import {
-  PoliciesGuard,
-  Action,
-} from '../../strategies/attribute-based-access-control';
+import { PoliciesGuard } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
 import { UserRolePermissionEntity } from '../permissions/entities';
@@ -64,7 +61,7 @@ export class UsersRolesController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'userRole'))
+  @CheckPolicies((ability) => ability.can('create', 'userRole'))
   async create(
     @Body() createRoleDto: CreateUserRoleDto
   ): Promise<SingleEntityResponse<EnhancedUserRole>> {
@@ -81,7 +78,7 @@ export class UsersRolesController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'userRole'))
+  @CheckPolicies((ability) => ability.can('count', 'userRole'))
   async count(@Query() query: CountUsersRolesParamsDto): Promise<number> {
     return await this.prismaService.userRole.count({
       where: query.filters,
@@ -90,7 +87,7 @@ export class UsersRolesController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'userRole'))
+  @CheckPolicies((ability) => ability.can('read', 'userRole'))
   async findMany(
     @Query() query: FindManyUsersRolesParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedUserRole>> {
@@ -117,7 +114,7 @@ export class UsersRolesController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'userRole'))
+  @CheckPolicies((ability) => ability.can('read', 'userRole'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserRole | null>> {
@@ -130,7 +127,7 @@ export class UsersRolesController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'userRole'))
+  @CheckPolicies((ability) => ability.can('update', 'userRole'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateRoleDto: UpdateUserRoleDto
@@ -187,7 +184,7 @@ export class UsersRolesController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'userRole'))
+  @CheckPolicies((ability) => ability.can('delete', 'userRole'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserRole>> {

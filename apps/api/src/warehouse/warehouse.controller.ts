@@ -1,7 +1,7 @@
 import { Controller, Patch, Body, UseGuards } from '@nestjs/common';
 
 import { UUID } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { ReceiveItemsDto } from './dto';
@@ -13,7 +13,7 @@ export class WarehouseController {
   constructor(private prismaService: PrismaService) {}
 
   @Patch('receive-items')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'order'))
+  @CheckPolicies((ability) => ability.can('receive-items', 'order'))
   async receiveItems(@Body() receiveItemsDto: ReceiveItemsDto): Promise<void> {
     await this.prismaService.$transaction(async (tx) => {
       const order = await tx.order.findUniqueOrThrow({

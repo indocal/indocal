@@ -13,7 +13,7 @@ import {
 import { Order, OrderItem, Supply, Supplier } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { OrderItemEntity } from '../orders-items/entities';
@@ -67,7 +67,7 @@ export class OrdersController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'order'))
+  @CheckPolicies((ability) => ability.can('create', 'order'))
   async create(
     @Body() createOrderDto: CreateOrderDto
   ): Promise<SingleEntityResponse<EnhancedOrder>> {
@@ -95,7 +95,7 @@ export class OrdersController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'order'))
+  @CheckPolicies((ability) => ability.can('count', 'order'))
   async count(@Query() query: CountOrdersParamsDto): Promise<number> {
     return await this.prismaService.order.count({
       where: query.filters,
@@ -104,7 +104,7 @@ export class OrdersController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'order'))
+  @CheckPolicies((ability) => ability.can('read', 'order'))
   async findMany(
     @Query() query: FindManyOrdersParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedOrder>> {
@@ -131,7 +131,7 @@ export class OrdersController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'order'))
+  @CheckPolicies((ability) => ability.can('read', 'order'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedOrder | null>> {
@@ -144,7 +144,7 @@ export class OrdersController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'order'))
+  @CheckPolicies((ability) => ability.can('update', 'order'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateOrderDto: UpdateOrderDto
@@ -162,7 +162,7 @@ export class OrdersController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'order'))
+  @CheckPolicies((ability) => ability.can('delete', 'order'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedOrder>> {

@@ -18,7 +18,7 @@ import {
 } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { InventoryMovementItemEntity } from '../inventory-movements-items/entities';
@@ -91,7 +91,7 @@ export class InventoryMovementsController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'inventoryMovement'))
+  @CheckPolicies((ability) => ability.can('create', 'inventoryMovement'))
   async create(
     @Body() createInventoryMovementDto: CreateInventoryMovementDto
   ): Promise<SingleEntityResponse<EnhancedInventoryMovement>> {
@@ -197,7 +197,7 @@ export class InventoryMovementsController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'inventoryMovement'))
+  @CheckPolicies((ability) => ability.can('count', 'inventoryMovement'))
   async count(
     @Query() query: CountInventoryMovementsParamsDto
   ): Promise<number> {
@@ -208,7 +208,7 @@ export class InventoryMovementsController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'inventoryMovement'))
+  @CheckPolicies((ability) => ability.can('read', 'inventoryMovement'))
   async findMany(
     @Query() query: FindManyInventoryMovementsParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedInventoryMovement>> {
@@ -242,7 +242,7 @@ export class InventoryMovementsController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'inventoryMovement'))
+  @CheckPolicies((ability) => ability.can('read', 'inventoryMovement'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedInventoryMovement | null>> {

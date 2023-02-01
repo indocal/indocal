@@ -13,7 +13,7 @@ import {
 import { Event, EventGuest } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { EventGuestEntity } from './submodules/guests/entities';
@@ -47,7 +47,7 @@ export class EventsController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'event'))
+  @CheckPolicies((ability) => ability.can('create', 'event'))
   async create(
     @Body() createEventDto: CreateEventDto
   ): Promise<SingleEntityResponse<EnhancedEvent>> {
@@ -65,7 +65,7 @@ export class EventsController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'event'))
+  @CheckPolicies((ability) => ability.can('count', 'event'))
   async count(@Query() query: CountEventsParamsDto): Promise<number> {
     return await this.prismaService.event.count({
       where: query.filters,
@@ -74,7 +74,7 @@ export class EventsController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'event'))
+  @CheckPolicies((ability) => ability.can('read', 'event'))
   async findMany(
     @Query() query: FindManyEventsParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedEvent>> {
@@ -101,7 +101,7 @@ export class EventsController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'event'))
+  @CheckPolicies((ability) => ability.can('read', 'event'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedEvent | null>> {
@@ -114,7 +114,7 @@ export class EventsController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'event'))
+  @CheckPolicies((ability) => ability.can('update', 'event'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateEventDto: UpdateEventDto
@@ -135,7 +135,7 @@ export class EventsController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'event'))
+  @CheckPolicies((ability) => ability.can('delete', 'event'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedEvent>> {

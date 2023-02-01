@@ -15,7 +15,7 @@ import {
 } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { SupplyEntity } from '../supplies/entities';
@@ -82,9 +82,7 @@ export class InventoryMovementsItemsController {
   }
 
   @Get('warehouse/movements/:movement_id/items/count')
-  @CheckPolicies((ability) =>
-    ability.can(Action.COUNT, 'inventoryMovementItem')
-  )
+  @CheckPolicies((ability) => ability.can('count', 'inventoryMovementItem'))
   async count(@Param('movement_id') movementId: UUID): Promise<number> {
     return await this.prismaService.inventoryMovementItem.count({
       where: { movement: { id: movementId } },
@@ -92,7 +90,7 @@ export class InventoryMovementsItemsController {
   }
 
   @Get('warehouse/movements/:movement_id/items')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'inventoryMovementItem'))
+  @CheckPolicies((ability) => ability.can('read', 'inventoryMovementItem'))
   async findAll(
     @Param('movement_id') movementId: UUID
   ): Promise<MultipleEntitiesResponse<EnhancedInventoryMovementItem>> {
@@ -124,7 +122,7 @@ export class InventoryMovementsItemsController {
   }
 
   @Get('warehouse/movements/items/:id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'inventoryMovementItem'))
+  @CheckPolicies((ability) => ability.can('read', 'inventoryMovementItem'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedInventoryMovementItem | null>> {

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { SupplierEntity } from './entities';
@@ -29,7 +29,7 @@ export class SuppliersController {
   constructor(private prismaService: PrismaService) {}
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'supplier'))
+  @CheckPolicies((ability) => ability.can('create', 'supplier'))
   async create(
     @Body() createSupplierDto: CreateSupplierDto
   ): Promise<SingleEntityResponse<SupplierEntity>> {
@@ -44,7 +44,7 @@ export class SuppliersController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'supplier'))
+  @CheckPolicies((ability) => ability.can('count', 'supplier'))
   async count(@Query() query: CountSuppliersParamsDto): Promise<number> {
     return await this.prismaService.supplier.count({
       where: query.filters,
@@ -53,7 +53,7 @@ export class SuppliersController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'supplier'))
+  @CheckPolicies((ability) => ability.can('read', 'supplier'))
   async findMany(
     @Query() query: FindManySuppliersParamsDto
   ): Promise<MultipleEntitiesResponse<SupplierEntity>> {
@@ -79,7 +79,7 @@ export class SuppliersController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'supplier'))
+  @CheckPolicies((ability) => ability.can('read', 'supplier'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<SupplierEntity | null>> {
@@ -91,7 +91,7 @@ export class SuppliersController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'supplier'))
+  @CheckPolicies((ability) => ability.can('update', 'supplier'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateSupplierDto: UpdateSupplierDto
@@ -108,7 +108,7 @@ export class SuppliersController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'supplier'))
+  @CheckPolicies((ability) => ability.can('delete', 'supplier'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<SupplierEntity>> {

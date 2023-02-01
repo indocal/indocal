@@ -70,7 +70,7 @@ const OrderItemsTable: React.FC<OrderItemsTableProps> = ({ order }) => {
             color={statusColors[order.status]}
           />
 
-          <Can I="update" an="orderItem">
+          <Can I="receive-items" an="order">
             <Button
               size="small"
               variant="contained"

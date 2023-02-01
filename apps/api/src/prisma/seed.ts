@@ -4,32 +4,90 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  const {
-    ROOT_USER_USERNAME,
-    ROOT_USER_EMAIL,
-    ROOT_USER_NAME,
-    ROOT_USER_PASSWORD,
-  } = process.env;
+  const root = [
+    process.env.ROOT_USER_USERNAME,
+    process.env.ROOT_USER_EMAIL,
+    process.env.ROOT_USER_NAME,
+    process.env.ROOT_USER_PASSWORD,
+  ];
 
-  if (
-    !ROOT_USER_USERNAME ||
-    !ROOT_USER_EMAIL ||
-    !ROOT_USER_NAME ||
-    !ROOT_USER_PASSWORD
-  )
-    throw new Error('Missing ROOT_USER env vars');
-
-  const models = Object.keys(prisma).filter((key) => !key.startsWith('_'));
+  if (root.some((env) => !env)) throw new Error('Missing ROOT_USER env vars');
 
   const salt = await bcrypt.genSalt();
-  const hash = await bcrypt.hash(ROOT_USER_PASSWORD, salt);
+  const hash = await bcrypt.hash(String(process.env.ROOT_USER_PASSWORD), salt);
 
-  // TODO: refactor seed, role-permission-panel and CASL
+  const permissions = [
+    {
+      scope: 'log',
+      actions: ['count', 'read'],
+    },
+    {
+      scope: 'user',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'userRole',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'userRolePermission',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'userGroup',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'event',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'eventGuest',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'form',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'formField',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'formEntry',
+      actions: ['count', 'read', 'create'],
+    },
+    {
+      scope: 'supply',
+      actions: ['count', 'read', 'create', 'update', 'delete', 'get-prices'],
+    },
+    {
+      scope: 'supplier',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'order',
+      actions: ['count', 'read', 'create', 'update', 'delete', 'receive-items'],
+    },
+    {
+      scope: 'orderItem',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'inventoryMovement',
+      actions: ['count', 'read', 'create'],
+    },
+    {
+      scope: 'inventoryMovementItem',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+  ];
+
   await prisma.user.create({
     data: {
-      username: ROOT_USER_USERNAME,
-      email: ROOT_USER_EMAIL,
-      name: ROOT_USER_NAME,
+      username: process.env.ROOT_USER_USERNAME as string,
+      email: process.env.ROOT_USER_EMAIL as string,
+      name: process.env.ROOT_USER_NAME as string,
       password: hash,
       roles: {
         create: {
@@ -48,11 +106,10 @@ async function main() {
           },
           permissions: {
             createMany: {
-              data: models
-                .map((model) =>
-                  ['count', 'create', 'read', 'update', 'delete'].map(
-                    (action) => ({ action: `${model}::${action}` })
-                  )
+              skipDuplicates: true,
+              data: permissions
+                .map(({ scope, actions }) =>
+                  actions.map((action) => ({ action: `${scope}::${action}` }))
                 )
                 .flat(),
             },

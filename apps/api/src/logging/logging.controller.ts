@@ -9,7 +9,7 @@ import {
 import { Log, User } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PoliciesGuard, CheckPolicies, Action } from '@/auth';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { PrismaService } from '@/prisma';
 
 import { UserEntity } from '../auth/submodules/users/entities';
@@ -38,7 +38,7 @@ export class LoggingController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'log'))
+  @CheckPolicies((ability) => ability.can('count', 'log'))
   async count(@Query() query: CountLogsParamsDto): Promise<number> {
     return await this.prismaService.log.count({
       where: query.filters,
@@ -47,7 +47,7 @@ export class LoggingController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'log'))
+  @CheckPolicies((ability) => ability.can('read', 'log'))
   async findMany(
     @Query() query: FindManyLogsParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedLog>> {
@@ -74,7 +74,7 @@ export class LoggingController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'log'))
+  @CheckPolicies((ability) => ability.can('read', 'log'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedLog | null>> {

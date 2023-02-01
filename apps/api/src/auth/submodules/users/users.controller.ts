@@ -16,10 +16,7 @@ import * as bcrypt from 'bcrypt';
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PrismaService } from '@/prisma';
 
-import {
-  PoliciesGuard,
-  Action,
-} from '../../strategies/attribute-based-access-control';
+import { PoliciesGuard } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
 
 import { UserRoleEntity } from '../roles/entities';
@@ -61,7 +58,7 @@ export class UsersController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.CREATE, 'user'))
+  @CheckPolicies((ability) => ability.can('create', 'user'))
   async create(
     @Body() createUserDto: CreateUserDto
   ): Promise<SingleEntityResponse<EnhancedUser>> {
@@ -82,7 +79,7 @@ export class UsersController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can(Action.COUNT, 'user'))
+  @CheckPolicies((ability) => ability.can('count', 'user'))
   async count(@Query() query: CountUsersParamsDto): Promise<number> {
     return await this.prismaService.user.count({
       where: query.filters,
@@ -91,7 +88,7 @@ export class UsersController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.READ, 'user'))
+  @CheckPolicies((ability) => ability.can('read', 'user'))
   async findMany(
     @Query() query: FindManyUsersParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedUser>> {
@@ -118,7 +115,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.READ, 'user'))
+  @CheckPolicies((ability) => ability.can('read', 'user'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUser | null>> {
@@ -131,7 +128,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.UPDATE, 'user'))
+  @CheckPolicies((ability) => ability.can('update', 'user'))
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateUserDto: UpdateUserDto
@@ -159,7 +156,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.DELETE, 'user'))
+  @CheckPolicies((ability) => ability.can('delete', 'user'))
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUser>> {

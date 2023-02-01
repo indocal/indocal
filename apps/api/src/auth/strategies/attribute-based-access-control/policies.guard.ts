@@ -6,17 +6,18 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { MongoAbility } from '@casl/ability';
 
 import { CHECK_POLICIES_KEY } from '../../decorators';
 import { AuthenticatedUser } from '../../types';
 
-import { AbilityFactory, AppAbility } from './ability.factory';
+import { AbilityFactory } from './ability.factory';
 
 export interface PolicyHandler {
-  handle(ability: AppAbility): boolean;
+  handle(ability: MongoAbility): boolean;
 }
 
-export type PolicyHandlerCallback = (ability: AppAbility) => boolean;
+export type PolicyHandlerCallback = (ability: MongoAbility) => boolean;
 
 export type Policy = PolicyHandler | PolicyHandlerCallback;
 
