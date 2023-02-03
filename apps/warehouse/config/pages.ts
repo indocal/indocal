@@ -7,6 +7,7 @@ export enum Pages {
   SUPPLIES = '/supplies',
   SUPPLIERS = '/suppliers',
   ORDERS = '/orders',
+  INVENTORY_MOVEMENTS = '/movements',
 }
 
 export default Pages;

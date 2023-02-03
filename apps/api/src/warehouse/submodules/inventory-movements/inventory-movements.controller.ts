@@ -103,12 +103,10 @@ export class InventoryMovementsController {
           items: {
             createMany: {
               skipDuplicates: true,
-              data: createInventoryMovementDto.items
-                .filter((item) => item.quantity > 0)
-                .map((item) => ({
-                  quantity: item.quantity,
-                  supplyId: item.supply,
-                })),
+              data: createInventoryMovementDto.items.map((item) => ({
+                quantity: item.quantity,
+                supplyId: item.supply,
+              })),
             },
           },
 
@@ -147,8 +145,8 @@ export class InventoryMovementsController {
                 data: {
                   quantity: {
                     ...(Math.sign(item.quantity)
-                      ? { increment: Math.abs(item.quantity) }
-                      : { decrement: Math.abs(item.quantity) }),
+                      ? { increment: item.quantity }
+                      : { decrement: item.quantity }),
                   },
                 },
               });

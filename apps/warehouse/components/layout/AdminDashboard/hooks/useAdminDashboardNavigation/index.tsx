@@ -4,6 +4,7 @@ import {
   Inventory as InventoryIcon,
   LocalShipping as SuppliersIcon,
   LocalMall as OrdersIcon,
+  History as InventoryMovementsIcon,
 } from '@mui/icons-material';
 
 import {
@@ -70,6 +71,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Suplidores',
           icon: <SuppliersIcon />,
           href: Pages.SUPPLIERS,
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'inventoryMovement'),
+          label: 'Movimientos',
+          icon: <InventoryMovementsIcon />,
+          href: Pages.INVENTORY_MOVEMENTS,
         },
       },
     ],

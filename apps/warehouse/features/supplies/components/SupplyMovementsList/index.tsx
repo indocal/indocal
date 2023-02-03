@@ -1,15 +1,19 @@
-import { Fragment, useState, useMemo } from 'react';
+import { Fragment, useState, useMemo, useCallback } from 'react';
 import {
   Paper,
   Box,
   List,
   ListSubheader,
+  Typography,
+  IconButton,
   Pagination,
   LinearProgress,
 } from '@mui/material';
+import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import {
+  Can,
   useInventoryMovements,
   UUID,
   Supply,
@@ -33,7 +37,7 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
 }) => {
   const [pagination, setPagination] = useState({ page: 0, pageSize: 5 });
 
-  const { loading, validating, movements, count, error } =
+  const { loading, validating, movements, count, error, refetch } =
     useInventoryMovements({
       filters: {
         items: {
@@ -61,6 +65,10 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
     }),
     []
   );
+
+  const handleRefetch = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   return (
     <Paper
@@ -101,10 +109,23 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
           >
             <ListSubheader
               sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: (theme) => theme.spacing(1),
+                padding: (theme) => theme.spacing(0.9, 2),
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
               }}
             >
-              Movimientos
+              <Typography variant="caption" fontWeight="bolder">
+                Movimientos
+              </Typography>
+
+              <Can I="read" an="inventoryMovement">
+                <IconButton size="small" onClick={handleRefetch}>
+                  <RefreshIcon />
+                </IconButton>
+              </Can>
             </ListSubheader>
 
             {loading ? (
