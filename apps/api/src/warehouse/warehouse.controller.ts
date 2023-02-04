@@ -84,14 +84,22 @@ export class WarehouseController {
       }
 
       const allItemsDelivered = targets.every(
-        ({ received, remaining }) => remaining - received === 0
+        (target) => target.remaining - target.received === 0
+      );
+
+      const someItemDelivered = targets.every(
+        (target) => target.item.quantity !== target.remaining - target.received
       );
 
       await tx.order.update({
         where: { id: order.id },
         data: {
-          status: allItemsDelivered ? 'COMPLETED' : 'PARTIAL',
           deliveryAt: { push: new Date() },
+          status: allItemsDelivered
+            ? 'COMPLETED'
+            : someItemDelivered
+            ? 'PARTIAL'
+            : 'PENDING',
         },
       });
 
