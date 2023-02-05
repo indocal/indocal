@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
-import { Container, Grid } from '@mui/material';
+import { Container } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useInventoryMovement, getShortUUID, UUID } from '@indocal/services';
 
+import { InventoryMovementDetailsPDF } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -25,20 +26,15 @@ const InventoryMovementPage: EnhancedNextPage = () => {
           : 'Movimiento no encontrado'
       }
     >
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
+      <Container disableGutters>
         {loading ? (
           <Loader invisible message="Cargando datos..." />
         ) : error ? (
           <ErrorInfo error={error} />
         ) : movement ? (
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-          >
-            <Widget disableDefaultSizes></Widget>
-          </Grid>
+          <Widget sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+            <InventoryMovementDetailsPDF movement={movement} />
+          </Widget>
         ) : (
           <NotFound />
         )}

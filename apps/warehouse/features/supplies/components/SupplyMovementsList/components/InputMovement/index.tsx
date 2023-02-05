@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import {
   ListItem,
   ListItemText,
@@ -12,7 +13,9 @@ import {
   Print as PrintIcon,
 } from '@mui/icons-material';
 
-import { InventoryMovement } from '@indocal/services';
+import { Can, InventoryMovement } from '@indocal/services';
+
+import { Pages } from '@/config';
 
 export interface InputMovementProps {
   movement: InventoryMovement;
@@ -37,11 +40,19 @@ export const InputMovement: React.FC<InputMovementProps> = ({
       secondary={`(${item.quantity}) ${movement.order?.supplier.name} -> Almacén`}
     />
 
-    <ListItemSecondaryAction>
-      <IconButton size="small">
-        <PrintIcon />
-      </IconButton>
-    </ListItemSecondaryAction>
+    <Can I="read" an="inventoryMovement">
+      <ListItemSecondaryAction>
+        <IconButton
+          LinkComponent={NextLink}
+          target="_blank"
+          href={`${Pages.INVENTORY_MOVEMENTS}/${movement.id}`}
+          size="small"
+          sx={{ display: 'flex' }}
+        >
+          <PrintIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </Can>
   </ListItem>
 );
 
