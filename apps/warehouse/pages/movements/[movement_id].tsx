@@ -26,7 +26,7 @@ const InventoryMovementPage: EnhancedNextPage = () => {
           : 'Movimiento no encontrado'
       }
     >
-      <Container disableGutters>
+      <Container disableGutters maxWidth={false}>
         {loading ? (
           <Loader invisible message="Cargando datos..." />
         ) : error ? (

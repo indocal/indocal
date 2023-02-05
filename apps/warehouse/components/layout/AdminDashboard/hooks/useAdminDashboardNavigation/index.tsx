@@ -58,19 +58,19 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
       {
         type: 'ITEM',
         item: {
-          show: ability.can('read', 'order'),
-          label: 'Ordenes',
-          icon: <OrdersIcon />,
-          href: Pages.ORDERS,
+          show: ability.can('read', 'supplier'),
+          label: 'Suplidores',
+          icon: <SuppliersIcon />,
+          href: Pages.SUPPLIERS,
         },
       },
       {
         type: 'ITEM',
         item: {
-          show: ability.can('read', 'supplier'),
-          label: 'Suplidores',
-          icon: <SuppliersIcon />,
-          href: Pages.SUPPLIERS,
+          show: ability.can('read', 'order'),
+          label: 'Ordenes',
+          icon: <OrdersIcon />,
+          href: Pages.ORDERS,
         },
       },
       {
