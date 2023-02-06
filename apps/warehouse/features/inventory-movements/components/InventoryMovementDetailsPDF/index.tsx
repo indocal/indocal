@@ -1,6 +1,18 @@
+import React, { useMemo } from 'react';
 import { PDFViewer, Document, Page, StyleSheet } from '@react-pdf/renderer';
 
-import { InventoryMovement } from '@indocal/services';
+import {
+  getShortUUID,
+  InventoryMovement,
+  InventoryMovementType,
+} from '@indocal/services';
+
+import {
+  InputHeader,
+  OutputHeader,
+  TransferHeader,
+  DischargeHeader,
+} from './components';
 
 const styles = StyleSheet.create({
   viewer: {
@@ -19,11 +31,48 @@ export interface InventoryMovementDetailsPDFProps {
 
 export const InventoryMovementDetailsPDF: React.FC<
   InventoryMovementDetailsPDFProps
-> = () => {
+> = ({ movement }) => {
+  const headers = useMemo<Record<InventoryMovementType, React.ReactElement>>(
+    () => ({
+      ADJUSTMENT: <></>,
+      INPUT: <InputHeader />,
+      OUTPUT: <OutputHeader />,
+      TRANSFER: <TransferHeader />,
+      DISCHARGE: <DischargeHeader />,
+    }),
+    []
+  );
+
+  const contents = useMemo<Record<InventoryMovementType, React.ReactElement>>(
+    () => ({
+      ADJUSTMENT: <></>,
+      INPUT: <></>,
+      OUTPUT: <></>,
+      TRANSFER: <></>,
+      DISCHARGE: <></>,
+    }),
+    []
+  );
+
+  const footers = useMemo<Record<InventoryMovementType, React.ReactElement>>(
+    () => ({
+      ADJUSTMENT: <></>,
+      INPUT: <></>,
+      OUTPUT: <></>,
+      TRANSFER: <></>,
+      DISCHARGE: <></>,
+    }),
+    []
+  );
+
   return (
     <PDFViewer showToolbar style={styles.viewer}>
-      <Document>
-        <Page size="A4" style={styles.page}></Page>
+      <Document title={`Movimiento ${getShortUUID(movement.id)}`}>
+        <Page size="A4" style={styles.page}>
+          {headers[movement.type]}
+          {contents[movement.type]}
+          {footers[movement.type]}
+        </Page>
       </Document>
     </PDFViewer>
   );
