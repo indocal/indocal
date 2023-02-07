@@ -48,8 +48,12 @@ export const getServerSideProps: GetServerSideProps<FormsPageProps> = async (
     token: token?.access_token,
   });
 
+  // TODO: add validation based on form visibility
   const { forms, error } = await indocal.forms.findMany({
-    filters: { group: { members: { some: { id: token?.user.id } } } },
+    filters: {
+      status: 'PUBLISHED',
+      group: { members: { some: { id: token?.user.id } } },
+    },
   });
 
   if (error) throw error;

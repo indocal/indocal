@@ -1,16 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { Container } from '@mui/material';
-import axios from 'axios';
 
 import { Page } from '@indocal/ui';
-import { Event } from '@indocal/services';
+import { INDOCAL, Event } from '@indocal/services';
 
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
 type EventPageParams = {
-  id: string;
+  event_id: string;
 };
 
 type EventPageProps = {
@@ -31,14 +30,13 @@ export const getServerSideProps: GetServerSideProps<
 > = async (ctx) => {
   const token = await getToken(ctx);
 
-  const { data: event } = await axios.get<Event | null>(
-    `/events/${ctx.params?.id}`,
-    {
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
-      headers: {
-        Authorization: `Bearer ${token?.access_token}`,
-      },
-    }
+  const indocal = new INDOCAL({
+    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+    token: token?.access_token,
+  });
+
+  const { event } = await indocal.events.findOneByUUID(
+    ctx.params?.event_id as string
   );
 
   if (!event) {

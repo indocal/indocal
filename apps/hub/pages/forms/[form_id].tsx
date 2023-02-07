@@ -79,7 +79,8 @@ export const getServerSideProps: GetServerSideProps<
     ctx.params?.form_id as string
   );
 
-  if (!form) {
+  // TODO: add validation based on form visibility
+  if (!form || form.status !== 'PUBLISHED') {
     return {
       notFound: true,
     };
