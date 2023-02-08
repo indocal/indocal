@@ -10,11 +10,11 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import { Order, OrderItem, Supply, Supplier } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
-import { PrismaService } from '@/prisma';
 
 import { OrderItemEntity } from '../orders-items/entities';
 import { SupplyEntity } from '../supplies/entities';

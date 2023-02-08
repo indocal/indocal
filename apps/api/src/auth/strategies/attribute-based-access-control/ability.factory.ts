@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MongoAbility, createMongoAbility } from '@casl/ability';
-
-import { PrismaService } from '@/prisma';
+import { PrismaService } from 'nestjs-prisma';
 
 import { AuthenticatedUser } from '../../types';
 

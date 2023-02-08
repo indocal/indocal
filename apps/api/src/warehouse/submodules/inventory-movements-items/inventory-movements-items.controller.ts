@@ -5,6 +5,7 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import {
   InventoryMovementItem,
   Supply,
@@ -16,7 +17,6 @@ import {
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
-import { PrismaService } from '@/prisma';
 
 import { SupplyEntity } from '../supplies/entities';
 import { OrderEntity } from '../orders/entities';

@@ -8,11 +8,11 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import { FormEntry, User, Form } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
-import { PrismaService } from '@/prisma';
 
 import { UserEntity } from '../../../auth/submodules/users/entities';
 import { FormEntity } from '../../entities';

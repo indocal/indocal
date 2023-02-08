@@ -5,10 +5,10 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 
 import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
-import { PrismaService } from '@/prisma';
 
 import { SupplyEntity } from '../entities';
 import { SupplyPrices } from '../types';

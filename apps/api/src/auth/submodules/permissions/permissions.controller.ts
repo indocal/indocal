@@ -9,10 +9,10 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import { UserRolePermission, UserRole } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
-import { PrismaService } from '@/prisma';
 
 import { PoliciesGuard } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';

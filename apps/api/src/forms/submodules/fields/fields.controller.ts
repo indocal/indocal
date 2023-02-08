@@ -9,11 +9,11 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import { FormField, Form } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
-import { PrismaService } from '@/prisma';
 
 import { FormEntity } from '../../entities';
 

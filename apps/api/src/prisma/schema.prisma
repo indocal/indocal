@@ -170,6 +170,8 @@ enum FormFieldType {
   DATE
   DATETIME
 
+  FILES
+
   USERS
 
   SECTION

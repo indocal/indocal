@@ -1,8 +1,8 @@
 import { Controller, Patch, Body, UseGuards } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 
 import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
-import { PrismaService } from '@/prisma';
 
 import { ReceiveItemsDto } from './dto';
 import { InsufficientQuantityException } from './errors';

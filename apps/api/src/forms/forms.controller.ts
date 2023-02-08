@@ -10,11 +10,11 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import { Form, FormField, UserGroup } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
-import { PrismaService } from '@/prisma';
 
 import { FormFieldEntity } from './submodules/fields/entities';
 import { UserGroupEntity } from '../auth/submodules/groups/entities';
@@ -48,8 +48,11 @@ export class FormsController {
     ...rest
   }: CreateEnhancedForm): EnhancedForm {
     const form = new EnhancedForm(rest);
-    form.fields = fields.map((field) => new FormFieldEntity(field));
     form.group = new UserGroupEntity(group);
+
+    form.fields = fields
+      .sort((a, b) => a.order - b.order)
+      .map((field) => new FormFieldEntity(field));
 
     return form;
   }
