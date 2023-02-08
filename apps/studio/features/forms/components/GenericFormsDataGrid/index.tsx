@@ -92,9 +92,9 @@ export const GenericFormsDataGrid: React.FC<GenericFormsDataGridProps> = ({
 
   const visibilityColors: Record<FormVisibility, ChipProps['color']> = useMemo(
     () => ({
-      PUBLIC: 'success',
-      PROTECTED: 'warning',
-      PRIVATE: 'default',
+      PUBLIC: 'warning',
+      PROTECTED: 'default',
+      PRIVATE: 'success',
     }),
     []
   );
