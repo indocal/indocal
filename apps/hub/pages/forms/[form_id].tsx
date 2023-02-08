@@ -75,12 +75,30 @@ export const getServerSideProps: GetServerSideProps<
     token: token?.access_token,
   });
 
+  const { user: me } = await indocal.auth.users.findOneByUUID(
+    token?.user.id as UUID
+  );
+
   const { form } = await indocal.forms.findOneByUUID(
     ctx.params?.form_id as string
   );
 
-  // TODO: add validation based on form visibility
   if (!form || form.status !== 'PUBLISHED') {
+    return {
+      notFound: true,
+    };
+  }
+
+  if (form.visibility === 'PROTECTED' && !me) {
+    return {
+      notFound: true,
+    };
+  }
+
+  if (
+    form.visibility === 'PRIVATE' &&
+    !me?.groups.some((group) => group.id === form.group.id)
+  ) {
     return {
       notFound: true,
     };

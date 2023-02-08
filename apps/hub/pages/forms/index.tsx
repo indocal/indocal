@@ -3,7 +3,7 @@ import { getToken } from 'next-auth/jwt';
 import { Paper, Container, Grid } from '@mui/material';
 
 import { Page, Widget, NoData } from '@indocal/ui';
-import { INDOCAL, Form } from '@indocal/services';
+import { INDOCAL, UUID, Form } from '@indocal/services';
 
 import { FormsGallery } from '@/features';
 import { AdminDashboard } from '@/components';
@@ -48,19 +48,39 @@ export const getServerSideProps: GetServerSideProps<FormsPageProps> = async (
     token: token?.access_token,
   });
 
-  // TODO: add validation based on form visibility
+  const { user: me } = await indocal.auth.users.findOneByUUID(
+    token?.user.id as UUID
+  );
+
   const { forms, error } = await indocal.forms.findMany({
-    filters: {
-      status: 'PUBLISHED',
-      group: { members: { some: { id: token?.user.id } } },
-    },
+    filters: { status: 'PUBLISHED' },
+  });
+
+  const availableForms = forms.filter((form) => {
+    switch (form.visibility) {
+      case 'PUBLIC': {
+        return true;
+      }
+
+      case 'PROTECTED': {
+        return me ? true : false;
+      }
+
+      case 'PRIVATE': {
+        return me?.groups.some((group) => group.id === form.group.id);
+      }
+
+      default: {
+        return false;
+      }
+    }
   });
 
   if (error) throw error;
 
   return {
     props: {
-      forms,
+      forms: availableForms,
     },
   };
 };
