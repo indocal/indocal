@@ -56,6 +56,8 @@ export const ControlledFormFieldTypeSelect: React.FC<
       'DATE',
       'DATETIME',
 
+      'FILES',
+
       'USERS',
 
       'SECTION',

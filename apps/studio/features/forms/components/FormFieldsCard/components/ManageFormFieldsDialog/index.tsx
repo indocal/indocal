@@ -27,6 +27,7 @@ import {
   Schedule as TimeIcon,
   Event as DateIcon,
   EventNote as DateTimeIcon,
+  FilePresent as FilesIcon,
   Group as UsersIcon,
   BackupTable as SectionIcon,
   TableChart as TableIcon,
@@ -74,6 +75,8 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
       TIME: <TimeIcon />,
       DATE: <DateIcon />,
       DATETIME: <DateTimeIcon />,
+
+      FILES: <FilesIcon />,
 
       USERS: <UsersIcon />,
 

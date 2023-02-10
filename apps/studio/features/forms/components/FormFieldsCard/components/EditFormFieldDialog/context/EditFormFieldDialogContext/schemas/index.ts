@@ -16,6 +16,8 @@ export * from './timeFormFieldConfigSchema';
 export * from './dateFormFieldConfigSchema';
 export * from './dateTimeFormFieldConfigSchema';
 
+export * from './filesFormFieldConfigSchema';
+
 export * from './usersFormFieldConfigSchema';
 
 export * from './sectionFormFieldConfigSchema';

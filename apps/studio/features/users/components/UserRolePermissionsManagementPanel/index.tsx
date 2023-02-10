@@ -665,6 +665,30 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
           },
         ],
       },
+      {
+        label: 'Archivos',
+        subPanels: [
+          {
+            scope: 'uploads',
+            permissions: [
+              {
+                label: 'Leer archivos',
+                action: 'read',
+                checked:
+                  Boolean(permissions?.uploads) &&
+                  Boolean(permissions?.uploads['read']),
+              },
+              {
+                label: 'Subir archivos',
+                action: 'create',
+                checked:
+                  Boolean(permissions?.uploads) &&
+                  Boolean(permissions?.uploads['create']),
+              },
+            ],
+          },
+        ],
+      },
     ],
     [permissions]
   );

@@ -123,8 +123,10 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
       }}
     >
       <Toolbar
+        disableGutters
         variant="dense"
         sx={{
+          paddingX: (theme) => theme.spacing(2),
           borderBottom: (theme) =>
             errors[field.id]?.root
               ? `1px dashed ${theme.palette.error.main}`
@@ -180,7 +182,12 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
                 {config.columns.map((column) => (
                   <TableCell
                     key={column.heading}
+                    align="center"
                     sx={{
+                      ':not(:last-child)': {
+                        borderRight: (theme) =>
+                          `1px solid ${theme.palette.divider}`,
+                      },
                       ...(errors[field.id]?.root && {
                         color: (theme) => theme.palette.error.main,
                       }),
@@ -241,7 +248,17 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
                   </TableCell>
 
                   {config?.columns.map((column) => (
-                    <TableCell key={column.heading} sx={{ minWidth: 225 }}>
+                    <TableCell
+                      key={column.heading}
+                      align="center"
+                      sx={{
+                        minWidth: 225,
+                        ':not(:last-child)': {
+                          borderRight: (theme) =>
+                            `1px solid ${theme.palette.divider}`,
+                        },
+                      }}
+                    >
                       {columns[column.type]({
                         field,
                         column,

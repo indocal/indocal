@@ -19,6 +19,7 @@ export type FormFieldAnswer = {
     | TimeFormFieldAnswer
     | DateFormFieldAnswer
     | DateTimeFormFieldAnswer
+    | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | SectionFormFieldAnswer
     | TableFormFieldAnswer
@@ -82,6 +83,9 @@ export type TimeFormFieldAnswer = string;
 export type DateFormFieldAnswer = string;
 
 export type DateTimeFormFieldAnswer = string;
+
+// TODO: implement corrrectly
+export type FilesFormFieldAnswer = File | File[];
 
 export type UsersFormFieldAnswer = User | User[];
 

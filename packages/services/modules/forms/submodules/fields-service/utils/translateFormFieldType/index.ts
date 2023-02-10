@@ -18,6 +18,8 @@ export function translateFormFieldType(type: FormFieldType): string {
     DATE: 'Fecha',
     DATETIME: 'Fecha y hora',
 
+    FILES: 'Archivos',
+
     USERS: 'Usuarios (INDOCAL)',
 
     SECTION: 'Sección',

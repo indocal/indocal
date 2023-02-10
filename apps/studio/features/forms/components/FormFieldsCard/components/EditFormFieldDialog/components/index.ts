@@ -14,6 +14,8 @@ export * from './TimeFormFieldConfig';
 export * from './DateFormFieldConfig';
 export * from './DateTimeFormFieldConfig';
 
+export * from './FilesFormFieldConfig';
+
 export * from './UsersFormFieldConfig';
 
 export * from './SectionFormFieldConfig';

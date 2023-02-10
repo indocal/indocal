@@ -27,6 +27,7 @@ export type FormFieldType =
   | 'TIME'
   | 'DATE'
   | 'DATETIME'
+  | 'FILES'
   | 'USERS'
   | 'SECTION'
   | 'TABLE';
@@ -44,6 +45,7 @@ export type FormFieldConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | FilesFormFieldConfig
   | UsersFormFieldConfig
   | SectionFormFieldConfig
   | TableFormFieldConfig
@@ -110,6 +112,10 @@ export type TimeFormFieldConfig = CommonFormFieldConfig;
 export type DateFormFieldConfig = CommonFormFieldConfig;
 
 export type DateTimeFormFieldConfig = CommonFormFieldConfig;
+
+export type FilesFormFieldConfig = CommonFormFieldConfig & {
+  multiple: boolean;
+};
 
 export type UsersFormFieldConfig = CommonFormFieldConfig & {
   multiple: boolean;

@@ -39,6 +39,7 @@ import {
   TimeFormFieldConfig,
   DateFormFieldConfig,
   DateTimeFormFieldConfig,
+  FilesFormFieldConfig,
   UsersFormFieldConfig,
   SectionFormFieldConfig,
   TableFormFieldConfig,
@@ -93,6 +94,8 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
       TIME: <TimeFormFieldConfig />,
       DATE: <DateFormFieldConfig />,
       DATETIME: <DateTimeFormFieldConfig />,
+
+      FILES: <FilesFormFieldConfig />,
 
       USERS: <UsersFormFieldConfig />,
 

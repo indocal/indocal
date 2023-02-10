@@ -39,7 +39,7 @@ export const RadioColumn: React.FC<RadioColumnProps> = ({
       rules: {
         required: {
           value: Boolean(config?.required),
-          message: 'Debe aceptar este campo',
+          message: 'Debe completar este campo',
         },
       },
     }}

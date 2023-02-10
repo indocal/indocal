@@ -44,6 +44,8 @@ const schema = zod.object(
           'DATE',
           'DATETIME',
 
+          'FILES',
+
           'USERS',
 
           'SECTION',

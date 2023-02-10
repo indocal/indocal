@@ -25,6 +25,7 @@ import {
   TimeFormField,
   DateFormField,
   DateTimeFormField,
+  FilesFormField,
   UsersFormField,
   SectionFormField,
   TableFormField,
@@ -42,6 +43,7 @@ import {
   parseTimeFormFieldAnswer,
   parseDateFormFieldAnswer,
   parseDateTimeFormFieldAnswer,
+  parseFilesFormFieldAnswer,
   parseUsersFormFieldAnswer,
   parseSectionFormFieldAnswer,
   parseTableFormFieldAnswer,
@@ -77,6 +79,8 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
       DATE: DateFormField,
       DATETIME: DateTimeFormField,
 
+      FILES: FilesFormField,
+
       USERS: UsersFormField,
 
       SECTION: SectionFormField,
@@ -102,6 +106,8 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
       TIME: parseTimeFormFieldAnswer,
       DATE: parseDateFormFieldAnswer,
       DATETIME: parseDateTimeFormFieldAnswer,
+
+      FILES: parseFilesFormFieldAnswer,
 
       USERS: parseUsersFormFieldAnswer,
 
