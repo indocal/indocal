@@ -1,12 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Request,
-  Body,
-  UseGuards,
-} from '@nestjs/common';
-import { Request as ExpressRequest } from 'express';
+import { Controller, Get, Post, Req, Body, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 
 import AuthService from './auth.service';
 import { LocalAuthGuard } from './strategies';
@@ -20,7 +13,7 @@ export class AuthController {
   @Post('local/sign-in')
   @SkipAuthentication()
   @UseGuards(LocalAuthGuard)
-  signIn(@Request() req: ExpressRequest): Session {
+  signIn(@Req() req: Request): Session {
     return this.authService.generateSession(req.user as AuthenticatedUser);
   }
 
@@ -35,7 +28,7 @@ export class AuthController {
   }
 
   @Get('me')
-  me(@Request() req: ExpressRequest): AuthenticatedUser {
+  me(@Req() req: Request): AuthenticatedUser {
     return req.user as AuthenticatedUser;
   }
 }
