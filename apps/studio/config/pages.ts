@@ -4,12 +4,13 @@ export enum Pages {
 
   // Sections
   ROOT = '/',
-  USERS = '/users',
-  USERS_ROLES = '/roles',
-  USERS_GROUPS = '/groups',
   FORMS = '/forms',
   FORMS_PREVIEW = '/forms/preview',
   FORMS_ENTRIES = '/forms/entries',
+  UPLOADS = '/uploads',
+  USERS = '/users',
+  USERS_ROLES = '/roles',
+  USERS_GROUPS = '/groups',
   LOGS = '/logging',
   SETTINGS = '/settings',
 }

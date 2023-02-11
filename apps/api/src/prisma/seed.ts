@@ -81,6 +81,14 @@ async function main() {
       scope: 'inventoryMovementItem',
       actions: ['count', 'read', 'create', 'update', 'delete'],
     },
+    {
+      scope: 'file',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'folder',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
   ];
 
   await prisma.user.create({

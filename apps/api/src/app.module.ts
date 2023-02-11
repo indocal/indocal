@@ -9,6 +9,7 @@ import {
   ClassSerializerInterceptor,
   ValidationPipe,
 } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule, PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 import { LoggingModule } from '@/logging';
@@ -16,6 +17,7 @@ import { AuthModule } from '@/auth';
 import { FormsModule } from '@/forms';
 import { EventsModule } from '@/events';
 import { WarehouseModule } from '@/warehouse';
+import { UploadsModule } from '@/uploads';
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { WarehouseModule } from '@/warehouse';
     FormsModule,
     EventsModule,
     WarehouseModule,
+    UploadsModule,
     PrismaModule.forRoot(),
+    ScheduleModule.forRoot(),
   ],
   providers: [
     {

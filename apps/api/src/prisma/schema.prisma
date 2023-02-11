@@ -43,8 +43,8 @@ model User {
   groups  UserGroup[]
   entries FormEntry[]
 
-  assignmentHistory InventoryMovement[] @relation("assignmentHistory")
-  dischargeHistory  InventoryMovement[] @relation("dischargeHistory")
+  assignmentHistory InventoryMovement[] @relation("AssignmentHistory")
+  dischargeHistory  InventoryMovement[] @relation("DischargeHistory")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -353,10 +353,10 @@ model InventoryMovement {
   order   Order?  @relation(fields: [orderId], references: [id], onDelete: Restrict)
   orderId String?
 
-  origin   User?   @relation(name: "dischargeHistory", fields: [originId], references: [id])
+  origin   User?   @relation(name: "DischargeHistory", fields: [originId], references: [id])
   originId String?
 
-  destination   User?   @relation(name: "assignmentHistory", fields: [destinationId], references: [id])
+  destination   User?   @relation(name: "AssignmentHistory", fields: [destinationId], references: [id])
   destinationId String?
 
   createdAt DateTime @default(now())
@@ -383,4 +383,47 @@ model InventoryMovementItem {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+////////////////////////
+// Uploads Management //
+////////////////////////
+
+model File {
+  id   String @id @default(uuid())
+  path String @unique
+
+  mime      String
+  extension String
+
+  size       Int
+  dimensions Int[]
+
+  name    String
+  caption String?
+  alt     String?
+
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, folderId])
+}
+
+model Folder {
+  id   String @id @default(uuid())
+  name String
+
+  files   File[]
+  folders Folder[] @relation("FolderFolders")
+
+  folder   Folder? @relation(name: "FolderFolders", fields: [folderId], references: [id], onDelete: Cascade)
+  folderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, folderId])
 }

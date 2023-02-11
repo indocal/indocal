@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import {
   Dashboard as OverviewIcon,
+  Feed as FormsIcon,
+  SnippetFolder as UploadsIcon,
   ManageAccounts as UsersPanelControl,
   Groups as UsersIcon,
   AccountTree as RolesIcon,
   GroupWork as GroupsIcon,
-  Feed as FormsIcon,
   History as LogsIcon,
   Settings as SettingsIcon,
 } from '@mui/icons-material';
@@ -59,6 +60,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
         },
       },
       {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'file') && ability.can('read', 'folder'),
+          label: 'Librería de archivos',
+          icon: <UploadsIcon />,
+          href: Pages.UPLOADS,
+        },
+      },
+      {
         type: 'MENU',
         menu: {
           label: 'Control de usuarios',
@@ -82,16 +92,13 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
               icon: <GroupsIcon />,
               href: Pages.USERS_GROUPS,
             },
+            {
+              show: ability.can('read', 'log'),
+              label: 'Registros',
+              icon: <LogsIcon />,
+              href: Pages.LOGS,
+            },
           ],
-        },
-      },
-      {
-        type: 'ITEM',
-        item: {
-          show: ability.can('read', 'log'),
-          label: 'Registros',
-          icon: <LogsIcon />,
-          href: Pages.LOGS,
         },
       },
       {
