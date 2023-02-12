@@ -27,6 +27,11 @@ import { OrderEntity } from '../orders/entities';
 import { SupplierEntity } from '../suppliers/entities';
 import { UserEntity } from '../../../auth/submodules/users/entities';
 
+import {
+  InvalidQuantityException,
+  InsufficientQuantityException,
+} from '../../errors';
+
 import { InventoryMovementEntity } from './entities';
 import {
   FindManyInventoryMovementsParamsDto,
@@ -140,6 +145,24 @@ export class InventoryMovementsController {
         case 'ADJUSTMENT': {
           await Promise.all(
             movement.items.map(async (item) => {
+              if (item.quantity === 0) {
+                throw new InvalidQuantityException({
+                  supply: item.supply.name,
+                  quantity: item.quantity,
+                });
+              }
+
+              if (
+                item.quantity < 0 &&
+                Math.abs(item.quantity) > item.supply.quantity
+              ) {
+                throw new InsufficientQuantityException({
+                  supply: item.supply.name,
+                  remaining: item.supply.quantity,
+                  requested: item.quantity,
+                });
+              }
+
               await tx.supply.update({
                 where: { id: item.supply.id },
                 data: {
@@ -158,6 +181,13 @@ export class InventoryMovementsController {
         case 'INPUT': {
           await Promise.all(
             movement.items.map(async (item) => {
+              if (item.quantity <= 0) {
+                throw new InvalidQuantityException({
+                  supply: item.supply.name,
+                  quantity: item.quantity,
+                });
+              }
+
               await tx.supply.update({
                 where: { id: item.supply.id },
                 data: {
@@ -174,6 +204,21 @@ export class InventoryMovementsController {
         case 'OUTPUT': {
           await Promise.all(
             movement.items.map(async (item) => {
+              if (item.quantity <= 0) {
+                throw new InvalidQuantityException({
+                  supply: item.supply.name,
+                  quantity: item.quantity,
+                });
+              }
+
+              if (item.quantity > item.supply.quantity) {
+                throw new InsufficientQuantityException({
+                  supply: item.supply.name,
+                  remaining: item.supply.quantity,
+                  requested: item.quantity,
+                });
+              }
+
               await tx.supply.update({
                 where: { id: item.supply.id },
                 data: {

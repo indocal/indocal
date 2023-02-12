@@ -4,12 +4,12 @@ import { PrismaService } from 'nestjs-prisma';
 import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { ReceiveItemsDto } from './dto';
-import { InsufficientQuantityException } from './errors';
+import { ReceiveItemsDto } from '../../../dto';
+import { InsufficientQuantityException } from '../../../errors';
 
-@Controller('warehouse/actions')
+@Controller('warehouse/orders/actions')
 @UseGuards(PoliciesGuard)
-export class WarehouseController {
+export class OrdersActionsController {
   constructor(private prismaService: PrismaService) {}
 
   @Patch('receive-items')
@@ -122,4 +122,4 @@ export class WarehouseController {
   }
 }
 
-export default WarehouseController;
+export default OrdersActionsController;

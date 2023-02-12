@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import { createServiceError, ServiceError } from '../../common';
-import { Config } from '../../config';
+import { Config, ApiEndpoints } from '../../config';
 
 import { ReceiveItemsDto } from './types';
 
@@ -35,7 +35,7 @@ export class WarehouseService {
         void,
         AxiosResponse<void, ReceiveItemsDto>,
         ReceiveItemsDto
-      >('warehouse/actions/receive-items', data);
+      >(`${ApiEndpoints.ORDERS}/actions/receive-items`, data);
 
       return {
         error: null,

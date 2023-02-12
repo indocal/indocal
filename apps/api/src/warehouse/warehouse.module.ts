@@ -3,8 +3,6 @@ import { PrismaService } from 'nestjs-prisma';
 
 import { AuthModule } from '@/auth';
 
-import WarehouseController from './warehouse.controller';
-
 import {
   SuppliesModule,
   SuppliersModule,
@@ -24,7 +22,6 @@ import {
     InventoryMovementsModule,
     InventoryMovementsItemsModule,
   ],
-  controllers: [WarehouseController],
   providers: [PrismaService],
 })
 export class WarehouseModule {}

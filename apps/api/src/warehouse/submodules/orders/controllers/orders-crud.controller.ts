@@ -16,17 +16,17 @@ import { Order, OrderItem, Supply, Supplier } from '@prisma/client';
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { OrderItemEntity } from '../orders-items/entities';
-import { SupplyEntity } from '../supplies/entities';
-import { SupplierEntity } from '../suppliers/entities';
+import { OrderItemEntity } from '../../orders-items/entities';
+import { SupplyEntity } from '../../supplies/entities';
+import { SupplierEntity } from '../../suppliers/entities';
 
-import { OrderEntity } from './entities';
+import { OrderEntity } from '../entities';
 import {
   FindManyOrdersParamsDto,
   CountOrdersParamsDto,
   CreateOrderDto,
   UpdateOrderDto,
-} from './dto';
+} from '../dto';
 
 class EnhancedOrderItem extends OrderItemEntity {
   supply: SupplyEntity;
@@ -44,7 +44,7 @@ type CreateEnhancedOrder = Order & {
 
 @Controller('warehouse/orders')
 @UseGuards(PoliciesGuard)
-export class OrdersController {
+export class OrdersCRUDController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedOrder({
@@ -175,4 +175,4 @@ export class OrdersController {
   }
 }
 
-export default OrdersController;
+export default OrdersCRUDController;
