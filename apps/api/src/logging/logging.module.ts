@@ -16,8 +16,8 @@ import LoggingInterceptor from './logging.interceptor';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    PrismaService,
     LoggingService,
+    PrismaService,
   ],
   exports: [LoggingService],
 })
