@@ -21,23 +21,23 @@ import {
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { InventoryMovementItemEntity } from '../inventory-movements-items/entities';
-import { SupplyEntity } from '../supplies/entities';
-import { OrderEntity } from '../orders/entities';
-import { SupplierEntity } from '../suppliers/entities';
-import { UserEntity } from '../../../auth/submodules/users/entities';
+import { InventoryMovementItemEntity } from '../../inventory-movements-items/entities';
+import { SupplyEntity } from '../../supplies/entities';
+import { OrderEntity } from '../../orders/entities';
+import { SupplierEntity } from '../../suppliers/entities';
+import { UserEntity } from '../../../../auth/submodules/users/entities';
 
 import {
   InvalidQuantityException,
   InsufficientQuantityException,
-} from '../../errors';
+} from '../../../errors';
 
-import { InventoryMovementEntity } from './entities';
+import { InventoryMovementEntity } from '../entities';
 import {
   FindManyInventoryMovementsParamsDto,
   CountInventoryMovementsParamsDto,
   CreateInventoryMovementDto,
-} from './dto';
+} from '../dto';
 
 class EnhancedInventoryMovementItem extends InventoryMovementItemEntity {
   supply: SupplyEntity;
@@ -63,7 +63,7 @@ type CreateEnhancedInventoryMovement = InventoryMovement & {
 
 @Controller('warehouse/movements')
 @UseGuards(PoliciesGuard)
-export class InventoryMovementsController {
+export class InventoryMovementsCRUDController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedInventoryMovement({
@@ -303,4 +303,4 @@ export class InventoryMovementsController {
   }
 }
 
-export default InventoryMovementsController;
+export default InventoryMovementsCRUDController;
