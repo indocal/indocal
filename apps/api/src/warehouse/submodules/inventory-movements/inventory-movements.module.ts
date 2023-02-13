@@ -3,17 +3,11 @@ import { PrismaService } from 'nestjs-prisma';
 
 import { AuthModule } from '@/auth';
 
-import {
-  InventoryMovementsCRUDController,
-  InventoryMovementsStatsController,
-} from './controllers';
+import InventoryMovementsController from './inventory-movements.controller';
 
 @Module({
   imports: [AuthModule],
-  controllers: [
-    InventoryMovementsCRUDController,
-    InventoryMovementsStatsController,
-  ],
+  controllers: [InventoryMovementsController],
   providers: [PrismaService],
 })
 export class InventoryMovementsModule {}
