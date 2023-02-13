@@ -5,7 +5,7 @@ import {
   StyleSheet,
 } from '@react-pdf/renderer';
 
-import { logo } from '../../assets';
+import { logo } from '../../../assets';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 20,
     paddingVertical: 20,
-    paddingHorizontal: 5,
+    paddingHorizontal: 15,
   },
   logo: {
     width: 100,
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const TransferHeader: React.FC = () => (
+export const InputHeader: React.FC = () => (
   <View style={styles.container}>
     <View style={styles.logo}>
       <ReactPDFImage
@@ -50,7 +50,7 @@ export const TransferHeader: React.FC = () => (
 
     <View style={styles.heading}>
       <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
-        Formulario Orden Traslado de Equipos y/o Mobiliarios
+        Formulario Control Entrada de Almacén
       </Text>
 
       <Text style={{ fontSize: 15, fontWeight: 'extrabold' }}>
@@ -63,11 +63,13 @@ export const TransferHeader: React.FC = () => (
     </View>
 
     <View style={styles.metadata}>
-      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>FO-SAS-004</Text>
+      <Text style={{ fontSize: 15, fontWeight: 'extrabold' }}>RC-SAS-001</Text>
+
+      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>FO-SAS-001</Text>
 
       <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Revisión No.00</Text>
     </View>
   </View>
 );
 
-export default TransferHeader;
+export default InputHeader;

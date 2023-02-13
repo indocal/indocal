@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { PDFViewer, Document, Page, StyleSheet } from '@react-pdf/renderer';
 
 import {
@@ -8,10 +8,21 @@ import {
 } from '@indocal/services';
 
 import {
+  AdjustmentHeader,
+  AdjustmentContent,
+  AdjustmentFooter,
   InputHeader,
+  InputContent,
+  InputFooter,
   OutputHeader,
+  OutputContent,
+  OutputFooter,
   TransferHeader,
+  TransferContent,
+  TransferFooter,
   DischargeHeader,
+  DischargeContent,
+  DischargeFooter,
 } from './components';
 
 const styles = StyleSheet.create({
@@ -22,6 +33,8 @@ const styles = StyleSheet.create({
   },
   page: {
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
   },
 });
 
@@ -34,7 +47,7 @@ export const InventoryMovementDetailsPDF: React.FC<
 > = ({ movement }) => {
   const headers = useMemo<Record<InventoryMovementType, React.ReactElement>>(
     () => ({
-      ADJUSTMENT: <></>,
+      ADJUSTMENT: <AdjustmentHeader />,
       INPUT: <InputHeader />,
       OUTPUT: <OutputHeader />,
       TRANSFER: <TransferHeader />,
@@ -45,24 +58,24 @@ export const InventoryMovementDetailsPDF: React.FC<
 
   const contents = useMemo<Record<InventoryMovementType, React.ReactElement>>(
     () => ({
-      ADJUSTMENT: <></>,
-      INPUT: <></>,
-      OUTPUT: <></>,
-      TRANSFER: <></>,
-      DISCHARGE: <></>,
+      ADJUSTMENT: <AdjustmentContent movement={movement} />,
+      INPUT: <InputContent movement={movement} />,
+      OUTPUT: <OutputContent movement={movement} />,
+      TRANSFER: <TransferContent movement={movement} />,
+      DISCHARGE: <DischargeContent movement={movement} />,
     }),
-    []
+    [movement]
   );
 
   const footers = useMemo<Record<InventoryMovementType, React.ReactElement>>(
     () => ({
-      ADJUSTMENT: <></>,
-      INPUT: <></>,
-      OUTPUT: <></>,
-      TRANSFER: <></>,
-      DISCHARGE: <></>,
+      ADJUSTMENT: <AdjustmentFooter movement={movement} />,
+      INPUT: <InputFooter movement={movement} />,
+      OUTPUT: <OutputFooter movement={movement} />,
+      TRANSFER: <TransferFooter movement={movement} />,
+      DISCHARGE: <DischargeFooter movement={movement} />,
     }),
-    []
+    [movement]
   );
 
   return (

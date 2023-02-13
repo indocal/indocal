@@ -5,7 +5,7 @@ import {
   StyleSheet,
 } from '@react-pdf/renderer';
 
-import { logo } from '../../assets';
+import { logo } from '../../../assets';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 20,
     paddingVertical: 20,
-    paddingHorizontal: 5,
+    paddingHorizontal: 15,
   },
   logo: {
     width: 100,
