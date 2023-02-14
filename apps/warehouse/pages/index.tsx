@@ -1,12 +1,13 @@
 import { Container, Grid } from '@mui/material';
 
-import { Page, Stat } from '@indocal/ui';
+import { Page, Widget, Stat } from '@indocal/ui';
 import {
   useSuppliesCount,
   useSuppliersCount,
   useOrdersCount,
 } from '@indocal/services';
 
+import { InventoryMovementsByGroupList } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -33,34 +34,48 @@ const DashboardPage: EnhancedNextPage = () => {
     <Page title="Dashboard" transition="down">
       <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
         <Grid container justifyContent="center" alignItems="center" spacing={1}>
-          <Grid item>
-            <Stat
-              title="Recursos"
-              description="Recursos registrados"
-              value={suppliesCount ?? 'N/A'}
-              loading={suppliesCountLoading}
-              validating={suppliesCountValidating}
-            />
+          <Grid
+            item
+            container
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Stat
+                title="Recursos"
+                description="Recursos registrados"
+                value={suppliesCount ?? 'N/A'}
+                loading={suppliesCountLoading}
+                validating={suppliesCountValidating}
+              />
+            </Grid>
+
+            <Grid item>
+              <Stat
+                title="Suplidores"
+                description="Suplidores registrados"
+                value={suppliersCount ?? 'N/A'}
+                loading={suppliersCountLoading}
+                validating={suppliersCountValidating}
+              />
+            </Grid>
+
+            <Grid item>
+              <Stat
+                title="Ordenes"
+                description="Ordenes realizadas"
+                value={ordersCount ?? 'N/A'}
+                loading={ordersCountLoading}
+                validating={ordersCountValidating}
+              />
+            </Grid>
           </Grid>
 
-          <Grid item>
-            <Stat
-              title="Suplidores"
-              description="Suplidores registrados"
-              value={suppliersCount ?? 'N/A'}
-              loading={suppliersCountLoading}
-              validating={suppliersCountValidating}
-            />
-          </Grid>
-
-          <Grid item>
-            <Stat
-              title="Ordenes"
-              description="Ordenes realizadas"
-              value={ordersCount ?? 'N/A'}
-              loading={ordersCountLoading}
-              validating={ordersCountValidating}
-            />
+          <Grid item xs={12}>
+            <Widget>
+              <InventoryMovementsByGroupList />
+            </Widget>
           </Grid>
         </Grid>
       </Container>
