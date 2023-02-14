@@ -7,7 +7,7 @@ import {
   useOrdersCount,
 } from '@indocal/services';
 
-import { InventoryMovementsByGroupList } from '@/features';
+import { InventoryMovementsByGroupChart } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -33,13 +33,14 @@ const DashboardPage: EnhancedNextPage = () => {
   return (
     <Page title="Dashboard" transition="down">
       <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-        <Grid container justifyContent="center" alignItems="center" spacing={1}>
+        <Grid container spacing={1}>
           <Grid
             item
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
+            xs={12}
           >
             <Grid item>
               <Stat
@@ -74,7 +75,7 @@ const DashboardPage: EnhancedNextPage = () => {
 
           <Grid item xs={12}>
             <Widget>
-              <InventoryMovementsByGroupList />
+              <InventoryMovementsByGroupChart />
             </Widget>
           </Grid>
         </Grid>

@@ -11,11 +11,11 @@ import {
 } from '@indocal/ui';
 import { useSupplyPrices, UUID, Supply } from '@indocal/services';
 
-export interface SupplyPricesChartCardProps {
+export interface SupplyPricesChartProps {
   supply: UUID | Supply;
 }
 
-export const SupplyPricesChartCard: React.FC<SupplyPricesChartCardProps> = ({
+export const SupplyPricesChart: React.FC<SupplyPricesChartProps> = ({
   supply: entity,
 }) => {
   const { loading, validating, supplyPrices, error } = useSupplyPrices(
@@ -24,7 +24,7 @@ export const SupplyPricesChartCard: React.FC<SupplyPricesChartCardProps> = ({
 
   const options: ChartOptions = useMemo(
     () => ({
-      chart: { id: SupplyPricesChartCard.name, toolbar: { show: false } },
+      chart: { id: SupplyPricesChart.name, toolbar: { show: false } },
       title: {
         text: 'Historial de precios',
         style: {
@@ -102,4 +102,4 @@ export const SupplyPricesChartCard: React.FC<SupplyPricesChartCardProps> = ({
   );
 };
 
-export default SupplyPricesChartCard;
+export default SupplyPricesChart;
