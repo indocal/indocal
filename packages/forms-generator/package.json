@@ -7,20 +7,20 @@
     "@emotion/styled": "11.10.5",
     "@indocal/services": "*",
     "@indocal/ui": "*",
-    "@mui/icons-material": "5.11.0",
-    "@mui/lab": "5.0.0-alpha.114",
-    "@mui/material": "5.11.3",
-    "next": "13.1.1",
+    "@mui/icons-material": "5.11.9",
+    "@mui/lab": "5.0.0-alpha.120",
+    "@mui/material": "5.11.9",
+    "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.3",
-    "react-hook-form": "7.41.3"
+    "react-hook-form": "7.43.1"
   },
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",
     "@indocal/typescript-config": "*",
-    "@types/node": "18.11.18",
-    "@types/react": "18.0.26",
-    "typescript": "4.9.4"
+    "@types/node": "18.13.0",
+    "@types/react": "18.0.28",
+    "typescript": "4.9.5"
   }
 }

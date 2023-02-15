@@ -6,23 +6,23 @@
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@indocal/utils": "*",
-    "@mui/icons-material": "5.11.0",
-    "@mui/material": "5.11.3",
-    "@mui/x-data-grid": "5.17.17",
-    "@mui/x-date-pickers": "5.0.12",
-    "apexcharts": "3.36.3",
-    "next": "13.1.1",
+    "@mui/icons-material": "5.11.9",
+    "@mui/material": "5.11.9",
+    "@mui/x-data-grid": "5.17.23",
+    "@mui/x-date-pickers": "5.0.18",
+    "apexcharts": "3.37.0",
+    "next": "13.1.6",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "7.41.3",
+    "react-hook-form": "7.43.1",
     "react-imask": "6.4.3"
   },
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",
     "@indocal/typescript-config": "*",
-    "@types/node": "18.11.18",
-    "@types/react": "18.0.26",
-    "typescript": "4.9.4"
+    "@types/node": "18.13.0",
+    "@types/react": "18.0.28",
+    "typescript": "4.9.5"
   }
 }

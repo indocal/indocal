@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const withTM = require('next-transpile-modules')([
-  '@indocal/forms-generator',
-  '@indocal/services',
-  '@indocal/theme',
-  '@indocal/ui',
-  '@indocal/utils',
-]);
-
 /** @type {import('next').NextConfig} */
-module.exports = withTM({
+module.exports = {
   reactStrictMode: true,
   staticPageGenerationTimeout: 60 * 15,
-});
+  transpilePackages: [
+    '@indocal/forms-generator',
+    '@indocal/services',
+    '@indocal/theme',
+    '@indocal/ui',
+    '@indocal/utils',
+  ],
+};
