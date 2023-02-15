@@ -7,12 +7,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'center',
+    fontFamily: 'Times-Roman',
   },
   header: {
     display: 'flex',
     flexDirection: 'row',
-    fontSize: 15,
-    fontWeight: 'extrabold',
+    fontFamily: 'Times-Bold',
+    fontSize: 12,
     backgroundColor: 'lightblue',
   },
   row: {
@@ -35,22 +36,22 @@ export const InventoryMovementItemsTable: React.FC<
 > = ({ movement }) => (
   <View style={styles.table}>
     <View style={styles.header}>
-      <Text style={{ ...styles.cell, width: 125 }}>Código</Text>
+      <Text style={{ ...styles.cell, width: 100 }}>Código</Text>
 
       <Text style={{ ...styles.cell, flex: 1 }}>
-        Descripción de Equipo y/o Mobiliario
+        Descripción de Material, Equipo y/o Mobiliario
       </Text>
 
-      <Text style={{ ...styles.cell, width: 125 }}>Cantidad</Text>
+      <Text style={{ ...styles.cell, width: 100 }}>Cantidad</Text>
     </View>
 
     {movement.items.map((item) => (
       <View key={item.id} style={styles.row}>
-        <Text style={{ ...styles.cell, width: 125 }}>{item.supply.code}</Text>
+        <Text style={{ ...styles.cell, width: 100 }}>{item.supply.code}</Text>
 
         <Text style={{ ...styles.cell, flex: 1 }}>{item.supply.name}</Text>
 
-        <Text style={{ ...styles.cell, width: 125 }}>{item.quantity}</Text>
+        <Text style={{ ...styles.cell, width: 100 }}>{item.quantity}</Text>
       </View>
     ))}
   </View>

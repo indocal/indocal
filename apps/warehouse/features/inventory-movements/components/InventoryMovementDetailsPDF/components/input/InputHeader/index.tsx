@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingVertical: 20,
     paddingHorizontal: 15,
+    fontFamily: 'Times-Bold',
   },
   logo: {
     width: 100,
@@ -49,25 +50,21 @@ export const InputHeader: React.FC = () => (
     </View>
 
     <View style={styles.heading}>
-      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
-        Formulario Control Entrada de Almacén
+      <Text style={{ fontSize: 12 }}>
+        Detalles de Entrada de Materiales, Equipos y/o Mobiliarios.
       </Text>
 
-      <Text style={{ fontSize: 15, fontWeight: 'extrabold' }}>
-        Instituto Dominicano para la Calidad
-      </Text>
+      <Text style={{ fontSize: 14 }}>Instituto Dominicano para la Calidad</Text>
 
-      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
-        Sección Almacén y Suministro
-      </Text>
+      <Text style={{ fontSize: 12 }}>Sección Almacén y Suministro</Text>
     </View>
 
     <View style={styles.metadata}>
-      <Text style={{ fontSize: 15, fontWeight: 'extrabold' }}>RC-SAS-001</Text>
+      <Text style={{ fontSize: 14 }}>RC-SAS-001</Text>
 
-      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>FO-SAS-001</Text>
+      <Text style={{ fontSize: 12 }}>FO-SAS-001</Text>
 
-      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Revisión No.00</Text>
+      <Text style={{ fontSize: 12 }}>Revisión No.00</Text>
     </View>
   </View>
 );

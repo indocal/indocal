@@ -8,8 +8,8 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 5,
-    paddingHorizontal: 40,
+    gap: 10,
+    paddingHorizontal: 30,
   },
 });
 
@@ -21,8 +21,8 @@ export const TransferContent: React.FC<TransferContentProps> = ({
   movement,
 }) => (
   <View style={styles.container}>
-    <Text style={{ fontWeight: 'extrabold' }}>
-      II. - Detalles de la Orden de Traslado de Equipos y /o Mobiliarios.
+    <Text style={{ fontFamily: 'Times-Bold', fontSize: 14 }}>
+      II. - Detalles de Traslado de Materiales, Equipos y/o Mobiliarios.
     </Text>
 
     <InventoryMovementItemsTable movement={movement} />

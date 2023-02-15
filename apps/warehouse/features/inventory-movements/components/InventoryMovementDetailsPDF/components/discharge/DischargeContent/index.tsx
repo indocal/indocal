@@ -8,8 +8,8 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 5,
-    paddingHorizontal: 40,
+    gap: 10,
+    paddingHorizontal: 30,
   },
 });
 
@@ -21,8 +21,8 @@ export const DischargeContent: React.FC<DischargeContentProps> = ({
   movement,
 }) => (
   <View style={styles.container}>
-    <Text style={{ fontWeight: 'extrabold' }}>
-      II. - Detalles del Descargo de Materiales, Equipos y /o Mobiliarios.
+    <Text style={{ fontFamily: 'Times-Bold', fontSize: 14 }}>
+      II. - Detalles de Descargo de Materiales, Equipos y/o Mobiliarios.
     </Text>
 
     <InventoryMovementItemsTable movement={movement} />

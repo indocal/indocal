@@ -8,8 +8,8 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 5,
-    paddingHorizontal: 40,
+    gap: 10,
+    paddingHorizontal: 30,
   },
 });
 
@@ -19,8 +19,8 @@ export interface InputContentProps {
 
 export const InputContent: React.FC<InputContentProps> = ({ movement }) => (
   <View style={styles.container}>
-    <Text style={{ fontWeight: 'extrabold' }}>
-      II. - Detalles del Material, Equipo y/o Mobiliario Recibido.
+    <Text style={{ fontFamily: 'Times-Bold', fontSize: 14 }}>
+      II. - Detalles de Entrada de Materiales, Equipos y/o Mobiliarios.
     </Text>
 
     <InventoryMovementItemsTable movement={movement} />
