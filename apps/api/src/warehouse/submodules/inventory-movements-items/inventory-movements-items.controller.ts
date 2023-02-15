@@ -11,7 +11,7 @@ import {
   Supply,
   Order,
   Supplier,
-  User,
+  UserGroup,
   InventoryMovement,
 } from '@prisma/client';
 
@@ -21,7 +21,7 @@ import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { SupplyEntity } from '../supplies/entities';
 import { OrderEntity } from '../orders/entities';
 import { SupplierEntity } from '../suppliers/entities';
-import { UserEntity } from '../../../auth/submodules/users/entities';
+import { UserGroupEntity } from '../../../auth/submodules/groups/entities';
 import { InventoryMovementEntity } from '../inventory-movements/entities';
 
 import { InventoryMovementItemEntity } from './entities';
@@ -32,8 +32,8 @@ class EnhancedOrder extends OrderEntity {
 
 class EnhancedInventoryMovement extends InventoryMovementEntity {
   order: EnhancedOrder | null;
-  origin: UserEntity | null;
-  destination: UserEntity | null;
+  origin: UserGroupEntity | null;
+  destination: UserGroupEntity | null;
 }
 
 class EnhancedInventoryMovementItem extends InventoryMovementItemEntity {
@@ -45,8 +45,8 @@ type CreateEnhancedInventoryMovementItem = InventoryMovementItem & {
   supply: Supply;
   movement: InventoryMovement & {
     order: (Order & { supplier: Supplier }) | null;
-    origin: User | null;
-    destination: User | null;
+    origin: UserGroup | null;
+    destination: UserGroup | null;
   };
 };
 
@@ -73,9 +73,9 @@ export class InventoryMovementsItemsController {
       item.movement.order = null;
     }
 
-    item.movement.origin = origin ? new UserEntity(origin) : null;
+    item.movement.origin = origin ? new UserGroupEntity(origin) : null;
     item.movement.destination = destination
-      ? new UserEntity(destination)
+      ? new UserGroupEntity(destination)
       : null;
 
     return item;

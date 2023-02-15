@@ -37,7 +37,7 @@ export const OutputMovement: React.FC<OutputMovementProps> = ({
 
     <ListItemText
       primary={new Date(movement.createdAt).toLocaleString()}
-      secondary={`(${item.quantity}) Almacén -> ${movement.destination?.username}`}
+      secondary={`(${item.quantity}) Almacén -> ${movement.destination?.name}`}
     />
 
     <Can I="read" an="inventoryMovement">

@@ -15,7 +15,7 @@ import {
   Supply,
   Order,
   Supplier,
-  User,
+  UserGroup,
 } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
@@ -25,7 +25,7 @@ import { InventoryMovementItemEntity } from '../inventory-movements-items/entiti
 import { SupplyEntity } from '../supplies/entities';
 import { OrderEntity } from '../orders/entities';
 import { SupplierEntity } from '../suppliers/entities';
-import { UserEntity } from '../../../auth/submodules/users/entities';
+import { UserGroupEntity } from '../../../auth/submodules/groups/entities';
 
 import {
   InvalidQuantityException,
@@ -50,15 +50,15 @@ class EnhancedOrder extends OrderEntity {
 class EnhancedInventoryMovement extends InventoryMovementEntity {
   items: EnhancedInventoryMovementItem[];
   order: EnhancedOrder | null;
-  origin: UserEntity | null;
-  destination: UserEntity | null;
+  origin: UserGroupEntity | null;
+  destination: UserGroupEntity | null;
 }
 
 type CreateEnhancedInventoryMovement = InventoryMovement & {
   items: (InventoryMovementItem & { supply: Supply })[];
   order: (Order & { supplier: Supplier }) | null;
-  origin: User | null;
-  destination: User | null;
+  origin: UserGroup | null;
+  destination: UserGroup | null;
 };
 
 @Controller('warehouse/movements')
@@ -82,8 +82,10 @@ export class InventoryMovementsController {
       movement.order = null;
     }
 
-    movement.origin = origin ? new UserEntity(origin) : null;
-    movement.destination = destination ? new UserEntity(destination) : null;
+    movement.origin = origin ? new UserGroupEntity(origin) : null;
+    movement.destination = destination
+      ? new UserGroupEntity(destination)
+      : null;
 
     movement.items = items.map(({ supply, ...rest }) => {
       const item = new EnhancedInventoryMovementItem(rest);

@@ -29,7 +29,7 @@ export const InventoryMovementsByGroupChart: React.FC = () => {
         lt: addMonths(startOfMonth(month), 1),
       },
       ...(group && {
-        destination: { groups: { some: { id: group.id } } },
+        destination: { id: group.id },
       }),
     },
   });

@@ -37,7 +37,7 @@ export const TransferMovement: React.FC<TransferMovementProps> = ({
 
     <ListItemText
       primary={new Date(movement.createdAt).toLocaleString()}
-      secondary={`(${item.quantity}) ${movement.origin?.username} -> ${movement.destination?.username}`}
+      secondary={`(${item.quantity}) ${movement.origin?.name} -> ${movement.destination?.name}`}
     />
 
     <Can I="read" an="inventoryMovement">

@@ -43,9 +43,6 @@ model User {
   groups  UserGroup[]
   entries FormEntry[]
 
-  assignmentHistory InventoryMovement[] @relation("AssignmentHistory")
-  dischargeHistory  InventoryMovement[] @relation("DischargeHistory")
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -90,6 +87,9 @@ model UserGroup {
 
   members User[]
   forms   Form[]
+
+  assignmentHistory InventoryMovement[] @relation("AssignmentHistory")
+  dischargeHistory  InventoryMovement[] @relation("DischargeHistory")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -353,10 +353,10 @@ model InventoryMovement {
   order   Order?  @relation(fields: [orderId], references: [id], onDelete: Restrict)
   orderId String?
 
-  origin   User?   @relation(name: "DischargeHistory", fields: [originId], references: [id])
+  origin   UserGroup? @relation(name: "DischargeHistory", fields: [originId], references: [id])
   originId String?
 
-  destination   User?   @relation(name: "AssignmentHistory", fields: [destinationId], references: [id])
+  destination   UserGroup? @relation(name: "AssignmentHistory", fields: [destinationId], references: [id])
   destinationId String?
 
   createdAt DateTime @default(now())

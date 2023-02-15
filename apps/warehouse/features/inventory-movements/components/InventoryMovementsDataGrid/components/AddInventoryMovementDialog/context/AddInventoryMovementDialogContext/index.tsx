@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { InventoryMovementType, UserStatus } from '@indocal/services';
+import { InventoryMovementType } from '@indocal/services';
 
 export type AddInventoryMovementDialogData = zod.infer<typeof schema>;
 
@@ -71,19 +71,14 @@ const schema = zod.object(
       .object(
         {
           id: zod.string().uuid(),
-          username: zod.string(),
-          email: zod.string().email(),
           name: zod.string(),
-          status: zod.enum<string, [UserStatus, ...UserStatus[]]>([
-            'ENABLED',
-            'DISABLED',
-          ]),
+          description: zod.string().nullable(),
           createdAt: zod.string(),
           updatedAt: zod.string(),
         },
         {
-          description: 'Usuario origen',
-          required_error: 'Debe seleccionar el usuario origen',
+          description: 'Área origen',
+          required_error: 'Debe seleccionar el área origen',
           invalid_type_error: 'Formato no válido',
         }
       )
@@ -93,19 +88,14 @@ const schema = zod.object(
       .object(
         {
           id: zod.string().uuid(),
-          username: zod.string(),
-          email: zod.string().email(),
           name: zod.string(),
-          status: zod.enum<string, [UserStatus, ...UserStatus[]]>([
-            'ENABLED',
-            'DISABLED',
-          ]),
+          description: zod.string().nullable(),
           createdAt: zod.string(),
           updatedAt: zod.string(),
         },
         {
-          description: 'Usuario destino',
-          required_error: 'Debe seleccionar el usuario destino',
+          description: 'Área destino',
+          required_error: 'Debe seleccionar el área destino',
           invalid_type_error: 'Formato no válido',
         }
       )

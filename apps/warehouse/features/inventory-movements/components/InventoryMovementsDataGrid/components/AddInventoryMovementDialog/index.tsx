@@ -14,7 +14,7 @@ import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useFormContext, Control } from 'react-hook-form';
 
-import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
+import { ControlledUsersGroupsAutocomplete } from '@indocal/forms-generator';
 
 import { indocal } from '@/lib';
 import { Pages } from '@/config';
@@ -163,10 +163,10 @@ const AddInventoryMovementDialog: React.FC = () => {
                 {type !== 'ADJUSTMENT' && (
                   <Stack direction="row" spacing={1}>
                     {['TRANSFER', 'DISCHARGE'].includes(type) && (
-                      <ControlledUsersAutocomplete
+                      <ControlledUsersGroupsAutocomplete
                         required
                         name="origin"
-                        label="Usuario origen"
+                        label="Área origen"
                         control={control as unknown as Control}
                         disabled={isSubmitting}
                         autocompleteProps={{ fullWidth: true }}
@@ -174,10 +174,10 @@ const AddInventoryMovementDialog: React.FC = () => {
                     )}
 
                     {['OUTPUT', 'TRANSFER'].includes(type) && (
-                      <ControlledUsersAutocomplete
+                      <ControlledUsersGroupsAutocomplete
                         required
                         name="destination"
-                        label="Usuario destino"
+                        label="Área destino"
                         control={control as unknown as Control}
                         disabled={isSubmitting}
                         autocompleteProps={{ fullWidth: true }}

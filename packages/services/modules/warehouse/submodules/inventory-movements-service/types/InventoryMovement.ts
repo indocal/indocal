@@ -1,7 +1,5 @@
 import { Entity, UUID } from '../../../../../common';
 
-import { UserStatus } from '../../../../auth';
-
 import { SupplyUnit } from '../../supplies-service';
 import { OrderStatus } from '../../orders-service';
 
@@ -44,20 +42,16 @@ type Order = {
 
 type Origin = {
   id: UUID;
-  username: string;
-  email: string;
   name: string;
-  status: UserStatus;
+  description: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 type Destination = {
   id: UUID;
-  username: string;
-  email: string;
   name: string;
-  status: UserStatus;
+  description: string | null;
   createdAt: string;
   updatedAt: string;
 };
