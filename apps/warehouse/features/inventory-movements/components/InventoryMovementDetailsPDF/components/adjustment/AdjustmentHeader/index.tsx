@@ -51,7 +51,7 @@ export const AdjustmentHeader: React.FC = () => (
 
     <View style={styles.heading}>
       <Text style={{ fontSize: 12 }}>
-        Detalles de Ajuste de Materiales, Equipos y/o Mobiliarios.
+        Formulario Ajuste de Materiales, Equipos y/o Mobiliarios
       </Text>
 
       <Text style={{ fontSize: 14 }}>Instituto Dominicano para la Calidad</Text>
