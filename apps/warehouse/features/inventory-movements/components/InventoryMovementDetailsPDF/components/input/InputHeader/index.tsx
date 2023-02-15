@@ -51,7 +51,7 @@ export const InputHeader: React.FC = () => (
 
     <View style={styles.heading}>
       <Text style={{ fontSize: 12 }}>
-        Detalles de Entrada de Materiales, Equipos y/o Mobiliarios.
+        Formulario Entrada de Materiales, Equipos y/o Mobiliarios
       </Text>
 
       <Text style={{ fontSize: 14 }}>Instituto Dominicano para la Calidad</Text>
