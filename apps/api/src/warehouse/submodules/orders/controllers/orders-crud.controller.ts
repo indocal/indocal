@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Order, OrderItem, Supply, Supplier } from '@prisma/client';
+import { Order, OrderItem, Supply, Supplier, UserGroup } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
@@ -19,6 +19,7 @@ import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { OrderItemEntity } from '../../orders-items/entities';
 import { SupplyEntity } from '../../supplies/entities';
 import { SupplierEntity } from '../../suppliers/entities';
+import { UserGroupEntity } from '../../../../auth/submodules/groups/entities';
 
 import { OrderEntity } from '../entities';
 import {
@@ -35,11 +36,13 @@ class EnhancedOrderItem extends OrderItemEntity {
 class EnhancedOrder extends OrderEntity {
   items: EnhancedOrderItem[];
   supplier: SupplierEntity;
+  requestedBy: UserGroupEntity;
 }
 
 type CreateEnhancedOrder = Order & {
   items: (OrderItem & { supply: Supply })[];
   supplier: Supplier;
+  requestedBy: UserGroup;
 };
 
 @Controller('warehouse/orders')
@@ -50,6 +53,7 @@ export class OrdersCRUDController {
   createEnhancedOrder({
     items,
     supplier,
+    requestedBy,
     ...rest
   }: CreateEnhancedOrder): EnhancedOrder {
     const order = new EnhancedOrder(rest);
@@ -62,6 +66,7 @@ export class OrdersCRUDController {
     });
 
     order.supplier = new SupplierEntity(supplier);
+    order.requestedBy = new UserGroupEntity(requestedBy);
 
     return order;
   }
@@ -74,7 +79,9 @@ export class OrdersCRUDController {
     const order = await this.prismaService.order.create({
       data: {
         code: createOrderDto.code,
+        concept: createOrderDto.concept,
         supplier: { connect: { id: createOrderDto.supplier } },
+        requestedBy: { connect: { id: createOrderDto.requestedBy } },
         items: {
           createMany: {
             skipDuplicates: true,
@@ -88,7 +95,11 @@ export class OrdersCRUDController {
           },
         },
       },
-      include: { items: { include: { supply: true } }, supplier: true },
+      include: {
+        items: { include: { supply: true } },
+        supplier: true,
+        requestedBy: true,
+      },
     });
 
     return this.createEnhancedOrder(order);
@@ -116,7 +127,11 @@ export class OrdersCRUDController {
         skip: query.pagination?.skip && Number(query.pagination.skip),
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
-        include: { items: { include: { supply: true } }, supplier: true },
+        include: {
+          items: { include: { supply: true } },
+          supplier: true,
+          requestedBy: true,
+        },
       }),
       this.prismaService.order.count({
         where: query.filters,
@@ -137,7 +152,11 @@ export class OrdersCRUDController {
   ): Promise<SingleEntityResponse<EnhancedOrder | null>> {
     const order = await this.prismaService.order.findUnique({
       where: { id },
-      include: { items: { include: { supply: true } }, supplier: true },
+      include: {
+        items: { include: { supply: true } },
+        supplier: true,
+        requestedBy: true,
+      },
     });
 
     return order ? this.createEnhancedOrder(order) : null;
@@ -153,9 +172,14 @@ export class OrdersCRUDController {
       where: { id },
       data: {
         code: updateOrderDto.code,
+        concept: updateOrderDto.concept,
         status: updateOrderDto.status,
       },
-      include: { items: { include: { supply: true } }, supplier: true },
+      include: {
+        items: { include: { supply: true } },
+        supplier: true,
+        requestedBy: true,
+      },
     });
 
     return this.createEnhancedOrder(order);
@@ -168,7 +192,11 @@ export class OrdersCRUDController {
   ): Promise<SingleEntityResponse<EnhancedOrder>> {
     const order = await this.prismaService.order.delete({
       where: { id },
-      include: { items: { include: { supply: true } }, supplier: true },
+      include: {
+        items: { include: { supply: true } },
+        supplier: true,
+        requestedBy: true,
+      },
     });
 
     return this.createEnhancedOrder(order);

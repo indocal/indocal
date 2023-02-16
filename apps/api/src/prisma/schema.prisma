@@ -88,6 +88,8 @@ model UserGroup {
   members User[]
   forms   Form[]
 
+  orders Order[]
+
   assignmentHistory InventoryMovement[] @relation("AssignmentHistory")
   dischargeHistory  InventoryMovement[] @relation("DischargeHistory")
 
@@ -292,8 +294,9 @@ model Supplier {
 }
 
 model Order {
-  id   String @id @default(uuid())
-  code String
+  id      String @id @default(uuid())
+  code    String
+  concept String
 
   status OrderStatus @default(PENDING)
 
@@ -303,6 +306,9 @@ model Order {
 
   supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Restrict)
   supplierId String
+
+  requestedBy   UserGroup @relation(fields: [requestedById], references: [id], onDelete: Restrict)
+  requestedById String
 
   deliveryAt DateTime[] @default([])
 
@@ -343,8 +349,8 @@ enum OrderItemDeliveryStatus {
 }
 
 model InventoryMovement {
-  id      String  @id @default(uuid())
-  concept String?
+  id      String @id @default(uuid())
+  concept String
 
   type InventoryMovementType
 

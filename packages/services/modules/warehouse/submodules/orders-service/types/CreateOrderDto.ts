@@ -8,7 +8,9 @@ type Item = {
 
 export type CreateOrderDto = {
   code: string;
+  concept: string;
   supplier: UUID;
+  requestedBy: UUID;
   items: Item[];
 };
 

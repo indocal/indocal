@@ -13,7 +13,10 @@ import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useFormContext, Control } from 'react-hook-form';
 
-import { ControlledSuppliersAutocomplete } from '@indocal/forms-generator';
+import {
+  ControlledSuppliersAutocomplete,
+  ControlledUsersGroupsAutocomplete,
+} from '@indocal/forms-generator';
 
 import { indocal } from '@/lib';
 import { Pages } from '@/config';
@@ -49,7 +52,9 @@ const AddOrderDialog: React.FC = () => {
     async (formData: AddOrderDialogData) => {
       const { order, error } = await indocal.warehouse.orders.create({
         code: formData.code,
+        concept: formData.concept,
         supplier: formData.supplier.id,
+        requestedBy: formData.requestedBy.id,
         items: formData.items.map((item) => ({
           price: item.price,
           quantity: Math.abs(Math.trunc(item.quantity)),
@@ -129,10 +134,29 @@ const AddOrderDialog: React.FC = () => {
                   helperText={errors.code?.message}
                 />
 
+                <TextField
+                  required
+                  multiline
+                  autoComplete="off"
+                  label="Concepto"
+                  disabled={isSubmitting}
+                  inputProps={register('concept')}
+                  error={Boolean(errors.concept)}
+                  helperText={errors.concept?.message}
+                />
+
                 <ControlledSuppliersAutocomplete
                   required
                   name="supplier"
                   label="Suplidor"
+                  control={control as unknown as Control}
+                  disabled={isSubmitting}
+                />
+
+                <ControlledUsersGroupsAutocomplete
+                  required
+                  name="requestedBy"
+                  label="Solicitante"
                   control={control as unknown as Control}
                   disabled={isSubmitting}
                 />

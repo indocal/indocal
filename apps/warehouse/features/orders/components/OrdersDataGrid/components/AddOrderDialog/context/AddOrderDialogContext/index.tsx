@@ -59,6 +59,15 @@ const schema = zod.object(
       .min(1, 'Debe ingresar el código de la orden')
       .trim(),
 
+    concept: zod
+      .string({
+        description: 'Concepto de la orden',
+        required_error: 'Debe ingresar el concepto de la orden',
+        invalid_type_error: 'Formato no válido',
+      })
+      .min(1, 'Debe ingresar el concepto de la orden')
+      .trim(),
+
     supplier: zod.object(
       {
         id: zod.string().uuid(),
@@ -70,6 +79,21 @@ const schema = zod.object(
       {
         description: 'Suplidor de la orden',
         required_error: 'Debe seleccionar el suplidor',
+        invalid_type_error: 'Formato no válido',
+      }
+    ),
+
+    requestedBy: zod.object(
+      {
+        id: zod.string().uuid(),
+        name: zod.string(),
+        description: zod.string().nullable(),
+        createdAt: zod.string(),
+        updatedAt: zod.string(),
+      },
+      {
+        description: 'Solicitante de la orden',
+        required_error: 'Debe seleccionar el solicitante',
         invalid_type_error: 'Formato no válido',
       }
     ),

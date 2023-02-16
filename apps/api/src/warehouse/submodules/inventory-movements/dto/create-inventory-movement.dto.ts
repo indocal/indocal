@@ -19,9 +19,8 @@ export class CreateInventoryMovementDto {
   type: InventoryMovementType;
 
   @IsString()
-  @IsOptional()
   @TrimParam()
-  concept?: string;
+  concept: string;
 
   @IsObject({ each: true })
   items: Item[];

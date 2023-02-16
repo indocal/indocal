@@ -14,10 +14,10 @@ export class InventoryMovementItemEntity
   quantity: number;
 
   @Exclude()
-  supplyId: string;
+  supplyId: UUID;
 
   @Exclude()
-  movementId: string;
+  movementId: UUID;
 
   createdAt: Date;
   updatedAt: Date;

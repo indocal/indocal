@@ -33,11 +33,21 @@ type Supplier = {
   updatedAt: string;
 };
 
+type RequestedBy = {
+  id: UUID;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type OrderStatus = 'PENDING' | 'PARTIAL' | 'COMPLETED' | 'CANCELLED';
 
 export interface Order extends Entity {
   code: string;
+  concept: string;
   status: OrderStatus;
+  requestedBy: RequestedBy;
   deliveryAt: string[];
   items: OrderItem[];
   supplier: Supplier;

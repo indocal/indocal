@@ -106,6 +106,7 @@ export class OrdersActionsController {
       await tx.inventoryMovement.create({
         data: {
           type: 'INPUT',
+          concept: order.concept,
           order: { connect: { id: order.id } },
           items: {
             createMany: {

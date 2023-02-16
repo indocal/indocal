@@ -9,6 +9,10 @@ class UpdateOrderDtoSchema {
   @TrimParam()
   code: string;
 
+  @IsString()
+  @TrimParam()
+  concept: string;
+
   @IsEnum(OrderStatus)
   status: OrderStatus;
 }

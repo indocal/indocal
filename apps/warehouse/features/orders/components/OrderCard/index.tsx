@@ -109,6 +109,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order: entity }) => {
               </ListItem>
 
               <ListItem disablePadding>
+                <ListItemText primary="Concepto" secondary={order.concept} />
+              </ListItem>
+
+              <ListItem disablePadding>
                 <ListItemText
                   primary="Estado"
                   secondary={translateOrderStatus(order.status)}
@@ -119,6 +123,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order: entity }) => {
                 <ListItemText
                   primary="Suplidor"
                   secondary={order.supplier.name}
+                />
+              </ListItem>
+
+              <ListItem disablePadding>
+                <ListItemText
+                  primary="Soliciante"
+                  secondary={order.requestedBy.name}
                 />
               </ListItem>
 

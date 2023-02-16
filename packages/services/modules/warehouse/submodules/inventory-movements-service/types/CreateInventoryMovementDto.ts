@@ -9,7 +9,7 @@ type Item = {
 
 export type CreateInventoryMovementDto = {
   type: InventoryMovementType;
-  concept?: string;
+  concept: string;
   items: Item[];
   order?: UUID;
   origin?: UUID;

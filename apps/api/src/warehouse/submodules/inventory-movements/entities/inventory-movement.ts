@@ -9,17 +9,17 @@ export class InventoryMovementEntity implements Entity, InventoryMovement {
   }
 
   id: UUID;
-  concept: string | null;
+  concept: string;
   type: InventoryMovementType;
 
   @Exclude()
-  orderId: string | null;
+  orderId: UUID | null;
 
   @Exclude()
-  originId: string | null;
+  originId: UUID | null;
 
   @Exclude()
-  destinationId: string | null;
+  destinationId: UUID | null;
 
   createdAt: Date;
   updatedAt: Date;

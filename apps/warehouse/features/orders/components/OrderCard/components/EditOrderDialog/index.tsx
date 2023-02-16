@@ -33,6 +33,15 @@ const schema = zod
         })
         .min(1, 'Debe ingresar el código de la orden')
         .trim(),
+
+      concept: zod
+        .string({
+          description: 'Concepto de la orden',
+          required_error: 'Debe ingresar el concepto de la orden',
+          invalid_type_error: 'Formato no válido',
+        })
+        .min(1, 'Debe ingresar el concepto de la orden')
+        .trim(),
     },
     {
       description: 'Datos de la orden',
@@ -62,6 +71,7 @@ export const EditOrderDialog: React.FC<EditOrderDialogProps> = ({ order }) => {
     resolver: zodResolver(schema),
     defaultValues: {
       code: order.code,
+      concept: order.concept,
     },
   });
 
@@ -69,7 +79,7 @@ export const EditOrderDialog: React.FC<EditOrderDialogProps> = ({ order }) => {
     async (formData: FormData) => {
       const { order: updated, error } = await indocal.warehouse.orders.update(
         order.id,
-        { code: formData.code }
+        { code: formData.code, concept: formData.concept }
       );
 
       if (error) {
@@ -123,6 +133,17 @@ export const EditOrderDialog: React.FC<EditOrderDialogProps> = ({ order }) => {
             inputProps={register('code')}
             error={Boolean(errors.code)}
             helperText={errors.code?.message}
+          />
+
+          <TextField
+            required
+            multiline
+            autoComplete="off"
+            label="Concepto"
+            disabled={isSubmitting}
+            inputProps={register('concept')}
+            error={Boolean(errors.concept)}
+            helperText={errors.concept?.message}
           />
         </Stack>
       </DialogContent>

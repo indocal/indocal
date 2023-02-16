@@ -13,8 +13,15 @@ export class CreateOrderDto {
   @TrimParam()
   code: string;
 
+  @IsString()
+  @TrimParam()
+  concept: string;
+
   @IsUUID()
   supplier: UUID;
+
+  @IsUUID()
+  requestedBy: UUID;
 
   @IsObject({ each: true })
   items: Item[];

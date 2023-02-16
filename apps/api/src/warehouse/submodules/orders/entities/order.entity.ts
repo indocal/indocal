@@ -10,10 +10,14 @@ export class OrderEntity implements Entity, Order {
 
   id: UUID;
   code: string;
+  concept: string;
   status: OrderStatus;
 
   @Exclude()
-  supplierId: string;
+  supplierId: UUID;
+
+  @Exclude()
+  requestedById: UUID;
 
   deliveryAt: Date[];
   createdAt: Date;
