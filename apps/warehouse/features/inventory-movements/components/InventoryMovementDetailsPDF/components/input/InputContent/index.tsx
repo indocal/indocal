@@ -32,11 +32,10 @@ const styles = StyleSheet.create({
   },
   line: {
     flex: 1,
-    marginTop: 10,
     textAlign: 'center',
     fontFamily: 'Times-Italic',
-    fontSize: 8,
-    borderTop: '1px solid black',
+    fontSize: 10,
+    borderBottom: '1px solid black',
   },
 });
 
@@ -55,13 +54,13 @@ export const InputContent: React.FC<InputContentProps> = ({ movement }) => (
         <View style={styles.item}>
           <Text>Suplidor:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line}>{movement.order?.supplier.name}</Text>
         </View>
 
         <View style={styles.item}>
           <Text>Orden de Compra No.:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line}>{movement.order?.code}</Text>
         </View>
       </View>
 
@@ -69,7 +68,7 @@ export const InputContent: React.FC<InputContentProps> = ({ movement }) => (
         <View style={styles.item}>
           <Text>Concepto de la Compra:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line}>{movement.order?.concept}</Text>
         </View>
       </View>
 
@@ -77,19 +76,19 @@ export const InputContent: React.FC<InputContentProps> = ({ movement }) => (
         <View style={styles.item}>
           <Text>Factura No.:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line} />
         </View>
 
         <View style={styles.item}>
           <Text>NCF:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line} />
         </View>
 
         <View style={styles.item}>
           <Text>Fecha de Fact.:</Text>
 
-          <Text style={styles.line}>(DD/MM/AAAA)</Text>
+          <Text style={styles.line} />
         </View>
       </View>
 
@@ -97,7 +96,7 @@ export const InputContent: React.FC<InputContentProps> = ({ movement }) => (
         <View style={styles.item}>
           <Text>Área Solicitante:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line}>{movement.order?.requestedBy.name}</Text>
         </View>
       </View>
     </View>

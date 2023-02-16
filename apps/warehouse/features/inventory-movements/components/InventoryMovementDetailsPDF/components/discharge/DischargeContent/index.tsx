@@ -32,11 +32,10 @@ const styles = StyleSheet.create({
   },
   line: {
     flex: 1,
-    marginTop: 10,
     textAlign: 'center',
     fontFamily: 'Times-Italic',
-    fontSize: 8,
-    borderTop: '1px solid black',
+    fontSize: 10,
+    borderBottom: '1px solid black',
   },
 });
 
@@ -57,13 +56,13 @@ export const DischargeContent: React.FC<DischargeContentProps> = ({
         <View style={styles.item}>
           <Text>Procedencia de:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line}>{movement.origin?.name}</Text>
         </View>
 
         <View style={styles.item}>
           <Text>Recepción Final:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line}>Dpto. Servicios Generales</Text>
         </View>
       </View>
 
@@ -77,7 +76,9 @@ export const DischargeContent: React.FC<DischargeContentProps> = ({
         <View style={styles.item}>
           <Text>Fecha de Descargo:</Text>
 
-          <Text style={styles.line}></Text>
+          <Text style={styles.line}>
+            {new Date(movement.createdAt).toLocaleDateString('es-do')}
+          </Text>
         </View>
       </View>
     </View>

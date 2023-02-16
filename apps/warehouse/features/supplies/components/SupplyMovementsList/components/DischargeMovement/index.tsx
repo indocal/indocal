@@ -37,7 +37,7 @@ export const DischargeMovement: React.FC<DischargeMovementProps> = ({
 
     <ListItemText
       primary={new Date(movement.createdAt).toLocaleString()}
-      secondary={`(${item.quantity}) ${movement.origin?.username}`}
+      secondary={`(${item.quantity}) ${movement.origin?.name}`}
     />
 
     <Can I="read" an="inventoryMovement">

@@ -30,11 +30,21 @@ type Supplier = {
   updatedAt: string;
 };
 
+type RequestedBy = {
+  id: UUID;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type Order = {
   id: UUID;
   code: string;
+  concept: string;
   status: OrderStatus;
   supplier: Supplier;
+  requestedBy: RequestedBy;
   deliveryAt: string[];
   createdAt: string;
   updatedAt: string;

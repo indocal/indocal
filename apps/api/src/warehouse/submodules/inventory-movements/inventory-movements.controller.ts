@@ -45,6 +45,7 @@ class EnhancedInventoryMovementItem extends InventoryMovementItemEntity {
 
 class EnhancedOrder extends OrderEntity {
   supplier: SupplierEntity;
+  requestedBy: UserGroupEntity;
 }
 
 class EnhancedInventoryMovement extends InventoryMovementEntity {
@@ -56,7 +57,7 @@ class EnhancedInventoryMovement extends InventoryMovementEntity {
 
 type CreateEnhancedInventoryMovement = InventoryMovement & {
   items: (InventoryMovementItem & { supply: Supply })[];
-  order: (Order & { supplier: Supplier }) | null;
+  order: (Order & { supplier: Supplier; requestedBy: UserGroup }) | null;
   origin: UserGroup | null;
   destination: UserGroup | null;
 };
@@ -78,6 +79,7 @@ export class InventoryMovementsController {
     if (order) {
       movement.order = new EnhancedOrder(order);
       movement.order.supplier = new SupplierEntity(order.supplier);
+      movement.order.requestedBy = new UserGroupEntity(order.requestedBy);
     } else {
       movement.order = null;
     }
@@ -137,7 +139,7 @@ export class InventoryMovementsController {
         },
         include: {
           items: { include: { supply: true } },
-          order: { include: { supplier: true } },
+          order: { include: { supplier: true, requestedBy: true } },
           origin: true,
           destination: true,
         },
@@ -267,7 +269,7 @@ export class InventoryMovementsController {
         cursor: query.pagination?.cursor,
         include: {
           items: { include: { supply: true } },
-          order: { include: { supplier: true } },
+          order: { include: { supplier: true, requestedBy: true } },
           origin: true,
           destination: true,
         },
@@ -295,7 +297,7 @@ export class InventoryMovementsController {
       where: { id },
       include: {
         items: { include: { supply: true } },
-        order: { include: { supplier: true } },
+        order: { include: { supplier: true, requestedBy: true } },
         origin: true,
         destination: true,
       },

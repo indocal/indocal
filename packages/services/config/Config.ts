@@ -17,16 +17,12 @@ export class Config {
 
     this.axios.interceptors.request.use((config) => {
       if (options.token) {
-        config.headers = {
-          Authorization: `Bearer ${options.token}`,
-        };
+        config.headers.Authorization = `Bearer ${options.token}`;
       } else {
         const token = AuthService.getToken();
 
         if (token) {
-          config.headers = {
-            Authorization: `Bearer ${token}`,
-          };
+          config.headers.Authorization = `Bearer ${token}`;
         }
       }
 
