@@ -17,7 +17,7 @@ export class LogEntity implements Entity, Log {
   metadata: LogMetadata | null;
 
   @Exclude()
-  userId: string | null;
+  userId: UUID | null;
 
   createdAt: Date;
   updatedAt: Date;

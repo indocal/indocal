@@ -37,7 +37,7 @@ export class FormFieldEntity implements Entity, FormField {
   config: FormFieldConfig | null;
 
   @Exclude()
-  formId: string;
+  formId: UUID;
 
   createdAt: Date;
   updatedAt: Date;

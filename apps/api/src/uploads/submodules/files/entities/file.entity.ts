@@ -22,7 +22,7 @@ export class FileEntity implements Entity, File {
   alt: string | null;
 
   @Exclude()
-  folderId: string | null;
+  folderId: UUID | null;
 
   createdAt: Date;
   updatedAt: Date;

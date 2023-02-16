@@ -17,7 +17,7 @@ export class EventGuestEntity implements Entity, EventGuest {
   position: string;
 
   @Exclude()
-  eventId: string;
+  eventId: UUID;
 
   createdAt: Date;
   updatedAt: Date;

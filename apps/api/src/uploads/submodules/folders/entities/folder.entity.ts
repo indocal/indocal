@@ -12,7 +12,7 @@ export class FolderEntity implements Entity, Folder {
   name: string;
 
   @Exclude()
-  folderId: string | null;
+  folderId: UUID | null;
 
   createdAt: Date;
   updatedAt: Date;

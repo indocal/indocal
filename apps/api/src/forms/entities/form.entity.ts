@@ -26,7 +26,7 @@ export class FormEntity implements Entity, Form {
   visibility: FormVisibility;
 
   @Exclude()
-  groupId: string;
+  groupId: UUID;
 
   createdAt: Date;
   updatedAt: Date;

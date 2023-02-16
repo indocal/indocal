@@ -12,7 +12,7 @@ export class UserRolePermissionEntity implements Entity, UserRolePermission {
   action: string;
 
   @Exclude()
-  roleId: string;
+  roleId: UUID;
 
   createdAt: Date;
   updatedAt: Date;
