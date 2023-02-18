@@ -30,8 +30,8 @@ export const RadioColumn: React.FC<RadioColumnProps> = ({
     name={`${field.id}.${row}.${column.heading}`}
     control={control}
     formControlProps={{
-      required: config?.required,
       disabled: isSubmitting,
+      required: config?.required,
     }}
     formHelperTextProps={{ sx: { marginX: 0 } }}
     radioGroupProps={{ row: true }}

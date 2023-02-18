@@ -34,6 +34,11 @@ export const CheckboxItem: React.FC<CheckboxItemProps> = ({ field, item }) => {
           errors[field.id] && (errors[field.id] as FieldErrors)[item.title]
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
+
+        ...(errors[field.id] &&
+          (errors[field.id] as FieldErrors)[item.title] && {
+            paddingBottom: (theme) => theme.spacing(1.25),
+          }),
       }}
     >
       <ControlledCheckbox
@@ -44,6 +49,7 @@ export const CheckboxItem: React.FC<CheckboxItemProps> = ({ field, item }) => {
           disabled: isSubmitting,
           required: config?.required,
         }}
+        formHelperTextProps={{ sx: { marginX: 0 } }}
         checkboxProps={{ size: 'small' }}
         controllerProps={{
           rules: {

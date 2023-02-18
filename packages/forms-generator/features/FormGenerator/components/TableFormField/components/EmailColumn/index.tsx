@@ -36,7 +36,7 @@ export const EmailColumn: React.FC<EmailColumnProps> = ({
     inputProps={register(`${field.id}.${row}.${column.heading}`, {
       required: {
         value: Boolean(config?.required),
-        message: 'Debe aceptar este campo',
+        message: 'Debe completar este campo',
       },
 
       pattern: {

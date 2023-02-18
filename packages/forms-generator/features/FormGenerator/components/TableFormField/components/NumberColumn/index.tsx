@@ -39,7 +39,7 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
 
       required: {
         value: Boolean(config?.required),
-        message: 'Debe aceptar este campo',
+        message: 'Debe completar este campo',
       },
 
       ...((config as NumberFormFieldConfig)?.min && {

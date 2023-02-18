@@ -138,7 +138,7 @@ const AddInventoryMovementDialog: React.FC = () => {
             </TabList>
 
             <TabPanel value={Tabs.INFO}>
-              <Stack spacing={2} divider={<Divider />}>
+              <Stack spacing={2} divider={<Divider flexItem />}>
                 <Stack spacing={2}>
                   <ControlledMovementTypeSelect
                     required

@@ -44,7 +44,7 @@ export const ControlledCheckbox: React.FC<ControlledCheckboxProps> = ({
           componentsProps={{
             badge: {
               style: label
-                ? { top: 15, right: error ? 65 : 10 }
+                ? { top: 15, right: error ? 35 : 10 }
                 : { top: 10, right: error ? 120 : 20 },
             },
           }}

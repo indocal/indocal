@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Box, FormControlLabel, Radio } from '@mui/material';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, FieldErrors } from 'react-hook-form';
 
 import { ControlledRadioGroup } from '@indocal/ui';
 import {
@@ -16,7 +16,7 @@ export interface RadioItemProps {
 
 export const RadioItem: React.FC<RadioItemProps> = ({ field, item }) => {
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     control,
   } = useFormContext();
 
@@ -30,7 +30,15 @@ export const RadioItem: React.FC<RadioItemProps> = ({ field, item }) => {
       sx={{
         padding: (theme) => theme.spacing(1, 1.5, 0.25),
         borderRadius: (theme) => theme.spacing(0.5),
-        border: (theme) => `1px solid ${theme.palette.divider}`,
+        border: (theme) =>
+          errors[field.id] && (errors[field.id] as FieldErrors)[item.title]
+            ? `1px solid ${theme.palette.error.main}`
+            : `1px solid ${theme.palette.divider}`,
+
+        ...(errors[field.id] &&
+          (errors[field.id] as FieldErrors)[item.title] && {
+            paddingBottom: (theme) => theme.spacing(1),
+          }),
       }}
     >
       <ControlledRadioGroup
@@ -41,6 +49,7 @@ export const RadioItem: React.FC<RadioItemProps> = ({ field, item }) => {
           required: config?.required,
           disabled: isSubmitting,
         }}
+        formHelperTextProps={{ sx: { marginX: 0 } }}
         radioGroupProps={{ row: true }}
         controllerProps={{
           rules: {

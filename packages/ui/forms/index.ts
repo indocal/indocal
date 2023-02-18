@@ -9,3 +9,5 @@ export * from './ControlledRadioGroup';
 export * from './ControlledTimePicker';
 export * from './ControlledDatePicker';
 export * from './ControlledDateTimePicker';
+
+export * from './ControlledFilesDropzone';

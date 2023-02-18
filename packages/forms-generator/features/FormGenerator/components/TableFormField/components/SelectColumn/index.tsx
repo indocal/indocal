@@ -31,14 +31,16 @@ export const SelectColumn: React.FC<SelectColumnProps> = ({
     control={control}
     formControlProps={{
       fullWidth: true,
-      required: config?.required,
+
       disabled: isSubmitting,
+      required: config?.required,
     }}
     formHelperTextProps={{ sx: { marginX: 0 } }}
     selectProps={{
       size: 'small',
       displayEmpty: true,
       multiple: (config as SelectFormFieldConfig)?.multiple,
+      sx: { textAlign: 'start' },
     }}
     controllerProps={{
       defaultValue: (config as SelectFormFieldConfig)?.multiple ? [] : '',

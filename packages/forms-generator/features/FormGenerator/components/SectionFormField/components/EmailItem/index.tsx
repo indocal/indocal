@@ -35,7 +35,7 @@ export const EmailItem: React.FC<EmailItemProps> = ({ field, item }) => {
       inputProps={register(`${field.id}.${item.title}`, {
         required: {
           value: Boolean(config?.required),
-          message: 'Debe aceptar este campo',
+          message: 'Debe completar este campo',
         },
 
         pattern: {

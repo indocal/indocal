@@ -29,15 +29,16 @@ export const PhoneColumn: React.FC<PhoneColumnProps> = ({
     control={control}
     textFieldProps={{
       size: 'small',
-      required: config?.required,
+
       disabled: isSubmitting,
+      required: config?.required,
       FormHelperTextProps: { sx: { marginX: 0 } },
     }}
     controllerProps={{
       rules: {
         required: {
           value: Boolean(config?.required),
-          message: 'Debe aceptar este campo',
+          message: 'Debe completar este campo',
         },
 
         minLength: {

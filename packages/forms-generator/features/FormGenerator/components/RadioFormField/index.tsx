@@ -11,7 +11,7 @@ export interface RadioFormFieldProps {
 
 export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     control,
   } = useFormContext();
 
@@ -25,7 +25,14 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
       sx={{
         padding: (theme) => theme.spacing(1.5, 1.5, 0.5),
         borderRadius: (theme) => theme.spacing(0.5),
-        border: (theme) => `1px solid ${theme.palette.divider}`,
+        border: (theme) =>
+          errors[field.id]
+            ? `1px solid ${theme.palette.error.main}`
+            : `1px solid ${theme.palette.divider}`,
+
+        ...(errors[field.id] && {
+          paddingBottom: (theme) => theme.spacing(1.5),
+        }),
       }}
     >
       <ControlledRadioGroup
@@ -36,6 +43,7 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
           required: config?.required,
           disabled: isSubmitting,
         }}
+        formHelperTextProps={{ sx: { marginX: 0 } }}
         radioGroupProps={{ row: true }}
         controllerProps={{
           rules: {

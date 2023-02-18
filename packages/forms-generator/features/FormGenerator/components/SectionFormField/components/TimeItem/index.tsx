@@ -39,7 +39,7 @@ export const TimeItem: React.FC<TimeItemProps> = ({ field, item }) => {
         rules: {
           required: {
             value: Boolean(config?.required),
-            message: 'Debe aceptar este campo',
+            message: 'Debe completar este campo',
           },
 
           validate: (value) => value && (isValid(value) || 'Formato no válido'),

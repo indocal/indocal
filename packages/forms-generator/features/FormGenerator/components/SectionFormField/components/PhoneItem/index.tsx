@@ -38,7 +38,7 @@ export const PhoneItem: React.FC<PhoneItemProps> = ({ field, item }) => {
         rules: {
           required: {
             value: Boolean(config?.required),
-            message: 'Debe aceptar este campo',
+            message: 'Debe completar este campo',
           },
 
           minLength: {

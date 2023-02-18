@@ -26,12 +26,12 @@ export const CheckboxColumn: React.FC<CheckboxColumnProps> = ({
 }) => (
   <ControlledCheckbox
     name={`${field.id}.${row}.${column.heading}`}
+    label={column.heading}
     control={control}
     formControlProps={{
       disabled: isSubmitting,
-      required: config?.required,
     }}
-    formHelperTextProps={{ sx: { marginTop: '2px', marginX: 0 } }}
+    formHelperTextProps={{ sx: { marginX: 0 } }}
     controllerProps={{
       rules: {
         required: {

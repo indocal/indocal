@@ -31,6 +31,10 @@ export const CheckboxFormField: React.FC<CheckboxFormFieldProps> = ({
           errors[field.id]
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
+
+        ...(errors[field.id] && {
+          paddingBottom: (theme) => theme.spacing(1.5),
+        }),
       }}
     >
       <ControlledCheckbox
@@ -41,6 +45,7 @@ export const CheckboxFormField: React.FC<CheckboxFormFieldProps> = ({
           disabled: isSubmitting,
           required: config?.required,
         }}
+        formHelperTextProps={{ sx: { marginX: 0 } }}
         controllerProps={{
           rules: {
             required: {

@@ -37,7 +37,7 @@ export const NumberItem: React.FC<NumberItemProps> = ({ field, item }) => {
 
         required: {
           value: Boolean(config?.required),
-          message: 'Debe aceptar este campo',
+          message: 'Debe completar este campo',
         },
 
         ...(config?.min && {
