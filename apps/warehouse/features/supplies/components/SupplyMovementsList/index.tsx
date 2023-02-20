@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, createElement } from 'react';
 import {
   Paper,
   Box,
@@ -133,18 +133,17 @@ export const SupplyMovementsList: React.FC<SupplyMovementsListProps> = ({
             ) : movements.length > 0 ? (
               <>
                 <Box sx={{ overflow: 'auto' }}>
-                  {movements.map((movement) => (
-                    <Fragment key={movement.id}>
-                      {options[movement.type]({
-                        movement,
-                        item: movement.items.find((item) =>
-                          typeof supply === 'string'
-                            ? item.supply.id === supply
-                            : item.supply.id === supply.id
-                        ) as InventoryMovement['items'][number],
-                      })}
-                    </Fragment>
-                  ))}
+                  {movements.map((movement) =>
+                    createElement(options[movement.type], {
+                      key: movement.id,
+                      movement,
+                      item: movement.items.find((item) =>
+                        typeof supply === 'string'
+                          ? item.supply.id === supply
+                          : item.supply.id === supply.id
+                      ) as InventoryMovement['items'][number],
+                    })
+                  )}
                 </Box>
 
                 <Box
