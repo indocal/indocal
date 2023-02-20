@@ -147,92 +147,92 @@ export class InventoryMovementsController {
 
       switch (movement.type) {
         case 'ADJUSTMENT': {
-          await Promise.all(
-            movement.items.map(async (item) => {
-              if (item.quantity === 0) {
-                throw new InvalidQuantityException({
-                  supply: item.supply.name,
-                  quantity: item.quantity,
-                });
-              }
-
-              if (
-                item.quantity < 0 &&
-                Math.abs(item.quantity) > item.supply.quantity
-              ) {
-                throw new InsufficientQuantityException({
-                  supply: item.supply.name,
-                  remaining: item.supply.quantity,
-                  requested: item.quantity,
-                });
-              }
-
-              await tx.supply.update({
-                where: { id: item.supply.id },
-                data: {
-                  quantity: {
-                    ...(Math.sign(item.quantity)
-                      ? { increment: item.quantity }
-                      : { decrement: item.quantity }),
-                  },
-                },
+          const promises = movement.items.map(async (item) => {
+            if (item.quantity === 0) {
+              throw new InvalidQuantityException({
+                supply: item.supply.name,
+                quantity: item.quantity,
               });
-            })
-          );
+            }
+
+            if (
+              item.quantity < 0 &&
+              Math.abs(item.quantity) > item.supply.quantity
+            ) {
+              throw new InsufficientQuantityException({
+                supply: item.supply.name,
+                remaining: item.supply.quantity,
+                requested: item.quantity,
+              });
+            }
+
+            await tx.supply.update({
+              where: { id: item.supply.id },
+              data: {
+                quantity: {
+                  ...(Math.sign(item.quantity)
+                    ? { increment: item.quantity }
+                    : { decrement: item.quantity }),
+                },
+              },
+            });
+          });
+
+          await Promise.all(promises);
           break;
         }
 
         case 'INPUT': {
-          await Promise.all(
-            movement.items.map(async (item) => {
-              if (item.quantity <= 0) {
-                throw new InvalidQuantityException({
-                  supply: item.supply.name,
-                  quantity: item.quantity,
-                });
-              }
-
-              await tx.supply.update({
-                where: { id: item.supply.id },
-                data: {
-                  quantity: {
-                    increment: item.quantity,
-                  },
-                },
+          const promises = movement.items.map(async (item) => {
+            if (item.quantity <= 0) {
+              throw new InvalidQuantityException({
+                supply: item.supply.name,
+                quantity: item.quantity,
               });
-            })
-          );
+            }
+
+            await tx.supply.update({
+              where: { id: item.supply.id },
+              data: {
+                quantity: {
+                  increment: item.quantity,
+                },
+              },
+            });
+          });
+
+          await Promise.all(promises);
           break;
         }
 
         case 'OUTPUT': {
-          await Promise.all(
-            movement.items.map(async (item) => {
-              if (item.quantity <= 0) {
-                throw new InvalidQuantityException({
-                  supply: item.supply.name,
-                  quantity: item.quantity,
-                });
-              }
-
-              if (item.quantity > item.supply.quantity) {
-                throw new InsufficientQuantityException({
-                  supply: item.supply.name,
-                  remaining: item.supply.quantity,
-                  requested: item.quantity,
-                });
-              }
-
-              await tx.supply.update({
-                where: { id: item.supply.id },
-                data: {
-                  quantity: {
-                    decrement: item.quantity,
-                  },
-                },
+          const promises = movement.items.map(async (item) => {
+            if (item.quantity <= 0) {
+              throw new InvalidQuantityException({
+                supply: item.supply.name,
+                quantity: item.quantity,
               });
-            })
-          );
+            }
+
+            if (item.quantity > item.supply.quantity) {
+              throw new InsufficientQuantityException({
+                supply: item.supply.name,
+                remaining: item.supply.quantity,
+                requested: item.quantity,
+              });
+            }
+
+            await tx.supply.update({
+              where: { id: item.supply.id },
+              data: {
+                quantity: {
+                  decrement: item.quantity,
+                },
+              },
+            });
+          });
+
+          await Promise.all(promises);
           break;
         }
       }

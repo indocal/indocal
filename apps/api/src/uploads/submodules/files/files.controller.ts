@@ -59,7 +59,7 @@ export class FilesController {
     @UploadedFiles() uploads: Array<Express.Multer.File>
   ): Promise<MultipleEntitiesResponse<EnhancedFile>> {
     const files = await this.prismaService.$transaction(async (tx) => {
-      const files = uploads.map((file) => {
+      const promises = uploads.map((file) => {
         const location = path.join(rootFolder, file.filename);
 
         const [mime] = file.mimetype.split('/');
@@ -88,7 +88,7 @@ export class FilesController {
         });
       });
 
-      return await Promise.all(files);
+      return await Promise.all(promises);
     });
 
     return {
