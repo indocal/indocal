@@ -33,19 +33,21 @@ export const NumberFormField: React.FC<NumberFormFieldProps> = ({ field }) => {
           message: 'Debe completar este campo',
         },
 
-        ...(config?.min && {
-          min: {
-            value: config.min,
-            message: `Debe ingresar un valor mayor o igual a ${config.min}`,
-          },
-        }),
+        ...(typeof config?.min === 'number' &&
+          !isNaN(config.min) && {
+            min: {
+              value: config.min,
+              message: `Debe ingresar un valor mayor o igual a ${config.min}`,
+            },
+          }),
 
-        ...(config?.max && {
-          max: {
-            value: config.max,
-            message: `Debe ingresar un valor menor o igual a ${config.max}`,
-          },
-        }),
+        ...(typeof config?.max === 'number' &&
+          !isNaN(config.max) && {
+            max: {
+              value: config.max,
+              message: `Debe ingresar un valor menor o igual a ${config.max}`,
+            },
+          }),
       })}
       error={Boolean(errors[field.id])}
       helperText={errors[field.id]?.message as string}

@@ -37,19 +37,21 @@ export const TextItem: React.FC<TextItemProps> = ({ field, item }) => {
           message: 'Debe completar este campo',
         },
 
-        ...(config?.minLength && {
-          minLength: {
-            value: config.minLength,
-            message: `Debe ingresar un mínimo de ${config.minLength} caracteres`,
-          },
-        }),
+        ...(typeof config?.minLength === 'number' &&
+          !isNaN(config.minLength) && {
+            minLength: {
+              value: config.minLength,
+              message: `Debe ingresar un mínimo de ${config.minLength} caracteres`,
+            },
+          }),
 
-        ...(config?.maxLength && {
-          maxLength: {
-            value: config.maxLength,
-            message: `Debe ingresar un máximo de ${config.maxLength} caracteres`,
-          },
-        }),
+        ...(typeof config?.maxLength === 'number' &&
+          !isNaN(config.maxLength) && {
+            maxLength: {
+              value: config.maxLength,
+              message: `Debe ingresar un máximo de ${config.maxLength} caracteres`,
+            },
+          }),
       })}
       error={
         errors[field.id] &&
