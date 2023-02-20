@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react';
+import { useMemo, createElement } from 'react';
 import { Paper, Stack, Divider } from '@mui/material';
 
 import { FormEntry } from '@indocal/services';
@@ -46,6 +46,8 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
       DATE: DateFormFieldAnswer,
       DATETIME: DateTimeFormFieldAnswer,
 
+      FILES: UsersFormFieldAnswer,
+
       USERS: UsersFormFieldAnswer,
 
       SECTION: SectionFormFieldAnswer,
@@ -61,11 +63,12 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
       divider={<Divider flexItem />}
       sx={{ padding: (theme) => theme.spacing(2) }}
     >
-      {entry.answers.map((answer) => (
-        <Fragment key={answer.field.id}>
-          {answers[answer.field.type]({ answer })}
-        </Fragment>
-      ))}
+      {entry.answers.map((answer) =>
+        createElement(answers[answer.field.type], {
+          key: answer.field.id,
+          answer,
+        })
+      )}
     </Stack>
   );
 };
