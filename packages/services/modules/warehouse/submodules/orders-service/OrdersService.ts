@@ -57,10 +57,6 @@ export class OrdersService {
     this.items = new OrdersItemsService(config);
   }
 
-  private getUUID(order: UUID | Order): UUID {
-    return typeof order === 'string' ? order : order.id;
-  }
-
   async create(data: CreateOrderDto): Promise<CreateOrderReturn> {
     try {
       const response = await this.config.axios.post<
