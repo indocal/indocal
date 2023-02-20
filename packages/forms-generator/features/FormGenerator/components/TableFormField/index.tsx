@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, createElement } from 'react';
 import {
   Paper,
   Stack,
@@ -49,8 +49,6 @@ export interface TableFormFieldProps {
 export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
   const {
     formState: { isSubmitting, errors },
-    register,
-    control,
   } = useFormContext();
 
   const config = useMemo<TableFormFieldConfig | null>(
@@ -259,15 +257,10 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
                         },
                       }}
                     >
-                      {columns[column.type]({
+                      {createElement(columns[column.type], {
                         field,
                         column,
                         row: index,
-                        config: column.config,
-                        isSubmitting,
-                        errors,
-                        register,
-                        control,
                       })}
                     </TableCell>
                   ))}

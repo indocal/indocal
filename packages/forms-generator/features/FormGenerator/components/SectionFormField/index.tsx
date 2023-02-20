@@ -1,7 +1,8 @@
-import { Fragment, useMemo } from 'react';
+import { useMemo, createElement } from 'react';
 import { Stack, Typography, Badge } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 
+import { NoData } from '@indocal/ui';
 import { Form, SectionFormFieldConfig } from '@indocal/services';
 
 import {
@@ -93,11 +94,17 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
         spacing={2}
         sx={{ marginTop: (theme) => `${theme.spacing(0.75)} !important` }}
       >
-        {config?.items?.map((item) => (
-          <Fragment key={item.title}>
-            {items[item.type]({ field, item })}
-          </Fragment>
-        ))}
+        {config && config.items.length > 0 ? (
+          config.items.map((item) =>
+            createElement(items[item.type], {
+              key: item.title,
+              field,
+              item,
+            })
+          )
+        ) : (
+          <NoData message="Esta sección no contiene campos definidos" />
+        )}
       </Stack>
 
       {field.description && (
