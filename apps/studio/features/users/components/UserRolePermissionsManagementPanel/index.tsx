@@ -686,11 +686,11 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.file['read']),
               },
               {
-                label: 'Crear',
-                action: 'create',
+                label: 'Cargar archivos',
+                action: 'upload',
                 checked:
                   Boolean(permissions?.file) &&
-                  Boolean(permissions?.file['create']),
+                  Boolean(permissions?.file['upload']),
               },
               {
                 label: 'Modificar',

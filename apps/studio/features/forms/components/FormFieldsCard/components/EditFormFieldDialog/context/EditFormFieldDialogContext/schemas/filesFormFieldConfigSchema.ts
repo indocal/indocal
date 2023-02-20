@@ -1,6 +1,5 @@
 import { z as zod } from 'zod';
 
-// TODO: implement correctly
 export const filesFormFieldConfigSchema = zod.object({
   multiple: zod.boolean({
     description: '¿Campo múltiple?',

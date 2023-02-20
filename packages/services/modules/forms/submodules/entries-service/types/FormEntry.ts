@@ -1,8 +1,33 @@
 import { Entity, UUID } from '../../../../../common';
 
-import { User, UserStatus } from '../../../../auth';
+import { UserStatus } from '../../../../auth';
 
 import { Form, FormStatus, FormVisibility, FormConfig } from '../../../types';
+
+type File = {
+  id: UUID;
+  path: string;
+  mime: string;
+  extension: string;
+  size: number;
+  dimensions: number[];
+  name: string;
+  caption: string | null;
+  alt: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type User = {
+  id: UUID;
+  username: string;
+  email: string;
+  name: string;
+  password: string;
+  status: UserStatus;
+  createdAt: string;
+  updatedAt: string;
+};
 
 export type FormFieldAnswer = {
   field: Form['fields'][number];
@@ -84,7 +109,6 @@ export type DateFormFieldAnswer = string;
 
 export type DateTimeFormFieldAnswer = string;
 
-// TODO: implement corrrectly
 export type FilesFormFieldAnswer = File | File[];
 
 export type UsersFormFieldAnswer = User | User[];

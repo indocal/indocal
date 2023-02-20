@@ -8,13 +8,20 @@ import {
   Query,
   Body,
   ParseUUIDPipe,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { PrismaService } from 'nestjs-prisma';
 import { File, Folder } from '@prisma/client';
+import imageSize from 'image-size';
+import path from 'path';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
+
+import { rootFolder } from '../../config';
 
 import { FolderEntity } from '../folders/entities';
 
@@ -22,7 +29,6 @@ import { FileEntity } from './entities';
 import {
   FindManyFilesParamsDto,
   CountFilesParamsDto,
-  CreateFileDto,
   UpdateFileDto,
 } from './dto';
 
@@ -34,7 +40,7 @@ type CreateEnhancedFile = File & {
   folder: Folder | null;
 };
 
-@Controller('files')
+@Controller('uploads/files')
 @UseGuards(PoliciesGuard)
 export class FilesController {
   constructor(private prismaService: PrismaService) {}
@@ -47,28 +53,48 @@ export class FilesController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can('create', 'file'))
-  async create(
-    @Body() createFileDto: CreateFileDto
-  ): Promise<SingleEntityResponse<EnhancedFile>> {
-    const file = await this.prismaService.file.create({
-      data: {
-        path: createFileDto.path,
-        mime: createFileDto.mime,
-        extension: createFileDto.extension,
-        size: createFileDto.size,
-        dimensions: createFileDto.dimensions,
-        name: createFileDto.name,
-        caption: createFileDto.caption,
-        alt: createFileDto.alt,
-        ...(createFileDto.folder && {
-          folder: { connect: { id: createFileDto.folder } },
-        }),
-      },
-      include: { folder: true },
+  @UseInterceptors(AnyFilesInterceptor())
+  @CheckPolicies((ability) => ability.can('upload', 'file'))
+  async upload(
+    @UploadedFiles() uploads: Array<Express.Multer.File>
+  ): Promise<MultipleEntitiesResponse<EnhancedFile>> {
+    const files = await this.prismaService.$transaction(async (tx) => {
+      const files = uploads.map((file) => {
+        const location = path.join(rootFolder, file.filename);
+
+        const [mime] = file.mimetype.split('/');
+
+        let width, height;
+
+        if (mime === 'image') {
+          const result = imageSize(location);
+
+          if (result) {
+            width = result.width;
+            height = result.height;
+          }
+        }
+
+        return tx.file.create({
+          data: {
+            path: file.path,
+            mime: file.mimetype,
+            extension: path.extname(file.filename),
+            size: file.size,
+            name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
+            dimensions: width && height ? [width, height] : [],
+          },
+          include: { folder: true },
+        });
+      });
+
+      return await Promise.all(files);
     });
 
-    return this.createEnhancedFile(file);
+    return {
+      count: files.length,
+      entities: files.map((file) => this.createEnhancedFile(file)),
+    };
   }
 
   @Get('count')

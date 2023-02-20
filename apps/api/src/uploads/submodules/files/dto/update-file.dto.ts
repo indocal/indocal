@@ -11,16 +11,16 @@ class UpdateFileDtoSchema {
   @IsString()
   @TrimParam()
   @IsOptional()
-  caption?: string;
+  caption: string | null;
 
   @IsString()
   @TrimParam()
   @IsOptional()
-  alt?: string;
+  alt: string | null;
 
   @IsUUID()
   @IsOptional()
-  folder?: UUID;
+  folder: UUID | null;
 }
 
 export class UpdateFileDto extends PartialType(UpdateFileDtoSchema) {}

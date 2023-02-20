@@ -5,6 +5,20 @@ import { Entity, UUID } from '@/common';
 
 import { FormFieldConfig } from '../../fields';
 
+type File = {
+  id: UUID;
+  path: string;
+  mime: string;
+  extension: string;
+  size: number;
+  dimensions: number[];
+  name: string;
+  caption: string | null;
+  alt: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type User = {
   id: UUID;
   username: string;
@@ -41,6 +55,7 @@ export type FormFieldAnswer = {
     | TimeFormFieldAnswer
     | DateFormFieldAnswer
     | DateTimeFormFieldAnswer
+    | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | SectionFormFieldAnswer
     | TableFormFieldAnswer
@@ -94,6 +109,8 @@ export type TimeFormFieldAnswer = string;
 export type DateFormFieldAnswer = string;
 
 export type DateTimeFormFieldAnswer = string;
+
+export type FilesFormFieldAnswer = File | File[];
 
 export type UsersFormFieldAnswer = User | User[];
 

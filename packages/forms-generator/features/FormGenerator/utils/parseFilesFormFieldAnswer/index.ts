@@ -1,6 +1,5 @@
 import { Form, FormFieldAnswer } from '@indocal/services';
 
-// TODO: implement correctly
 export function parseFilesFormFieldAnswer(
   field: Form['fields'][number],
   answer: FormFieldAnswer['content']

@@ -83,7 +83,7 @@ async function main() {
     },
     {
       scope: 'file',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
+      actions: ['count', 'upload', 'create', 'update', 'delete'],
     },
     {
       scope: 'folder',

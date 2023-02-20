@@ -29,6 +29,11 @@ export enum ApiEndpoints {
   ORDERS_COUNT = 'warehouse/orders/count',
   INVENTORY_MOVEMENTS = 'warehouse/movements',
   INVENTORY_MOVEMENTS_COUNT = 'warehouse/movements/count',
+
+  FOLDERS = 'uploads/folders',
+  FOLDERS_COUNT = 'uploads/folders/count',
+  FILES = 'uploads/files',
+  FILES_COUNT = 'uploads/files/count',
 }
 
 export default ApiEndpoints;

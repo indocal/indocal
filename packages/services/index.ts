@@ -3,6 +3,7 @@ import {
   FormsService,
   EventsService,
   WarehouseService,
+  UploadsService,
 } from './modules';
 import { Config, ConfigOptions } from './config';
 
@@ -12,6 +13,7 @@ export class INDOCAL {
   forms: FormsService;
   events: EventsService;
   warehouse: WarehouseService;
+  uploads: UploadsService;
 
   constructor(options: ConfigOptions) {
     this.config = new Config(options);
@@ -19,6 +21,7 @@ export class INDOCAL {
     this.forms = new FormsService(this.config);
     this.events = new EventsService(this.config);
     this.warehouse = new WarehouseService(this.config);
+    this.uploads = new UploadsService(this.config);
   }
 }
 
