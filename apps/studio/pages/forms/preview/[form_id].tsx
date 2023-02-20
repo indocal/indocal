@@ -28,11 +28,14 @@ const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
 
   const handleOnSubmit = useCallback(
     async (answers: FormFieldAnswer[]) => {
-      const { error } = await indocal.forms.entries.create({
-        answers,
-        form: form.id,
-        answeredBy: session?.user.id,
-      });
+      const files = answers
+        .filter((answer) => answer.field.type === 'FILES')
+        .map((answer) => answer.content as unknown as File[])
+        .flat();
+
+      const { files: uploads, error } = await indocal.uploads.files.upload(
+        files
+      );
 
       if (error) {
         enqueueSnackbar(
@@ -45,9 +48,39 @@ const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
           { variant: 'error' }
         );
       } else {
-        enqueueSnackbar('Respuestas guardadas exitosamente', {
-          variant: 'success',
+        const data = answers.map((answer) => {
+          if (answer.field.type === 'FILES') {
+            const files = answer.content as unknown as File[];
+
+            answer.content = uploads.filter((upload) =>
+              files.some((file) => upload.name === file.name)
+            );
+          }
+
+          return answer;
         });
+
+        const { error } = await indocal.forms.entries.create({
+          answers: data,
+          form: form.id,
+          answeredBy: session?.user.id,
+        });
+
+        if (error) {
+          enqueueSnackbar(
+            error.details
+              ? error.details.reduce(
+                  (acc, current) => (acc ? `${acc} | ${current}` : current),
+                  ``
+                )
+              : error.message,
+            { variant: 'error' }
+          );
+        } else {
+          enqueueSnackbar('Respuestas guardadas exitosamente', {
+            variant: 'success',
+          });
+        }
       }
     },
     [form, session?.user.id, enqueueSnackbar]
