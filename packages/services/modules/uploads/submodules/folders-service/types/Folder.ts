@@ -10,8 +10,6 @@ type Root = {
 export interface Folder extends Entity {
   name: string;
   folder: Root | null;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default Folder;
