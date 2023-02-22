@@ -202,10 +202,13 @@ export const GenericOrdersDataGrid: React.FC<GenericOrdersDataGridProps> = ({
         <Typography
           variant="h6"
           sx={{
-            maxWidth: ['12ch', '20ch', '100%'],
-            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 1,
+            lineClamp: 1,
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            wordBreak: 'break-word',
           }}
         >
           {title}

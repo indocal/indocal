@@ -32,10 +32,13 @@ export const AdminDashboardDrawerHeader: React.FC = () => {
             <Stack sx={{ width: '100%' }}>
               <Typography
                 sx={{
-                  maxWidth: '17ch',
-                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 1,
+                  lineClamp: 1,
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  wordBreak: 'break-word',
                 }}
               >
                 {session?.user.username}
@@ -44,10 +47,13 @@ export const AdminDashboardDrawerHeader: React.FC = () => {
               <Typography
                 variant="caption"
                 sx={{
-                  maxWidth: '22ch',
-                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 1,
+                  lineClamp: 1,
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  wordBreak: 'break-word',
                 }}
               >
                 {session?.user.email}
