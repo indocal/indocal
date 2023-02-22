@@ -9,7 +9,7 @@ async function bootstrap() {
     cors: true,
   });
 
-  app.useStaticAssets('public', { prefix: '/static' });
+  app.useStaticAssets('public', { prefix: '/public' });
   app.setGlobalPrefix('api');
 
   const prismaService = app.get(PrismaService);

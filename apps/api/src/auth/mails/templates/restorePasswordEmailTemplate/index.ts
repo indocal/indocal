@@ -3,7 +3,7 @@ import mjml2html from 'mjml';
 
 export const restorePasswordEmailTemplate = (user: User): string => {
   const logo =
-    'http://localhost:5000/static/assets/images/logos/logo--full.png';
+    'http://localhost:5000/public/assets/images/logos/logo--full.png';
 
   const output = mjml2html(
     `
