@@ -17,8 +17,6 @@ export interface File extends Entity {
   caption: string | null;
   alt: string | null;
   folder: Folder | null;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default File;
