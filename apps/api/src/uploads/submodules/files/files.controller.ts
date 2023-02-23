@@ -53,8 +53,8 @@ export class FilesController {
   }
 
   @Post()
-  @UseInterceptors(AnyFilesInterceptor())
   @CheckPolicies((ability) => ability.can('upload', 'file'))
+  @UseInterceptors(AnyFilesInterceptor())
   async upload(
     @UploadedFiles() uploads: Array<Express.Multer.File>
   ): Promise<MultipleEntitiesResponse<EnhancedFile>> {

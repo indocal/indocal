@@ -10,6 +10,7 @@ import { AuthModule } from '@/auth';
 import { rootFolder } from '../../config';
 
 import FilesController from './files.controller';
+import FilesService from './files.service';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import FilesController from './files.controller';
     }),
   ],
   controllers: [FilesController],
-  providers: [PrismaService],
+  providers: [FilesService, PrismaService],
 })
 export class FilesModule {}
 
