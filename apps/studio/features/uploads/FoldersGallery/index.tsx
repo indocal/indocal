@@ -2,6 +2,7 @@ import {
   Grid,
   Stack,
   Divider,
+  Paper,
   Card,
   CardContent,
   CardActions,
@@ -16,6 +17,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 
+import { NoData } from '@indocal/ui';
 import { Folder } from '@indocal/services';
 
 export interface FoldersGalleryProps {
@@ -32,64 +34,72 @@ export const FoldersGallery: React.FC<FoldersGalleryProps> = ({
       <Typography variant="h6">{title}</Typography>
     </Grid>
 
-    {folders.map((folder) => (
-      <Grid key={folder.id} item xs={12} sm={6} md={4} lg={3}>
-        <Card sx={{ display: 'flex', height: 125 }}>
-          <Stack
-            divider={<Divider flexItem />}
-            sx={{ width: '100%', height: '100%' }}
-          >
-            <CardContent sx={{ flex: 1 }}>
-              <Typography
-                variant="caption"
+    {folders.length > 0 ? (
+      folders.map((folder) => (
+        <Grid key={folder.id} item xs={12} sm={6} md={4} lg={3}>
+          <Card sx={{ display: 'flex', height: 125 }}>
+            <Stack
+              divider={<Divider flexItem />}
+              sx={{ width: '100%', height: '100%' }}
+            >
+              <CardContent sx={{ flex: 1 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2,
+                    lineClamp: 2,
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    wordBreak: 'break-word',
+                    fontWeight: 'bolder',
+                  }}
+                >
+                  {folder.name}
+                </Typography>
+              </CardContent>
+
+              <CardActions
                 sx={{
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: 2,
-                  lineClamp: 2,
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  wordBreak: 'break-word',
-                  fontWeight: 'bolder',
+                  display: 'flex',
+                  placeContent: 'center',
+                  placeItems: 'center',
                 }}
               >
-                {folder.name}
-              </Typography>
-            </CardContent>
+                <IconButton size="small">
+                  <EditIcon fontSize="small" />
+                </IconButton>
 
-            <CardActions
+                <IconButton size="small">
+                  <DeleteIcon fontSize="small" color="error" />
+                </IconButton>
+              </CardActions>
+            </Stack>
+
+            <CardMedia
               sx={{
-                display: 'flex',
+                display: 'grid',
                 placeContent: 'center',
                 placeItems: 'center',
+                padding: (theme) => theme.spacing(1),
+                borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
               }}
             >
-              <IconButton size="small">
-                <EditIcon fontSize="small" />
-              </IconButton>
-
-              <IconButton size="small">
-                <DeleteIcon fontSize="small" color="error" />
-              </IconButton>
-            </CardActions>
-          </Stack>
-
-          <CardMedia
-            sx={{
-              display: 'grid',
-              placeContent: 'center',
-              placeItems: 'center',
-              padding: (theme) => theme.spacing(1),
-              borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          >
-            <Avatar>
-              <FolderIcon />
-            </Avatar>
-          </CardMedia>
-        </Card>
+              <Avatar>
+                <FolderIcon />
+              </Avatar>
+            </CardMedia>
+          </Card>
+        </Grid>
+      ))
+    ) : (
+      <Grid item xs={12}>
+        <Paper>
+          <NoData />
+        </Paper>
       </Grid>
-    ))}
+    )}
   </Grid>
 );
 
