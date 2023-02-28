@@ -11,3 +11,6 @@ export * from './ControlledSupplyUnitSelect';
 export * from './ControlledInventoryMovementTypeSelect';
 export * from './ControlledSuppliesAutocomplete';
 export * from './ControlledSuppliersAutocomplete';
+
+export * from './ControlledFoldersAutocomplete';
+export * from './ControlledFilesAutocomplete';
