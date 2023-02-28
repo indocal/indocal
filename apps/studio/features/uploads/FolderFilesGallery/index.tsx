@@ -74,7 +74,7 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
           <Loader invisible />
         </Paper>
       ) : (
-        <FilesGallery title={`Últimos archivos (${count})`} files={files} />
+        <FilesGallery title={`Archivos (${count})`} files={files} />
       )}
     </Stack>
   );

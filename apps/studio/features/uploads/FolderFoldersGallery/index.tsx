@@ -19,9 +19,7 @@ export const FolderFoldersGallery: React.FC<FolderFoldersGalleryProps> = ({
 
   const { loading, folders, count } = useFolders({
     filters: {
-      ...(search && {
-        name: { contains: search },
-      }),
+      ...(search && { name: { contains: search } }),
       folder: { id: typeof folder === 'string' ? folder : folder.id },
     },
     pagination: {
@@ -70,10 +68,7 @@ export const FolderFoldersGallery: React.FC<FolderFoldersGalleryProps> = ({
           <Loader invisible />
         </Paper>
       ) : (
-        <FoldersGallery
-          title={`Últimas carpetas (${count})`}
-          folders={folders}
-        />
+        <FoldersGallery title={`Carpetas (${count})`} folders={folders} />
       )}
     </Stack>
   );

@@ -4,7 +4,11 @@ import { Container, Grid, Divider } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useFolder, UUID } from '@indocal/services';
 
-import { FolderFoldersGallery, FolderFilesGallery } from '@/features';
+import {
+  FolderTreeBreadcrumbs,
+  FolderFoldersGallery,
+  FolderFilesGallery,
+} from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -36,6 +40,14 @@ const UploadsByFolderPage: EnhancedNextPage = () => {
             alignItems="center"
             spacing={2}
           >
+            <Grid item xs={12}>
+              <FolderTreeBreadcrumbs folder={folder} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider flexItem />
+            </Grid>
+
             <Grid item xs={12}>
               <Widget disableDefaultSizes>
                 <FolderFoldersGallery folder={folder} />
