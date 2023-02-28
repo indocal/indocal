@@ -15,9 +15,10 @@ export const LastFilesGallery: React.FC = () => {
     ...(search && {
       filters: {
         OR: [
-          { name: { contains: search } },
-          { caption: { contains: search } },
-          { alt: { contains: search } },
+          { id: { mode: 'insensitive', contains: search } },
+          { name: { mode: 'insensitive', contains: search } },
+          { caption: { mode: 'insensitive', contains: search } },
+          { alt: { mode: 'insensitive', contains: search } },
         ],
       },
     }),

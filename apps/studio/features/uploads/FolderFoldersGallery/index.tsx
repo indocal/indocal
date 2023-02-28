@@ -19,7 +19,12 @@ export const FolderFoldersGallery: React.FC<FolderFoldersGalleryProps> = ({
 
   const { loading, folders, count } = useFolders({
     filters: {
-      ...(search && { name: { contains: search } }),
+      ...(search && {
+        OR: [
+          { id: { mode: 'insensitive', contains: search } },
+          { name: { mode: 'insensitive', contains: search } },
+        ],
+      }),
       folder: { id: typeof folder === 'string' ? folder : folder.id },
     },
     pagination: {

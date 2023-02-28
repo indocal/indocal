@@ -21,9 +21,10 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
     filters: {
       ...(search && {
         OR: [
-          { name: { contains: search } },
-          { caption: { contains: search } },
-          { alt: { contains: search } },
+          { id: { mode: 'insensitive', contains: search } },
+          { name: { mode: 'insensitive', contains: search } },
+          { caption: { mode: 'insensitive', contains: search } },
+          { alt: { mode: 'insensitive', contains: search } },
         ],
       }),
       folder: { id: typeof folder === 'string' ? folder : folder.id },

@@ -12,7 +12,14 @@ export const LastFoldersGallery: React.FC = () => {
   const [pagination, setPagination] = useState({ page: 0, pageSize: 10 });
 
   const { loading, folders, count } = useFolders({
-    ...(search && { filters: { name: { contains: search } } }),
+    ...(search && {
+      filters: {
+        OR: [
+          { id: { mode: 'insensitive', contains: search } },
+          { name: { mode: 'insensitive', contains: search } },
+        ],
+      },
+    }),
     pagination: {
       skip: pagination.page * pagination.pageSize,
       take: pagination.pageSize,
