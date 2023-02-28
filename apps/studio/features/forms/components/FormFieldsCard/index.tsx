@@ -42,9 +42,12 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
   const handleCopyToClipboard = useCallback(async () => {
     try {
       if (form) {
-        await navigator.clipboard.writeText(
-          `${process.env.NEXT_PUBLIC_SITE_URL}${Pages.FORMS_PREVIEW}/${form.id}`
+        const url = new URL(
+          `${Pages.FORMS_PREVIEW}/${form.id}`,
+          process.env.NEXT_PUBLIC_SITE_URL
         );
+
+        await navigator.clipboard.writeText(url.toString());
 
         enqueueSnackbar('Enlace copiado', {
           variant: 'info',

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Stack, Paper, TextField, Pagination } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
-import { Loader } from '@indocal/ui';
+import { Loader, ErrorInfo } from '@indocal/ui';
 import { useFolders } from '@indocal/services';
 
 import { FoldersGallery } from '@/features';
@@ -11,8 +11,15 @@ export const LastFoldersGallery: React.FC = () => {
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 10 });
 
-  const { loading, folders, count } = useFolders({
-    ...(search && { filters: { name: { contains: search } } }),
+  const { loading, folders, count, error } = useFolders({
+    ...(search && {
+      filters: {
+        OR: [
+          { id: { mode: 'insensitive', contains: search } },
+          { name: { mode: 'insensitive', contains: search } },
+        ],
+      },
+    }),
     pagination: {
       skip: pagination.page * pagination.pageSize,
       take: pagination.pageSize,
@@ -57,6 +64,10 @@ export const LastFoldersGallery: React.FC = () => {
       {loading ? (
         <Paper sx={{ padding: (theme) => theme.spacing(2) }}>
           <Loader invisible />
+        </Paper>
+      ) : error ? (
+        <Paper sx={{ padding: (theme) => theme.spacing(2) }}>
+          <ErrorInfo error={error} />
         </Paper>
       ) : (
         <FoldersGallery

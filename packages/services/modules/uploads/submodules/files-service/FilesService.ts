@@ -11,6 +11,7 @@ import { Config, ApiEndpoints } from '../../../../config';
 
 import {
   File as ApiFile,
+  UploadFilesParamsDto,
   UpdateFileDto,
   CountFilesParamsDto,
   FindManyFilesParamsDto,
@@ -51,16 +52,18 @@ export interface DeleteFileReturn {
 export class FilesService {
   constructor(private config: Config) {}
 
-  async upload(data: File[]): Promise<UploadFilesReturn> {
+  async upload(
+    data: File[],
+    params?: UploadFilesParamsDto
+  ): Promise<UploadFilesReturn> {
     try {
       const response = await this.config.axios.post<
         MultipleEntitiesResponse<ApiFile>,
         AxiosResponse<MultipleEntitiesResponse<ApiFile>, File[]>,
         File[]
       >(ApiEndpoints.FILES, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
+        params,
       });
 
       return {

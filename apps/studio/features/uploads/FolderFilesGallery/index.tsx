@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Stack, Paper, TextField, Pagination } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
-import { Loader } from '@indocal/ui';
+import { Loader, ErrorInfo } from '@indocal/ui';
 import { useFiles, UUID, Folder } from '@indocal/services';
 
 import { FilesGallery } from '@/features';
@@ -17,13 +17,14 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 10 });
 
-  const { loading, files, count } = useFiles({
+  const { loading, files, count, error } = useFiles({
     filters: {
       ...(search && {
         OR: [
-          { name: { contains: search } },
-          { caption: { contains: search } },
-          { alt: { contains: search } },
+          { id: { mode: 'insensitive', contains: search } },
+          { name: { mode: 'insensitive', contains: search } },
+          { caption: { mode: 'insensitive', contains: search } },
+          { alt: { mode: 'insensitive', contains: search } },
         ],
       }),
       folder: { id: typeof folder === 'string' ? folder : folder.id },
@@ -72,6 +73,10 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
       {loading ? (
         <Paper sx={{ padding: (theme) => theme.spacing(2) }}>
           <Loader invisible />
+        </Paper>
+      ) : error ? (
+        <Paper sx={{ padding: (theme) => theme.spacing(2) }}>
+          <ErrorInfo error={error} />
         </Paper>
       ) : (
         <FilesGallery title={`Archivos (${count})`} files={files} />

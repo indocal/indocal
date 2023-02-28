@@ -124,9 +124,7 @@ export class FoldersController {
       where: { id },
       data: {
         name: updateFolderDto.name,
-        ...(updateFolderDto.folder && {
-          folder: { connect: { id: updateFolderDto.folder } },
-        }),
+        folderId: updateFolderDto.folder,
       },
       include: { folder: true },
     });

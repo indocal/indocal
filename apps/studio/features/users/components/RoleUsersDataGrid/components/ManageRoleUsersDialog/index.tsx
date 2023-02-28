@@ -12,7 +12,6 @@ import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
-import qs from 'qs';
 
 import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
 import { UserRole, UserStatus, ApiEndpoints } from '@indocal/services';
@@ -98,14 +97,14 @@ export const ManageRoleUsersDialog: React.FC<ManageRoleUsersDialogProps> = ({
           { variant: 'error' }
         );
       } else {
-        const query = qs.stringify({
-          filters: { roles: { some: { id: role.id } } },
-          orderBy: { username: 'asc' },
-        });
-
         await Promise.all([
           mutate(`${ApiEndpoints.USERS_ROLES}/${role.id}`, updated),
-          mutate(`${ApiEndpoints.USERS}?${query}`),
+          mutate(
+            (key) =>
+              typeof key === 'string' &&
+              key.startsWith(ApiEndpoints.USERS) &&
+              key.includes(role.id)
+          ),
         ]);
 
         enqueueSnackbar('Miembros actualizados exitosamente', {

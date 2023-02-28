@@ -1,3 +1,6 @@
+import { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import {
   Grid,
   Stack,
@@ -8,6 +11,7 @@ import {
   CardActions,
   CardMedia,
   Typography,
+  Button,
   IconButton,
   Avatar,
 } from '@mui/material';
@@ -16,93 +20,214 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
+import { useSWRConfig } from 'swr';
 
 import { NoData } from '@indocal/ui';
-import { Folder } from '@indocal/services';
+import { Can, UUID, Folder, ApiEndpoints } from '@indocal/services';
+
+import { indocal } from '@/lib';
+import { Pages } from '@/config';
+
+import { FoldersGalleryProvider, useFoldersGallery } from './context';
+import { AddFolderDialog, EditFolderDialog } from './components';
 
 export interface FoldersGalleryProps {
   title: string;
   folders: Folder[];
 }
 
-export const FoldersGallery: React.FC<FoldersGalleryProps> = ({
-  title,
-  folders,
-}) => (
-  <Grid container alignItems="center" spacing={1}>
-    <Grid item xs={12}>
-      <Typography variant="h6">{title}</Typography>
-    </Grid>
+const FoldersGallery: React.FC<FoldersGalleryProps> = ({ title, folders }) => {
+  const router = useRouter();
 
-    {folders.length > 0 ? (
-      folders.map((folder) => (
-        <Grid key={folder.id} item xs={12} sm={6} md={4} lg={3}>
-          <Card sx={{ display: 'flex', height: 125 }}>
-            <Stack
-              divider={<Divider flexItem />}
-              sx={{ width: '100%', height: '100%' }}
-            >
-              <CardContent sx={{ flex: 1 }}>
-                <Typography
-                  variant="caption"
+  const { mutate } = useSWRConfig();
+
+  const {
+    isAddFolderDialogOpen,
+    isEditFolderDialogOpen,
+    toggleAddFolderDialog,
+    toggleEditFolderDialog,
+  } = useFoldersGallery();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [folder, setFolder] = useState<Folder | null>(null);
+
+  const handleEdit = useCallback(
+    (folder: Folder) => {
+      setFolder(folder);
+      toggleEditFolderDialog();
+    },
+    [toggleEditFolderDialog]
+  );
+
+  const handleDelete = useCallback(
+    async (id: UUID) => {
+      const answer = window.confirm(
+        '¿Estás seguro de que deseas eliminar esta carpeta?'
+      );
+
+      if (!answer) return;
+
+      const { error } = await indocal.uploads.folders.delete(id);
+
+      if (error) {
+        enqueueSnackbar(
+          error.details
+            ? error.details.reduce(
+                (acc, current) => (acc ? `${acc} | ${current}` : current),
+                ``
+              )
+            : error.message,
+          { variant: 'error' }
+        );
+      } else {
+        const folder =
+          typeof router.query.folder_id === 'string'
+            ? router.query.folder_id
+            : null;
+
+        await mutate((key) =>
+          folder
+            ? typeof key === 'string' &&
+              key.startsWith(ApiEndpoints.FOLDERS) &&
+              key.includes(folder)
+            : typeof key === 'string' && key.startsWith(ApiEndpoints.FOLDERS)
+        );
+
+        enqueueSnackbar('Carpeta eliminada exitosamente', {
+          variant: 'success',
+        });
+      }
+    },
+    [router.query.folder_id, mutate, enqueueSnackbar]
+  );
+
+  return (
+    <>
+      {isAddFolderDialogOpen && <AddFolderDialog />}
+      {isEditFolderDialogOpen && folder && <EditFolderDialog folder={folder} />}
+
+      <Grid container alignItems="center" spacing={1}>
+        <Grid
+          item
+          container
+          justifyContent={{ xs: 'center', sm: 'space-between' }}
+          alignItems="center"
+          spacing={1}
+          xs={12}
+        >
+          <Grid item>
+            <Typography variant="h6">{title}</Typography>
+          </Grid>
+
+          <Grid item onClick={toggleAddFolderDialog}>
+            <Button size="small" variant="contained">
+              Agregar carpeta
+            </Button>
+          </Grid>
+        </Grid>
+
+        {folders.length > 0 ? (
+          folders.map((folder) => (
+            <Grid key={folder.id} item xs={12} sm={6} md={4} lg={3}>
+              <Card sx={{ display: 'flex', height: 125 }}>
+                <Stack
+                  divider={<Divider flexItem />}
+                  sx={{ width: '100%', height: '100%' }}
+                >
+                  <CardContent sx={{ flex: 1 }}>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 2,
+                        lineClamp: 2,
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        wordBreak: 'break-word',
+                        fontWeight: 'bolder',
+                      }}
+                    >
+                      {folder.name}
+                    </Typography>
+                  </CardContent>
+
+                  <CardActions
+                    sx={{
+                      display: 'flex',
+                      placeContent: 'center',
+                      placeItems: 'center',
+                    }}
+                  >
+                    <Can I="update" a="folder" passThrough>
+                      {(allowed) => (
+                        <IconButton
+                          size="small"
+                          disabled={!allowed}
+                          onClick={() => handleEdit(folder)}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      )}
+                    </Can>
+
+                    <Can I="delete" a="folder" passThrough>
+                      {(allowed) => (
+                        <IconButton
+                          size="small"
+                          disabled={!allowed}
+                          onClick={() => handleDelete(folder.id)}
+                        >
+                          <DeleteIcon fontSize="small" color="error" />
+                        </IconButton>
+                      )}
+                    </Can>
+                  </CardActions>
+                </Stack>
+
+                <CardMedia
                   sx={{
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                    lineClamp: 2,
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    wordBreak: 'break-word',
-                    fontWeight: 'bolder',
+                    display: 'grid',
+                    placeContent: 'center',
+                    placeItems: 'center',
+                    padding: (theme) => theme.spacing(1),
+                    borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
                   }}
                 >
-                  {folder.name}
-                </Typography>
-              </CardContent>
-
-              <CardActions
-                sx={{
-                  display: 'flex',
-                  placeContent: 'center',
-                  placeItems: 'center',
-                }}
-              >
-                <IconButton size="small">
-                  <EditIcon fontSize="small" />
-                </IconButton>
-
-                <IconButton size="small">
-                  <DeleteIcon fontSize="small" color="error" />
-                </IconButton>
-              </CardActions>
-            </Stack>
-
-            <CardMedia
-              sx={{
-                display: 'grid',
-                placeContent: 'center',
-                placeItems: 'center',
-                padding: (theme) => theme.spacing(1),
-                borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
-              }}
-            >
-              <IconButton size="small">
-                <Avatar>
-                  <FolderIcon />
-                </Avatar>
-              </IconButton>
-            </CardMedia>
-          </Card>
-        </Grid>
-      ))
-    ) : (
-      <Grid item xs={12}>
-        <Paper>
-          <NoData />
-        </Paper>
+                  <IconButton
+                    LinkComponent={NextLink}
+                    href={`${Pages.UPLOADS}/${folder.id}`}
+                    size="small"
+                    sx={{ display: 'flex' }}
+                  >
+                    <Avatar>
+                      <FolderIcon />
+                    </Avatar>
+                  </IconButton>
+                </CardMedia>
+              </Card>
+            </Grid>
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <Paper>
+              <NoData />
+            </Paper>
+          </Grid>
+        )}
       </Grid>
-    )}
-  </Grid>
+    </>
+  );
+};
+
+const FoldersGalleryWrapper: React.FC<FoldersGalleryProps> = (props) => (
+  <FoldersGalleryProvider>
+    <FoldersGallery {...props} />
+  </FoldersGalleryProvider>
 );
 
-export default FoldersGallery;
+export { FoldersGalleryWrapper as FoldersGallery };
+
+export default FoldersGalleryWrapper;

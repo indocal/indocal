@@ -16,6 +16,7 @@ import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { PrismaService } from 'nestjs-prisma';
 import { File, Folder } from '@prisma/client';
 import imageSize from 'image-size';
+import fs from 'fs';
 import path from 'path';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
@@ -29,6 +30,7 @@ import { FileEntity } from './entities';
 import {
   FindManyFilesParamsDto,
   CountFilesParamsDto,
+  UploadFilesParamsDto,
   UpdateFileDto,
 } from './dto';
 
@@ -56,7 +58,8 @@ export class FilesController {
   @CheckPolicies((ability) => ability.can('upload', 'file'))
   @UseInterceptors(AnyFilesInterceptor())
   async upload(
-    @UploadedFiles() uploads: Array<Express.Multer.File>
+    @UploadedFiles() uploads: Array<Express.Multer.File>,
+    @Query() query: UploadFilesParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedFile>> {
     const files = await this.prismaService.$transaction(async (tx) => {
       const promises = uploads.map((file) => {
@@ -83,6 +86,9 @@ export class FilesController {
             size: file.size,
             name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
             dimensions: width && height ? [width, height] : [],
+            ...(query.folder && {
+              folder: { connect: { id: query.folder } },
+            }),
           },
           include: { folder: true },
         });
@@ -158,9 +164,7 @@ export class FilesController {
         name: updateFileDto.name,
         caption: updateFileDto.caption,
         alt: updateFileDto.alt,
-        ...(updateFileDto.folder && {
-          folder: { connect: { id: updateFileDto.folder } },
-        }),
+        folderId: updateFileDto.folder,
       },
       include: { folder: true },
     });
@@ -177,6 +181,10 @@ export class FilesController {
       where: { id },
       include: { folder: true },
     });
+
+    if (fs.existsSync(path.join(process.cwd(), file.path))) {
+      fs.unlinkSync(path.join(process.cwd(), file.path));
+    }
 
     return this.createEnhancedFile(file);
   }
