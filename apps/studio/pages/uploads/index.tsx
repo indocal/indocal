@@ -1,6 +1,6 @@
 import { Container, Grid, Divider } from '@mui/material';
 
-import { Page } from '@indocal/ui';
+import { Page, Widget } from '@indocal/ui';
 
 import { LastFoldersGallery, LastFilesGallery } from '@/features';
 import { AdminDashboard } from '@/components';
@@ -11,7 +11,9 @@ const UploadsPage: EnhancedNextPage = () => (
     <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
       <Grid container justifyContent="center" alignItems="center" spacing={2}>
         <Grid item xs={12}>
-          <LastFoldersGallery />
+          <Widget disableDefaultSizes>
+            <LastFoldersGallery />
+          </Widget>
         </Grid>
 
         <Grid item xs={12}>
@@ -19,7 +21,9 @@ const UploadsPage: EnhancedNextPage = () => (
         </Grid>
 
         <Grid item xs={12}>
-          <LastFilesGallery />
+          <Widget disableDefaultSizes>
+            <LastFilesGallery />
+          </Widget>
         </Grid>
       </Grid>
     </Container>

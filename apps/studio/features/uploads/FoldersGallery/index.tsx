@@ -86,9 +86,11 @@ export const FoldersGallery: React.FC<FoldersGalleryProps> = ({
                 borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
               }}
             >
-              <Avatar>
-                <FolderIcon />
-              </Avatar>
+              <IconButton size="small">
+                <Avatar>
+                  <FolderIcon />
+                </Avatar>
+              </IconButton>
             </CardMedia>
           </Card>
         </Grid>
