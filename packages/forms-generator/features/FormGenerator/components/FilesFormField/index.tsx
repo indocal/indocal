@@ -55,12 +55,66 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
         name={field.id}
         control={control}
         disabled={isSubmitting}
+        dropzoneProps={{
+          maxFiles: config?.maxFiles,
+          accept: {
+            ...(config?.accept.includes('image') && {
+              'image/*': [
+                '.jpg',
+                '.jpeg',
+                '.png',
+                '.gif',
+                '.svg',
+                '.tiff',
+                '.ico',
+              ],
+            }),
+
+            ...(config?.accept.includes('video') && {
+              'video/*': ['.mpeg', '.mp4', '.mov', '.wmv', '.avi', '.flv'],
+            }),
+
+            ...(config?.accept.includes('audio') && {
+              'audio/*': ['.mp3', '.wav', '.ogg'],
+            }),
+
+            ...(config?.accept.includes('files') && {
+              'text/*': ['.txt', '.csv'],
+              'application/*': [
+                '.json',
+                '.pdf',
+                '.doc',
+                '.docx',
+                '.xls',
+                '.xlsx',
+                '.ppt',
+                '.pptx',
+              ],
+            }),
+          },
+        }}
         controllerProps={{
           rules: {
             required: {
               value: Boolean(config?.required),
               message: 'Debe completar este campo',
             },
+
+            ...(config?.multiple && {
+              validate: {
+                ...(config?.minFiles && {
+                  minFiles: (value) =>
+                    value.length >= config.minFiles ||
+                    `Debe ingresar al menos ${config.minFiles} archivos`,
+                }),
+
+                ...(config?.maxFiles && {
+                  maxFiles: (value) =>
+                    value.length <= config.maxFiles ||
+                    `Debe ingresar como máximo ${config.maxFiles} archivos`,
+                }),
+              },
+            }),
           },
         }}
       />

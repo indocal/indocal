@@ -97,7 +97,7 @@ export const FilesFormFieldConfig: React.FC = () => {
         }}
       >
         <MenuItem value="image">
-          Imágenes (JPEG, PNG, GIF, SVG, TIFF, ICO, DVU)
+          Imágenes (JPEG, PNG, GIF, SVG, TIFF, ICO)
         </MenuItem>
 
         <MenuItem value="video">
