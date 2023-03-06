@@ -114,7 +114,10 @@ export type DateFormFieldConfig = CommonFormFieldConfig;
 export type DateTimeFormFieldConfig = CommonFormFieldConfig;
 
 export type FilesFormFieldConfig = CommonFormFieldConfig & {
+  accept: string[];
   multiple: boolean;
+  minFiles: number;
+  maxFiles: number;
 };
 
 export type UsersFormFieldConfig = CommonFormFieldConfig & {
