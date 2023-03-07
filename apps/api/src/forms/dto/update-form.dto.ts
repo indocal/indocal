@@ -32,7 +32,7 @@ class UpdateFormDtoSchema {
   @IsEnum(FormVisibility)
   visibility: FormVisibility;
 
-  @IsObject()
+  @IsObject() // TODO: Validate this object
   config: FormConfig;
 
   @IsUUID()

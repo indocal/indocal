@@ -15,7 +15,7 @@ class UpdateFormFieldDtoSchema {
   @TrimParam()
   description: string | null;
 
-  @IsObject()
+  @IsObject() // TODO: Validate this object
   config: FormFieldConfig;
 }
 

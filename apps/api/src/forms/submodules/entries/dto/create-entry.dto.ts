@@ -6,7 +6,7 @@ import { FormFieldAnswer } from '../entities';
 
 export class CreateFormEntryDto {
   @IsObject({ each: true })
-  answers: FormFieldAnswer[];
+  answers: FormFieldAnswer[]; // TODO: Validate this object
 
   @IsUUID()
   form: UUID;

@@ -20,7 +20,7 @@ class UpdateUserRoleDtoSchema {
   @TrimParam()
   description: string;
 
-  @IsObject()
+  @IsObject() // TODO: Validate this object
   config: UserRoleConfig;
 
   @IsObject()

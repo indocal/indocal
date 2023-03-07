@@ -8,7 +8,7 @@ type Item = {
 };
 
 export class ReceiveItemsDto {
-  @IsObject({ each: true })
+  @IsObject({ each: true }) // TODO: Validate this object
   received: Item[];
 
   @IsUUID()

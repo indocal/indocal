@@ -23,7 +23,7 @@ export class CreateOrderDto {
   @IsUUID()
   requestedBy: UUID;
 
-  @IsObject({ each: true })
+  @IsObject({ each: true }) // TODO: Validate this object
   items: Item[];
 }
 
