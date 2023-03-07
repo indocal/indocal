@@ -178,6 +178,7 @@ export type TableFormFieldColumnType =
   | 'TIME'
   | 'DATE'
   | 'DATETIME'
+  | 'FILES'
   | 'USERS';
 
 export type TableFormFieldColumnConfig = Partial<
@@ -193,5 +194,6 @@ export type TableFormFieldColumnConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | FilesFormFieldConfig
   | UsersFormFieldConfig
 >;
