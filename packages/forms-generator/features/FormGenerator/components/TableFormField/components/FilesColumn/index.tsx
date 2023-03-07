@@ -62,16 +62,11 @@ export const FilesColumn: React.FC<FilesColumnProps> = ({
 
           ...(config?.accept?.includes('files') && {
             'text/*': ['.txt', '.csv'],
-            'application/*': [
-              '.json',
-              '.pdf',
-              '.doc',
-              '.docx',
-              '.xls',
-              '.xlsx',
-              '.ppt',
-              '.pptx',
-            ],
+            'application/json': ['.json'],
+            'application/pdf': ['.pdf'],
+            'application/msword': ['.doc', '.docx'],
+            'application/msexcel': ['.xls', '.xlsx'],
+            'aplication/mspowerpoint': ['.ppt', '.pptx'],
           }),
         },
       }}
