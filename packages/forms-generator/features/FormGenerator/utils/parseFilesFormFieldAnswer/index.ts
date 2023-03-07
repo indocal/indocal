@@ -1,10 +1,9 @@
-import { Form, FormFieldAnswer } from '@indocal/services';
+import { FormGeneratorAnswer } from '../../types';
 
 export function parseFilesFormFieldAnswer(
-  field: Form['fields'][number],
-  answer: FormFieldAnswer['content']
-): FormFieldAnswer {
-  return { field, content: answer || null };
+  answer: FormGeneratorAnswer<File[]>
+): FormGeneratorAnswer<File[]> {
+  return { field: answer.field, content: answer.content || null };
 }
 
 export default parseFilesFormFieldAnswer;

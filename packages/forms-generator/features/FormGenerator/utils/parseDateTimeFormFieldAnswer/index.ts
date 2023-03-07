@@ -1,14 +1,16 @@
 import { isValid } from 'date-fns';
 
-import { Form, FormFieldAnswer } from '@indocal/services';
+import { FormGeneratorAnswer } from '../../types';
 
 export function parseDateTimeFormFieldAnswer(
-  field: Form['fields'][number],
-  answer: FormFieldAnswer['content']
-): FormFieldAnswer {
+  answer: FormGeneratorAnswer<Date>
+): FormGeneratorAnswer<string> {
   return {
-    field,
-    content: isValid(answer) ? new Date(answer as string).toISOString() : null,
+    field: answer.field,
+    content:
+      answer.content && isValid(answer.content)
+        ? new Date(answer.content).toISOString()
+        : null,
   };
 }
 

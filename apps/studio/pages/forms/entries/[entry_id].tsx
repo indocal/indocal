@@ -1,15 +1,11 @@
 import { useRouter } from 'next/router';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Stack } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
+import { FormEntryAnswers } from '@indocal/forms-generator';
 import { useFormEntry, getShortUUID, UUID } from '@indocal/services';
 
-import {
-  FormEntryCard,
-  FormEntryAnswers,
-  FormCard,
-  UserCard,
-} from '@/features';
+import { FormEntryCard, UserCard } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -35,36 +31,25 @@ const FormEntryPage: EnhancedNextPage = () => {
         ) : error ? (
           <ErrorInfo error={error} />
         ) : entry ? (
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-          >
-            <Grid item xs={12} md={4}>
-              <Widget>
-                <FormEntryCard entry={entry} />
-              </Widget>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Widget>
-                <FormCard form={entry.form.id} />
-              </Widget>
-            </Grid>
-
-            {entry.answeredBy && (
-              <Grid item xs={12} md={4}>
-                <Widget>
-                  <UserCard user={entry.answeredBy.id} />
-                </Widget>
-              </Grid>
-            )}
-
-            <Grid item xs={12}>
+          <Grid container justifyContent="center" spacing={1}>
+            <Grid item xs={12} md={8}>
               <Widget disableDefaultSizes>
                 <FormEntryAnswers entry={entry} />
               </Widget>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Stack spacing={1}>
+                <Widget>
+                  <FormEntryCard entry={entry} />
+                </Widget>
+
+                {entry.answeredBy && (
+                  <Widget>
+                    <UserCard user={entry.answeredBy.id} />
+                  </Widget>
+                )}
+              </Stack>
             </Grid>
           </Grid>
         ) : (

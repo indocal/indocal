@@ -1,12 +1,14 @@
-import { Form, FormFieldAnswer } from '@indocal/services';
+import { FormGeneratorAnswer } from '../../types';
 
 export function parseCheckboxFormFieldAnswer(
-  field: Form['fields'][number],
-  answer: FormFieldAnswer['content']
-): FormFieldAnswer {
+  answer: FormGeneratorAnswer<boolean>
+): FormGeneratorAnswer<boolean> {
   return {
-    field,
-    content: answer !== null && answer !== undefined ? Boolean(answer) : null,
+    field: answer.field,
+    content:
+      answer.content !== null && answer.content !== undefined
+        ? Boolean(answer.content)
+        : null,
   };
 }
 

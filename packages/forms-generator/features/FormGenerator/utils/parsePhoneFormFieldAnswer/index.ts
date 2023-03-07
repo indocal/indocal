@@ -1,13 +1,13 @@
 import { formatPhone } from '@indocal/ui';
-import { Form, FormFieldAnswer } from '@indocal/services';
+
+import { FormGeneratorAnswer } from '../../types';
 
 export function parsePhoneFormFieldAnswer(
-  field: Form['fields'][number],
-  answer: FormFieldAnswer['content']
-): FormFieldAnswer {
+  answer: FormGeneratorAnswer<string>
+): FormGeneratorAnswer<string> {
   return {
-    field,
-    content: answer ? formatPhone(answer as string, 'DB') : null,
+    field: answer.field,
+    content: answer.content ? formatPhone(answer.content, 'DB') : null,
   };
 }
 

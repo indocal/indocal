@@ -1,12 +1,14 @@
-import { Form, FormFieldAnswer } from '@indocal/services';
+import { FormGeneratorAnswer } from '../../types';
 
 export function parseNumberFormFieldAnswer(
-  field: Form['fields'][number],
-  answer: FormFieldAnswer['content']
-): FormFieldAnswer {
+  answer: FormGeneratorAnswer<number>
+): FormGeneratorAnswer<number> {
   return {
-    field,
-    content: typeof answer === 'number' && !isNaN(answer) ? answer : null,
+    field: answer.field,
+    content:
+      typeof answer.content === 'number' && !isNaN(answer.content)
+        ? answer.content
+        : null,
   };
 }
 

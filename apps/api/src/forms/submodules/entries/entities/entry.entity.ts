@@ -1,34 +1,13 @@
 import { Exclude } from 'class-transformer';
-import { FormEntry, FormFieldType, UserStatus } from '@prisma/client';
+import { FormEntry, FormFieldType } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-import { FormFieldConfig } from '../../fields';
-
-type File = {
-  id: UUID;
-  path: string;
-  mime: string;
-  extension: string;
-  size: number;
-  dimensions: number[];
-  name: string;
-  caption: string | null;
-  alt: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type User = {
-  id: UUID;
-  username: string;
-  email: string;
-  name: string;
-  password: string;
-  status: UserStatus;
-  createdAt: string;
-  updatedAt: string;
-};
+import {
+  FormFieldConfig,
+  SectionFormFieldItem,
+  TableFormFieldColumn,
+} from '../../fields';
 
 type FormField = {
   id: UUID;
@@ -110,44 +89,54 @@ export type DateFormFieldAnswer = string;
 
 export type DateTimeFormFieldAnswer = string;
 
-export type FilesFormFieldAnswer = File | File[];
+export type FilesFormFieldAnswer = UUID | UUID[];
 
-export type UsersFormFieldAnswer = User | User[];
+export type UsersFormFieldAnswer = UUID | UUID[];
 
 export type SectionFormFieldAnswer = Record<
   string,
-  | TextFormFieldAnswer
-  | TextAreaFormFieldAnswer
-  | NumberFormFieldAnswer
-  | DniFormFieldAnswer
-  | PhoneFormFieldAnswer
-  | EmailFormFieldAnswer
-  | CheckboxFormFieldAnswer
-  | SelectFormFieldAnswer
-  | RadioFormFieldAnswer
-  | TimeFormFieldAnswer
-  | DateFormFieldAnswer
-  | DateTimeFormFieldAnswer
-  | UsersFormFieldAnswer
-  | null
+  {
+    item: SectionFormFieldItem;
+    content:
+      | TextFormFieldAnswer
+      | TextAreaFormFieldAnswer
+      | NumberFormFieldAnswer
+      | DniFormFieldAnswer
+      | PhoneFormFieldAnswer
+      | EmailFormFieldAnswer
+      | CheckboxFormFieldAnswer
+      | SelectFormFieldAnswer
+      | RadioFormFieldAnswer
+      | TimeFormFieldAnswer
+      | DateFormFieldAnswer
+      | DateTimeFormFieldAnswer
+      | FilesFormFieldAnswer
+      | UsersFormFieldAnswer
+      | null;
+  }
 >;
 
 export type TableFormFieldAnswer = Array<
   Record<
     string,
-    | TextFormFieldAnswer
-    | TextAreaFormFieldAnswer
-    | NumberFormFieldAnswer
-    | DniFormFieldAnswer
-    | PhoneFormFieldAnswer
-    | EmailFormFieldAnswer
-    | CheckboxFormFieldAnswer
-    | SelectFormFieldAnswer
-    | RadioFormFieldAnswer
-    | TimeFormFieldAnswer
-    | DateFormFieldAnswer
-    | DateTimeFormFieldAnswer
-    | UsersFormFieldAnswer
-    | null
+    {
+      column: TableFormFieldColumn;
+      content:
+        | TextFormFieldAnswer
+        | TextAreaFormFieldAnswer
+        | NumberFormFieldAnswer
+        | DniFormFieldAnswer
+        | PhoneFormFieldAnswer
+        | EmailFormFieldAnswer
+        | CheckboxFormFieldAnswer
+        | SelectFormFieldAnswer
+        | RadioFormFieldAnswer
+        | TimeFormFieldAnswer
+        | DateFormFieldAnswer
+        | DateTimeFormFieldAnswer
+        | FilesFormFieldAnswer
+        | UsersFormFieldAnswer
+        | null;
+    }
   >
 >;
