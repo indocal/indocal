@@ -14,6 +14,8 @@ export * from './TimeColumnConfig';
 export * from './DateColumnConfig';
 export * from './DateTimeColumnConfig';
 
+export * from './FilesColumnConfig';
+
 export * from './UsersColumnConfig';
 
 export * from './WebhookColumnConfig';
