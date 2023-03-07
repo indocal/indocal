@@ -152,7 +152,9 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
 
       <TableContainer sx={{ maxHeight: 500 }}>
         <Table stickyHeader size="small">
-          {config?.columns.length &&
+          {config &&
+            config.columns &&
+            config.columns.length &&
             (errors[field.id]?.root || field.description) && (
               <Typography
                 component="caption"
@@ -167,7 +169,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
               </Typography>
             )}
 
-          {config?.columns.length && (
+          {config && config.columns && config.columns.length && (
             <TableHead>
               <TableRow>
                 <TableCell
@@ -204,7 +206,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
           )}
 
           <TableBody>
-            {config && config.columns.length > 0 ? (
+            {config && config.columns && config.columns.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell
@@ -250,7 +252,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
                     </Stack>
                   </TableCell>
 
-                  {config?.columns.map((column) => (
+                  {config.columns.map((column) => (
                     <TableCell
                       key={column.heading}
                       align="center"
@@ -280,7 +282,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
             )}
           </TableBody>
 
-          {config?.columns.length && (
+          {config && config.columns && config.columns.length && (
             <TableFooter>
               <TableRow>
                 <TableCell

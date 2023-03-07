@@ -97,7 +97,7 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
         spacing={2}
         sx={{ marginTop: (theme) => `${theme.spacing(0.75)} !important` }}
       >
-        {config && config.items.length > 0 ? (
+        {config && config.items && config.items.length > 0 ? (
           config.items.map((item) =>
             createElement(items[item.type], {
               key: item.title,

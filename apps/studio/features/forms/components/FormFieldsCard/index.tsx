@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import {
   Paper,
   List,
@@ -39,14 +39,18 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const url = useMemo(
+    () =>
+      new URL(
+        `${Pages.FORMS_PREVIEW}/${form?.id}`,
+        process.env.NEXT_PUBLIC_SITE_URL
+      ),
+    [form?.id]
+  );
+
   const handleCopyToClipboard = useCallback(async () => {
     try {
       if (form) {
-        const url = new URL(
-          `${Pages.FORMS_PREVIEW}/${form.id}`,
-          process.env.NEXT_PUBLIC_SITE_URL
-        );
-
         await navigator.clipboard.writeText(url.toString());
 
         enqueueSnackbar('Enlace copiado', {
@@ -66,7 +70,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
         },
       });
     }
-  }, [form, enqueueSnackbar]);
+  }, [form, url, enqueueSnackbar]);
 
   return (
     <Paper
@@ -135,7 +139,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
             <ListItem dense divider>
               <ListItemText
                 primary="Enlance del formulario"
-                secondary={`${process.env.NEXT_PUBLIC_SITE_URL}${Pages.FORMS_PREVIEW}/${form.id}`}
+                secondary={url.toString()}
               />
             </ListItem>
 

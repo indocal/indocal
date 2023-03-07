@@ -52,7 +52,7 @@ export function parseSectionFormFieldAnswer(
   return {
     field,
     content:
-      items && config && config.items.length > 0
+      items && config && config.items && config.items.length > 0
         ? config.items.reduce<SectionFormFieldAnswer>((prev, item) => {
             const { content } = parsers[item.type](field, items[item.title]);
 
