@@ -30,6 +30,7 @@ import {
   TimeColumnConfig,
   DateColumnConfig,
   DateTimeColumnConfig,
+  FilesColumnConfig,
   UsersColumnConfig,
   WebhookColumnConfig,
 } from './components';
@@ -78,6 +79,8 @@ export const EditTableFormFieldColumnDialog: React.FC<
       TIME: <TimeColumnConfig column={column} />,
       DATE: <DateColumnConfig column={column} />,
       DATETIME: <DateTimeColumnConfig column={column} />,
+
+      FILES: <FilesColumnConfig column={column} />,
 
       USERS: <UsersColumnConfig column={column} />,
     }),
