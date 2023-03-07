@@ -59,6 +59,8 @@ export const ControlledColumnTypeSelect: React.FC<
       'DATE',
       'DATETIME',
 
+      'FILES',
+
       'USERS',
     ],
     []
