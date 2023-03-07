@@ -29,6 +29,7 @@ export interface ControlledFilesDropzoneProps {
   multiple?: boolean;
   disabled?: boolean;
   required?: boolean;
+  size?: 'small' | 'normal';
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   formControlProps?: Omit<FormControlProps, 'required' | 'disabled' | 'error'>;
   formHelperTextProps?: FormHelperTextProps;
@@ -43,6 +44,7 @@ export const ControlledFilesDropzone: React.FC<
   multiple,
   disabled,
   required,
+  size,
   controllerProps,
   formControlProps,
   formHelperTextProps,
@@ -90,9 +92,11 @@ export const ControlledFilesDropzone: React.FC<
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: (theme) => theme.spacing(6),
                     borderRadius: (theme) => theme.spacing(0.5),
                     opacity: 0.75,
+
+                    padding: (theme) =>
+                      size === 'small' ? theme.spacing(1) : theme.spacing(6),
 
                     border: (theme) =>
                       isDragAccept
