@@ -39,6 +39,7 @@ import {
   TimeColumn,
   DateColumn,
   DateTimeColumn,
+  FilesColumn,
   UsersColumn,
 } from './components';
 
@@ -104,6 +105,8 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
       TIME: TimeColumn,
       DATE: DateColumn,
       DATETIME: DateTimeColumn,
+
+      FILES: FilesColumn,
 
       USERS: UsersColumn,
     }),
