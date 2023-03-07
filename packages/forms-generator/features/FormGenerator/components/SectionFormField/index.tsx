@@ -18,6 +18,7 @@ import {
   TimeItem,
   DateItem,
   DateTimeItem,
+  FilesItem,
   UsersItem,
 } from './components';
 
@@ -54,6 +55,8 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
       TIME: TimeItem,
       DATE: DateItem,
       DATETIME: DateTimeItem,
+
+      FILES: FilesItem,
 
       USERS: UsersItem,
     }),

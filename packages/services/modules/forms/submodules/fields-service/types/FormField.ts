@@ -148,6 +148,7 @@ export type SectionFormFieldItemType =
   | 'TIME'
   | 'DATE'
   | 'DATETIME'
+  | 'FILES'
   | 'USERS';
 
 export type SectionFormFieldItemConfig = Partial<
@@ -163,6 +164,7 @@ export type SectionFormFieldItemConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | FilesFormFieldConfig
   | UsersFormFieldConfig
 >;
 

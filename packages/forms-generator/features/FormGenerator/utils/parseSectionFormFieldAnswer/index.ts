@@ -17,6 +17,7 @@ import parseRadioFormFieldAnswer from '../parseRadioFormFieldAnswer';
 import parseTimeFormFieldAnswer from '../parseTimeFormFieldAnswer';
 import parseDateFormFieldAnswer from '../parseDateFormFieldAnswer';
 import parseDateTimeFormFieldAnswer from '../parseDateTimeFormFieldAnswer';
+import parseFilesFormFieldAnswer from '../parseFilesFormFieldAnswer';
 import parseUsersFormFieldAnswer from '../parseUsersFormFieldAnswer';
 
 export function parseSectionFormFieldAnswer(
@@ -42,6 +43,8 @@ export function parseSectionFormFieldAnswer(
     TIME: parseTimeFormFieldAnswer,
     DATE: parseDateFormFieldAnswer,
     DATETIME: parseDateTimeFormFieldAnswer,
+
+    FILES: parseFilesFormFieldAnswer,
 
     USERS: parseUsersFormFieldAnswer,
   };

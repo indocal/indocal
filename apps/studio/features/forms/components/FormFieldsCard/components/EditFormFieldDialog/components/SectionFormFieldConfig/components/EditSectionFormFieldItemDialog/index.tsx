@@ -30,6 +30,7 @@ import {
   TimeItemConfig,
   DateItemConfig,
   DateTimeItemConfig,
+  FilesItemConfig,
   UsersItemConfig,
   WebhookItemConfig,
 } from './components';
@@ -78,6 +79,8 @@ export const EditSectionFormFieldItemDialog: React.FC<
       TIME: <TimeItemConfig item={item} />,
       DATE: <DateItemConfig item={item} />,
       DATETIME: <DateTimeItemConfig item={item} />,
+
+      FILES: <FilesItemConfig item={item} />,
 
       USERS: <UsersItemConfig item={item} />,
     }),

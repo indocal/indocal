@@ -14,6 +14,8 @@ export * from './TimeItemConfig';
 export * from './DateItemConfig';
 export * from './DateTimeItemConfig';
 
+export * from './FilesItemConfig';
+
 export * from './UsersItemConfig';
 
 export * from './WebhookItemConfig';

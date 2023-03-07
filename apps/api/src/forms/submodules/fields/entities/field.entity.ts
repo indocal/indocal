@@ -16,6 +16,7 @@ export type FormFieldConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | FilesFormFieldConfig
   | UsersFormFieldConfig
   | SectionFormFieldConfig
   | TableFormFieldConfig
@@ -97,6 +98,13 @@ export type DateFormFieldConfig = CommonFormFieldConfig;
 
 export type DateTimeFormFieldConfig = CommonFormFieldConfig;
 
+export type FilesFormFieldConfig = CommonFormFieldConfig & {
+  accept: string[];
+  multiple: boolean;
+  minFiles: number;
+  maxFiles: number;
+};
+
 export type UsersFormFieldConfig = CommonFormFieldConfig & {
   multiple: boolean;
 };
@@ -125,6 +133,7 @@ export type SectionFormFieldItemType =
   | 'TIME'
   | 'DATE'
   | 'DATETIME'
+  | 'FILES'
   | 'USERS';
 
 export type SectionFormFieldItemConfig = Partial<
@@ -140,6 +149,7 @@ export type SectionFormFieldItemConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | FilesFormFieldConfig
   | UsersFormFieldConfig
 >;
 

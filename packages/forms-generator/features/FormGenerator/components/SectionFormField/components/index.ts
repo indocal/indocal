@@ -14,4 +14,6 @@ export * from './TimeItem';
 export * from './DateItem';
 export * from './DateTimeItem';
 
+export * from './FilesItem';
+
 export * from './UsersItem';

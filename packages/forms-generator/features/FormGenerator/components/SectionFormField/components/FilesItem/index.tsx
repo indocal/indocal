@@ -1,23 +1,28 @@
 import { useMemo } from 'react';
 import { Stack, Typography, Badge } from '@mui/material';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, FieldErrors } from 'react-hook-form';
 
 import { ControlledFilesDropzone } from '@indocal/ui';
-import { Form, FilesFormFieldConfig } from '@indocal/services';
+import {
+  Form,
+  SectionFormFieldItem,
+  FilesFormFieldConfig,
+} from '@indocal/services';
 
-export interface FilesFormFieldProps {
+export interface FilesItemProps {
   field: Form['fields'][number];
+  item: SectionFormFieldItem;
 }
 
-export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
+export const FilesItem: React.FC<FilesItemProps> = ({ field, item }) => {
   const {
     formState: { isSubmitting, errors },
     control,
   } = useFormContext();
 
   const config = useMemo<FilesFormFieldConfig | null>(
-    () => field.config as FilesFormFieldConfig,
-    [field.config]
+    () => item.config as FilesFormFieldConfig,
+    [item.config]
   );
 
   return (
@@ -25,10 +30,10 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
       sx={{
         display: 'grid',
         gap: (theme) => theme.spacing(1),
-        padding: (theme) => theme.spacing(2),
+        padding: (theme) => theme.spacing(1, 2, 1.5),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) =>
-          errors[field.id]
+          errors[field.id] && (errors[field.id] as FieldErrors)[item.title]
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
       }}
@@ -41,18 +46,19 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
         }}
         sx={{
           width: 'fit-content',
-          ...(errors[field.id] && {
-            color: (theme) => theme.palette.error.main,
-          }),
+          ...(errors[field.id] &&
+            (errors[field.id] as FieldErrors)[item.title] && {
+              color: (theme) => theme.palette.error.main,
+            }),
         }}
       >
-        <Typography>{field.title}</Typography>
+        <Typography>{item.title}</Typography>
       </Badge>
 
       <ControlledFilesDropzone
         required={config?.required}
         multiple={config?.multiple}
-        name={field.id}
+        name={`${field.id}.${item.title}`}
         control={control}
         disabled={isSubmitting}
         dropzoneProps={{
@@ -122,4 +128,4 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
   );
 };
 
-export default FilesFormField;
+export default FilesItem;

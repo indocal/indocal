@@ -59,6 +59,8 @@ export const ControlledItemTypeSelect: React.FC<
       'DATE',
       'DATETIME',
 
+      'FILES',
+
       'USERS',
     ],
     []
