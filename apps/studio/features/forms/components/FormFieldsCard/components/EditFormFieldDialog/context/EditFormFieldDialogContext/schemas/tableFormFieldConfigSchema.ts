@@ -15,6 +15,7 @@ import radioFormFieldConfigSchema from './radioFormFieldConfigSchema';
 import timeFormFieldConfigSchema from './timeFormFieldConfigSchema';
 import dateFormFieldConfigSchema from './dateFormFieldConfigSchema';
 import dateTimeFormFieldConfigSchema from './dateTimeFormFieldConfigSchema';
+import filesFormFieldConfigSchema from './filesFormFieldConfigSchema';
 import usersFormFieldConfigSchema from './usersFormFieldConfigSchema';
 
 const columnConfigSchema = zod.object({
@@ -31,6 +32,7 @@ const columnConfigSchema = zod.object({
   ...timeFormFieldConfigSchema.shape,
   ...dateFormFieldConfigSchema.shape,
   ...dateTimeFormFieldConfigSchema.shape,
+  ...filesFormFieldConfigSchema.shape,
   ...usersFormFieldConfigSchema.shape,
 });
 
@@ -53,6 +55,8 @@ const columnSchema = zod.object({
         'TIME',
         'DATE',
         'DATETIME',
+
+        'FILES',
 
         'USERS',
       ],
