@@ -1,8 +1,8 @@
-import { FormGeneratorAnswer } from '../../types';
+import { FormGeneratorFormFieldAnswer } from '../../types';
 
 export function parseCheckboxFormFieldAnswer(
-  answer: FormGeneratorAnswer<boolean>
-): FormGeneratorAnswer<boolean> {
+  answer: FormGeneratorFormFieldAnswer<boolean | null>
+): FormGeneratorFormFieldAnswer<boolean | null> {
   return {
     field: answer.field,
     content:

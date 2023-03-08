@@ -1,8 +1,8 @@
-import { FormGeneratorAnswer } from '../../types';
+import { FormGeneratorFormFieldAnswer } from '../../types';
 
 export function parseFilesFormFieldAnswer(
-  answer: FormGeneratorAnswer<File[]>
-): FormGeneratorAnswer<File[]> {
+  answer: FormGeneratorFormFieldAnswer<File[] | null>
+): FormGeneratorFormFieldAnswer<File[] | null> {
   return { field: answer.field, content: answer.content || null };
 }
 

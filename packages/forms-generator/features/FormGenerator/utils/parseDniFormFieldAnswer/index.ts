@@ -1,10 +1,10 @@
 import { formatDni } from '@indocal/ui';
 
-import { FormGeneratorAnswer } from '../../types';
+import { FormGeneratorFormFieldAnswer } from '../../types';
 
 export function parseDniFormFieldAnswer(
-  answer: FormGeneratorAnswer<string>
-): FormGeneratorAnswer<string> {
+  answer: FormGeneratorFormFieldAnswer<string | null>
+): FormGeneratorFormFieldAnswer<string | null> {
   return {
     field: answer.field,
     content: answer.content ? formatDni(answer.content, 'DB') : null,

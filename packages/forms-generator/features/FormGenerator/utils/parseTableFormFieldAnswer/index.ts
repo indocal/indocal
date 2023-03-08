@@ -1,74 +1,88 @@
 import {
-  Form,
   TableFormFieldConfig,
-  FormFieldAnswer,
   TableFormFieldAnswer,
+  TableFormFieldRowAnswer,
 } from '@indocal/services';
 
-import parseTextFormFieldAnswer from '../parseTextFormFieldAnswer';
-import parseTextAreaFormFieldAnswer from '../parseTextAreaFormFieldAnswer';
-import parseNumberFormFieldAnswer from '../parseNumberFormFieldAnswer';
-import parseDniFormFieldAnswer from '../parseDniFormFieldAnswer';
-import parsePhoneFormFieldAnswer from '../parsePhoneFormFieldAnswer';
-import parseEmailFormFieldAnswer from '../parseEmailFormFieldAnswer';
-import parseCheckboxFormFieldAnswer from '../parseCheckboxFormFieldAnswer';
-import parseSelectFormFieldAnswer from '../parseSelectFormFieldAnswer';
-import parseRadioFormFieldAnswer from '../parseRadioFormFieldAnswer';
-import parseTimeFormFieldAnswer from '../parseTimeFormFieldAnswer';
-import parseDateFormFieldAnswer from '../parseDateFormFieldAnswer';
-import parseDateTimeFormFieldAnswer from '../parseDateTimeFormFieldAnswer';
-import parseFilesFormFieldAnswer from '../parseFilesFormFieldAnswer';
-import parseUsersFormFieldAnswer from '../parseUsersFormFieldAnswer';
+import { FormGeneratorFormFieldAnswer } from '../../types';
+
+import {
+  parseTextColumnAnswer,
+  parseTextAreaColumnAnswer,
+  parseNumberColumnAnswer,
+  parseDniColumnAnswer,
+  parsePhoneColumnAnswer,
+  parseEmailColumnAnswer,
+  parseCheckboxColumnAnswer,
+  parseSelectColumnAnswer,
+  parseRadioColumnAnswer,
+  parseTimeColumnAnswer,
+  parseDateColumnAnswer,
+  parseDateTimeColumnAnswer,
+  parseFilesColumnAnswer,
+  parseUsersColumnAnswer,
+} from './utils';
+
+export type TableFormFieldFormData = Array<
+  Record<
+    string,
+    | Parameters<typeof parseTextColumnAnswer>[number]['content']
+    | Parameters<typeof parseTextAreaColumnAnswer>[number]['content']
+    | Parameters<typeof parseNumberColumnAnswer>[number]['content']
+    | Parameters<typeof parseDniColumnAnswer>[number]['content']
+    | Parameters<typeof parsePhoneColumnAnswer>[number]['content']
+    | Parameters<typeof parseEmailColumnAnswer>[number]['content']
+    | Parameters<typeof parseCheckboxColumnAnswer>[number]['content']
+    | Parameters<typeof parseSelectColumnAnswer>[number]['content']
+    | Parameters<typeof parseRadioColumnAnswer>[number]['content']
+    | Parameters<typeof parseTimeColumnAnswer>[number]['content']
+    | Parameters<typeof parseDateColumnAnswer>[number]['content']
+    | Parameters<typeof parseDateTimeColumnAnswer>[number]['content']
+    | Parameters<typeof parseFilesColumnAnswer>[number]['content']
+    | Parameters<typeof parseUsersColumnAnswer>[number]['content']
+  >
+>;
 
 export function parseTableFormFieldAnswer(
-  field: Form['fields'][number],
-  answer: FormFieldAnswer['content']
-): FormFieldAnswer {
-  const config = field.config as TableFormFieldConfig | null;
-  const rows = answer as TableFormFieldAnswer | null;
+  answer: FormGeneratorFormFieldAnswer<TableFormFieldFormData | null>
+): FormGeneratorFormFieldAnswer<TableFormFieldAnswer | null> {
+  const config = answer.field.config as TableFormFieldConfig | null;
+  const rows = answer.content;
 
   const parsers = {
-    TEXT: parseTextFormFieldAnswer,
-    TEXTAREA: parseTextAreaFormFieldAnswer,
-    NUMBER: parseNumberFormFieldAnswer,
+    TEXT: parseTextColumnAnswer,
+    TEXTAREA: parseTextAreaColumnAnswer,
+    NUMBER: parseNumberColumnAnswer,
 
-    DNI: parseDniFormFieldAnswer,
-    PHONE: parsePhoneFormFieldAnswer,
-    EMAIL: parseEmailFormFieldAnswer,
+    DNI: parseDniColumnAnswer,
+    PHONE: parsePhoneColumnAnswer,
+    EMAIL: parseEmailColumnAnswer,
 
-    CHECKBOX: parseCheckboxFormFieldAnswer,
-    SELECT: parseSelectFormFieldAnswer,
-    RADIO: parseRadioFormFieldAnswer,
+    CHECKBOX: parseCheckboxColumnAnswer,
+    SELECT: parseSelectColumnAnswer,
+    RADIO: parseRadioColumnAnswer,
 
-    TIME: parseTimeFormFieldAnswer,
-    DATE: parseDateFormFieldAnswer,
-    DATETIME: parseDateTimeFormFieldAnswer,
+    TIME: parseTimeColumnAnswer,
+    DATE: parseDateColumnAnswer,
+    DATETIME: parseDateTimeColumnAnswer,
 
-    FILES: parseFilesFormFieldAnswer,
+    FILES: parseFilesColumnAnswer,
 
-    USERS: parseUsersFormFieldAnswer,
+    USERS: parseUsersColumnAnswer,
   };
 
   return {
-    field,
+    field: answer.field,
     content:
       rows && config && config.columns && config.columns.length > 0
-        ? rows.map<TableFormFieldAnswer[number]>((_, row) =>
-            config.columns.reduce<TableFormFieldAnswer[number]>(
-              (prev, column) => {
-                const { content } = parsers[column.type](
-                  field,
-                  rows[row][column.heading]
-                );
-
-                return {
-                  ...prev,
-                  [column.heading]:
-                    content as TableFormFieldAnswer[number][string],
-                };
-              },
-              {}
-            )
+        ? rows.map(
+            (_, row) =>
+              config.columns.map((column) =>
+                parsers[column.type]({
+                  column,
+                  content: rows[row][column.heading] as null,
+                })
+              ) as TableFormFieldRowAnswer
           )
         : null,
   };

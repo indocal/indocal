@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab';
 import { useFormContext } from 'react-hook-form';
 
 import { NoData } from '@indocal/ui';
-import { UUID, Form, FormFieldAnswer } from '@indocal/services';
+import { Form } from '@indocal/services';
 
 import { FormGeneratorProvider } from './context';
 import {
@@ -49,9 +49,48 @@ import {
   parseTableFormFieldAnswer,
 } from './utils';
 
+export type FormGeneratorFormData = Record<
+  string,
+  | Parameters<typeof parseTextFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseTextAreaFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseNumberFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseDniFormFieldAnswer>[number]['content']
+  | Parameters<typeof parsePhoneFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseEmailFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseCheckboxFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseSelectFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseRadioFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseTimeFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseDateFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseDateTimeFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseFilesFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseUsersFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseSectionFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseTableFormFieldAnswer>[number]['content']
+>;
+
+export type FormGeneratorAnswers = Array<
+  | ReturnType<typeof parseTextFormFieldAnswer>
+  | ReturnType<typeof parseTextAreaFormFieldAnswer>
+  | ReturnType<typeof parseNumberFormFieldAnswer>
+  | ReturnType<typeof parseDniFormFieldAnswer>
+  | ReturnType<typeof parsePhoneFormFieldAnswer>
+  | ReturnType<typeof parseEmailFormFieldAnswer>
+  | ReturnType<typeof parseCheckboxFormFieldAnswer>
+  | ReturnType<typeof parseSelectFormFieldAnswer>
+  | ReturnType<typeof parseRadioFormFieldAnswer>
+  | ReturnType<typeof parseTimeFormFieldAnswer>
+  | ReturnType<typeof parseDateFormFieldAnswer>
+  | ReturnType<typeof parseDateTimeFormFieldAnswer>
+  | ReturnType<typeof parseFilesFormFieldAnswer>
+  | ReturnType<typeof parseUsersFormFieldAnswer>
+  | ReturnType<typeof parseSectionFormFieldAnswer>
+  | ReturnType<typeof parseTableFormFieldAnswer>
+>;
+
 export interface FormGeneratorProps {
   form: Form;
-  onSubmit: (answers: FormFieldAnswer[]) => void | Promise<void>;
+  onSubmit: (answers: FormGeneratorAnswers) => void | Promise<void>;
 }
 
 const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
@@ -118,12 +157,12 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
   );
 
   const handleOnSubmit = useCallback(
-    async (formData: Record<UUID, FormFieldAnswer['content']>) => {
-      await onSubmit(
-        form.fields.map((field) =>
-          parsers[field.type](field, formData[field.id])
-        )
+    async (formData: FormGeneratorFormData) => {
+      const answers = form.fields.map((field) =>
+        parsers[field.type]({ field, content: formData[field.id] as null })
       );
+
+      await onSubmit(answers);
     },
     [form.fields, parsers, onSubmit]
   );

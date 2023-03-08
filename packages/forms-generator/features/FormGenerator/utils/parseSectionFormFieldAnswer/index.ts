@@ -1,66 +1,83 @@
 import {
-  Form,
   SectionFormFieldConfig,
-  FormFieldAnswer,
   SectionFormFieldAnswer,
 } from '@indocal/services';
 
-import parseTextFormFieldAnswer from '../parseTextFormFieldAnswer';
-import parseTextAreaFormFieldAnswer from '../parseTextAreaFormFieldAnswer';
-import parseNumberFormFieldAnswer from '../parseNumberFormFieldAnswer';
-import parseDniFormFieldAnswer from '../parseDniFormFieldAnswer';
-import parsePhoneFormFieldAnswer from '../parsePhoneFormFieldAnswer';
-import parseEmailFormFieldAnswer from '../parseEmailFormFieldAnswer';
-import parseCheckboxFormFieldAnswer from '../parseCheckboxFormFieldAnswer';
-import parseSelectFormFieldAnswer from '../parseSelectFormFieldAnswer';
-import parseRadioFormFieldAnswer from '../parseRadioFormFieldAnswer';
-import parseTimeFormFieldAnswer from '../parseTimeFormFieldAnswer';
-import parseDateFormFieldAnswer from '../parseDateFormFieldAnswer';
-import parseDateTimeFormFieldAnswer from '../parseDateTimeFormFieldAnswer';
-import parseFilesFormFieldAnswer from '../parseFilesFormFieldAnswer';
-import parseUsersFormFieldAnswer from '../parseUsersFormFieldAnswer';
+import { FormGeneratorFormFieldAnswer } from '../../types';
+
+import {
+  parseTextItemAnswer,
+  parseTextAreaItemAnswer,
+  parseNumberItemAnswer,
+  parseDniItemAnswer,
+  parsePhoneItemAnswer,
+  parseEmailItemAnswer,
+  parseCheckboxItemAnswer,
+  parseSelectItemAnswer,
+  parseRadioItemAnswer,
+  parseTimeItemAnswer,
+  parseDateItemAnswer,
+  parseDateTimeItemAnswer,
+  parseFilesItemAnswer,
+  parseUsersItemAnswer,
+} from './utils';
+
+export type SectionFormFieldFormData = Record<
+  string,
+  | Parameters<typeof parseTextItemAnswer>[number]['content']
+  | Parameters<typeof parseTextAreaItemAnswer>[number]['content']
+  | Parameters<typeof parseNumberItemAnswer>[number]['content']
+  | Parameters<typeof parseDniItemAnswer>[number]['content']
+  | Parameters<typeof parsePhoneItemAnswer>[number]['content']
+  | Parameters<typeof parseEmailItemAnswer>[number]['content']
+  | Parameters<typeof parseCheckboxItemAnswer>[number]['content']
+  | Parameters<typeof parseSelectItemAnswer>[number]['content']
+  | Parameters<typeof parseRadioItemAnswer>[number]['content']
+  | Parameters<typeof parseTimeItemAnswer>[number]['content']
+  | Parameters<typeof parseDateItemAnswer>[number]['content']
+  | Parameters<typeof parseDateTimeItemAnswer>[number]['content']
+  | Parameters<typeof parseFilesItemAnswer>[number]['content']
+  | Parameters<typeof parseUsersItemAnswer>[number]['content']
+>;
 
 export function parseSectionFormFieldAnswer(
-  field: Form['fields'][number],
-  answer: FormFieldAnswer['content']
-): FormFieldAnswer {
-  const config = field.config as SectionFormFieldConfig | null;
-  const items = answer as SectionFormFieldAnswer | null;
+  answer: FormGeneratorFormFieldAnswer<SectionFormFieldFormData | null>
+): FormGeneratorFormFieldAnswer<SectionFormFieldAnswer | null> {
+  const config = answer.field.config as SectionFormFieldConfig | null;
+  const items = answer.content;
 
   const parsers = {
-    TEXT: parseTextFormFieldAnswer,
-    TEXTAREA: parseTextAreaFormFieldAnswer,
-    NUMBER: parseNumberFormFieldAnswer,
+    TEXT: parseTextItemAnswer,
+    TEXTAREA: parseTextAreaItemAnswer,
+    NUMBER: parseNumberItemAnswer,
 
-    DNI: parseDniFormFieldAnswer,
-    PHONE: parsePhoneFormFieldAnswer,
-    EMAIL: parseEmailFormFieldAnswer,
+    DNI: parseDniItemAnswer,
+    PHONE: parsePhoneItemAnswer,
+    EMAIL: parseEmailItemAnswer,
 
-    CHECKBOX: parseCheckboxFormFieldAnswer,
-    SELECT: parseSelectFormFieldAnswer,
-    RADIO: parseRadioFormFieldAnswer,
+    CHECKBOX: parseCheckboxItemAnswer,
+    SELECT: parseSelectItemAnswer,
+    RADIO: parseRadioItemAnswer,
 
-    TIME: parseTimeFormFieldAnswer,
-    DATE: parseDateFormFieldAnswer,
-    DATETIME: parseDateTimeFormFieldAnswer,
+    TIME: parseTimeItemAnswer,
+    DATE: parseDateItemAnswer,
+    DATETIME: parseDateTimeItemAnswer,
 
-    FILES: parseFilesFormFieldAnswer,
+    FILES: parseFilesItemAnswer,
 
-    USERS: parseUsersFormFieldAnswer,
+    USERS: parseUsersItemAnswer,
   };
 
   return {
-    field,
+    field: answer.field,
     content:
       items && config && config.items && config.items.length > 0
-        ? config.items.reduce<SectionFormFieldAnswer>((prev, item) => {
-            const { content } = parsers[item.type](field, items[item.title]);
-
-            return {
-              ...prev,
-              [item.title]: content as SectionFormFieldAnswer[string],
-            };
-          }, {})
+        ? (config.items.map((item) =>
+            parsers[item.type]({
+              item,
+              content: items[item.title] as null,
+            })
+          ) as SectionFormFieldAnswer)
         : null,
   };
 }

@@ -1,10 +1,10 @@
 import { isValid } from 'date-fns';
 
-import { FormGeneratorAnswer } from '../../types';
+import { FormGeneratorFormFieldAnswer } from '../../types';
 
 export function parseTimeFormFieldAnswer(
-  answer: FormGeneratorAnswer<Date>
-): FormGeneratorAnswer<string> {
+  answer: FormGeneratorFormFieldAnswer<Date | null>
+): FormGeneratorFormFieldAnswer<string | null> {
   return {
     field: answer.field,
     content:

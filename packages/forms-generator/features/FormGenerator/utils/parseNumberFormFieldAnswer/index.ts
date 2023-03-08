@@ -1,8 +1,8 @@
-import { FormGeneratorAnswer } from '../../types';
+import { FormGeneratorFormFieldAnswer } from '../../types';
 
 export function parseNumberFormFieldAnswer(
-  answer: FormGeneratorAnswer<number>
-): FormGeneratorAnswer<number> {
+  answer: FormGeneratorFormFieldAnswer<number | null>
+): FormGeneratorFormFieldAnswer<number | null> {
   return {
     field: answer.field,
     content:

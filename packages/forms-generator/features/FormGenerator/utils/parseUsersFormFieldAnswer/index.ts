@@ -1,10 +1,10 @@
 import { User } from '@indocal/services';
 
-import { FormGeneratorAnswer } from '../../types';
+import { FormGeneratorFormFieldAnswer } from '../../types';
 
 export function parseUsersFormFieldAnswer(
-  answer: FormGeneratorAnswer<User | User[]>
-): FormGeneratorAnswer<User | User[]> {
+  answer: FormGeneratorFormFieldAnswer<User | User[] | null>
+): FormGeneratorFormFieldAnswer<User | User[] | null> {
   return { field: answer.field, content: answer.content || null };
 }
 

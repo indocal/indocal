@@ -93,50 +93,48 @@ export type FilesFormFieldAnswer = UUID | UUID[];
 
 export type UsersFormFieldAnswer = UUID | UUID[];
 
-export type SectionFormFieldAnswer = Record<
-  string,
-  {
-    item: SectionFormFieldItem;
-    content:
-      | TextFormFieldAnswer
-      | TextAreaFormFieldAnswer
-      | NumberFormFieldAnswer
-      | DniFormFieldAnswer
-      | PhoneFormFieldAnswer
-      | EmailFormFieldAnswer
-      | CheckboxFormFieldAnswer
-      | SelectFormFieldAnswer
-      | RadioFormFieldAnswer
-      | TimeFormFieldAnswer
-      | DateFormFieldAnswer
-      | DateTimeFormFieldAnswer
-      | FilesFormFieldAnswer
-      | UsersFormFieldAnswer
-      | null;
-  }
->;
+export type SectionFormFieldAnswer = SectionFormFieldItemAnswer[];
 
-export type TableFormFieldAnswer = Array<
-  Record<
-    string,
-    {
-      column: TableFormFieldColumn;
-      content:
-        | TextFormFieldAnswer
-        | TextAreaFormFieldAnswer
-        | NumberFormFieldAnswer
-        | DniFormFieldAnswer
-        | PhoneFormFieldAnswer
-        | EmailFormFieldAnswer
-        | CheckboxFormFieldAnswer
-        | SelectFormFieldAnswer
-        | RadioFormFieldAnswer
-        | TimeFormFieldAnswer
-        | DateFormFieldAnswer
-        | DateTimeFormFieldAnswer
-        | FilesFormFieldAnswer
-        | UsersFormFieldAnswer
-        | null;
-    }
-  >
->;
+export type SectionFormFieldItemAnswer = {
+  item: SectionFormFieldItem;
+  content:
+    | TextFormFieldAnswer
+    | TextAreaFormFieldAnswer
+    | NumberFormFieldAnswer
+    | DniFormFieldAnswer
+    | PhoneFormFieldAnswer
+    | EmailFormFieldAnswer
+    | CheckboxFormFieldAnswer
+    | SelectFormFieldAnswer
+    | RadioFormFieldAnswer
+    | TimeFormFieldAnswer
+    | DateFormFieldAnswer
+    | DateTimeFormFieldAnswer
+    | FilesFormFieldAnswer
+    | UsersFormFieldAnswer
+    | null;
+};
+
+export type TableFormFieldAnswer = TableFormFieldRowAnswer[];
+
+export type TableFormFieldRowAnswer = TableFormFieldColumnAnswer[];
+
+export type TableFormFieldColumnAnswer = {
+  column: TableFormFieldColumn;
+  content:
+    | TextFormFieldAnswer
+    | TextAreaFormFieldAnswer
+    | NumberFormFieldAnswer
+    | DniFormFieldAnswer
+    | PhoneFormFieldAnswer
+    | EmailFormFieldAnswer
+    | CheckboxFormFieldAnswer
+    | SelectFormFieldAnswer
+    | RadioFormFieldAnswer
+    | TimeFormFieldAnswer
+    | DateFormFieldAnswer
+    | DateTimeFormFieldAnswer
+    | FilesFormFieldAnswer
+    | UsersFormFieldAnswer
+    | null;
+};
