@@ -4,25 +4,26 @@ import { Paper, Stack, Divider, Typography, Chip } from '@mui/material';
 import { NoData } from '@indocal/ui';
 import {
   translateFormFieldType,
-  FormFieldAnswer,
-  FilesFormFieldAnswer,
+  SectionFormFieldItemAnswer,
+  DateTimeFormFieldAnswer,
 } from '@indocal/services';
 
-import { SingleFile, MultipleFiles } from './components';
-
-export interface FilesAnswerProps {
-  answer: FormFieldAnswer;
+export interface DateTimeItemAnswerProps {
+  answer: SectionFormFieldItemAnswer;
 }
 
-export const FilesAnswer: React.FC<FilesAnswerProps> = ({ answer }) => {
+export const DateTimeItemAnswer: React.FC<DateTimeItemAnswerProps> = ({
+  answer,
+}) => {
   const content = useMemo(
-    () => answer.content as FilesFormFieldAnswer | null,
+    () => answer.content as DateTimeFormFieldAnswer | null,
     [answer]
   );
 
   return (
     <Stack
       component={Paper}
+      elevation={4}
       spacing={1}
       divider={<Divider flexItem />}
       sx={{ padding: (theme) => theme.spacing(2) }}
@@ -34,28 +35,24 @@ export const FilesAnswer: React.FC<FilesAnswerProps> = ({ answer }) => {
         spacing={1}
       >
         <Stack>
-          <Typography variant="h6">{answer.field.title}</Typography>
+          <Typography variant="h6">{answer.item.title}</Typography>
 
-          {answer.field.description && (
+          {answer.item.description && (
             <Typography
               component="pre"
               variant="caption"
               color="text.secondary"
             >
-              {answer.field.description}
+              {answer.item.description}
             </Typography>
           )}
         </Stack>
 
-        <Chip label={translateFormFieldType(answer.field.type)} />
+        <Chip label={translateFormFieldType(answer.item.type)} />
       </Stack>
 
       {content ? (
-        typeof content === 'string' ? (
-          <SingleFile file={content} />
-        ) : (
-          <MultipleFiles files={content} />
-        )
+        <Typography>{new Date(content).toLocaleString()}</Typography>
       ) : (
         <NoData message="Campo no respondido" />
       )}
@@ -63,4 +60,4 @@ export const FilesAnswer: React.FC<FilesAnswerProps> = ({ answer }) => {
   );
 };
 
-export default FilesAnswer;
+export default DateTimeItemAnswer;

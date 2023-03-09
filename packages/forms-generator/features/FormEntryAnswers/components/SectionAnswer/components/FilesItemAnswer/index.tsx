@@ -4,17 +4,17 @@ import { Paper, Stack, Divider, Typography, Chip } from '@mui/material';
 import { NoData } from '@indocal/ui';
 import {
   translateFormFieldType,
-  FormFieldAnswer,
+  SectionFormFieldItemAnswer,
   FilesFormFieldAnswer,
 } from '@indocal/services';
 
 import { SingleFile, MultipleFiles } from './components';
 
-export interface FilesAnswerProps {
-  answer: FormFieldAnswer;
+export interface FilesItemAnswerProps {
+  answer: SectionFormFieldItemAnswer;
 }
 
-export const FilesAnswer: React.FC<FilesAnswerProps> = ({ answer }) => {
+export const FilesItemAnswer: React.FC<FilesItemAnswerProps> = ({ answer }) => {
   const content = useMemo(
     () => answer.content as FilesFormFieldAnswer | null,
     [answer]
@@ -23,6 +23,7 @@ export const FilesAnswer: React.FC<FilesAnswerProps> = ({ answer }) => {
   return (
     <Stack
       component={Paper}
+      elevation={4}
       spacing={1}
       divider={<Divider flexItem />}
       sx={{ padding: (theme) => theme.spacing(2) }}
@@ -34,20 +35,20 @@ export const FilesAnswer: React.FC<FilesAnswerProps> = ({ answer }) => {
         spacing={1}
       >
         <Stack>
-          <Typography variant="h6">{answer.field.title}</Typography>
+          <Typography variant="h6">{answer.item.title}</Typography>
 
-          {answer.field.description && (
+          {answer.item.description && (
             <Typography
               component="pre"
               variant="caption"
               color="text.secondary"
             >
-              {answer.field.description}
+              {answer.item.description}
             </Typography>
           )}
         </Stack>
 
-        <Chip label={translateFormFieldType(answer.field.type)} />
+        <Chip label={translateFormFieldType(answer.item.type)} />
       </Stack>
 
       {content ? (
@@ -63,4 +64,4 @@ export const FilesAnswer: React.FC<FilesAnswerProps> = ({ answer }) => {
   );
 };
 
-export default FilesAnswer;
+export default FilesItemAnswer;
