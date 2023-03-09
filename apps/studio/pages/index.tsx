@@ -6,6 +6,7 @@ import {
   useUsersRolesCount,
   useUsersGroupsCount,
   useFormsCount,
+  useFilesCount,
 } from '@indocal/services';
 
 import { AdminDashboard } from '@/components';
@@ -35,6 +36,12 @@ const DashboardPage: EnhancedNextPage = () => {
     validating: formsCountValidating,
     count: formsCount,
   } = useFormsCount();
+
+  const {
+    loading: filesCountLoading,
+    validating: filesCountValidating,
+    count: filesCount,
+  } = useFilesCount();
 
   return (
     <Page title="Dashboard" transition="down">
@@ -77,6 +84,16 @@ const DashboardPage: EnhancedNextPage = () => {
               value={formsCount ?? 'N/A'}
               loading={formsCountLoading}
               validating={formsCountValidating}
+            />
+          </Grid>
+
+          <Grid item>
+            <Stat
+              title="Archivos"
+              description="Archivos cargados"
+              value={filesCount ?? 'N/A'}
+              loading={filesCountLoading}
+              validating={filesCountValidating}
             />
           </Grid>
         </Grid>
