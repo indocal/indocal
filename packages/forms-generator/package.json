@@ -13,7 +13,8 @@
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "7.43.1"
+    "react-hook-form": "7.43.1",
+    "react-markdown": "8.0.5"
   },
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",
