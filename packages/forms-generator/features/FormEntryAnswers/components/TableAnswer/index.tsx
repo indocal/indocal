@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, createElement } from 'react';
 import {
   Paper,
   Stack,
@@ -9,7 +9,6 @@ import {
   Table,
   TableHead,
   TableBody,
-  TableFooter,
   TableRow,
   TableCell,
 } from '@mui/material';
@@ -21,6 +20,23 @@ import {
   TableFormFieldAnswer,
   TableFormFieldConfig,
 } from '@indocal/services';
+
+import {
+  TextColumnAnswer,
+  TextAreaColumnAnswer,
+  NumberColumnAnswer,
+  DniColumnAnswer,
+  PhoneColumnAnswer,
+  EmailColumnAnswer,
+  CheckboxColumnAnswer,
+  SelectColumnAnswer,
+  RadioColumnAnswer,
+  TimeColumnAnswer,
+  DateColumnAnswer,
+  DateTimeColumnAnswer,
+  FilesColumnAnswer,
+  UsersColumnAnswer,
+} from './components';
 
 export interface TableAnswerProps {
   answer: FormFieldAnswer;
@@ -35,6 +51,31 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
   const content = useMemo(
     () => answer.content as TableFormFieldAnswer | null,
     [answer]
+  );
+
+  const answers = useMemo(
+    () => ({
+      TEXT: TextColumnAnswer,
+      TEXTAREA: TextAreaColumnAnswer,
+      NUMBER: NumberColumnAnswer,
+
+      DNI: DniColumnAnswer,
+      PHONE: PhoneColumnAnswer,
+      EMAIL: EmailColumnAnswer,
+
+      CHECKBOX: CheckboxColumnAnswer,
+      SELECT: SelectColumnAnswer,
+      RADIO: RadioColumnAnswer,
+
+      TIME: TimeColumnAnswer,
+      DATE: DateColumnAnswer,
+      DATETIME: DateTimeColumnAnswer,
+
+      FILES: FilesColumnAnswer,
+
+      USERS: UsersColumnAnswer,
+    }),
+    []
   );
 
   return (
@@ -69,7 +110,7 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
 
       {content && content.length > 0 ? (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer sx={{ maxHeight: 440 }}>
+          <TableContainer sx={{ maxHeight: 500 }}>
             <Table stickyHeader size="small">
               {config && config.columns && config.columns.length && (
                 <TableHead>
@@ -95,18 +136,22 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
               <TableBody>
                 {content.map((row, index) => (
                   <TableRow key={index}>
-                    {row.map((column) => (
+                    {row.map((answer) => (
                       <TableCell
-                        key={column.column.heading}
+                        key={answer.column.heading}
                         align="center"
                         sx={{
+                          minWidth: 225,
                           ':not(:last-child)': {
                             borderRight: (theme) =>
                               `1px solid ${theme.palette.divider}`,
                           },
                         }}
                       >
-                        {JSON.stringify(column.content)}
+                        {createElement(answers[answer.column.type], {
+                          key: answer.column.heading,
+                          answer,
+                        })}
                       </TableCell>
                     ))}
                   </TableRow>

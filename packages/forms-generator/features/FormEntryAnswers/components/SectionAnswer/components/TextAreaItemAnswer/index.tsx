@@ -52,7 +52,15 @@ export const TextAreaItemAnswer: React.FC<TextAreaItemAnswerProps> = ({
       </Stack>
 
       {content ? (
-        <Typography component="pre">{content}</Typography>
+        <Typography
+          component="pre"
+          sx={{
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          }}
+        >
+          {content}
+        </Typography>
       ) : (
         <NoData message="Campo no respondido" />
       )}
