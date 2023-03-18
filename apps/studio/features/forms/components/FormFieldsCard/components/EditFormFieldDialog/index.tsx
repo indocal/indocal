@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import {
   Stack,
+  Divider,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -43,6 +44,7 @@ import {
   UsersFormFieldConfig,
   SectionFormFieldConfig,
   TableFormFieldConfig,
+  FormFieldHintConfig,
   WebhookFormFieldConfig,
 } from './components';
 
@@ -212,26 +214,30 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
             </TabList>
 
             <TabPanel value={Tabs.INFO}>
-              <Stack spacing={2}>
-                <TextField
-                  required
-                  autoComplete="off"
-                  label="Título"
-                  disabled={isSubmitting}
-                  inputProps={register('title')}
-                  error={Boolean(errors.title)}
-                  helperText={errors.title?.message}
-                />
+              <Stack spacing={2} divider={<Divider flexItem />}>
+                <Stack spacing={2}>
+                  <TextField
+                    required
+                    autoComplete="off"
+                    label="Título"
+                    disabled={isSubmitting}
+                    inputProps={register('title')}
+                    error={Boolean(errors.title)}
+                    helperText={errors.title?.message}
+                  />
 
-                <TextField
-                  multiline
-                  autoComplete="off"
-                  label="Descripción"
-                  disabled={isSubmitting}
-                  inputProps={register('description')}
-                  error={Boolean(errors.description)}
-                  helperText={errors.description?.message}
-                />
+                  <TextField
+                    multiline
+                    autoComplete="off"
+                    label="Descripción"
+                    disabled={isSubmitting}
+                    inputProps={register('description')}
+                    error={Boolean(errors.description)}
+                    helperText={errors.description?.message}
+                  />
+                </Stack>
+
+                <FormFieldHintConfig />
               </Stack>
             </TabPanel>
 

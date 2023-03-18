@@ -1,4 +1,4 @@
-import { useMemo, useCallback, createElement } from 'react';
+import { Fragment, useMemo, useCallback, createElement } from 'react';
 import { Paper, Stack, Divider, Typography, Button } from '@mui/material';
 import {
   Save as SaveIcon,
@@ -8,7 +8,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useFormContext } from 'react-hook-form';
 
-import { NoData } from '@indocal/ui';
+import { NoData, Markdown } from '@indocal/ui';
 import { Form } from '@indocal/services';
 
 import { FormGeneratorProvider } from './context';
@@ -221,9 +221,23 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
               onSubmit={handleSubmit(handleOnSubmit)}
               sx={{ padding: (theme) => theme.spacing(1) }}
             >
-              {form.fields.map((field) =>
-                createElement(fields[field.type], { key: field.id, field })
-              )}
+              {form.fields.map((field) => (
+                <Fragment key={field.id}>
+                  {field.config?.hint?.include &&
+                    field.config?.hint?.content &&
+                    field.config.hint?.position === 'BEFORE' && (
+                      <Markdown>{field.config.hint.content}</Markdown>
+                    )}
+
+                  {createElement(fields[field.type], { field })}
+
+                  {field.config?.hint?.include &&
+                    field.config?.hint?.content &&
+                    field.config.hint?.position === 'AFTER' && (
+                      <Markdown>{field.config.hint.content}</Markdown>
+                    )}
+                </Fragment>
+              ))}
 
               <LoadingButton
                 type="submit"

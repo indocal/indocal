@@ -50,13 +50,20 @@ export default FormFieldEntity;
 // Config by type //
 ////////////////////
 
+export type HintFormFieldConfig = {
+  include: boolean;
+  position: 'BEFORE' | 'AFTER';
+  content: string | null;
+};
+
 export type WebhookFormFieldConfig = {
   include: boolean;
-  key: string;
+  key: string | null;
 };
 
 export type CommonFormFieldConfig = {
   required: boolean;
+  hint: HintFormFieldConfig;
   webhook: WebhookFormFieldConfig;
 };
 
