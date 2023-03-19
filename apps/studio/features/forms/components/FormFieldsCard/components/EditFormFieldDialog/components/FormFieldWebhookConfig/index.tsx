@@ -6,11 +6,11 @@ import { Form } from '@indocal/services';
 
 import { EditFormFieldDialogData } from '../../context';
 
-export interface WebhookFormFieldConfigProps {
+export interface FormFieldWebhookConfigProps {
   field: Form['fields'][number];
 }
 
-export const WebhookFormFieldConfig: React.FC<WebhookFormFieldConfigProps> = ({
+export const FormFieldWebhookConfig: React.FC<FormFieldWebhookConfigProps> = ({
   field,
 }) => {
   const {
@@ -53,4 +53,4 @@ export const WebhookFormFieldConfig: React.FC<WebhookFormFieldConfigProps> = ({
   );
 };
 
-export default WebhookFormFieldConfig;
+export default FormFieldWebhookConfig;

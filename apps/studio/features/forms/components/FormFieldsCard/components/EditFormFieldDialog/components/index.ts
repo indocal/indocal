@@ -22,4 +22,4 @@ export * from './SectionFormFieldConfig';
 export * from './TableFormFieldConfig';
 
 export * from './FormFieldHintConfig';
-export * from './WebhookFormFieldConfig';
+export * from './FormFieldWebhookConfig';

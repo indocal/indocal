@@ -65,21 +65,21 @@ export default FormField;
 // Config by type //
 ////////////////////
 
-export type HintFormFieldConfig = {
+export type FormFieldHintConfig = {
   include: boolean;
   position: 'BEFORE' | 'AFTER';
   content: string | null;
 };
 
-export type WebhookFormFieldConfig = {
+export type FormFieldWebhookConfig = {
   include: boolean;
   key: string | null;
 };
 
 export type CommonFormFieldConfig = {
   required: boolean;
-  hint: HintFormFieldConfig;
-  webhook: WebhookFormFieldConfig;
+  hint: FormFieldHintConfig;
+  webhook: FormFieldWebhookConfig;
 };
 
 export type TextFormFieldConfig = CommonFormFieldConfig & {
