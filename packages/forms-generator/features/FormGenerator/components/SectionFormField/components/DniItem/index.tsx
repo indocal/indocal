@@ -28,6 +28,7 @@ export const DniItem: React.FC<DniItemProps> = ({ field, item }) => {
     <ControlledDniTextField
       name={`${field.id}.${item.title}`}
       label={item.title}
+      description={item.description}
       control={control}
       textFieldProps={{
         size: 'small',

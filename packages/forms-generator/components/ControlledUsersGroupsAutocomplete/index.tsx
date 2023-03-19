@@ -12,6 +12,7 @@ import { useUsersGroups, UserGroup } from '@indocal/services';
 export interface ControlledUsersGroupsAutocompleteProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;
@@ -41,6 +42,7 @@ export const ControlledUsersGroupsAutocomplete: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   multiple,
   disabled,
@@ -103,7 +105,7 @@ export const ControlledUsersGroupsAutocomplete: React.FC<
                         acc ? `${acc} | ${current.message}` : current.message,
                       ``
                     )
-                  : fieldError?.message
+                  : fieldError?.message || description
               }
             />
           )}

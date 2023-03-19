@@ -35,15 +35,17 @@ export const RadioItem: React.FC<RadioItemProps> = ({ field, item }) => {
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
 
-        ...(errors[field.id] &&
-          (errors[field.id] as FieldErrors)[item.title] && {
-            paddingBottom: (theme) => theme.spacing(1),
-          }),
+        ...(((errors[field.id] &&
+          (errors[field.id] as FieldErrors)[item.title]) ||
+          item.description) && {
+          paddingBottom: (theme) => theme.spacing(1),
+        }),
       }}
     >
       <ControlledRadioGroup
         name={`${field.id}.${item.title}`}
         label={item.title}
+        description={item.description}
         control={control}
         formControlProps={{
           required: config?.required,

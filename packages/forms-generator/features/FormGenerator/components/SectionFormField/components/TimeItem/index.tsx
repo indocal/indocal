@@ -29,6 +29,7 @@ export const TimeItem: React.FC<TimeItemProps> = ({ field, item }) => {
     <ControlledTimePicker
       name={`${field.id}.${item.title}`}
       label={item.title}
+      description={item.description}
       control={control}
       timePickerProps={{ disabled: isSubmitting }}
       textFieldProps={{

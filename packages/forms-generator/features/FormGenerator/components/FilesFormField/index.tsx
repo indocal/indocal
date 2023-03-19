@@ -53,6 +53,7 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
         required={config?.required}
         multiple={config?.multiple}
         name={field.id}
+        description={field.description}
         control={control}
         disabled={isSubmitting}
         dropzoneProps={{

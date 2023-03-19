@@ -12,6 +12,7 @@ import { useUsersRoles, UserRole } from '@indocal/services';
 export interface ControlledUsersRolesAutocompleteProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;
@@ -41,6 +42,7 @@ export const ControlledUsersRolesAutocomplete: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   multiple,
   disabled,
@@ -103,7 +105,7 @@ export const ControlledUsersRolesAutocomplete: React.FC<
                         acc ? `${acc} | ${current.message}` : current.message,
                       ``
                     )
-                  : fieldError?.message
+                  : fieldError?.message || description
               }
             />
           )}

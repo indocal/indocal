@@ -17,6 +17,7 @@ import {
 export interface ControlledInventoryMovementTypeSelectProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   disabled?: boolean;
   required?: boolean;
@@ -32,6 +33,7 @@ export const ControlledInventoryMovementTypeSelect: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   disabled,
   required,
@@ -50,6 +52,7 @@ export const ControlledInventoryMovementTypeSelect: React.FC<
     <ControlledSelect
       name={name}
       label={label}
+      description={description}
       control={control}
       controllerProps={controllerProps}
       formControlProps={{ required, disabled, ...formControlProps }}

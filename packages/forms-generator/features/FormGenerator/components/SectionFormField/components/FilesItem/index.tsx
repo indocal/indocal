@@ -59,6 +59,7 @@ export const FilesItem: React.FC<FilesItemProps> = ({ field, item }) => {
         required={config?.required}
         multiple={config?.multiple}
         name={`${field.id}.${item.title}`}
+        description={item.description}
         control={control}
         disabled={isSubmitting}
         dropzoneProps={{

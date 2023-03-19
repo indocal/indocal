@@ -47,7 +47,7 @@ export const TextFormField: React.FC<TextFormFieldProps> = ({ field }) => {
           }),
       })}
       error={Boolean(errors[field.id])}
-      helperText={errors[field.id]?.message as string}
+      helperText={(errors[field.id]?.message as string) || field.description}
     />
   );
 };

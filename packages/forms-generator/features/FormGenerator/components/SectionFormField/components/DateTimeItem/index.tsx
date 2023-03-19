@@ -29,6 +29,7 @@ export const DateTimeItem: React.FC<DateTimeItemProps> = ({ field, item }) => {
     <ControlledDateTimePicker
       name={`${field.id}.${item.title}`}
       label={item.title}
+      description={item.description}
       control={control}
       dateTimePickerProps={{ disabled: isSubmitting }}
       textFieldProps={{

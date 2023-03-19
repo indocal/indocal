@@ -24,6 +24,7 @@ export const TimeFormField: React.FC<TimeFormFieldProps> = ({ field }) => {
     <ControlledTimePicker
       name={field.id}
       label={field.title}
+      description={field.description}
       control={control}
       timePickerProps={{ disabled: isSubmitting }}
       textFieldProps={{ required: config?.required }}

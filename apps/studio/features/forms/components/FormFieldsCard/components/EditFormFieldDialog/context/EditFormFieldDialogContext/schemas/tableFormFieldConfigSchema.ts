@@ -2,7 +2,6 @@ import { z as zod } from 'zod';
 
 import { TableFormFieldColumnType } from '@indocal/services';
 
-import commonFormFieldConfigSchema from './commonFormFieldConfigSchema';
 import textFormFieldConfigSchema from './textFormFieldConfigSchema';
 import textAreaFormFieldConfigSchema from './textAreaFormFieldConfigSchema';
 import numberFormFieldConfigSchema from './numberFormFieldConfigSchema';
@@ -18,8 +17,41 @@ import dateTimeFormFieldConfigSchema from './dateTimeFormFieldConfigSchema';
 import filesFormFieldConfigSchema from './filesFormFieldConfigSchema';
 import usersFormFieldConfigSchema from './usersFormFieldConfigSchema';
 
+const commonColumnConfigSchema = zod.object({
+  required: zod.boolean({
+    description: '¿Campo requerido?',
+    required_error: 'Debe indicar si el campo es requerido o no',
+    invalid_type_error: 'Formato no válido',
+  }),
+
+  webhook: zod
+    .object({
+      include: zod.boolean({
+        description: '¿Incluir en el webhook?',
+        required_error: 'Debe indicar si el campo debe ser incluido o no',
+        invalid_type_error: 'Formato no válido',
+      }),
+
+      key: zod
+        .string({
+          description: 'Webhook key',
+          required_error: 'Debe ingresar el webhook key',
+          invalid_type_error: 'Formato no válido',
+        })
+        .nullable(),
+    })
+    .refine(
+      (data) =>
+        !data.include || (data.include && data.key && data.key.length > 0),
+      {
+        message: 'Debe ingresar el webhook key',
+        path: ['key'],
+      }
+    ),
+});
+
 const columnConfigSchema = zod.object({
-  ...commonFormFieldConfigSchema.shape,
+  ...commonColumnConfigSchema.shape,
   ...textFormFieldConfigSchema.shape,
   ...textAreaFormFieldConfigSchema.shape,
   ...numberFormFieldConfigSchema.shape,

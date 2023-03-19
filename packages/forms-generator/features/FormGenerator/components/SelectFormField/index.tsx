@@ -24,6 +24,7 @@ export const SelectFormField: React.FC<SelectFormFieldProps> = ({ field }) => {
     <ControlledSelect
       name={field.id}
       label={field.title}
+      description={field.description}
       control={control}
       formControlProps={{
         required: config?.required,

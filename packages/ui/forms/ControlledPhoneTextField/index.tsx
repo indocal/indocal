@@ -26,6 +26,7 @@ const PhoneTextMask = forwardRef<
 export interface ControlledPhoneTextFieldProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   textFieldProps?: Omit<
@@ -42,7 +43,14 @@ export interface ControlledPhoneTextFieldProps {
 
 export const ControlledPhoneTextField: React.FC<
   ControlledPhoneTextFieldProps
-> = ({ name, label, control, controllerProps, textFieldProps }) => {
+> = ({
+  name,
+  label,
+  description,
+  control,
+  controllerProps,
+  textFieldProps,
+}) => {
   return (
     <Controller
       {...controllerProps}
@@ -57,7 +65,7 @@ export const ControlledPhoneTextField: React.FC<
           value={value}
           onChange={onChange}
           error={Boolean(error)}
-          helperText={error?.message}
+          helperText={error?.message || description}
           InputProps={{
             inputComponent:
               PhoneTextMask as React.ElementType<InputBaseComponentProps>,

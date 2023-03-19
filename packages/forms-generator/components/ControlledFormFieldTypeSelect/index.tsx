@@ -14,6 +14,7 @@ import { FormFieldType, translateFormFieldType } from '@indocal/services';
 export interface ControlledFormFieldTypeSelectProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   disabled?: boolean;
   required?: boolean;
@@ -29,6 +30,7 @@ export const ControlledFormFieldTypeSelect: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   disabled,
   required,
@@ -70,6 +72,7 @@ export const ControlledFormFieldTypeSelect: React.FC<
     <ControlledSelect
       name={name}
       label={label}
+      description={description}
       control={control}
       controllerProps={controllerProps}
       formControlProps={{ required, disabled, ...formControlProps }}

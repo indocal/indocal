@@ -14,6 +14,7 @@ import { Controller, ControllerProps, Control } from 'react-hook-form';
 export interface ControlledCheckboxProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   formControlProps?: Omit<FormControlProps, 'error'>;
@@ -25,6 +26,7 @@ export interface ControlledCheckboxProps {
 export const ControlledCheckbox: React.FC<ControlledCheckboxProps> = ({
   name,
   label,
+  description,
   control,
   controllerProps,
   formControlProps,
@@ -43,12 +45,13 @@ export const ControlledCheckbox: React.FC<ControlledCheckboxProps> = ({
           invisible={!formControlProps?.required}
           componentsProps={{
             badge: {
-              style: label
-                ? { top: 15, right: error ? 35 : 10 }
-                : { top: 10, right: error ? 120 : 20 },
+              style: label ? { top: 15, right: 10 } : { top: 10, right: 20 },
             },
           }}
-          sx={{ ...(error && { color: (theme) => theme.palette.error.main }) }}
+          sx={{
+            width: 'fit-content',
+            ...(error && { color: (theme) => theme.palette.error.main }),
+          }}
         >
           <FormControlLabel
             {...formControlLabelProps}
@@ -71,9 +74,11 @@ export const ControlledCheckbox: React.FC<ControlledCheckboxProps> = ({
           />
         </Badge>
 
-        <FormHelperText {...formHelperTextProps}>
-          {error?.message}
-        </FormHelperText>
+        {(error?.message || description) && (
+          <FormHelperText {...formHelperTextProps}>
+            {error?.message || description}
+          </FormHelperText>
+        )}
       </FormControl>
     )}
   />

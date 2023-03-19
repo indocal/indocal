@@ -30,6 +30,7 @@ export const UsersItem: React.FC<UsersItemProps> = ({ field, item }) => {
       multiple={config?.multiple}
       name={`${field.id}.${item.title}`}
       label={item.title}
+      description={item.description}
       control={control}
       disabled={isSubmitting}
       textFieldProps={{

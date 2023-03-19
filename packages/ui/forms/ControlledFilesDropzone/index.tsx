@@ -25,6 +25,7 @@ import Dropzone, { DropzoneProps } from 'react-dropzone';
 
 export interface ControlledFilesDropzoneProps {
   name: string;
+  description?: string | null;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;
@@ -40,6 +41,7 @@ export const ControlledFilesDropzone: React.FC<
   ControlledFilesDropzoneProps
 > = ({
   name,
+  description,
   control,
   multiple,
   disabled,
@@ -135,7 +137,7 @@ export const ControlledFilesDropzone: React.FC<
                       ? 'Archivos no válidos'
                       : error
                       ? error.message
-                      : 'Arrastra y suelta archivos aquí'}
+                      : description || 'Arrastra y suelta archivos aquí'}
                   </FormHelperText>
                 </Stack>
 

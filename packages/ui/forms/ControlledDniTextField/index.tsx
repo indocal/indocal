@@ -25,6 +25,7 @@ const DniMask = forwardRef<HTMLElement, { onChange: (value: unknown) => void }>(
 export interface ControlledDniTextFieldProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   textFieldProps?: Omit<
@@ -42,6 +43,7 @@ export interface ControlledDniTextFieldProps {
 export const ControlledDniTextField: React.FC<ControlledDniTextFieldProps> = ({
   name,
   label,
+  description,
   control,
   controllerProps,
   textFieldProps,
@@ -59,7 +61,7 @@ export const ControlledDniTextField: React.FC<ControlledDniTextFieldProps> = ({
           value={value}
           onChange={onChange}
           error={Boolean(error)}
-          helperText={error?.message}
+          helperText={error?.message || description}
           InputProps={{
             inputComponent:
               DniMask as React.ElementType<InputBaseComponentProps>,

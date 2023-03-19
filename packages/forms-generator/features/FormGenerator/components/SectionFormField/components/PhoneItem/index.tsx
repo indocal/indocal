@@ -28,6 +28,7 @@ export const PhoneItem: React.FC<PhoneItemProps> = ({ field, item }) => {
     <ControlledPhoneTextField
       name={`${field.id}.${item.title}`}
       label={item.title}
+      description={item.description}
       control={control}
       textFieldProps={{
         size: 'small',

@@ -12,6 +12,7 @@ import { useFiles, File } from '@indocal/services';
 export interface ControlledFilesAutocompleteProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;
@@ -42,6 +43,7 @@ export const ControlledFilesAutocomplete: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   multiple,
   disabled,
@@ -108,7 +110,7 @@ export const ControlledFilesAutocomplete: React.FC<
                         acc ? `${acc} | ${current.message}` : current.message,
                       ``
                     )
-                  : fieldError?.message
+                  : fieldError?.message || description
               }
             />
           )}

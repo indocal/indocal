@@ -25,6 +25,7 @@ export const UsersFormField: React.FC<UsersFormFieldProps> = ({ field }) => {
       multiple={config?.multiple}
       name={field.id}
       label={field.title}
+      description={field.description}
       control={control}
       disabled={isSubmitting}
       controllerProps={{

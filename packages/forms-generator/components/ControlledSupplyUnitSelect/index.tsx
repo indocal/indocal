@@ -14,6 +14,7 @@ import { SupplyUnit, translateSupplyUnit } from '@indocal/services';
 export interface ControlledSupplyUnitSelectProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   disabled?: boolean;
   required?: boolean;
@@ -29,6 +30,7 @@ export const ControlledSupplyUnitSelect: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   disabled,
   required,
@@ -47,6 +49,7 @@ export const ControlledSupplyUnitSelect: React.FC<
     <ControlledSelect
       name={name}
       label={label}
+      description={description}
       control={control}
       controllerProps={controllerProps}
       formControlProps={{ required, disabled, ...formControlProps }}

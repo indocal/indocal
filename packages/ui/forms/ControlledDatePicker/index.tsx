@@ -5,6 +5,7 @@ import { Controller, ControllerProps, Control } from 'react-hook-form';
 export interface ControlledDatePickerProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   datePickerProps?: Omit<
@@ -17,6 +18,7 @@ export interface ControlledDatePickerProps {
 export const ControlledDatePicker: React.FC<ControlledDatePickerProps> = ({
   name,
   label,
+  description,
   control,
   controllerProps,
   datePickerProps,
@@ -37,7 +39,7 @@ export const ControlledDatePicker: React.FC<ControlledDatePickerProps> = ({
             {...params}
             {...textFieldProps}
             error={Boolean(error)}
-            helperText={error?.message}
+            helperText={error?.message || description}
           />
         )}
       />

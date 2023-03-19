@@ -13,6 +13,7 @@ import { Controller, ControllerProps, Control } from 'react-hook-form';
 export interface ControlledSelectProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   formControlProps?: Omit<FormControlProps, 'error'>;
@@ -26,6 +27,7 @@ export const ControlledSelect: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   controllerProps,
   formControlProps,
@@ -51,9 +53,11 @@ export const ControlledSelect: React.FC<
           {children}
         </Select>
 
-        <FormHelperText {...formHelperTextProps}>
-          {error?.message}
-        </FormHelperText>
+        {(error?.message || description) && (
+          <FormHelperText {...formHelperTextProps}>
+            {error?.message || description}
+          </FormHelperText>
+        )}
       </FormControl>
     )}
   />

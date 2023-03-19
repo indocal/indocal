@@ -12,6 +12,7 @@ import { useSupplies, Supply } from '@indocal/services';
 export interface ControlledSuppliesAutocompleteProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;
@@ -41,6 +42,7 @@ export const ControlledSuppliesAutocomplete: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   multiple,
   disabled,
@@ -104,7 +106,7 @@ export const ControlledSuppliesAutocomplete: React.FC<
                         acc ? `${acc} | ${current.message}` : current.message,
                       ``
                     )
-                  : fieldError?.message
+                  : fieldError?.message || description
               }
             />
           )}

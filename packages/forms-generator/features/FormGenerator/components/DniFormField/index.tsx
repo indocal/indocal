@@ -23,6 +23,7 @@ export const DniFormField: React.FC<DniFormFieldProps> = ({ field }) => {
     <ControlledDniTextField
       name={field.id}
       label={field.title}
+      description={field.description}
       control={control}
       textFieldProps={{
         required: config?.required,

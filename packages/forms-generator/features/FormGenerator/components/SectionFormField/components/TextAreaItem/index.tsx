@@ -59,8 +59,9 @@ export const TextAreaItem: React.FC<TextAreaItemProps> = ({ field, item }) => {
         Boolean((errors[field.id] as FieldErrors)[item.title])
       }
       helperText={
-        errors[field.id] &&
-        ((errors[field.id] as FieldErrors)[item.title]?.message as string)
+        (errors[field.id] &&
+          ((errors[field.id] as FieldErrors)[item.title]?.message as string)) ||
+        item.description
       }
     />
   );

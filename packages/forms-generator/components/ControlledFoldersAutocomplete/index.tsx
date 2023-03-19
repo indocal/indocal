@@ -12,6 +12,7 @@ import { useFolders, Folder } from '@indocal/services';
 export interface ControlledFoldersAutocompleteProps {
   name: string;
   label?: string;
+  description?: string | null;
   control: Control;
   multiple?: boolean;
   disabled?: boolean;
@@ -42,6 +43,7 @@ export const ControlledFoldersAutocomplete: React.FC<
 > = ({
   name,
   label,
+  description,
   control,
   multiple,
   disabled,
@@ -104,7 +106,7 @@ export const ControlledFoldersAutocomplete: React.FC<
                         acc ? `${acc} | ${current.message}` : current.message,
                       ``
                     )
-                  : fieldError?.message
+                  : fieldError?.message || description
               }
             />
           )}

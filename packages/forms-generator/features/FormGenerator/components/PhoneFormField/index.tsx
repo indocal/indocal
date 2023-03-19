@@ -23,6 +23,7 @@ export const PhoneFormField: React.FC<PhoneFormFieldProps> = ({ field }) => {
     <ControlledPhoneTextField
       name={field.id}
       label={field.title}
+      description={field.description}
       control={control}
       textFieldProps={{
         required: config?.required,

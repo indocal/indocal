@@ -24,6 +24,7 @@ export const DateFormField: React.FC<DateFormFieldProps> = ({ field }) => {
     <ControlledDatePicker
       name={field.id}
       label={field.title}
+      description={field.description}
       control={control}
       datePickerProps={{ disabled: isSubmitting }}
       textFieldProps={{ required: config?.required }}

@@ -29,6 +29,7 @@ export const SelectItem: React.FC<SelectItemProps> = ({ field, item }) => {
     <ControlledSelect
       name={`${field.id}.${item.title}`}
       label={item.title}
+      description={item.description}
       control={control}
       formControlProps={{
         size: 'small',

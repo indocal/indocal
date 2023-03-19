@@ -30,7 +30,7 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
 
-        ...(errors[field.id] && {
+        ...((errors[field.id] || field.description) && {
           paddingBottom: (theme) => theme.spacing(1.5),
         }),
       }}
@@ -38,6 +38,7 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
       <ControlledRadioGroup
         name={field.id}
         label={field.title}
+        description={field.description}
         control={control}
         formControlProps={{
           required: config?.required,
