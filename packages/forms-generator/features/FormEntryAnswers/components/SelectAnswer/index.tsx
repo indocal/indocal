@@ -10,7 +10,11 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+import { ExpandMore as ViewOptionsIcon } from '@mui/icons-material';
 
 import { NoData } from '@indocal/ui';
 import {
@@ -70,46 +74,51 @@ export const SelectAnswer: React.FC<SelectAnswerProps> = ({ answer }) => {
       </Stack>
 
       {typeof content === 'string' || content?.length ? (
-        <Stack spacing={1}>
-          {typeof content === 'string' ? (
-            <FormControlLabel
-              label={content}
-              control={<Radio disableRipple checked />}
-            />
-          ) : (
-            <RadioGroup row>
-              {content.map((option) => (
-                <FormControlLabel
-                  key={option}
-                  label={option}
-                  control={<Radio disableRipple checked />}
-                />
-              ))}
-            </RadioGroup>
-          )}
-
-          {config?.options && (
-            <FormControl
-              disabled
-              sx={{
-                paddingTop: (theme) => theme.spacing(1),
-                borderTop: (theme) => `1px dashed ${theme.palette.divider}`,
-              }}
-            >
-              <FormLabel>Opciones</FormLabel>
-
+        <Accordion>
+          <AccordionSummary expandIcon={<ViewOptionsIcon />}>
+            {typeof content === 'string' ? (
+              <FormControlLabel
+                label={content}
+                control={<Radio disableRipple checked />}
+              />
+            ) : (
               <RadioGroup row>
-                {config.options.map((option) => (
+                {content.map((option) => (
                   <FormControlLabel
                     key={option}
                     label={option}
-                    control={<Radio checked={false} />}
+                    control={<Radio disableRipple checked />}
                   />
                 ))}
               </RadioGroup>
-            </FormControl>
-          )}
-        </Stack>
+            )}
+          </AccordionSummary>
+
+          <AccordionDetails>
+            {config?.options && (
+              <FormControl
+                fullWidth
+                disabled
+                sx={{
+                  paddingTop: (theme) => theme.spacing(1),
+                  borderTop: (theme) => `1px dashed ${theme.palette.divider}`,
+                }}
+              >
+                <FormLabel>Opciones</FormLabel>
+
+                <RadioGroup row>
+                  {config.options.map((option) => (
+                    <FormControlLabel
+                      key={option}
+                      label={option}
+                      control={<Radio checked={false} />}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            )}
+          </AccordionDetails>
+        </Accordion>
       ) : (
         <NoData message="Campo no respondido" />
       )}

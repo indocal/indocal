@@ -10,7 +10,11 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+import { ExpandMore as ViewOptionsIcon } from '@mui/icons-material';
 
 import { NoData } from '@indocal/ui';
 import {
@@ -71,34 +75,39 @@ export const RadioItemAnswer: React.FC<RadioItemAnswerProps> = ({ answer }) => {
       </Stack>
 
       {content ? (
-        <Stack spacing={1}>
-          <FormControlLabel
-            label={content}
-            control={<Radio disableRipple checked={Boolean(content)} />}
-          />
+        <Accordion>
+          <AccordionSummary expandIcon={<ViewOptionsIcon />}>
+            <FormControlLabel
+              label={content}
+              control={<Radio disableRipple checked={Boolean(content)} />}
+            />
+          </AccordionSummary>
 
-          {config?.options && (
-            <FormControl
-              disabled
-              sx={{
-                paddingTop: (theme) => theme.spacing(1),
-                borderTop: (theme) => `1px dashed ${theme.palette.divider}`,
-              }}
-            >
-              <FormLabel>Opciones</FormLabel>
+          <AccordionDetails>
+            {config?.options && (
+              <FormControl
+                fullWidth
+                disabled
+                sx={{
+                  paddingTop: (theme) => theme.spacing(1),
+                  borderTop: (theme) => `1px dashed ${theme.palette.divider}`,
+                }}
+              >
+                <FormLabel>Opciones</FormLabel>
 
-              <RadioGroup row>
-                {config.options.map((option) => (
-                  <FormControlLabel
-                    key={option}
-                    label={option}
-                    control={<Radio checked={false} />}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          )}
-        </Stack>
+                <RadioGroup row>
+                  {config.options.map((option) => (
+                    <FormControlLabel
+                      key={option}
+                      label={option}
+                      control={<Radio checked={false} />}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            )}
+          </AccordionDetails>
+        </Accordion>
       ) : (
         <NoData message="Campo no respondido" />
       )}
