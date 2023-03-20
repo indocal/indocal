@@ -1,5 +1,15 @@
-import { useMemo, createElement } from 'react';
-import { Paper, Stack, Divider, Typography, Chip } from '@mui/material';
+import { useState, useMemo, createElement } from 'react';
+import {
+  Paper,
+  Stack,
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Chip,
+} from '@mui/material';
+import { ExpandMore as ViewOptionsIcon } from '@mui/icons-material';
 
 import { NoData } from '@indocal/ui';
 import {
@@ -30,6 +40,8 @@ export interface SectionAnswerProps {
 }
 
 export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
+  const [expand, setExpand] = useState(false);
+
   const content = useMemo(
     () => answer.content as SectionFormFieldAnswer | null,
     [answer]
@@ -61,52 +73,72 @@ export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
   );
 
   return (
-    <Stack
-      component={Paper}
-      spacing={1}
-      divider={<Divider flexItem />}
-      sx={{ padding: (theme) => theme.spacing(2) }}
+    <Paper
+      component={Accordion}
+      disableGutters
+      expanded={expand}
+      onChange={() => setExpand(!expand)}
+      sx={{ '&:before': { display: 'none' } }}
     >
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        spacing={1}
-      >
-        <Stack>
-          <Typography variant="h6">{answer.field.title}</Typography>
+      <AccordionSummary>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+          sx={{ width: '100%' }}
+        >
+          <Stack>
+            <Typography variant="h6">{answer.field.title}</Typography>
 
-          {answer.field.description && (
-            <Typography
-              component="pre"
-              variant="caption"
-              color="text.secondary"
+            {answer.field.description && (
+              <Typography
+                component="pre"
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {answer.field.description}
+              </Typography>
+            )}
+          </Stack>
+
+          <Stack alignSelf="flex-start" alignItems="center" spacing={1}>
+            <Chip label={translateFormFieldType(answer.field.type)} />
+
+            <ViewOptionsIcon
               sx={{
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
+                transform: expand ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
               }}
-            >
-              {answer.field.description}
-            </Typography>
-          )}
+            />
+          </Stack>
         </Stack>
+      </AccordionSummary>
 
-        <Chip label={translateFormFieldType(answer.field.type)} />
-      </Stack>
-
-      {content && content.length > 0 ? (
-        <Stack spacing={1} divider={<Divider flexItem />}>
-          {content.map((answer) =>
-            createElement(answers[answer.item.type], {
-              key: answer.item.title,
-              answer,
-            })
-          )}
-        </Stack>
-      ) : (
-        <NoData message="Campo no respondido" />
-      )}
-    </Stack>
+      <AccordionDetails
+        sx={{
+          marginX: (theme) => theme.spacing(2),
+          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        {content && content.length > 0 ? (
+          <Stack spacing={1} divider={<Divider flexItem />}>
+            {content.map((answer) =>
+              createElement(answers[answer.item.type], {
+                key: answer.item.title,
+                answer,
+              })
+            )}
+          </Stack>
+        ) : (
+          <NoData message="Campo no respondido" />
+        )}
+      </AccordionDetails>
+    </Paper>
   );
 };
 

@@ -74,7 +74,7 @@ export const RadioAnswer: React.FC<RadioAnswerProps> = ({ answer }) => {
       </Stack>
 
       {content ? (
-        <Accordion>
+        <Accordion disableGutters sx={{ '&:before': { display: 'none' } }}>
           <AccordionSummary expandIcon={<ViewOptionsIcon />}>
             <FormControlLabel
               label={content}

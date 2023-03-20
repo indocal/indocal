@@ -1,8 +1,10 @@
-import { useMemo, createElement } from 'react';
+import { useState, useMemo, createElement } from 'react';
 import {
   Paper,
   Stack,
-  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
   Chip,
   TableContainer,
@@ -12,6 +14,7 @@ import {
   TableRow,
   TableCell,
 } from '@mui/material';
+import { ExpandMore as ViewOptionsIcon } from '@mui/icons-material';
 
 import { NoData } from '@indocal/ui';
 import {
@@ -43,6 +46,8 @@ export interface TableAnswerProps {
 }
 
 export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
+  const [expand, setExpand] = useState(false);
+
   const config = useMemo(
     () => answer.field.config as TableFormFieldConfig | null,
     [answer]
@@ -79,97 +84,116 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
   );
 
   return (
-    <Stack
-      component={Paper}
-      spacing={1}
-      divider={<Divider flexItem />}
-      sx={{ padding: (theme) => theme.spacing(2) }}
+    <Paper
+      component={Accordion}
+      disableGutters
+      expanded={expand}
+      onChange={() => setExpand(!expand)}
+      sx={{ '&:before': { display: 'none' } }}
     >
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        spacing={1}
-      >
-        <Stack>
-          <Typography variant="h6">{answer.field.title}</Typography>
+      <AccordionSummary>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+          sx={{ width: '100%' }}
+        >
+          <Stack>
+            <Typography variant="h6">{answer.field.title}</Typography>
 
-          {answer.field.description && (
-            <Typography
-              component="pre"
-              variant="caption"
-              color="text.secondary"
+            {answer.field.description && (
+              <Typography
+                component="pre"
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {answer.field.description}
+              </Typography>
+            )}
+          </Stack>
+
+          <Stack alignSelf="flex-start" alignItems="center" spacing={1}>
+            <Chip label={translateFormFieldType(answer.field.type)} />
+
+            <ViewOptionsIcon
               sx={{
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
+                transform: expand ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
               }}
-            >
-              {answer.field.description}
-            </Typography>
-          )}
+            />
+          </Stack>
         </Stack>
+      </AccordionSummary>
 
-        <Chip label={translateFormFieldType(answer.field.type)} />
-      </Stack>
+      <AccordionDetails
+        sx={{
+          marginX: (theme) => theme.spacing(2),
+          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        {content && content.length > 0 ? (
+          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <TableContainer sx={{ maxHeight: 500 }}>
+              <Table stickyHeader size="small">
+                {config && config.columns && config.columns.length && (
+                  <TableHead>
+                    <TableRow>
+                      {config.columns.map((column) => (
+                        <TableCell
+                          key={column.heading}
+                          align="center"
+                          sx={{
+                            ':not(:last-child)': {
+                              borderRight: (theme) =>
+                                `1px solid ${theme.palette.divider}`,
+                            },
+                          }}
+                        >
+                          {column.heading}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                )}
 
-      {content && content.length > 0 ? (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer sx={{ maxHeight: 500 }}>
-            <Table stickyHeader size="small">
-              {config && config.columns && config.columns.length && (
-                <TableHead>
-                  <TableRow>
-                    {config.columns.map((column) => (
-                      <TableCell
-                        key={column.heading}
-                        align="center"
-                        sx={{
-                          ':not(:last-child)': {
-                            borderRight: (theme) =>
-                              `1px solid ${theme.palette.divider}`,
-                          },
-                        }}
-                      >
-                        {column.heading}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-              )}
-
-              <TableBody>
-                {content.map((row, index) => (
-                  <TableRow key={index}>
-                    {row.map((answer) => (
-                      <TableCell
-                        key={answer.column.heading}
-                        align="center"
-                        sx={{
-                          minWidth: 225,
-                          ':not(:last-child)': {
-                            borderRight: (theme) =>
-                              `1px solid ${theme.palette.divider}`,
-                          },
-                        }}
-                      >
-                        {createElement(answers[answer.column.type], {
-                          key: answer.column.heading,
-                          answer,
-                        })}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      ) : (
-        <NoData message="Campo no respondido" />
-      )}
-    </Stack>
+                <TableBody>
+                  {content.map((row, index) => (
+                    <TableRow key={index}>
+                      {row.map((answer) => (
+                        <TableCell
+                          key={answer.column.heading}
+                          align="center"
+                          sx={{
+                            minWidth: 225,
+                            ':not(:last-child)': {
+                              borderRight: (theme) =>
+                                `1px solid ${theme.palette.divider}`,
+                            },
+                          }}
+                        >
+                          {createElement(answers[answer.column.type], {
+                            key: answer.column.heading,
+                            answer,
+                          })}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        ) : (
+          <NoData message="Campo no respondido" />
+        )}
+      </AccordionDetails>
+    </Paper>
   );
 };
 
 export default TableAnswer;
-// TODO: improve table answer

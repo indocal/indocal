@@ -74,7 +74,7 @@ export const SelectAnswer: React.FC<SelectAnswerProps> = ({ answer }) => {
       </Stack>
 
       {typeof content === 'string' || content?.length ? (
-        <Accordion>
+        <Accordion disableGutters sx={{ '&:before': { display: 'none' } }}>
           <AccordionSummary expandIcon={<ViewOptionsIcon />}>
             {typeof content === 'string' ? (
               <FormControlLabel
