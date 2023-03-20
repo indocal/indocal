@@ -43,7 +43,6 @@ export const WebhookColumnConfig: React.FC<WebhookColumnConfigProps> = ({
           label="Key"
           disabled={isSubmitting}
           inputProps={register(`config.columns.${column}.config.webhook.key`)}
-          defaultValue={`column_${column}`}
           error={
             errors.config?.columns &&
             errors.config.columns[column] &&

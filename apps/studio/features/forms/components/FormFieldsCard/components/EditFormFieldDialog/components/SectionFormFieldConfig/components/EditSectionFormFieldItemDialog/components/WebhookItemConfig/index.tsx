@@ -43,7 +43,6 @@ export const WebhookItemConfig: React.FC<WebhookItemConfigProps> = ({
           label="Key"
           disabled={isSubmitting}
           inputProps={register(`config.items.${item}.config.webhook.key`)}
-          defaultValue={`item_${item}`}
           error={
             errors.config?.items &&
             errors.config.items[item] &&

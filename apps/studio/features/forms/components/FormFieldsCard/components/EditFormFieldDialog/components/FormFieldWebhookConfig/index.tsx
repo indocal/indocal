@@ -10,9 +10,9 @@ export interface FormFieldWebhookConfigProps {
   field: Form['fields'][number];
 }
 
-export const FormFieldWebhookConfig: React.FC<FormFieldWebhookConfigProps> = ({
-  field,
-}) => {
+export const FormFieldWebhookConfig: React.FC<
+  FormFieldWebhookConfigProps
+> = () => {
   const {
     formState: { isSubmitting, errors },
     register,
@@ -44,7 +44,6 @@ export const FormFieldWebhookConfig: React.FC<FormFieldWebhookConfigProps> = ({
           label="Key"
           disabled={isSubmitting}
           inputProps={register('config.webhook.key')}
-          defaultValue={field.id}
           error={Boolean(errors.config?.webhook?.key)}
           helperText={errors.config?.webhook?.key?.message}
         />
