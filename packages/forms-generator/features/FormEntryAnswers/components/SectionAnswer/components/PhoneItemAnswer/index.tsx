@@ -48,6 +48,10 @@ export const PhoneItemAnswer: React.FC<PhoneItemAnswerProps> = ({ answer }) => {
               component="pre"
               variant="caption"
               color="text.secondary"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
             >
               {answer.item.description}
             </Typography>

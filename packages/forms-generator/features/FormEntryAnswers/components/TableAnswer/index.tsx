@@ -99,6 +99,10 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
               component="pre"
               variant="caption"
               color="text.secondary"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
             >
               {answer.field.description}
             </Typography>
@@ -168,3 +172,4 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
 };
 
 export default TableAnswer;
+// TODO: improve table answer

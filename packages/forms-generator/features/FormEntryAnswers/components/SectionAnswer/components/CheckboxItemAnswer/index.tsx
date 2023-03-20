@@ -50,6 +50,10 @@ export const CheckboxItemAnswer: React.FC<CheckboxItemAnswerProps> = ({
               component="pre"
               variant="caption"
               color="text.secondary"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
             >
               {answer.item.description}
             </Typography>

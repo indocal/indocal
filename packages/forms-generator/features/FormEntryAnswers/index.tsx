@@ -58,7 +58,7 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
   );
 
   return (
-    <Stack divider={<Divider flexItem />} spacing={1}>
+    <Stack spacing={1} divider={<Divider flexItem />}>
       {entry.answers.map((answer) =>
         createElement(answers[answer.field.type], {
           key: answer.field.id,

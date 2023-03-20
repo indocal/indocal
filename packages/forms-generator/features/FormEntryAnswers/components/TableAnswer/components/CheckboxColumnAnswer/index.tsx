@@ -20,7 +20,7 @@ export const CheckboxColumnAnswer: React.FC<CheckboxColumnAnswerProps> = ({
   );
 
   return (
-    <Paper elevation={5} sx={{ padding: (theme) => theme.spacing(1) }}>
+    <Paper elevation={5}>
       {typeof content === 'boolean' ? (
         <FormControlLabel
           label={content ? 'Sí' : 'No'}

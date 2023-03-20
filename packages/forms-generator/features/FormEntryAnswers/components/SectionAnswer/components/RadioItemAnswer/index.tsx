@@ -57,6 +57,10 @@ export const RadioItemAnswer: React.FC<RadioItemAnswerProps> = ({ answer }) => {
               component="pre"
               variant="caption"
               color="text.secondary"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
             >
               {answer.item.description}
             </Typography>

@@ -42,6 +42,10 @@ export const UsersItemAnswer: React.FC<UsersItemAnswerProps> = ({ answer }) => {
               component="pre"
               variant="caption"
               color="text.secondary"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
             >
               {answer.item.description}
             </Typography>

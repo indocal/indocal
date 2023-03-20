@@ -20,7 +20,7 @@ export const RadioColumnAnswer: React.FC<RadioColumnAnswerProps> = ({
   );
 
   return (
-    <Paper elevation={5} sx={{ padding: (theme) => theme.spacing(1) }}>
+    <Paper elevation={5} sx={{ paddingX: (theme) => theme.spacing(1) }}>
       {content ? (
         <Stack spacing={1}>
           <FormControlLabel

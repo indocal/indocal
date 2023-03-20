@@ -81,6 +81,10 @@ export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
               component="pre"
               variant="caption"
               color="text.secondary"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
             >
               {answer.field.description}
             </Typography>
@@ -91,7 +95,7 @@ export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
       </Stack>
 
       {content && content.length > 0 ? (
-        <Stack divider={<Divider flexItem />} spacing={1}>
+        <Stack spacing={1} divider={<Divider flexItem />}>
           {content.map((answer) =>
             createElement(answers[answer.item.type], {
               key: answer.item.title,

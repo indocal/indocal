@@ -21,7 +21,7 @@ export const EmailColumnAnswer: React.FC<EmailColumnAnswerProps> = ({
   );
 
   return (
-    <Paper elevation={5} sx={{ padding: (theme) => theme.spacing(1) }}>
+    <Paper elevation={5} sx={{ padding: (theme) => theme.spacing(0.5) }}>
       {content ? (
         <Stack
           direction="row"

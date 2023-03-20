@@ -56,6 +56,10 @@ export const RadioAnswer: React.FC<RadioAnswerProps> = ({ answer }) => {
               component="pre"
               variant="caption"
               color="text.secondary"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
             >
               {answer.field.description}
             </Typography>
