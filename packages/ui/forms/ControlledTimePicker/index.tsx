@@ -8,10 +8,7 @@ export interface ControlledTimePickerProps {
   description?: string | null;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
-  timePickerProps?: Omit<
-    TimePickerProps<Date>,
-    'label' | 'value' | 'onChange' | 'renderInput'
-  >;
+  timePickerProps?: Omit<TimePickerProps<Date>, 'label' | 'value' | 'onChange'>;
   textFieldProps?: Omit<TextFieldProps, 'error' | 'helperText'>;
 }
 

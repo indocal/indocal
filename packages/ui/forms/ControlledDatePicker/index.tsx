@@ -8,10 +8,7 @@ export interface ControlledDatePickerProps {
   description?: string | null;
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
-  datePickerProps?: Omit<
-    DatePickerProps<Date>,
-    'label' | 'value' | 'onChange' | 'renderInput'
-  >;
+  datePickerProps?: Omit<DatePickerProps<Date>, 'label' | 'value' | 'onChange'>;
   textFieldProps?: Omit<TextFieldProps, 'error' | 'helperText'>;
 }
 

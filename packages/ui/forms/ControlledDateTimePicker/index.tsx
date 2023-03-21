@@ -10,7 +10,7 @@ export interface ControlledDateTimePickerProps {
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   dateTimePickerProps?: Omit<
     DateTimePickerProps<Date>,
-    'label' | 'value' | 'onChange' | 'renderInput'
+    'label' | 'value' | 'onChange'
   >;
   textFieldProps?: Omit<TextFieldProps, 'error' | 'helperText'>;
 }
