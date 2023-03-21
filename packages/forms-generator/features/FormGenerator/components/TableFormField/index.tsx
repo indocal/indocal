@@ -139,7 +139,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
         <Badge
           badgeContent="*"
           invisible={!config?.required}
-          componentsProps={{ badge: { style: { top: 5, right: -5 } } }}
+          slotProps={{ badge: { style: { top: 5, right: -5 } } }}
           sx={{
             ...(errors[field.id]?.root && {
               color: (theme) => theme.palette.error.main,

@@ -36,7 +36,7 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
       <Badge
         badgeContent="*"
         invisible={!config?.required}
-        componentsProps={{
+        slotProps={{
           badge: { style: { top: 5, right: -5 } },
         }}
         sx={{

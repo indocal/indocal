@@ -11,7 +11,7 @@ import {
 } from './components';
 
 export interface EnhancedDataGridProps
-  extends Omit<DataGridProps, 'components' | 'componentsProps'> {
+  extends Omit<DataGridProps, 'components' | 'slotProps'> {
   quickFilterProps?: GridToolbarQuickFilterProps;
 }
 

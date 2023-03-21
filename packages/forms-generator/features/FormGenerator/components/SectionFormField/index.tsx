@@ -78,7 +78,7 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
         component="legend"
         badgeContent="*"
         invisible={!config?.required}
-        componentsProps={{ badge: { style: { top: 7.5, right: 5 } } }}
+        slotProps={{ badge: { style: { top: 7.5, right: 5 } } }}
         sx={{
           ...(errors[field.id] && {
             color: (theme) => theme.palette.error.main,

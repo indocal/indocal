@@ -43,7 +43,7 @@ export const ControlledCheckbox: React.FC<ControlledCheckboxProps> = ({
         <Badge
           badgeContent="*"
           invisible={!formControlProps?.required}
-          componentsProps={{
+          slotProps={{
             badge: {
               style: label ? { top: 15, right: 10 } : { top: 10, right: 20 },
             },
