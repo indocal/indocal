@@ -18,7 +18,7 @@ const SuppliersDataGrid: React.FC = () => {
     validating,
     suppliers,
     count,
-    error: serviceError,
+
     refetch,
   } = useSuppliers({
     ...(search && {
@@ -60,7 +60,6 @@ const SuppliersDataGrid: React.FC = () => {
         onRefreshButtonClick={ability.can('read', 'supplier') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
-          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',
@@ -71,11 +70,14 @@ const SuppliersDataGrid: React.FC = () => {
 
           paginationMode: 'server',
           rowCount: count,
-          page: pagination.page,
-          pageSize: pagination.pageSize,
-          onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
-          onPageSizeChange: (pageSize) =>
-            setPagination((prev) => ({ ...prev, pageSize })),
+          paginationModel: {
+            page: pagination.page,
+            pageSize: pagination.pageSize,
+          },
+          onPaginationModelChange: ({ page, pageSize }) => {
+            setPagination((prev) => ({ ...prev, page }));
+            setPagination((prev) => ({ ...prev, pageSize }));
+          },
         }}
       />
     </>

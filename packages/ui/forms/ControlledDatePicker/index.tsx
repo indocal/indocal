@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from '@mui/material';
+import { TextFieldProps } from '@mui/material';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers';
 import { Controller, ControllerProps, Control } from 'react-hook-form';
 
@@ -9,7 +9,7 @@ export interface ControlledDatePickerProps {
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   datePickerProps?: Omit<
-    DatePickerProps<Date, Date>,
+    DatePickerProps<Date>,
     'label' | 'value' | 'onChange' | 'renderInput'
   >;
   textFieldProps?: Omit<TextFieldProps, 'error' | 'helperText'>;
@@ -34,14 +34,13 @@ export const ControlledDatePicker: React.FC<ControlledDatePickerProps> = ({
         label={label}
         value={value ?? null}
         onChange={(value) => onChange(value)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            {...textFieldProps}
-            error={Boolean(error)}
-            helperText={error?.message || description}
-          />
-        )}
+        slotProps={{
+          textField: {
+            ...textFieldProps,
+            error: Boolean(error),
+            helperText: error?.message || description,
+          },
+        }}
       />
     )}
   />

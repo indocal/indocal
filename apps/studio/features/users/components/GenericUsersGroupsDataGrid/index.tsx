@@ -7,7 +7,7 @@ import {
   Launch as ViewDetailsIcon,
   Delete as DeleteIcon,
 } from '@mui/icons-material';
-import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
@@ -66,7 +66,7 @@ export const GenericUsersGroupsDataGrid: React.FC<
     [onRefreshButtonClick, enqueueSnackbar]
   );
 
-  const columns = useMemo<GridColumns>(
+  const columns = useMemo<GridColDef[]>(
     () => [
       {
         field: 'actions',
@@ -195,7 +195,7 @@ export const GenericUsersGroupsDataGrid: React.FC<
           columns={columns}
           rows={rows}
           disableColumnMenu
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           sx={{ border: 'none' }}
           {...enhancedDataGridProps}
         />

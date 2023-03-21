@@ -6,7 +6,7 @@ import {
   AddCircle as AddIcon,
   Launch as ViewDetailsIcon,
 } from '@mui/icons-material';
-import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import { Can, getShortUUID, FormEntry } from '@indocal/services';
@@ -30,7 +30,7 @@ export const GenericFormsEntriesDataGrid: React.FC<
   onAddButtonClick,
   enhancedDataGridProps,
 }) => {
-  const columns = useMemo<GridColumns>(
+  const columns = useMemo<GridColDef[]>(
     () => [
       {
         field: 'actions',
@@ -151,7 +151,7 @@ export const GenericFormsEntriesDataGrid: React.FC<
           columns={columns}
           rows={rows}
           disableColumnMenu
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           sx={{ border: 'none' }}
           {...enhancedDataGridProps}
         />

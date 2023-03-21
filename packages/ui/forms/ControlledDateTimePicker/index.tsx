@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from '@mui/material';
+import { TextFieldProps } from '@mui/material';
 import { DateTimePicker, DateTimePickerProps } from '@mui/x-date-pickers';
 import { Controller, ControllerProps, Control } from 'react-hook-form';
 
@@ -9,7 +9,7 @@ export interface ControlledDateTimePickerProps {
   control: Control;
   controllerProps?: Omit<ControllerProps, 'name' | 'control' | 'render'>;
   dateTimePickerProps?: Omit<
-    DateTimePickerProps<Date, Date>,
+    DateTimePickerProps<Date>,
     'label' | 'value' | 'onChange' | 'renderInput'
   >;
   textFieldProps?: Omit<TextFieldProps, 'error' | 'helperText'>;
@@ -36,14 +36,13 @@ export const ControlledDateTimePicker: React.FC<
         label={label}
         value={value ?? null}
         onChange={(value) => onChange(value)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            {...textFieldProps}
-            error={Boolean(error)}
-            helperText={error?.message || description}
-          />
-        )}
+        slotProps={{
+          textField: {
+            ...textFieldProps,
+            error: Boolean(error),
+            helperText: error?.message || description,
+          },
+        }}
       />
     )}
   />

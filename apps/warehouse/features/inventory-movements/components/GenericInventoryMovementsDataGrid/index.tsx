@@ -11,7 +11,7 @@ import {
   SwapHoriz as TransferIcon,
   SignLanguage as DischargeIcon,
 } from '@mui/icons-material';
-import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import {
@@ -52,7 +52,7 @@ export const GenericInventoryMovementsDataGrid: React.FC<
     []
   );
 
-  const columns = useMemo<GridColumns>(
+  const columns = useMemo<GridColDef[]>(
     () => [
       {
         field: 'actions',
@@ -176,7 +176,7 @@ export const GenericInventoryMovementsDataGrid: React.FC<
           columns={columns}
           rows={rows}
           disableColumnMenu
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           sx={{ border: 'none' }}
           {...enhancedDataGridProps}
         />

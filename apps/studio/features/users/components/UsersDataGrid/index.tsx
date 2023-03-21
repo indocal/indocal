@@ -18,7 +18,7 @@ const UsersDataGrid: React.FC = () => {
     validating,
     users,
     count,
-    error: serviceError,
+
     refetch,
   } = useUsers({
     ...(search && {
@@ -60,7 +60,6 @@ const UsersDataGrid: React.FC = () => {
         onRefreshButtonClick={ability.can('read', 'user') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
-          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',
@@ -71,11 +70,14 @@ const UsersDataGrid: React.FC = () => {
 
           paginationMode: 'server',
           rowCount: count,
-          page: pagination.page,
-          pageSize: pagination.pageSize,
-          onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
-          onPageSizeChange: (pageSize) =>
-            setPagination((prev) => ({ ...prev, pageSize })),
+          paginationModel: {
+            page: pagination.page,
+            pageSize: pagination.pageSize,
+          },
+          onPaginationModelChange: ({ page, pageSize }) => {
+            setPagination((prev) => ({ ...prev, page }));
+            setPagination((prev) => ({ ...prev, pageSize }));
+          },
         }}
       />
     </>

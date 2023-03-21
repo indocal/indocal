@@ -18,7 +18,7 @@ const OrdersDataGrid: React.FC = () => {
     validating,
     orders,
     count,
-    error: serviceError,
+
     refetch,
   } = useOrders({
     ...(search && {
@@ -59,7 +59,6 @@ const OrdersDataGrid: React.FC = () => {
         onRefreshButtonClick={ability.can('read', 'order') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
-          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',
@@ -70,11 +69,14 @@ const OrdersDataGrid: React.FC = () => {
 
           paginationMode: 'server',
           rowCount: count,
-          page: pagination.page,
-          pageSize: pagination.pageSize,
-          onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
-          onPageSizeChange: (pageSize) =>
-            setPagination((prev) => ({ ...prev, pageSize })),
+          paginationModel: {
+            page: pagination.page,
+            pageSize: pagination.pageSize,
+          },
+          onPaginationModelChange: ({ page, pageSize }) => {
+            setPagination((prev) => ({ ...prev, page }));
+            setPagination((prev) => ({ ...prev, pageSize }));
+          },
         }}
       />
     </>

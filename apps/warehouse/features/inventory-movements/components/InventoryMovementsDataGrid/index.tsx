@@ -21,7 +21,7 @@ const InventoryMovementsDataGrid: React.FC = () => {
     validating,
     movements,
     count,
-    error: serviceError,
+
     refetch,
   } = useInventoryMovements({
     ...(search && {
@@ -68,7 +68,6 @@ const InventoryMovementsDataGrid: React.FC = () => {
         }
         enhancedDataGridProps={{
           loading: loading || validating,
-          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',
@@ -79,11 +78,14 @@ const InventoryMovementsDataGrid: React.FC = () => {
 
           paginationMode: 'server',
           rowCount: count,
-          page: pagination.page,
-          pageSize: pagination.pageSize,
-          onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
-          onPageSizeChange: (pageSize) =>
-            setPagination((prev) => ({ ...prev, pageSize })),
+          paginationModel: {
+            page: pagination.page,
+            pageSize: pagination.pageSize,
+          },
+          onPaginationModelChange: ({ page, pageSize }) => {
+            setPagination((prev) => ({ ...prev, page }));
+            setPagination((prev) => ({ ...prev, pageSize }));
+          },
         }}
       />
     </>

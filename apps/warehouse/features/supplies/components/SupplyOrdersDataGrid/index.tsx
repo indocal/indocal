@@ -13,7 +13,7 @@ import {
   Refresh as RefreshIcon,
   Launch as ViewDetailsIcon,
 } from '@mui/icons-material';
-import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 
 import { EnhancedDataGrid } from '@indocal/ui';
 import {
@@ -42,7 +42,7 @@ export const SupplyOrdersDataGrid: React.FC<SupplyOrdersDataGridProps> = ({
     validating,
     orders,
     count,
-    error: serviceError,
+
     refetch,
   } = useOrders({
     filters: {
@@ -72,7 +72,7 @@ export const SupplyOrdersDataGrid: React.FC<SupplyOrdersDataGridProps> = ({
     []
   );
 
-  const columns = useMemo<GridColumns>(
+  const columns = useMemo<GridColDef[]>(
     () => [
       {
         field: 'actions',
@@ -224,7 +224,7 @@ export const SupplyOrdersDataGrid: React.FC<SupplyOrdersDataGridProps> = ({
       <Box sx={{ height: 'calc(100% - 75px)' }}>
         <EnhancedDataGrid
           disableColumnMenu
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           columns={columns}
           rows={rows}
           density="compact"

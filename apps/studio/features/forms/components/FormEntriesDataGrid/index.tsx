@@ -22,7 +22,7 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
     validating,
     entries,
     count,
-    error: serviceError,
+
     refetch,
   } = useFormsEntries({
     filters: {
@@ -67,7 +67,6 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
       enhancedDataGridProps={{
         density: 'compact',
         loading: loading || validating,
-        error: serviceError,
 
         quickFilterProps: { placeholder: 'Buscar...' },
         filterMode: 'server',
@@ -78,11 +77,14 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
 
         paginationMode: 'server',
         rowCount: count,
-        page: pagination.page,
-        pageSize: pagination.pageSize,
-        onPageChange: (page) => setPagination((prev) => ({ ...prev, page })),
-        onPageSizeChange: (pageSize) =>
-          setPagination((prev) => ({ ...prev, pageSize })),
+        paginationModel: {
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+        },
+        onPaginationModelChange: ({ page, pageSize }) => {
+          setPagination((prev) => ({ ...prev, page }));
+          setPagination((prev) => ({ ...prev, pageSize }));
+        },
       }}
     />
   );

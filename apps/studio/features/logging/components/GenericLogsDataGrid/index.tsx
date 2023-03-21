@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Box, Paper, Stack, Typography, IconButton } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
-import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import { getShortUUID, Log } from '@indocal/services';
@@ -19,7 +19,7 @@ export const GenericLogsDataGrid: React.FC<GenericLogsDataGridProps> = ({
   onRefreshButtonClick,
   enhancedDataGridProps,
 }) => {
-  const columns = useMemo<GridColumns>(
+  const columns = useMemo<GridColDef[]>(
     () => [
       {
         field: 'id',
@@ -109,7 +109,7 @@ export const GenericLogsDataGrid: React.FC<GenericLogsDataGridProps> = ({
           columns={columns}
           rows={rows}
           disableColumnMenu
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           sx={{ border: 'none' }}
           {...enhancedDataGridProps}
         />

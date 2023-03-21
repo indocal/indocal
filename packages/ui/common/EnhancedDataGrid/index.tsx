@@ -8,7 +8,6 @@ import {
   EnhancedDataGridLoadingOverlay,
   EnhancedDataGridToolbar,
   EnhancedDataGridNoRowsOverlay,
-  EnhancedDataGridErrorOverlay,
 } from './components';
 
 export interface EnhancedDataGridProps
@@ -25,7 +24,6 @@ export const EnhancedDataGrid: React.FC<EnhancedDataGridProps> = ({
       LoadingOverlay: EnhancedDataGridLoadingOverlay,
       NoRowsOverlay: EnhancedDataGridNoRowsOverlay,
       NoResultsOverlay: EnhancedDataGridNoRowsOverlay,
-      ErrorOverlay: EnhancedDataGridErrorOverlay,
       Toolbar: () => (
         <EnhancedDataGridToolbar quickFilterProps={quickFilterProps} />
       ),
