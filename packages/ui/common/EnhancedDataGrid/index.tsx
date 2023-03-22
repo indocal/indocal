@@ -4,6 +4,8 @@ import {
   GridToolbarQuickFilterProps,
 } from '@mui/x-data-grid';
 
+import { ErrorInfo } from '@indocal/ui';
+
 import {
   EnhancedDataGridLoadingOverlay,
   EnhancedDataGridToolbar,
@@ -13,23 +15,29 @@ import {
 export interface EnhancedDataGridProps
   extends Omit<DataGridProps, 'components' | 'slotProps'> {
   quickFilterProps?: GridToolbarQuickFilterProps;
+  error?: Error | null;
 }
 
 export const EnhancedDataGrid: React.FC<EnhancedDataGridProps> = ({
   quickFilterProps,
+  error,
   ...props
-}) => (
-  <DataGrid
-    components={{
-      LoadingOverlay: EnhancedDataGridLoadingOverlay,
-      NoRowsOverlay: EnhancedDataGridNoRowsOverlay,
-      NoResultsOverlay: EnhancedDataGridNoRowsOverlay,
-      Toolbar: () => (
-        <EnhancedDataGridToolbar quickFilterProps={quickFilterProps} />
-      ),
-    }}
-    {...props}
-  />
-);
+}) => {
+  return error ? (
+    <ErrorInfo error={error} />
+  ) : (
+    <DataGrid
+      components={{
+        LoadingOverlay: EnhancedDataGridLoadingOverlay,
+        NoRowsOverlay: EnhancedDataGridNoRowsOverlay,
+        NoResultsOverlay: EnhancedDataGridNoRowsOverlay,
+        Toolbar: () => (
+          <EnhancedDataGridToolbar quickFilterProps={quickFilterProps} />
+        ),
+      }}
+      {...props}
+    />
+  );
+};
 
 export default EnhancedDataGrid;

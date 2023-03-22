@@ -18,7 +18,7 @@ const OrdersDataGrid: React.FC = () => {
     validating,
     orders,
     count,
-
+    error: serviceError,
     refetch,
   } = useOrders({
     ...(search && {
@@ -59,6 +59,7 @@ const OrdersDataGrid: React.FC = () => {
         onRefreshButtonClick={ability.can('read', 'order') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',

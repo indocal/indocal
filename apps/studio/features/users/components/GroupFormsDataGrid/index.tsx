@@ -22,7 +22,7 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
     validating,
     forms,
     count,
-
+    error: serviceError,
     refetch,
   } = useForms({
     filters: {
@@ -66,6 +66,7 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
         enhancedDataGridProps={{
           density: 'compact',
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',

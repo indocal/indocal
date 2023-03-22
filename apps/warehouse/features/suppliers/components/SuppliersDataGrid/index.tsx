@@ -18,7 +18,7 @@ const SuppliersDataGrid: React.FC = () => {
     validating,
     suppliers,
     count,
-
+    error: serviceError,
     refetch,
   } = useSuppliers({
     ...(search && {
@@ -60,6 +60,7 @@ const SuppliersDataGrid: React.FC = () => {
         onRefreshButtonClick={ability.can('read', 'supplier') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',

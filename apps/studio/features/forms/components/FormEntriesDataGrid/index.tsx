@@ -22,7 +22,7 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
     validating,
     entries,
     count,
-
+    error: serviceError,
     refetch,
   } = useFormsEntries({
     filters: {
@@ -67,6 +67,7 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
       enhancedDataGridProps={{
         density: 'compact',
         loading: loading || validating,
+        error: serviceError,
 
         quickFilterProps: { placeholder: 'Buscar...' },
         filterMode: 'server',

@@ -18,7 +18,7 @@ const UsersDataGrid: React.FC = () => {
     validating,
     users,
     count,
-
+    error: serviceError,
     refetch,
   } = useUsers({
     ...(search && {
@@ -60,6 +60,7 @@ const UsersDataGrid: React.FC = () => {
         onRefreshButtonClick={ability.can('read', 'user') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',

@@ -19,7 +19,7 @@ export const UserLogsDataGrid: React.FC<UserLogsDataGridProps> = ({ user }) => {
     validating,
     logs,
     count,
-
+    error: serviceError,
     refetch,
   } = useLogs({
     filters: {
@@ -51,6 +51,7 @@ export const UserLogsDataGrid: React.FC<UserLogsDataGridProps> = ({ user }) => {
       enhancedDataGridProps={{
         density: 'compact',
         loading: loading || validating,
+        error: serviceError,
 
         quickFilterProps: { placeholder: 'Buscar...' },
         filterMode: 'server',

@@ -18,7 +18,7 @@ const FormsDataGrid: React.FC = () => {
     validating,
     forms,
     count,
-
+    error: serviceError,
     refetch,
   } = useForms({
     ...(search && {
@@ -63,6 +63,7 @@ const FormsDataGrid: React.FC = () => {
         onRefreshButtonClick={ability.can('read', 'form') && handleRefetch}
         enhancedDataGridProps={{
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',

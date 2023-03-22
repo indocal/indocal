@@ -21,7 +21,7 @@ const InventoryMovementsDataGrid: React.FC = () => {
     validating,
     movements,
     count,
-
+    error: serviceError,
     refetch,
   } = useInventoryMovements({
     ...(search && {
@@ -68,6 +68,7 @@ const InventoryMovementsDataGrid: React.FC = () => {
         }
         enhancedDataGridProps={{
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',

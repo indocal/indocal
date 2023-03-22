@@ -22,7 +22,7 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
     validating,
     users,
     count,
-
+    error: serviceError,
     refetch,
   } = useUsers({
     filters: {
@@ -71,6 +71,7 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
         enhancedDataGridProps={{
           density: 'compact',
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',

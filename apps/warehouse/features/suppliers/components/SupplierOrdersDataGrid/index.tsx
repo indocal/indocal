@@ -21,7 +21,7 @@ export const SupplierOrdersDataGrid: React.FC<SupplierOrdersDataGridProps> = ({
     validating,
     orders,
     count,
-
+    error: serviceError,
     refetch,
   } = useOrders({
     filters: {
@@ -52,6 +52,7 @@ export const SupplierOrdersDataGrid: React.FC<SupplierOrdersDataGridProps> = ({
       enhancedDataGridProps={{
         density: 'compact',
         loading: loading || validating,
+        error: serviceError,
 
         quickFilterProps: { placeholder: 'Buscar...' },
         filterMode: 'server',

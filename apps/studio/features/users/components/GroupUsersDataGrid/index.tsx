@@ -22,7 +22,7 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
     validating,
     users,
     count,
-
+    error: serviceError,
     refetch,
   } = useUsers({
     filters: {
@@ -71,6 +71,7 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
         enhancedDataGridProps={{
           density: 'compact',
           loading: loading || validating,
+          error: serviceError,
 
           quickFilterProps: { placeholder: 'Buscar...' },
           filterMode: 'server',
