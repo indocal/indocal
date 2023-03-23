@@ -14,15 +14,15 @@ import { FormEntry, User, Form } from '@prisma/client';
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { UserEntity } from '../../../auth/submodules/users/entities';
-import { FormEntity } from '../../entities';
+import { UserEntity } from '../../../../auth/submodules/users/entities';
+import { FormEntity } from '../../../entities';
 
-import { FormEntryEntity } from './entities';
+import { FormEntryEntity } from '../entities';
 import {
   FindManyFormsEntriesParamsDto,
   CountFormsEntriesParamsDto,
   CreateFormEntryDto,
-} from './dto';
+} from '../dto';
 
 class EnhancedFormEntry extends FormEntryEntity {
   answeredBy: UserEntity | null;
@@ -36,7 +36,7 @@ type CreateEnhancedFormEntry = FormEntry & {
 
 @Controller('entries')
 @UseGuards(PoliciesGuard)
-export class FormsEntriesController {
+export class FormsEntriesCRUDController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedFormEntry({
@@ -120,4 +120,4 @@ export class FormsEntriesController {
   }
 }
 
-export default FormsEntriesController;
+export default FormsEntriesCRUDController;

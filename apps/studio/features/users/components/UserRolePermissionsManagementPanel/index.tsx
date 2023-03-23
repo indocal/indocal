@@ -265,6 +265,13 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.form) &&
                   Boolean(permissions?.form['delete']),
               },
+              {
+                label: 'Generar reportes',
+                action: 'generate-reports',
+                checked:
+                  Boolean(permissions?.form) &&
+                  Boolean(permissions?.form['generate-reports']),
+              },
             ],
           },
           {

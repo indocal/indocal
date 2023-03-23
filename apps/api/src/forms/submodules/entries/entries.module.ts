@@ -4,11 +4,14 @@ import { PrismaService } from 'nestjs-prisma';
 
 import { AuthModule } from '@/auth';
 
-import FormsEntriesController from './entries.controller';
+import {
+  FormsEntriesCRUDController,
+  FormsEntriesStatsController,
+} from './controllers';
 
 @Module({
   imports: [AuthModule, HttpModule],
-  controllers: [FormsEntriesController],
+  controllers: [FormsEntriesCRUDController, FormsEntriesStatsController],
   providers: [PrismaService],
 })
 export class FormsEntriesModule {}
