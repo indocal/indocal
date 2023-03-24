@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Paper, Box, Stack, Divider, LinearProgress } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { startOfMonth, addMonths } from 'date-fns';
+import { useForm, Control } from 'react-hook-form';
+import { startOfMonth, endOfMonth } from 'date-fns';
 
 import {
   Loader,
@@ -15,8 +15,18 @@ import {
 import { ControlledUsersGroupsAutocomplete } from '@indocal/forms-generator';
 import { useInventoryMovements, UserGroup } from '@indocal/services';
 
+type FormData = {
+  group: UserGroup | null;
+  month: Date | null;
+};
+
 export const InventoryMovementsByGroupChart: React.FC = () => {
-  const { control, watch } = useForm();
+  const { control, watch } = useForm<FormData>({
+    defaultValues: {
+      group: null,
+      month: new Date(),
+    },
+  });
 
   const group: UserGroup | null = watch().group || null;
   const month: Date = watch().month || new Date();
@@ -26,7 +36,7 @@ export const InventoryMovementsByGroupChart: React.FC = () => {
       type: 'OUTPUT',
       createdAt: {
         gte: startOfMonth(month),
-        lt: addMonths(startOfMonth(month), 1),
+        lte: endOfMonth(month),
       },
       ...(group && {
         destination: { id: group.id },
@@ -129,7 +139,7 @@ export const InventoryMovementsByGroupChart: React.FC = () => {
                 <ControlledUsersGroupsAutocomplete
                   name="group"
                   label="Área"
-                  control={control}
+                  control={control as unknown as Control}
                   textFieldProps={{ size: 'small' }}
                 />
               </Box>
@@ -138,7 +148,7 @@ export const InventoryMovementsByGroupChart: React.FC = () => {
                 <ControlledDatePicker
                   name="month"
                   label="Mes / Año"
-                  control={control}
+                  control={control as unknown as Control}
                   textFieldProps={{ size: 'small' }}
                   datePickerProps={{
                     views: ['month', 'year'],
