@@ -13,6 +13,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 import {
+  QueryStats as ReportsIcon,
   Launch as ViewDetailsIcon,
   Edit as EditIcon,
   Handyman as SettingsIcon,
@@ -82,6 +83,17 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
             subheader="Detalles del formulario"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
+                <Can do="generate-reports" on="form">
+                  <IconButton
+                    LinkComponent={NextLink}
+                    href={`${Pages.FORMS_REPORTS}/${form.id}`}
+                    size="small"
+                    sx={{ display: 'flex' }}
+                  >
+                    <ReportsIcon />
+                  </IconButton>
+                </Can>
+
                 <Can I="read" a="form">
                   <IconButton
                     LinkComponent={NextLink}
@@ -126,6 +138,15 @@ const FormCard: React.FC<FormCardProps> = ({ form: entity }) => {
                   <ListItemText
                     primary="Descripción"
                     secondary={form.description}
+                    secondaryTypographyProps={{
+                      component: 'pre',
+                      variant: 'caption',
+                      color: 'text.secondary',
+                      sx: {
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      },
+                    }}
                   />
                 </ListItem>
               )}
