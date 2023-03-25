@@ -35,6 +35,12 @@ export const DateTimeItem: React.FC<DateTimeItemProps> = ({ field, item }) => {
       textFieldProps={{
         size: 'small',
         required: config?.required,
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
       }}
       controllerProps={{
         rules: {

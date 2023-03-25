@@ -126,6 +126,15 @@ const UserRoleCard: React.FC<UserRoleCardProps> = ({ role: entity }) => {
                 <ListItemText
                   primary="Descripción"
                   secondary={role.description}
+                  secondaryTypographyProps={{
+                    component: 'pre',
+                    variant: 'caption',
+                    color: 'text.secondary',
+                    sx: {
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                    },
+                  }}
                 />
               </ListItem>
 

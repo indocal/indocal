@@ -113,6 +113,15 @@ const UserGroupCard: React.FC<UserGroupCardProps> = ({ group: entity }) => {
                   <ListItemText
                     primary="Descripción"
                     secondary={group.description}
+                    secondaryTypographyProps={{
+                      component: 'pre',
+                      variant: 'caption',
+                      color: 'text.secondary',
+                      sx: {
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      },
+                    }}
                   />
                 </ListItem>
               )}

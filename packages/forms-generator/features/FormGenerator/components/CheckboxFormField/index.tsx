@@ -46,7 +46,13 @@ export const CheckboxFormField: React.FC<CheckboxFormFieldProps> = ({
           disabled: isSubmitting,
           required: config?.required,
         }}
-        formHelperTextProps={{ sx: { marginX: 0 } }}
+        formHelperTextProps={{
+          sx: {
+            marginX: 0,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        }}
         controllerProps={{
           rules: {
             required: {

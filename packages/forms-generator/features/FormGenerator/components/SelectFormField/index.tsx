@@ -30,6 +30,12 @@ export const SelectFormField: React.FC<SelectFormFieldProps> = ({ field }) => {
         required: config?.required,
         disabled: isSubmitting,
       }}
+      formHelperTextProps={{
+        sx: {
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+        },
+      }}
       selectProps={{ multiple: config?.multiple }}
       controllerProps={{
         defaultValue: config?.multiple ? [] : '',

@@ -34,6 +34,12 @@ export const PhoneItem: React.FC<PhoneItemProps> = ({ field, item }) => {
         size: 'small',
         required: config?.required,
         disabled: isSubmitting,
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
       }}
       controllerProps={{
         rules: {

@@ -28,6 +28,14 @@ export const UsersFormField: React.FC<UsersFormFieldProps> = ({ field }) => {
       description={field.description}
       control={control}
       disabled={isSubmitting}
+      textFieldProps={{
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
+      }}
       controllerProps={{
         rules: {
           required: {

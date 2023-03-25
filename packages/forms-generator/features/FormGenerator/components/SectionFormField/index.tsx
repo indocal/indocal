@@ -112,8 +112,12 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
 
       {field.description && (
         <Typography
+          component="pre"
           variant="caption"
+          color="text.secondary"
           sx={{
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
             ...(errors[field.id] && {
               color: (theme) => theme.palette.error.main,
             }),

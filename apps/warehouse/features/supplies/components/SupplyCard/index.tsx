@@ -120,6 +120,15 @@ const SupplyCard: React.FC<SupplyCardProps> = ({ supply: entity }) => {
                   <ListItemText
                     primary="Descripción"
                     secondary={supply.description}
+                    secondaryTypographyProps={{
+                      component: 'pre',
+                      variant: 'caption',
+                      color: 'text.secondary',
+                      sx: {
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      },
+                    }}
                   />
                 </ListItem>
               )}

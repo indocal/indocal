@@ -207,7 +207,16 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
             </Typography>
 
             {form.description && (
-              <Typography variant="caption" align="center">
+              <Typography
+                component="pre"
+                variant="caption"
+                align="center"
+                color="text.secondary"
+                sx={{
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
                 {form.description}
               </Typography>
             )}

@@ -95,6 +95,12 @@ export const FilesItem: React.FC<FilesItemProps> = ({ field, item }) => {
             }),
           },
         }}
+        formHelperTextProps={{
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        }}
         controllerProps={{
           rules: {
             required: {

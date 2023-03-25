@@ -35,6 +35,12 @@ export const UsersItem: React.FC<UsersItemProps> = ({ field, item }) => {
       disabled={isSubmitting}
       textFieldProps={{
         size: 'small',
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
       }}
       controllerProps={{
         rules: {

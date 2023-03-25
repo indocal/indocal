@@ -89,6 +89,12 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
             }),
           },
         }}
+        formHelperTextProps={{
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        }}
         controllerProps={{
           rules: {
             required: {

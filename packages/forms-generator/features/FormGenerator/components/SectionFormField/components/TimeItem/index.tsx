@@ -35,6 +35,12 @@ export const TimeItem: React.FC<TimeItemProps> = ({ field, item }) => {
       textFieldProps={{
         size: 'small',
         required: config?.required,
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
       }}
       controllerProps={{
         rules: {

@@ -27,7 +27,15 @@ export const TimeFormField: React.FC<TimeFormFieldProps> = ({ field }) => {
       description={field.description}
       control={control}
       timePickerProps={{ disabled: isSubmitting }}
-      textFieldProps={{ required: config?.required }}
+      textFieldProps={{
+        required: config?.required,
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
+      }}
       controllerProps={{
         rules: {
           required: {

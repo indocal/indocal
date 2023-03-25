@@ -159,6 +159,8 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
               <Typography
                 component="caption"
                 sx={{
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
                   ...(errors[field.id]?.root && {
                     color: (theme) => `${theme.palette.error.main} !important`,
                   }),

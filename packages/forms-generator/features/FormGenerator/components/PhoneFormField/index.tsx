@@ -28,6 +28,12 @@ export const PhoneFormField: React.FC<PhoneFormFieldProps> = ({ field }) => {
       textFieldProps={{
         required: config?.required,
         disabled: isSubmitting,
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
       }}
       controllerProps={{
         rules: {

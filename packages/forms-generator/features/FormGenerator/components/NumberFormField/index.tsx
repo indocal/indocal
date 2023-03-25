@@ -51,6 +51,12 @@ export const NumberFormField: React.FC<NumberFormFieldProps> = ({ field }) => {
       })}
       error={Boolean(errors[field.id])}
       helperText={(errors[field.id]?.message as string) || field.description}
+      FormHelperTextProps={{
+        sx: {
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+        },
+      }}
     />
   );
 };

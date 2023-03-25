@@ -27,7 +27,15 @@ export const DateFormField: React.FC<DateFormFieldProps> = ({ field }) => {
       description={field.description}
       control={control}
       datePickerProps={{ disabled: isSubmitting }}
-      textFieldProps={{ required: config?.required }}
+      textFieldProps={{
+        required: config?.required,
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
+      }}
       controllerProps={{
         rules: {
           required: {

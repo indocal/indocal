@@ -29,7 +29,15 @@ export const DateTimeFormField: React.FC<DateTimeFormFieldProps> = ({
       description={field.description}
       control={control}
       dateTimePickerProps={{ disabled: isSubmitting }}
-      textFieldProps={{ required: config?.required }}
+      textFieldProps={{
+        required: config?.required,
+        FormHelperTextProps: {
+          sx: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        },
+      }}
       controllerProps={{
         rules: {
           required: {

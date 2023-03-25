@@ -44,7 +44,13 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
           required: config?.required,
           disabled: isSubmitting,
         }}
-        formHelperTextProps={{ sx: { marginX: 0 } }}
+        formHelperTextProps={{
+          sx: {
+            marginX: 0,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        }}
         radioGroupProps={{ row: true }}
         controllerProps={{
           rules: {

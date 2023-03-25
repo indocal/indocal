@@ -51,7 +51,13 @@ export const CheckboxItem: React.FC<CheckboxItemProps> = ({ field, item }) => {
           disabled: isSubmitting,
           required: config?.required,
         }}
-        formHelperTextProps={{ sx: { marginX: 0 } }}
+        formHelperTextProps={{
+          sx: {
+            marginX: 0,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        }}
         checkboxProps={{ size: 'small' }}
         controllerProps={{
           rules: {
