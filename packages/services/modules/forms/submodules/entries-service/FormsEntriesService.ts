@@ -14,6 +14,8 @@ import {
   CreateFormEntryDto,
   CountFormsEntriesParamsDto,
   FindManyFormsEntriesParamsDto,
+  FormEntriesPerMonth,
+  CalcFormEntriesPerMonthParamsDto,
 } from './types';
 
 export interface CreateFormEntryReturn {
@@ -34,6 +36,11 @@ export interface FindManyFormsEntriesReturn {
 
 export interface FindOneFormEntryByUUIDReturn {
   entry: FormEntry | null;
+  error: ServiceError | null;
+}
+
+export interface CalcFormEntriesPerMonthReturn {
+  entriesPerMonth: FormEntriesPerMonth[];
   error: ServiceError | null;
 }
 
@@ -116,6 +123,28 @@ export class FormsEntriesService {
     } catch (error) {
       return {
         entry: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async calcFormEntriesPerMonth(
+    id: UUID,
+    params?: CalcFormEntriesPerMonthParamsDto
+  ): Promise<CalcFormEntriesPerMonthReturn> {
+    try {
+      const response = await this.config.axios.get<FormEntriesPerMonth[]>(
+        `${ApiEndpoints.FORMS_ENTRIES_STATS}/${id}/entries-per-month`,
+        { params }
+      );
+
+      return {
+        entriesPerMonth: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        entriesPerMonth: [],
         error: createServiceError(error),
       };
     }

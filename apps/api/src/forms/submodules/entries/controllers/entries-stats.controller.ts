@@ -39,7 +39,7 @@ export class FormsEntriesStatsController {
           lte: end,
         },
       },
-      select: { id: true, createdAt: true },
+      select: { createdAt: true },
     });
 
     const entriesPerMonth: FormEntriesPerMonth[] = [];
@@ -56,7 +56,7 @@ export class FormsEntriesStatsController {
       );
 
       entriesPerMonth.push({
-        month: date.toLocaleString('es', { month: 'short' }),
+        month: date.toLocaleString('es-do', { month: 'short' }),
         count: entries.length,
       });
     }
