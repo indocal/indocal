@@ -8,3 +8,4 @@ export * from './FormEntriesDataGrid';
 export * from './GenericFormsEntriesDataGrid';
 
 export * from './FormEntriesPerMonthChart';
+export * from './FormFieldsReportsPerCycle';
