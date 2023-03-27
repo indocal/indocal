@@ -17,6 +17,7 @@ export class AuthController {
     return this.authService.generateSession(req.user as AuthenticatedUser);
   }
 
+  // TODO: complete this feature
   @Post('local/restore-password')
   @SkipAuthentication()
   async restorePassword(

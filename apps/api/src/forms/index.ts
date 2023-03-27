@@ -1,5 +1,5 @@
 export * from './forms.module';
-export * from './forms.controller';
+export * from './controllers';
 export * from './entities';
 export * from './dto';
 

@@ -15,6 +15,7 @@ import {
   UpdateOrderDto,
   CountOrdersParamsDto,
   FindManyOrdersParamsDto,
+  ReceiveItemsDto,
 } from './types';
 
 import { OrdersItemsService } from '../orders-items-service';
@@ -47,6 +48,10 @@ export interface UpdateOrderReturn {
 
 export interface DeleteOrderReturn {
   order: Order | null;
+  error: ServiceError | null;
+}
+
+export interface ReceiveItemsReturn {
   error: ServiceError | null;
 }
 
@@ -169,6 +174,24 @@ export class OrdersService {
     } catch (error) {
       return {
         order: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async receiveItems(data: ReceiveItemsDto): Promise<ReceiveItemsReturn> {
+    try {
+      await this.config.axios.patch<
+        void,
+        AxiosResponse<void, ReceiveItemsDto>,
+        ReceiveItemsDto
+      >(`${ApiEndpoints.ORDERS_ACTIONS}/receive-items`, data);
+
+      return {
+        error: null,
+      };
+    } catch (error) {
+      return {
         error: createServiceError(error),
       };
     }

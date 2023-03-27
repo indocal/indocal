@@ -1,6 +1,7 @@
 import { User } from '@prisma/client';
 import mjml2html from 'mjml';
 
+// TODO: complete this feature
 export const restorePasswordEmailTemplate = (user: User): string => {
   const logo =
     'http://localhost:5000/public/assets/images/logos/logo--full.png';

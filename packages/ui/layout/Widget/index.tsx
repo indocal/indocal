@@ -23,6 +23,7 @@ export const Widget: React.FC<React.PropsWithChildren<WidgetProps>> = ({
     <ErrorBoundary message={errorBoundaryMessage}>{children}</ErrorBoundary>
   </Box>
 );
+
 export default Widget;
 
 ////////////////

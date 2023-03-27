@@ -1,22 +1,16 @@
-import { Entity, UUID } from '../../../../../common';
+import { Entity } from '../../../../../common';
 
 import { UserStatus } from '../../users-service';
 
-type Permission = {
-  id: UUID;
+type Permission = Entity & {
   action: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type User = {
-  id: UUID;
+type User = Entity & {
   username: string;
   email: string;
   name: string;
   status: UserStatus;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type UserRoleAccessType = 'NONE' | 'STANDARD' | 'ADMIN';

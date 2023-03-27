@@ -44,6 +44,7 @@ export class AuthService {
     }
   }
 
+  // TODO: complete this feature
   async sendRestorePasswordEmail(email: string): Promise<void> {
     const user = await this.prismaService.user.findUnique({ where: { email } });
 

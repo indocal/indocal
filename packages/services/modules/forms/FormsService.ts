@@ -15,6 +15,10 @@ import {
   UpdateFormDto,
   CountFormsParamsDto,
   FindManyFormsParamsDto,
+  FormEntriesPerMonth,
+  FormFieldReport,
+  CalcFormEntriesPerMonthParamsDto,
+  CalcFormFieldsReportsParamsDto,
 } from './types';
 
 import { FormsFieldsService, FormsEntriesService } from './submodules';
@@ -47,6 +51,16 @@ export interface UpdateFormReturn {
 
 export interface DeleteFormReturn {
   form: Form | null;
+  error: ServiceError | null;
+}
+
+export interface CalcFormEntriesPerMonthReturn {
+  entriesPerMonth: FormEntriesPerMonth[];
+  error: ServiceError | null;
+}
+
+export interface CalcFormFieldsReportsReturn {
+  reports: FormFieldReport[];
   error: ServiceError | null;
 }
 
@@ -173,6 +187,50 @@ export class FormsService {
     } catch (error) {
       return {
         form: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async calcFormEntriesPerMonth(
+    id: UUID,
+    params?: CalcFormEntriesPerMonthParamsDto
+  ): Promise<CalcFormEntriesPerMonthReturn> {
+    try {
+      const response = await this.config.axios.get<FormEntriesPerMonth[]>(
+        `${ApiEndpoints.FORMS}/${id}/stats/entries-per-month`,
+        { params }
+      );
+
+      return {
+        entriesPerMonth: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        entriesPerMonth: [],
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async calcFormFieldsReports(
+    id: UUID,
+    params?: CalcFormFieldsReportsParamsDto
+  ): Promise<CalcFormFieldsReportsReturn> {
+    try {
+      const response = await this.config.axios.get<FormFieldReport[]>(
+        `${ApiEndpoints.FORMS}/${id}/stats/fields-reports`,
+        { params }
+      );
+
+      return {
+        reports: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        reports: [],
         error: createServiceError(error),
       };
     }

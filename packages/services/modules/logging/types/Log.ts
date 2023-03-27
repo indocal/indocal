@@ -1,15 +1,12 @@
-import { Entity, UUID } from '../../../common';
+import { Entity } from '../../../common';
 
 import { UserStatus } from '../../auth';
 
-type User = {
-  id: UUID;
+type User = Entity & {
   username: string;
   email: string;
   name: string;
   status: UserStatus;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type LogMetadata = HTTPLogMetadata;

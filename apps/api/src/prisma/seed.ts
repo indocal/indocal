@@ -117,7 +117,9 @@ async function main() {
               skipDuplicates: true,
               data: permissions
                 .map(({ scope, actions }) =>
-                  actions.map((action) => ({ action: `${scope}::${action}` }))
+                  actions.map((action) => ({
+                    action: `${scope}::${action}`,
+                  }))
                 )
                 .flat(),
             },

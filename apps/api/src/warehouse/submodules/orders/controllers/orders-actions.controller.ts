@@ -4,8 +4,9 @@ import { PrismaService } from 'nestjs-prisma';
 import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { ReceiveItemsDto } from '../../../dto';
 import { InsufficientQuantityException } from '../../../errors';
+
+import { ReceiveItemsDto } from '../dto';
 
 @Controller('warehouse/orders/actions')
 @UseGuards(PoliciesGuard)

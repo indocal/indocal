@@ -1,10 +1,7 @@
-import { Entity, UUID } from '../../../../../common';
+import { Entity } from '../../../../../common';
 
-type Folder = {
-  id: UUID;
+type Folder = Entity & {
   name: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export interface File extends Entity {

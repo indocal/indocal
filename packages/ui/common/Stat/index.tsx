@@ -45,8 +45,8 @@ export const Stat: React.FC<StatProps> = ({
     sx={{
       position: 'relative',
       display: 'grid',
-      width: 275,
-      aspectRatio: '16 / 9',
+      width: 250,
+      aspectRatio: '2 / 1',
       overflow: 'hidden',
     }}
   >
@@ -109,6 +109,7 @@ export const Stat: React.FC<StatProps> = ({
               </CardContent>
             </Tooltip>
 
+            {/* TODO: complete this feature */}
             <CardActions>
               <ToggleButtonGroup exclusive size="small">
                 <ToggleButton value="#">

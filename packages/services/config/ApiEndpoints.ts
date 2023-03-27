@@ -17,7 +17,6 @@ export enum ApiEndpoints {
   FORMS_COUNT = '/forms/count',
   FORMS_ENTRIES = '/entries',
   FORMS_ENTRIES_COUNT = '/entries/count',
-  FORMS_ENTRIES_STATS = '/entries/stats',
 
   EVENTS = '/events',
   EVENTS_COUNT = '/events/count',
@@ -28,6 +27,7 @@ export enum ApiEndpoints {
   SUPPLIERS_COUNT = 'warehouse/suppliers/count',
   ORDERS = 'warehouse/orders',
   ORDERS_COUNT = 'warehouse/orders/count',
+  ORDERS_ACTIONS = 'warehouse/orders/actions',
   INVENTORY_MOVEMENTS = 'warehouse/movements',
   INVENTORY_MOVEMENTS_COUNT = 'warehouse/movements/count',
 

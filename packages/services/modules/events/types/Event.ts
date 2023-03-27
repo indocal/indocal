@@ -1,15 +1,12 @@
-import { Entity, UUID } from '../../../common';
+import { Entity } from '../../../common';
 
-type Guest = {
-  id: UUID;
+type Guest = Entity & {
   dni: string;
   name: string;
   email: string;
   phone: string;
   from: string;
   position: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type EventStatus = 'SCHEDULED' | 'OVERDUED';

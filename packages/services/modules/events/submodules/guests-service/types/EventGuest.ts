@@ -1,16 +1,13 @@
-import { Entity, UUID } from '../../../../../common';
+import { Entity } from '../../../../../common';
 
 import { EventStatus } from '../../../types';
 
-type Event = {
-  id: UUID;
+type Event = Entity & {
   slug: string;
   title: string;
   description: string | null;
   status: EventStatus;
   scheduledAt: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export interface EventGuest extends Entity {

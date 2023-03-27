@@ -1,44 +1,32 @@
-import { Entity, UUID } from '../../../../../common';
+import { Entity } from '../../../../../common';
 
 import { OrderItemDeliveryStatus } from '../../orders-items-service';
 import { SupplyUnit } from '../../supplies-service';
 
-type Supply = {
-  id: UUID;
+type RequestedBy = Entity & {
+  name: string;
+  description: string | null;
+};
+
+type Supply = Entity & {
   code: string;
   name: string;
   description: string | null;
   quantity: number;
   unit: SupplyUnit;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type OrderItem = {
-  id: UUID;
+type OrderItem = Entity & {
   price: number;
   quantity: number;
   received: number[];
   deliveryStatus: OrderItemDeliveryStatus;
   supply: Supply;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type Supplier = {
-  id: UUID;
+type Supplier = Entity & {
   name: string;
   description: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type RequestedBy = {
-  id: UUID;
-  name: string;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OrderStatus = 'PENDING' | 'PARTIAL' | 'COMPLETED' | 'CANCELLED';

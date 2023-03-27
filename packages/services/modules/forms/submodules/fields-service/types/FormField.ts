@@ -1,17 +1,14 @@
-import { Entity, UUID } from '../../../../../common';
+import { Entity } from '../../../../../common';
 
 import { FormStatus, FormVisibility, FormConfig } from '../../../types';
 
-type Form = {
-  id: UUID;
+type Form = Entity & {
   slug: string;
   title: string;
   description: string | null;
   status: FormStatus;
   visibility: FormVisibility;
   config: FormConfig | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type FormFieldType =

@@ -1,15 +1,12 @@
-import { Entity, UUID } from '../../../../../common';
+import { Entity } from '../../../../../common';
 
 import { UserStatus } from '../../users-service';
 
-type Member = {
-  id: UUID;
+type Member = Entity & {
   username: string;
   email: string;
   name: string;
   status: UserStatus;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export interface UserGroup extends Entity {

@@ -23,20 +23,24 @@ export const EnhancedDataGrid: React.FC<EnhancedDataGridProps> = ({
   error,
   ...props
 }) => {
-  return error ? (
-    <ErrorInfo error={error} />
-  ) : (
-    <DataGrid
-      components={{
-        LoadingOverlay: EnhancedDataGridLoadingOverlay,
-        NoRowsOverlay: EnhancedDataGridNoRowsOverlay,
-        NoResultsOverlay: EnhancedDataGridNoRowsOverlay,
-        Toolbar: () => (
-          <EnhancedDataGridToolbar quickFilterProps={quickFilterProps} />
-        ),
-      }}
-      {...props}
-    />
+  return (
+    <>
+      {error && <ErrorInfo error={error} />}
+
+      {!error && (
+        <DataGrid
+          components={{
+            LoadingOverlay: EnhancedDataGridLoadingOverlay,
+            NoRowsOverlay: EnhancedDataGridNoRowsOverlay,
+            NoResultsOverlay: EnhancedDataGridNoRowsOverlay,
+            Toolbar: () => (
+              <EnhancedDataGridToolbar quickFilterProps={quickFilterProps} />
+            ),
+          }}
+          {...props}
+        />
+      )}
+    </>
   );
 };
 

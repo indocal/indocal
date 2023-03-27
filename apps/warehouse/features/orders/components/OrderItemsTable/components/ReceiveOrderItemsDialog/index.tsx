@@ -64,7 +64,7 @@ export const ReceiveOrderItemsDialog: React.FC<
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { error } = await indocal.warehouse.receiveItems({
+      const { error } = await indocal.warehouse.orders.receiveItems({
         order: order.id,
         received: order.items.map((item, index) => ({
           item: item.id,

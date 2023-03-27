@@ -31,26 +31,20 @@ export type FormFieldAnswer = {
     | null;
 };
 
-type AnsweredBy = {
-  id: UUID;
+type AnsweredBy = Entity & {
   username: string;
   email: string;
   name: string;
   status: UserStatus;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type EntryForm = {
-  id: UUID;
+type EntryForm = Entity & {
   slug: string;
   title: string;
   description: string | null;
   status: FormStatus;
   visibility: FormVisibility;
   config: FormConfig | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export interface FormEntry extends Entity {

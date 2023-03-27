@@ -1,23 +1,17 @@
-import { Entity, UUID } from '../../../common';
+import { Entity } from '../../../common';
 
 import { FormFieldType, FormFieldConfig } from '../submodules';
 
-type Field = {
-  id: UUID;
+type Field = Entity & {
   type: FormFieldType;
   title: string;
   description: string | null;
   config: FormFieldConfig | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type Group = {
-  id: UUID;
+type Group = Entity & {
   name: string;
   description: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type FormStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';

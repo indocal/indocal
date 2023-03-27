@@ -1,63 +1,45 @@
-import { Entity, UUID } from '../../../../../common';
+import { Entity } from '../../../../../common';
 
 import { SupplyUnit } from '../../supplies-service';
 import { OrderStatus } from '../../orders-service';
 import { InventoryMovementType } from '../../inventory-movements-service';
 
-type Supply = {
-  id: UUID;
+type Supply = Entity & {
   code: string;
   name: string;
   description: string | null;
   quantity: number;
   unit: SupplyUnit;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type Supplier = {
-  id: UUID;
+type Supplier = Entity & {
   name: string;
   description: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type Order = {
-  id: UUID;
+type Order = Entity & {
   code: string;
   status: OrderStatus;
   supplier: Supplier;
   deliveryAt: string[];
-  createdAt: string;
-  updatedAt: string;
 };
 
-type Origin = {
-  id: UUID;
+type Origin = Entity & {
   name: string;
   description: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type Destination = {
-  id: UUID;
+type Destination = Entity & {
   name: string;
   description: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
-type Movement = {
-  id: UUID;
+type Movement = Entity & {
   concept: string | null;
   type: InventoryMovementType;
   order: Order | null;
   origin: Origin | null;
   destination: Destination | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export interface InventoryMovementItem extends Entity {
