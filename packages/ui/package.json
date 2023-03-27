@@ -7,17 +7,17 @@
     "@emotion/styled": "11.10.6",
     "@indocal/utils": "*",
     "@mui/icons-material": "5.11.11",
-    "@mui/material": "5.11.13",
-    "@mui/x-data-grid": "6.0.2",
-    "@mui/x-date-pickers": "6.0.2",
-    "apexcharts": "3.37.1",
+    "@mui/material": "5.11.14",
+    "@mui/x-data-grid": "6.0.3",
+    "@mui/x-date-pickers": "6.0.3",
+    "apexcharts": "3.37.2",
     "github-markdown-css": "5.2.0",
     "next": "13.2.4",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.3",
-    "react-hook-form": "7.43.7",
+    "react-hook-form": "7.43.8",
     "react-imask": "6.4.3",
     "react-markdown": "8.0.6",
     "remark-gfm": "3.0.1"
@@ -25,8 +25,8 @@
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",
     "@indocal/typescript-config": "*",
-    "@types/node": "18.15.5",
-    "@types/react": "18.0.28",
+    "@types/node": "18.15.10",
+    "@types/react": "18.0.29",
     "typescript": "5.0.2"
   }
 }
