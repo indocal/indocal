@@ -24,6 +24,8 @@ export type FormFieldAnswer = {
     | TimeFormFieldAnswer
     | DateFormFieldAnswer
     | DateTimeFormFieldAnswer
+    | RatingFormFieldAnswer
+    | NetPromoterScoreFormFieldAnswer
     | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | SectionFormFieldAnswer
@@ -82,6 +84,10 @@ export type TimeFormFieldAnswer = string;
 export type DateFormFieldAnswer = string;
 
 export type DateTimeFormFieldAnswer = string;
+
+export type RatingFormFieldAnswer = number;
+
+export type NetPromoterScoreFormFieldAnswer = number;
 
 export type FilesFormFieldAnswer = UUID | UUID[];
 

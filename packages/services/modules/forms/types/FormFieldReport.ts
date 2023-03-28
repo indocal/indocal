@@ -21,6 +21,8 @@ export type FormFieldReport = {
     | TimeFormFieldReport
     | DateFormFieldReport
     | DateTimeFormFieldReport
+    | RatingFormFieldReport
+    | NetPromoterScoreFormFieldReport
     | FilesFormFieldReport
     | UsersFormFieldReport
     | SectionFormFieldReport
@@ -97,6 +99,19 @@ export type DateTimeFormFieldReport = {
   lastAnswers: string[];
 };
 
+export type RatingFormFieldReport = {
+  count: number;
+  na: number;
+  average: number;
+};
+
+export type NetPromoterScoreFormFieldReport = {
+  positive: number;
+  neutral: number;
+  negative: number;
+  na: number;
+};
+
 export type FilesFormFieldReport = {
   count: number;
   na: number;
@@ -130,9 +145,7 @@ export type SectionFormFieldItemReport = {
     | UsersFormFieldReport;
 };
 
-export type TableFormFieldReport = TableFormFieldRowReport[];
-
-export type TableFormFieldRowReport = TableFormFieldColumnReport[];
+export type TableFormFieldReport = TableFormFieldColumnReport[];
 
 export type TableFormFieldColumnReport = {
   column: TableFormFieldColumnAnswer['column'];

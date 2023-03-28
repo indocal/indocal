@@ -14,6 +14,12 @@ export * from './TimeReport';
 export * from './DateReport';
 export * from './DateTimeReport';
 
+export * from './RatingReport';
+export * from './NetPromoterScoreReport';
+
 export * from './FilesReport';
 
 export * from './UsersReport';
+
+export * from './SectionReport';
+export * from './TableReport';

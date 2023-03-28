@@ -1,35 +1,14 @@
 import { useMemo } from 'react';
-import {
-  Paper,
-  Stack,
-  Divider,
-  Grid,
-  Typography,
-  Chip,
-  Button,
-  Link,
-} from '@mui/material';
-import {
-  FilePresent as FileIcon,
-  Image as ImageIcon,
-  VideoFile as VideoIcon,
-  AudioFile as AudioIcon,
-} from '@mui/icons-material';
+import { Paper, Stack, Divider, Typography, Chip } from '@mui/material';
 
+import { NoData, Chart, ChartSeries, ChartOptions } from '@indocal/ui';
 import {
-  Loader,
-  NotFound,
-  ErrorInfo,
-  Chart,
-  ChartSeries,
-  ChartOptions,
-} from '@indocal/ui';
-import {
-  useFiles,
   translateFormFieldType,
   FormFieldReport,
   FilesFormFieldReport,
 } from '@indocal/services';
+
+import { LastFilesAnswers } from './components';
 
 export interface FilesReportProps {
   report: FormFieldReport;
@@ -41,10 +20,6 @@ export const FilesReport: React.FC<FilesReportProps> = ({ report }) => {
     [report]
   );
 
-  const { loading, files, error } = useFiles({
-    filters: { id: { in: content.lastAnswers } },
-  });
-
   const options: ChartOptions = useMemo(
     () => ({
       chart: {
@@ -52,7 +27,6 @@ export const FilesReport: React.FC<FilesReportProps> = ({ report }) => {
         toolbar: { show: true },
       },
       title: {
-        text: 'Veces respondido VS Veces no respondido',
         style: {
           fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
           fontWeight: 500,
@@ -66,16 +40,6 @@ export const FilesReport: React.FC<FilesReportProps> = ({ report }) => {
   const series: ChartSeries = useMemo(
     () => [content.count, content.na],
     [content.count, content.na]
-  );
-
-  const icons = useMemo<Record<string, React.ReactElement>>(
-    () => ({
-      text: <FileIcon />,
-      image: <ImageIcon />,
-      video: <VideoIcon />,
-      audio: <AudioIcon />,
-    }),
-    []
   );
 
   return (
@@ -121,13 +85,7 @@ export const FilesReport: React.FC<FilesReportProps> = ({ report }) => {
         divider={<Divider flexItem />}
       >
         <Stack flex={{ md: 1 }}>
-          <Chart
-            type="pie"
-            width={350}
-            height={250}
-            series={series}
-            options={options}
-          />
+          <Chart type="pie" height={200} series={series} options={options} />
         </Stack>
 
         <Stack
@@ -136,51 +94,12 @@ export const FilesReport: React.FC<FilesReportProps> = ({ report }) => {
           alignItems="center"
           spacing={0.5}
         >
-          {loading ? (
-            <Loader invisible message="Cargando datos..." />
-          ) : error ? (
-            <ErrorInfo error={error} />
-          ) : files.length > 0 ? (
-            <>
-              <Typography variant="h6" align="center">
-                Ultimas respuestas
-              </Typography>
-
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                spacing={1}
-              >
-                {files.map((file) => {
-                  const url = new URL(
-                    file.path,
-                    process.env.NEXT_PUBLIC_BACKEND_URL
-                  );
-
-                  return (
-                    <Grid key={file.id} item>
-                      <Button
-                        key={file.id}
-                        component={Link}
-                        size="small"
-                        variant="outlined"
-                        href={url.toString()}
-                        target="_blank"
-                        startIcon={
-                          icons[file.mime.split('/')[0]] ?? <FileIcon />
-                        }
-                        sx={{ width: 'fit-content' }}
-                      >
-                        {file.name}
-                      </Button>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </>
+          {content.lastAnswers.length > 0 ? (
+            <LastFilesAnswers files={content.lastAnswers} />
           ) : (
-            <NotFound />
+            <Paper sx={{ width: '100%', height: '100%' }}>
+              <NoData />
+            </Paper>
           )}
         </Stack>
       </Stack>

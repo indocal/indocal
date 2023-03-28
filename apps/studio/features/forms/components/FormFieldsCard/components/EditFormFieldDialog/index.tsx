@@ -40,6 +40,8 @@ import {
   TimeFormFieldConfig,
   DateFormFieldConfig,
   DateTimeFormFieldConfig,
+  RatingFormFieldConfig,
+  NetPromoterScoreFormFieldConfig,
   FilesFormFieldConfig,
   UsersFormFieldConfig,
   SectionFormFieldConfig,
@@ -96,6 +98,9 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
       TIME: <TimeFormFieldConfig />,
       DATE: <DateFormFieldConfig />,
       DATETIME: <DateTimeFormFieldConfig />,
+
+      RATING: <RatingFormFieldConfig />,
+      NET_PROMOTER_SCORE: <NetPromoterScoreFormFieldConfig />,
 
       FILES: <FilesFormFieldConfig />,
 

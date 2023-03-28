@@ -23,14 +23,12 @@ export const FilesColumnAnswer: React.FC<FilesColumnAnswerProps> = ({
 
   return (
     <Paper elevation={5} sx={{ padding: (theme) => theme.spacing(1) }}>
-      {content ? (
-        typeof content === 'string' ? (
-          <SingleFile file={content} />
-        ) : (
-          <MultipleFiles files={content} />
-        )
-      ) : (
+      {!content || content.length === 0 ? (
         <NoData message="Campo no respondido" />
+      ) : typeof content === 'string' ? (
+        <SingleFile file={content} />
+      ) : (
+        <MultipleFiles files={content} />
       )}
     </Paper>
   );

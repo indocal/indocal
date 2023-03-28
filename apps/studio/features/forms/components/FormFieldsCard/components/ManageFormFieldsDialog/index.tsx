@@ -27,6 +27,8 @@ import {
   Schedule as TimeIcon,
   Event as DateIcon,
   EventNote as DateTimeIcon,
+  Star as RatingIcon,
+  SentimentSatisfied as NetPromoterScoreIcon,
   FilePresent as FilesIcon,
   Group as UsersIcon,
   BackupTable as SectionIcon,
@@ -75,6 +77,9 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
       TIME: <TimeIcon />,
       DATE: <DateIcon />,
       DATETIME: <DateTimeIcon />,
+
+      RATING: <RatingIcon />,
+      NET_PROMOTER_SCORE: <NetPromoterScoreIcon />,
 
       FILES: <FilesIcon />,
 

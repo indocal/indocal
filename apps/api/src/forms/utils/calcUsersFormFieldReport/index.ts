@@ -22,6 +22,25 @@ export function calcUsersFormFieldReport(
           lastAnswers: [answer.content].concat(content.lastAnswers.slice(0, 2)),
         },
       });
+    } else if (Array.isArray(answer.content)) {
+      const users = answer.content as UUID[];
+
+      users.forEach((user) => {
+        const record = map.get(answer.field.id);
+
+        if (!record) return;
+
+        const content = record.content as UsersFormFieldReport;
+
+        map.set(answer.field.id, {
+          field: answer.field,
+          content: {
+            count: content.count + 1,
+            na: content.na,
+            lastAnswers: [user].concat(content.lastAnswers.slice(0, 2)),
+          },
+        });
+      });
     } else {
       map.set(answer.field.id, {
         field: answer.field,
@@ -41,6 +60,34 @@ export function calcUsersFormFieldReport(
           na: 0,
           lastAnswers: [answer.content],
         },
+      });
+    } else if (Array.isArray(answer.content)) {
+      const users = answer.content as UUID[];
+
+      map.set(answer.field.id, {
+        field: answer.field,
+        content: {
+          count: 0,
+          na: 0,
+          lastAnswers: [],
+        },
+      });
+
+      users.forEach((user) => {
+        const record = map.get(answer.field.id);
+
+        if (!record) return;
+
+        const content = record.content as UsersFormFieldReport;
+
+        map.set(answer.field.id, {
+          field: answer.field,
+          content: {
+            count: content.count + 1,
+            na: content.na,
+            lastAnswers: [user].concat(content.lastAnswers.slice(0, 2)),
+          },
+        });
       });
     } else {
       map.set(answer.field.id, {

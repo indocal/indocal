@@ -6,16 +6,12 @@ import { Container } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { Page } from '@indocal/ui';
-import { FormGenerator, FormGeneratorAnswers } from '@indocal/forms-generator';
 import {
-  INDOCAL,
-  UUID,
-  Form,
-  FormFieldAnswer,
-  FilesFormFieldConfig,
-  UsersFormFieldConfig,
-  User,
-} from '@indocal/services';
+  FormGenerator,
+  serializeFormGeneratorAnswers,
+  FormGeneratorAnswers,
+} from '@indocal/forms-generator';
+import { INDOCAL, UUID, Form } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { AdminDashboard } from '@/components';
@@ -34,81 +30,9 @@ const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const parseFilesFormFieldAnswer = useCallback(
-    async (answer: FormGeneratorAnswers[number]): Promise<FormFieldAnswer> => {
-      const config = answer.field.config as FilesFormFieldConfig | null;
-      const content = answer.content as File[] | null;
-
-      if (config?.multiple && content) {
-        const { files } = await indocal.uploads.files.upload(content);
-
-        return {
-          field: answer.field,
-          content: files.map((file) => file.id),
-        };
-      }
-
-      if (content) {
-        const { files } = await indocal.uploads.files.upload(content);
-
-        return {
-          field: answer.field,
-          content: files.length > 0 ? files[0].id : null,
-        };
-      }
-
-      return {
-        field: answer.field,
-        content: null,
-      };
-    },
-    []
-  );
-
-  const parseUsersFormFieldAnswer = useCallback(
-    (answer: FormGeneratorAnswers[number]): FormFieldAnswer => {
-      const config = answer.field.config as UsersFormFieldConfig | null;
-      const content = answer.content as User | User[] | null;
-
-      if (config?.multiple && Array.isArray(content)) {
-        return {
-          field: answer.field,
-          content: content.map((user) => user.id),
-        };
-      }
-
-      if (content && !Array.isArray(content)) {
-        return {
-          field: answer.field,
-          content: content.id,
-        };
-      }
-
-      return {
-        field: answer.field,
-        content: null,
-      };
-    },
-    []
-  );
-
   const handleOnSubmit = useCallback(
     async (answers: FormGeneratorAnswers) => {
-      const promises = answers.map(async (answer) => {
-        if (answer.field.type === 'FILES') {
-          return await parseFilesFormFieldAnswer(answer);
-        }
-
-        if (answer.field.type === 'USERS') {
-          return parseUsersFormFieldAnswer(answer);
-        }
-
-        // TODO: Handle other types of fields (e.g. SECTIONS, TABLES)
-
-        return answer;
-      });
-
-      const data = (await Promise.all(promises)) as FormFieldAnswer[];
+      const data = await serializeFormGeneratorAnswers(answers, indocal);
 
       const { error } = await indocal.forms.entries.create({
         answers: data,
@@ -132,13 +56,7 @@ const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
         });
       }
     },
-    [
-      form,
-      session?.user.id,
-      enqueueSnackbar,
-      parseFilesFormFieldAnswer,
-      parseUsersFormFieldAnswer,
-    ]
+    [form, session?.user.id, enqueueSnackbar]
   );
 
   return (

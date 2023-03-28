@@ -25,8 +25,12 @@ import {
   calcTimeFormFieldReport,
   calcDateFormFieldReport,
   calcDateTimeFormFieldReport,
+  calcRatingFormFieldReport,
+  calcNetPromoterScoreFormFieldReport,
   calcUsersFormFieldReport,
   calcFilesFormFieldReport,
+  calcSectionFormFieldReport,
+  calcTableFormFieldReport,
 } from '../utils';
 import {
   CalcFormEntriesPerMonthParamsDto,
@@ -69,18 +73,18 @@ export class FormsStatsController {
     const entriesPerMonth: FormEntriesPerMonth[] = [];
 
     for (let i = 0; i < 12; i++) {
-      const date = new Date();
+      const year = startOfYear(new Date());
 
-      date.setMonth(i);
+      year.setMonth(i);
 
-      const month = date.getMonth();
+      const month = year.getMonth();
 
       const entries = records.filter(
         (record) => record.createdAt.getMonth() === month
       );
 
       entriesPerMonth.push({
-        month: date.toLocaleString('es-do', { month: 'short' }),
+        month: year.toLocaleString('es-do', { month: 'short' }),
         count: entries.length,
       });
     }
@@ -133,12 +137,15 @@ export class FormsStatsController {
       DATE: calcDateFormFieldReport,
       DATETIME: calcDateTimeFormFieldReport,
 
-      FILES: calcUsersFormFieldReport,
+      RATING: calcRatingFormFieldReport,
+      NET_PROMOTER_SCORE: calcNetPromoterScoreFormFieldReport,
 
-      USERS: calcFilesFormFieldReport,
+      FILES: calcFilesFormFieldReport,
 
-      SECTION: calcTextFormFieldReport,
-      TABLE: calcTextFormFieldReport,
+      USERS: calcUsersFormFieldReport,
+
+      SECTION: calcSectionFormFieldReport,
+      TABLE: calcTableFormFieldReport,
     };
 
     entries.forEach((entry) => {

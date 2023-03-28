@@ -54,14 +54,12 @@ export const UsersAnswer: React.FC<UsersAnswerProps> = ({ answer }) => {
         <Chip label={translateFormFieldType(answer.field.type)} />
       </Stack>
 
-      {content ? (
-        typeof content === 'string' ? (
-          <SingleUser user={content} />
-        ) : (
-          <MultipleUsers users={content} />
-        )
-      ) : (
+      {!content || content.length === 0 ? (
         <NoData message="Campo no respondido" />
+      ) : typeof content === 'string' ? (
+        <SingleUser user={content} />
+      ) : (
+        <MultipleUsers users={content} />
       )}
     </Stack>
   );

@@ -26,9 +26,7 @@ export const FormFieldsReportsPerCycle: React.FC<
 
   const { loading, validating, reports, error } = useFormFieldsReports(
     typeof form === 'string' ? form : form.id,
-    {
-      year,
-    }
+    { year }
   );
 
   return (
@@ -43,7 +41,7 @@ export const FormFieldsReportsPerCycle: React.FC<
         <Loader invisible message="Generando reportes..." />
       ) : error ? (
         <ErrorInfo error={error} />
-      ) : reports.length > 0 ? (
+      ) : (
         <>
           {validating && (
             <LinearProgress
@@ -74,13 +72,15 @@ export const FormFieldsReportsPerCycle: React.FC<
               />
             </Stack>
 
-            <Box sx={{ flex: 1 }}>
-              <FormFieldsReports reports={reports} />
-            </Box>
+            {reports.length > 0 ? (
+              <Box sx={{ flex: 1 }}>
+                <FormFieldsReports reports={reports} />
+              </Box>
+            ) : (
+              <NoData message="No se han encontrado entradas suficientes para generar reportes" />
+            )}
           </Stack>
         </>
-      ) : (
-        <NoData message="No se han encontrado entradas suficientes para generar reportes" />
       )}
     </Paper>
   );

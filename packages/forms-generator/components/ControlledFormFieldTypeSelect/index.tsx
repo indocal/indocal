@@ -58,6 +58,9 @@ export const ControlledFormFieldTypeSelect: React.FC<
       'DATE',
       'DATETIME',
 
+      'RATING',
+      'NET_PROMOTER_SCORE',
+
       'FILES',
 
       'USERS',

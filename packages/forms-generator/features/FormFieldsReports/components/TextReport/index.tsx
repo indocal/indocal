@@ -1,5 +1,13 @@
 import { useMemo } from 'react';
-import { Paper, Stack, Divider, Grid, Typography, Chip } from '@mui/material';
+import {
+  Paper,
+  Stack,
+  Divider,
+  Grid,
+  Typography,
+  Chip,
+  Tooltip,
+} from '@mui/material';
 
 import { Chart, ChartSeries, ChartOptions } from '@indocal/ui';
 import {
@@ -25,7 +33,6 @@ export const TextReport: React.FC<TextReportProps> = ({ report }) => {
         toolbar: { show: true },
       },
       title: {
-        text: 'Veces respondido VS Veces no respondido',
         style: {
           fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
           fontWeight: 500,
@@ -84,13 +91,7 @@ export const TextReport: React.FC<TextReportProps> = ({ report }) => {
         divider={<Divider flexItem />}
       >
         <Stack flex={{ md: 1 }}>
-          <Chart
-            type="pie"
-            width={350}
-            height={250}
-            series={series}
-            options={options}
-          />
+          <Chart type="pie" height={200} series={series} options={options} />
         </Stack>
 
         <Stack
@@ -111,10 +112,17 @@ export const TextReport: React.FC<TextReportProps> = ({ report }) => {
           >
             {content.lastAnswers.map((answer, index) => (
               <Grid key={`${answer}-${index}`} item>
-                <Chip
-                  label={JSON.stringify(answer)}
-                  sx={{ fontStyle: 'italic' }}
-                />
+                <Tooltip title={answer}>
+                  <Chip
+                    label={JSON.stringify(answer)}
+                    sx={{
+                      maxWidth: 200,
+                      textOverflow: 'ellipsis',
+                      fontStyle: 'italic',
+                      overflow: 'hidden',
+                    }}
+                  />
+                </Tooltip>
               </Grid>
             ))}
           </Grid>

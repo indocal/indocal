@@ -32,7 +32,7 @@ export const commonFormFieldConfigSchema = zod.object({
           required_error: 'Debe ingresar el contenido de la leyenda',
           invalid_type_error: 'Formato no válido',
         })
-        .nullable(),
+        .nullish(),
     })
     .refine(
       (data) =>

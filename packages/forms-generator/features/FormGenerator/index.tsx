@@ -25,6 +25,8 @@ import {
   TimeFormField,
   DateFormField,
   DateTimeFormField,
+  RatingFormField,
+  NetPromoterScoreFormField,
   FilesFormField,
   UsersFormField,
   SectionFormField,
@@ -43,6 +45,8 @@ import {
   parseTimeFormFieldAnswer,
   parseDateFormFieldAnswer,
   parseDateTimeFormFieldAnswer,
+  parseRatingFormFieldAnswer,
+  parseNetPromoterScoreFormFieldAnswer,
   parseFilesFormFieldAnswer,
   parseUsersFormFieldAnswer,
   parseSectionFormFieldAnswer,
@@ -63,6 +67,8 @@ export type FormGeneratorFormData = Record<
   | Parameters<typeof parseTimeFormFieldAnswer>[number]['content']
   | Parameters<typeof parseDateFormFieldAnswer>[number]['content']
   | Parameters<typeof parseDateTimeFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseRatingFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseNetPromoterScoreFormFieldAnswer>[number]['content']
   | Parameters<typeof parseFilesFormFieldAnswer>[number]['content']
   | Parameters<typeof parseUsersFormFieldAnswer>[number]['content']
   | Parameters<typeof parseSectionFormFieldAnswer>[number]['content']
@@ -82,6 +88,8 @@ export type FormGeneratorAnswers = Array<
   | ReturnType<typeof parseTimeFormFieldAnswer>
   | ReturnType<typeof parseDateFormFieldAnswer>
   | ReturnType<typeof parseDateTimeFormFieldAnswer>
+  | ReturnType<typeof parseRatingFormFieldAnswer>
+  | ReturnType<typeof parseNetPromoterScoreFormFieldAnswer>
   | ReturnType<typeof parseFilesFormFieldAnswer>
   | ReturnType<typeof parseUsersFormFieldAnswer>
   | ReturnType<typeof parseSectionFormFieldAnswer>
@@ -118,6 +126,9 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
       DATE: DateFormField,
       DATETIME: DateTimeFormField,
 
+      RATING: RatingFormField,
+      NET_PROMOTER_SCORE: NetPromoterScoreFormField,
+
       FILES: FilesFormField,
 
       USERS: UsersFormField,
@@ -145,6 +156,9 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
       TIME: parseTimeFormFieldAnswer,
       DATE: parseDateFormFieldAnswer,
       DATETIME: parseDateTimeFormFieldAnswer,
+
+      RATING: parseRatingFormFieldAnswer,
+      NET_PROMOTER_SCORE: parseNetPromoterScoreFormFieldAnswer,
 
       FILES: parseFilesFormFieldAnswer,
 

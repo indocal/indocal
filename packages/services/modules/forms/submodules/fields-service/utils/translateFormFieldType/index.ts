@@ -18,6 +18,9 @@ export function translateFormFieldType(type: FormFieldType): string {
     DATE: 'Fecha',
     DATETIME: 'Fecha y hora',
 
+    RATING: 'Puntuación',
+    NET_PROMOTER_SCORE: 'Net Promoter Score',
+
     FILES: 'Archivos',
 
     USERS: 'Usuarios (INDOCAL)',

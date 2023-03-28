@@ -44,6 +44,9 @@ const schema = zod.object(
           'DATE',
           'DATETIME',
 
+          'RATING',
+          'NET_PROMOTER_SCORE',
+
           'FILES',
 
           'USERS',

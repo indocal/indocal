@@ -55,14 +55,12 @@ export const FilesItemAnswer: React.FC<FilesItemAnswerProps> = ({ answer }) => {
         <Chip label={translateFormFieldType(answer.item.type)} />
       </Stack>
 
-      {content ? (
-        typeof content === 'string' ? (
-          <SingleFile file={content} />
-        ) : (
-          <MultipleFiles files={content} />
-        )
-      ) : (
+      {!content || content.length === 0 ? (
         <NoData message="Campo no respondido" />
+      ) : typeof content === 'string' ? (
+        <SingleFile file={content} />
+      ) : (
+        <MultipleFiles files={content} />
       )}
     </Stack>
   );

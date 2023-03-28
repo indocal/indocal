@@ -16,6 +16,9 @@ export * from './timeFormFieldConfigSchema';
 export * from './dateFormFieldConfigSchema';
 export * from './dateTimeFormFieldConfigSchema';
 
+export * from './ratingFormFieldConfigSchema';
+export * from './netPromoterScoreFormFieldConfigSchema';
+
 export * from './filesFormFieldConfigSchema';
 
 export * from './usersFormFieldConfigSchema';

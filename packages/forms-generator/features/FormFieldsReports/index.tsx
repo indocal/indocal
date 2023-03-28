@@ -16,8 +16,12 @@ import {
   TimeReport,
   DateReport,
   DateTimeReport,
+  RatingReport,
+  NetPromoterScoreReport,
   FilesReport,
   UsersReport,
+  SectionReport,
+  TableReport,
 } from './components';
 
 export interface FormFieldsReportsProps {
@@ -45,12 +49,15 @@ export const FormFieldsReports: React.FC<FormFieldsReportsProps> = ({
       DATE: DateReport,
       DATETIME: DateTimeReport,
 
+      RATING: RatingReport,
+      NET_PROMOTER_SCORE: NetPromoterScoreReport,
+
       FILES: FilesReport,
 
       USERS: UsersReport,
 
-      SECTION: () => <></>,
-      TABLE: () => <></>,
+      SECTION: SectionReport,
+      TABLE: TableReport,
     }),
     []
   );

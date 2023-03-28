@@ -22,7 +22,6 @@ export const DniReport: React.FC<DniReportProps> = ({ report }) => {
         toolbar: { show: true },
       },
       title: {
-        text: 'Veces respondido VS Veces no respondido',
         style: {
           fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
           fontWeight: 500,
@@ -81,13 +80,7 @@ export const DniReport: React.FC<DniReportProps> = ({ report }) => {
         divider={<Divider flexItem />}
       >
         <Stack flex={{ md: 1 }}>
-          <Chart
-            type="pie"
-            width={350}
-            height={250}
-            series={series}
-            options={options}
-          />
+          <Chart type="pie" height={200} series={series} options={options} />
         </Stack>
 
         <Stack

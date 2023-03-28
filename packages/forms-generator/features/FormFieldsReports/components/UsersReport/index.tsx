@@ -1,20 +1,14 @@
 import { useMemo } from 'react';
-import { Paper, Stack, Divider, Grid, Typography, Chip } from '@mui/material';
+import { Paper, Stack, Divider, Typography, Chip } from '@mui/material';
 
+import { NoData, Chart, ChartSeries, ChartOptions } from '@indocal/ui';
 import {
-  Loader,
-  NotFound,
-  ErrorInfo,
-  Chart,
-  ChartSeries,
-  ChartOptions,
-} from '@indocal/ui';
-import {
-  useUsers,
   translateFormFieldType,
   FormFieldReport,
   UsersFormFieldReport,
 } from '@indocal/services';
+
+import { LastUsersAnswers } from './components';
 
 export interface UsersReportProps {
   report: FormFieldReport;
@@ -26,10 +20,6 @@ export const UsersReport: React.FC<UsersReportProps> = ({ report }) => {
     [report]
   );
 
-  const { loading, users, error } = useUsers({
-    filters: { id: { in: content.lastAnswers } },
-  });
-
   const options: ChartOptions = useMemo(
     () => ({
       chart: {
@@ -37,7 +27,6 @@ export const UsersReport: React.FC<UsersReportProps> = ({ report }) => {
         toolbar: { show: true },
       },
       title: {
-        text: 'Veces respondido VS Veces no respondido',
         style: {
           fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
           fontWeight: 500,
@@ -96,13 +85,7 @@ export const UsersReport: React.FC<UsersReportProps> = ({ report }) => {
         divider={<Divider flexItem />}
       >
         <Stack flex={{ md: 1 }}>
-          <Chart
-            type="pie"
-            width={350}
-            height={250}
-            series={series}
-            options={options}
-          />
+          <Chart type="pie" height={200} series={series} options={options} />
         </Stack>
 
         <Stack
@@ -111,31 +94,12 @@ export const UsersReport: React.FC<UsersReportProps> = ({ report }) => {
           alignItems="center"
           spacing={0.5}
         >
-          {loading ? (
-            <Loader invisible message="Cargando datos..." />
-          ) : error ? (
-            <ErrorInfo error={error} />
-          ) : users.length > 0 ? (
-            <>
-              <Typography variant="h6" align="center">
-                Ultimas respuestas
-              </Typography>
-
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                spacing={1}
-              >
-                {users.map((user) => (
-                  <Grid key={user.id} item>
-                    <Chip label={user.name} sx={{ fontStyle: 'italic' }} />
-                  </Grid>
-                ))}
-              </Grid>
-            </>
+          {content.lastAnswers.length > 0 ? (
+            <LastUsersAnswers users={content.lastAnswers} />
           ) : (
-            <NotFound />
+            <Paper sx={{ width: '100%', height: '100%' }}>
+              <NoData />
+            </Paper>
           )}
         </Stack>
       </Stack>

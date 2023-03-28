@@ -27,11 +27,17 @@ export function calcSelectFormFieldReport(
     } else if (Array.isArray(answer.content)) {
       const options = answer.content as string[];
 
+      const record = map.get(answer.field.id);
+
+      if (!record) return;
+
+      const content = record.content as SelectFormFieldReport;
+
       options.forEach((option) => {
         map.set(answer.field.id, {
           field: answer.field,
           content: {
-            ...map.get(answer.field.id)?.content,
+            ...content,
             na: content.na,
             [option]: content[option] ? content[option] + 1 : 1,
           },
@@ -58,11 +64,24 @@ export function calcSelectFormFieldReport(
     } else if (Array.isArray(answer.content)) {
       const options = answer.content as string[];
 
+      map.set(answer.field.id, {
+        field: answer.field,
+        content: {
+          na: 0,
+        },
+      });
+
       options.forEach((option) => {
+        const record = map.get(answer.field.id);
+
+        if (!record) return;
+
+        const content = record.content as SelectFormFieldReport;
+
         map.set(answer.field.id, {
           field: answer.field,
           content: {
-            ...map.get(answer.field.id)?.content,
+            ...content,
             [option]: 1,
             na: 0,
           },

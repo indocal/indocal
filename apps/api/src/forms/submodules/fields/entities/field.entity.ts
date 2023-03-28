@@ -16,6 +16,8 @@ export type FormFieldConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | RatingFormFieldConfig
+  | NetPromoterScoreFormFieldConfig
   | FilesFormFieldConfig
   | UsersFormFieldConfig
   | SectionFormFieldConfig
@@ -53,12 +55,12 @@ export default FormFieldEntity;
 export type FormFieldHintConfig = {
   include: boolean;
   position: 'BEFORE' | 'AFTER';
-  content: string | null;
+  content?: string | null;
 };
 
 export type FormFieldWebhookConfig = {
   include: boolean;
-  key: string | null;
+  key?: string | null;
 };
 
 export type CommonFormFieldConfig = {
@@ -104,6 +106,12 @@ export type TimeFormFieldConfig = CommonFormFieldConfig;
 export type DateFormFieldConfig = CommonFormFieldConfig;
 
 export type DateTimeFormFieldConfig = CommonFormFieldConfig;
+
+export type RatingFormFieldConfig = CommonFormFieldConfig & {
+  levels: number;
+};
+
+export type NetPromoterScoreFormFieldConfig = CommonFormFieldConfig;
 
 export type FilesFormFieldConfig = CommonFormFieldConfig & {
   accept: string[];
