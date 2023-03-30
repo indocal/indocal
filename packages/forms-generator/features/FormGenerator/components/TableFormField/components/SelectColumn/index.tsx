@@ -36,7 +36,6 @@ export const SelectColumn: React.FC<SelectColumnProps> = ({
       control={control}
       formControlProps={{
         fullWidth: true,
-
         disabled: isSubmitting,
         required: config?.required,
       }}

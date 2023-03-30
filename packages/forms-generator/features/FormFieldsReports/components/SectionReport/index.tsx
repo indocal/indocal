@@ -31,6 +31,8 @@ import {
   TimeItemReport,
   DateItemReport,
   DateTimeItemReport,
+  RatingItemReport,
+  NetPromoterScoreItemReport,
   FilesItemReport,
   UsersItemReport,
 } from './components';
@@ -64,6 +66,9 @@ export const SectionReport: React.FC<SectionReportProps> = ({ report }) => {
       TIME: TimeItemReport,
       DATE: DateItemReport,
       DATETIME: DateTimeItemReport,
+
+      RATING: RatingItemReport,
+      NET_PROMOTER_SCORE: NetPromoterScoreItemReport,
 
       FILES: FilesItemReport,
 

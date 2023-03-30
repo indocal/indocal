@@ -37,6 +37,7 @@ import {
   TimeColumnAnswer,
   DateColumnAnswer,
   DateTimeColumnAnswer,
+  RatingColumnAnswer,
   FilesColumnAnswer,
   UsersColumnAnswer,
 } from './components';
@@ -75,6 +76,8 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
       TIME: TimeColumnAnswer,
       DATE: DateColumnAnswer,
       DATETIME: DateTimeColumnAnswer,
+
+      RATING: RatingColumnAnswer,
 
       FILES: FilesColumnAnswer,
 

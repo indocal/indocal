@@ -14,6 +14,8 @@ export * from './parseTimeColumnAnswer';
 export * from './parseDateColumnAnswer';
 export * from './parseDateTimeColumnAnswer';
 
+export * from './parseRatingColumnAnswer';
+
 export * from './parseFilesColumnAnswer';
 
 export * from './parseUsersColumnAnswer';

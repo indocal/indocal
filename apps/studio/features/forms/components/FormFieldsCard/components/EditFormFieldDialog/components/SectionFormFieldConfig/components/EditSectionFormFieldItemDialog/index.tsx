@@ -30,6 +30,8 @@ import {
   TimeItemConfig,
   DateItemConfig,
   DateTimeItemConfig,
+  RatingItemConfig,
+  NetPromoterScoreItemConfig,
   FilesItemConfig,
   UsersItemConfig,
   WebhookItemConfig,
@@ -79,6 +81,9 @@ export const EditSectionFormFieldItemDialog: React.FC<
       TIME: <TimeItemConfig item={item} />,
       DATE: <DateItemConfig item={item} />,
       DATETIME: <DateTimeItemConfig item={item} />,
+
+      RATING: <RatingItemConfig item={item} />,
+      NET_PROMOTER_SCORE: <NetPromoterScoreItemConfig item={item} />,
 
       FILES: <FilesItemConfig item={item} />,
 
