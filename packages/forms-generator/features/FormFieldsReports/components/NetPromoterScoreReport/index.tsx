@@ -79,7 +79,6 @@ export const NetPromoterScoreReport: React.FC<NetPromoterScoreReportProps> = ({
         (content.positive * 5 + content.neutral * 3 + content.negative * 1) /
           (content.positive + content.neutral + content.negative)
       ),
-
     [content.positive, content.neutral, content.negative]
   );
 
@@ -148,7 +147,7 @@ export const NetPromoterScoreReport: React.FC<NetPromoterScoreReportProps> = ({
             <Rating
               readOnly
               highlightSelectedOnly
-              defaultValue={nfs}
+              value={nfs}
               IconContainerComponent={({ value, ...rest }) => (
                 <span {...rest}>{icons[value]}</span>
               )}

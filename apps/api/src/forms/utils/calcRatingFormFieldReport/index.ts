@@ -18,16 +18,14 @@ export function calcRatingFormFieldReport(
     if (typeof answer.content === 'number') {
       total += answer.content;
 
-      if (answer.content) {
-        map.set(answer.field.id, {
-          field: answer.field,
-          content: {
-            count: content.count + 1,
-            na: content.na,
-            average: total / (content.count + 1),
-          },
-        });
-      }
+      map.set(answer.field.id, {
+        field: answer.field,
+        content: {
+          count: content.count + 1,
+          na: content.na,
+          average: total / (content.count + 1),
+        },
+      });
     } else {
       map.set(answer.field.id, {
         field: answer.field,

@@ -14,42 +14,40 @@ export function calcNetPromoterScoreFormFieldReport(
     const content = record.content as NetPromoterScoreFormFieldReport;
 
     if (typeof answer.content === 'number') {
-      if (answer.content) {
-        if (answer.content >= 0 && answer.content <= 3) {
-          map.set(answer.field.id, {
-            field: answer.field,
-            content: {
-              positive: content.positive,
-              neutral: content.neutral,
-              negative: content.negative + 1,
-              na: content.na,
-            },
-          });
-        }
+      if (answer.content >= 0 && answer.content <= 3) {
+        map.set(answer.field.id, {
+          field: answer.field,
+          content: {
+            positive: content.positive,
+            neutral: content.neutral,
+            negative: content.negative + 1,
+            na: content.na,
+          },
+        });
+      }
 
-        if (answer.content >= 4 && answer.content <= 6) {
-          map.set(answer.field.id, {
-            field: answer.field,
-            content: {
-              positive: content.positive,
-              neutral: content.neutral + 1,
-              negative: content.negative,
-              na: content.na,
-            },
-          });
-        }
+      if (answer.content >= 4 && answer.content <= 6) {
+        map.set(answer.field.id, {
+          field: answer.field,
+          content: {
+            positive: content.positive,
+            neutral: content.neutral + 1,
+            negative: content.negative,
+            na: content.na,
+          },
+        });
+      }
 
-        if (answer.content >= 7 && answer.content <= 10) {
-          map.set(answer.field.id, {
-            field: answer.field,
-            content: {
-              positive: content.positive + 1,
-              neutral: content.neutral,
-              negative: content.negative,
-              na: content.na,
-            },
-          });
-        }
+      if (answer.content >= 7 && answer.content <= 10) {
+        map.set(answer.field.id, {
+          field: answer.field,
+          content: {
+            positive: content.positive + 1,
+            neutral: content.neutral,
+            negative: content.negative,
+            na: content.na,
+          },
+        });
       }
     } else {
       map.set(answer.field.id, {

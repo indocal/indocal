@@ -116,11 +116,7 @@ export const RatingReport: React.FC<RatingReportProps> = ({ report }) => {
             alignItems="center"
             spacing={1}
           >
-            <Rating
-              readOnly
-              max={config?.levels}
-              defaultValue={content.average}
-            />
+            <Rating readOnly max={config?.levels} value={content.average} />
           </Grid>
         </Stack>
       </Stack>
