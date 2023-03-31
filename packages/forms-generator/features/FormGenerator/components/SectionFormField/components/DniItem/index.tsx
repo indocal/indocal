@@ -26,7 +26,7 @@ export const DniItem: React.FC<DniItemProps> = ({ field, item }) => {
 
   return (
     <ControlledDniTextField
-      name={`${field.id}.${item.title}`}
+      name={`${field.id}.${item.id}`}
       label={item.title}
       description={item.description}
       control={control}

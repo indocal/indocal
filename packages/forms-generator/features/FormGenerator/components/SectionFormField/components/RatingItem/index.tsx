@@ -31,19 +31,18 @@ export const RatingItem: React.FC<RatingItemProps> = ({ field, item }) => {
         padding: (theme) => theme.spacing(1, 1.5, 0.25),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) =>
-          errors[field.id] && (errors[field.id] as FieldErrors)[item.title]
+          errors[field.id] && (errors[field.id] as FieldErrors)[item.id]
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
 
-        ...(((errors[field.id] &&
-          (errors[field.id] as FieldErrors)[item.title]) ||
+        ...(((errors[field.id] && (errors[field.id] as FieldErrors)[item.id]) ||
           item.description) && {
           paddingBottom: (theme) => theme.spacing(1.25),
         }),
       }}
     >
       <ControlledRating
-        name={`${field.id}.${item.title}`}
+        name={`${field.id}.${item.id}`}
         label={item.title}
         description={item.description}
         control={control}

@@ -9,14 +9,14 @@ export function calcNetPromoterScoreItemReport(
   answer: SectionFormFieldItemAnswer,
   map: Map<string, SectionFormFieldItemReport>
 ): void {
-  const record = map.get(answer.item.title);
+  const record = map.get(answer.item.id);
 
   if (record) {
     const content = record.content as NetPromoterScoreFormFieldReport;
 
     if (typeof answer.content === 'number') {
       if (answer.content >= 0 && answer.content <= 3) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             positive: content.positive,
@@ -28,7 +28,7 @@ export function calcNetPromoterScoreItemReport(
       }
 
       if (answer.content >= 4 && answer.content <= 6) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             positive: content.positive,
@@ -40,7 +40,7 @@ export function calcNetPromoterScoreItemReport(
       }
 
       if (answer.content >= 7 && answer.content <= 10) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             positive: content.positive + 1,
@@ -51,7 +51,7 @@ export function calcNetPromoterScoreItemReport(
         });
       }
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           positive: content.positive,
@@ -64,7 +64,7 @@ export function calcNetPromoterScoreItemReport(
   } else {
     if (typeof answer.content === 'number') {
       if (answer.content >= 0 && answer.content <= 3) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             positive: 0,
@@ -76,7 +76,7 @@ export function calcNetPromoterScoreItemReport(
       }
 
       if (answer.content >= 4 && answer.content <= 6) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             positive: 0,
@@ -88,7 +88,7 @@ export function calcNetPromoterScoreItemReport(
       }
 
       if (answer.content >= 7 && answer.content <= 10) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             positive: 1,
@@ -99,7 +99,7 @@ export function calcNetPromoterScoreItemReport(
         });
       }
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           positive: 0,

@@ -11,13 +11,13 @@ export function calcUsersItemReport(
   answer: SectionFormFieldItemAnswer,
   map: Map<string, SectionFormFieldItemReport>
 ): void {
-  const record = map.get(answer.item.title);
+  const record = map.get(answer.item.id);
 
   if (record) {
     const content = record.content as UsersFormFieldReport;
 
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: content.count + 1,
@@ -29,13 +29,13 @@ export function calcUsersItemReport(
       const users = answer.content as UUID[];
 
       users.forEach((user) => {
-        const record = map.get(answer.item.title);
+        const record = map.get(answer.item.id);
 
         if (!record) return;
 
         const content = record.content as UsersFormFieldReport;
 
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             count: content.count + 1,
@@ -45,7 +45,7 @@ export function calcUsersItemReport(
         });
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: content.count,
@@ -56,7 +56,7 @@ export function calcUsersItemReport(
     }
   } else {
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: 1,
@@ -67,7 +67,7 @@ export function calcUsersItemReport(
     } else if (Array.isArray(answer.content)) {
       const users = answer.content as UUID[];
 
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: 0,
@@ -77,13 +77,13 @@ export function calcUsersItemReport(
       });
 
       users.forEach((user) => {
-        const record = map.get(answer.item.title);
+        const record = map.get(answer.item.id);
 
         if (!record) return;
 
         const content = record.content as UsersFormFieldReport;
 
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             count: content.count + 1,
@@ -93,7 +93,7 @@ export function calcUsersItemReport(
         });
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: 0,

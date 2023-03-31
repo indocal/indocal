@@ -33,7 +33,7 @@ export const FilesItem: React.FC<FilesItemProps> = ({ field, item }) => {
         padding: (theme) => theme.spacing(1, 2, 1.5),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) =>
-          errors[field.id] && (errors[field.id] as FieldErrors)[item.title]
+          errors[field.id] && (errors[field.id] as FieldErrors)[item.id]
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
       }}
@@ -47,7 +47,7 @@ export const FilesItem: React.FC<FilesItemProps> = ({ field, item }) => {
         sx={{
           width: 'fit-content',
           ...(errors[field.id] &&
-            (errors[field.id] as FieldErrors)[item.title] && {
+            (errors[field.id] as FieldErrors)[item.id] && {
               color: (theme) => theme.palette.error.main,
             }),
         }}
@@ -58,7 +58,7 @@ export const FilesItem: React.FC<FilesItemProps> = ({ field, item }) => {
       <ControlledFilesDropzone
         required={config?.required}
         multiple={config?.multiple}
-        name={`${field.id}.${item.title}`}
+        name={`${field.id}.${item.id}`}
         description={item.description}
         control={control}
         disabled={isSubmitting}

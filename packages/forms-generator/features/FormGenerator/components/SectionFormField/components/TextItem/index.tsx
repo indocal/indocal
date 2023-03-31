@@ -31,7 +31,7 @@ export const TextItem: React.FC<TextItemProps> = ({ field, item }) => {
       size="small"
       label={item.title}
       disabled={isSubmitting}
-      inputProps={register(`${field.id}.${item.title}`, {
+      inputProps={register(`${field.id}.${item.id}`, {
         required: {
           value: Boolean(config?.required),
           message: 'Debe completar este campo',
@@ -54,12 +54,11 @@ export const TextItem: React.FC<TextItemProps> = ({ field, item }) => {
           }),
       })}
       error={
-        errors[field.id] &&
-        Boolean((errors[field.id] as FieldErrors)[item.title])
+        errors[field.id] && Boolean((errors[field.id] as FieldErrors)[item.id])
       }
       helperText={
         (errors[field.id] &&
-          ((errors[field.id] as FieldErrors)[item.title]?.message as string)) ||
+          ((errors[field.id] as FieldErrors)[item.id]?.message as string)) ||
         item.description
       }
     />

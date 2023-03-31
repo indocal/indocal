@@ -9,7 +9,7 @@ export function calcRatingItemReport(
   answer: SectionFormFieldItemAnswer,
   map: Map<string, SectionFormFieldItemReport>
 ): void {
-  const record = map.get(answer.item.title);
+  const record = map.get(answer.item.id);
 
   let total = 0;
 
@@ -19,7 +19,7 @@ export function calcRatingItemReport(
     if (typeof answer.content === 'number') {
       total += answer.content;
 
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: content.count + 1,
@@ -28,7 +28,7 @@ export function calcRatingItemReport(
         },
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: content.count,
@@ -41,7 +41,7 @@ export function calcRatingItemReport(
     if (typeof answer.content === 'number') {
       total += answer.content;
 
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: 1,
@@ -50,7 +50,7 @@ export function calcRatingItemReport(
         },
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: 0,

@@ -76,7 +76,7 @@ export function calcSectionFormFieldReport(
       const acc = record.content as SectionFormFieldItemReport[];
 
       const items = new Map<string, SectionFormFieldItemReport>(
-        acc.map((item) => [item.item.title, item])
+        acc.map((item) => [item.item.id, item])
       );
 
       content.forEach(({ item, content }) => {

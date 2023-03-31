@@ -9,13 +9,13 @@ export function calcDateTimeItemReport(
   answer: SectionFormFieldItemAnswer,
   map: Map<string, SectionFormFieldItemReport>
 ): void {
-  const record = map.get(answer.item.title);
+  const record = map.get(answer.item.id);
 
   if (record) {
     const content = record.content as DateTimeFormFieldReport;
 
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: content.count + 1,
@@ -24,7 +24,7 @@ export function calcDateTimeItemReport(
         },
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: content.count,
@@ -35,7 +35,7 @@ export function calcDateTimeItemReport(
     }
   } else {
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: 1,
@@ -44,7 +44,7 @@ export function calcDateTimeItemReport(
         },
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           count: 0,

@@ -9,14 +9,14 @@ export function calcCheckboxItemReport(
   answer: SectionFormFieldItemAnswer,
   map: Map<string, SectionFormFieldItemReport>
 ): void {
-  const record = map.get(answer.item.title);
+  const record = map.get(answer.item.id);
 
   if (record) {
     const content = record.content as CheckboxFormFieldReport;
 
     if (typeof answer.content === 'boolean') {
       if (answer.content) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             yes: content.yes + 1,
@@ -25,7 +25,7 @@ export function calcCheckboxItemReport(
           },
         });
       } else {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             yes: content.yes,
@@ -35,7 +35,7 @@ export function calcCheckboxItemReport(
         });
       }
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           yes: content.yes,
@@ -47,7 +47,7 @@ export function calcCheckboxItemReport(
   } else {
     if (typeof answer.content === 'boolean') {
       if (answer.content) {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             yes: 1,
@@ -56,7 +56,7 @@ export function calcCheckboxItemReport(
           },
         });
       } else {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             yes: 0,
@@ -66,7 +66,7 @@ export function calcCheckboxItemReport(
         });
       }
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           yes: 0,

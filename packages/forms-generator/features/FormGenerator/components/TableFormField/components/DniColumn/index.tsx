@@ -32,7 +32,7 @@ export const DniColumn: React.FC<DniColumnProps> = ({
 
   return (
     <ControlledDniTextField
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       control={control}
       textFieldProps={{
         size: 'small',

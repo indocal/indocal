@@ -9,13 +9,13 @@ export function calcSelectColumnReport(
   answer: TableFormFieldColumnAnswer,
   map: Map<string, TableFormFieldColumnReport>
 ): void {
-  const record = map.get(answer.column.heading);
+  const record = map.get(answer.column.id);
 
   if (record) {
     const content = record.content as SelectFormFieldReport;
 
     if (typeof answer.content === 'string') {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           ...content,
@@ -28,14 +28,14 @@ export function calcSelectColumnReport(
     } else if (Array.isArray(answer.content)) {
       const options = answer.content as string[];
 
-      const record = map.get(answer.column.heading);
+      const record = map.get(answer.column.id);
 
       if (!record) return;
 
       const content = record.content as SelectFormFieldReport;
 
       options.forEach((option) => {
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             ...content,
@@ -45,7 +45,7 @@ export function calcSelectColumnReport(
         });
       });
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           ...content,
@@ -55,7 +55,7 @@ export function calcSelectColumnReport(
     }
   } else {
     if (typeof answer.content === 'string') {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           [answer.content]: 1,
@@ -65,7 +65,7 @@ export function calcSelectColumnReport(
     } else if (Array.isArray(answer.content)) {
       const options = answer.content as string[];
 
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           na: 0,
@@ -73,13 +73,13 @@ export function calcSelectColumnReport(
       });
 
       options.forEach((option) => {
-        const record = map.get(answer.column.heading);
+        const record = map.get(answer.column.id);
 
         if (!record) return;
 
         const content = record.content as SelectFormFieldReport;
 
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             ...content,
@@ -89,7 +89,7 @@ export function calcSelectColumnReport(
         });
       });
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           na: 1,

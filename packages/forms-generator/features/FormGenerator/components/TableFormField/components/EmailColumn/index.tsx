@@ -38,7 +38,7 @@ export const EmailColumn: React.FC<EmailColumnProps> = ({
       size="small"
       placeholder="example@domain.com"
       disabled={isSubmitting}
-      inputProps={register(`${field.id}.${row}.${column.heading}`, {
+      inputProps={register(`${field.id}.${row}.${column.id}`, {
         required: {
           value: Boolean(config?.required),
           message: 'Debe completar este campo',
@@ -52,17 +52,13 @@ export const EmailColumn: React.FC<EmailColumnProps> = ({
       error={Boolean(
         errors[field.id] &&
           (errors[field.id] as FieldErrors)[row] &&
-          ((errors[field.id] as FieldErrors)[row] as FieldErrors)[
-            column.heading
-          ]
+          ((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.id]
       )}
       helperText={
         errors[field.id] &&
         (errors[field.id] as FieldErrors)[row] &&
-        ((errors[field.id] as FieldErrors)[row] as FieldErrors)[
-          column.heading
-        ] &&
-        (((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.heading]
+        ((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.id] &&
+        (((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.id]
           ?.message as string)
       }
       FormHelperTextProps={{ sx: { marginX: 0 } }}

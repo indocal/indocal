@@ -73,6 +73,14 @@ const itemConfigSchema = zod.object({
 });
 
 const itemSchema = zod.object({
+  id: zod
+    .string({
+      description: 'ID del campo',
+      required_error: 'Debe ingresar el ID del campo',
+      invalid_type_error: 'Formato no válido',
+    })
+    .uuid('Debe ingresar un UUID válido'),
+
   type: zod
     .enum<string, [SectionFormFieldItemType, ...SectionFormFieldItemType[]]>(
       [

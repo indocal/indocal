@@ -33,7 +33,7 @@ export const UsersColumn: React.FC<UsersColumnProps> = ({
     <ControlledUsersAutocomplete
       required={config?.required}
       multiple={config?.multiple}
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       control={control}
       disabled={isSubmitting}
       textFieldProps={{

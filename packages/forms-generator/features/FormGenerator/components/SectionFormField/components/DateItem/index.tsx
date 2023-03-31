@@ -27,7 +27,7 @@ export const DateItem: React.FC<DateItemProps> = ({ field, item }) => {
 
   return (
     <ControlledDatePicker
-      name={`${field.id}.${item.title}`}
+      name={`${field.id}.${item.id}`}
       label={item.title}
       description={item.description}
       control={control}

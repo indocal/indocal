@@ -32,7 +32,7 @@ export const NumberItem: React.FC<NumberItemProps> = ({ field, item }) => {
       size="small"
       label={item.title}
       disabled={isSubmitting}
-      inputProps={register(`${field.id}.${item.title}`, {
+      inputProps={register(`${field.id}.${item.id}`, {
         valueAsNumber: true,
 
         required: {
@@ -57,12 +57,11 @@ export const NumberItem: React.FC<NumberItemProps> = ({ field, item }) => {
           }),
       })}
       error={
-        errors[field.id] &&
-        Boolean((errors[field.id] as FieldErrors)[item.title])
+        errors[field.id] && Boolean((errors[field.id] as FieldErrors)[item.id])
       }
       helperText={
         (errors[field.id] &&
-          ((errors[field.id] as FieldErrors)[item.title]?.message as string)) ||
+          ((errors[field.id] as FieldErrors)[item.id]?.message as string)) ||
         item.description
       }
     />

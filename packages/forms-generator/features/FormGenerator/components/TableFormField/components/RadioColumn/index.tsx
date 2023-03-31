@@ -32,7 +32,7 @@ export const RadioColumn: React.FC<RadioColumnProps> = ({
 
   return (
     <ControlledRadioGroup
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       control={control}
       formControlProps={{
         disabled: isSubmitting,

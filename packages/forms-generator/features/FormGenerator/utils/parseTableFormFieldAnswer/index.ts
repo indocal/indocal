@@ -84,7 +84,7 @@ export function parseTableFormFieldAnswer(
               config.columns.map((column) =>
                 parsers[column.type]({
                   column,
-                  content: rows[row][column.heading] as null,
+                  content: rows[row][column.id] as null,
                 })
               ) as TableFormFieldRowAnswer
           )

@@ -32,7 +32,7 @@ export const TimeColumn: React.FC<TimeColumnProps> = ({
 
   return (
     <ControlledTimePicker
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       control={control}
       timePickerProps={{ disabled: isSubmitting }}
       textFieldProps={{

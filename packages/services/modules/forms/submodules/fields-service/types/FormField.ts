@@ -1,4 +1,4 @@
-import { Entity } from '../../../../../common';
+import { Entity, UUID } from '../../../../../common';
 
 import { FormStatus, FormVisibility, FormConfig } from '../../../types';
 
@@ -143,6 +143,7 @@ export type SectionFormFieldConfig = CommonFormFieldConfig & {
 };
 
 export type SectionFormFieldItem = {
+  id: UUID;
   type: SectionFormFieldItemType;
   title: string;
   description: string | null;
@@ -193,6 +194,7 @@ export type TableFormFieldConfig = CommonFormFieldConfig & {
 };
 
 export type TableFormFieldColumn = {
+  id: UUID;
   type: TableFormFieldColumnType;
   heading: string;
   config: TableFormFieldColumnConfig | null;

@@ -21,6 +21,7 @@ import {
 import { useFormContext, useFieldArray, Control } from 'react-hook-form';
 
 import { NoData, ControlledCheckbox } from '@indocal/ui';
+import { generateUUID } from '@indocal/utils';
 
 import { EditFormFieldDialogData } from '../../context';
 
@@ -131,7 +132,7 @@ const TableFormFieldConfig: React.FC = () => {
             <IconButton
               size="small"
               disabled={isSubmitting}
-              onClick={() => append({ type: 'TEXT' })}
+              onClick={() => append({ id: generateUUID(), type: 'TEXT' })}
             >
               <AddIcon />
             </IconButton>

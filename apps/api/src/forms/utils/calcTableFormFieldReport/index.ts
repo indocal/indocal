@@ -74,7 +74,7 @@ export function calcTableFormFieldReport(
       const acc = record.content as TableFormFieldColumnReport[];
 
       const columns = new Map<string, TableFormFieldColumnReport>(
-        acc.map((column) => [column.column.heading, column])
+        acc.map((column) => [column.column.id, column])
       );
 
       content.forEach((row) => {

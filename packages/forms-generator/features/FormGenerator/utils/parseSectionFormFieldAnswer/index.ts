@@ -82,7 +82,7 @@ export function parseSectionFormFieldAnswer(
         ? (config.items.map((item) =>
             parsers[item.type]({
               item,
-              content: items[item.title] as null,
+              content: items[item.id] as null,
             })
           ) as SectionFormFieldAnswer)
         : null,

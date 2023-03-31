@@ -31,7 +31,7 @@ export const RatingColumn: React.FC<RatingColumnProps> = ({
 
   return (
     <ControlledRating
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       control={control}
       formControlProps={{
         required: config?.required,

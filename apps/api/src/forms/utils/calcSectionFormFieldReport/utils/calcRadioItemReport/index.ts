@@ -9,13 +9,13 @@ export function calcRadioItemReport(
   answer: SectionFormFieldItemAnswer,
   map: Map<string, SectionFormFieldItemReport>
 ): void {
-  const record = map.get(answer.item.title);
+  const record = map.get(answer.item.id);
 
   if (record) {
     const content = record.content as RadioFormFieldReport;
 
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           ...content,
@@ -26,7 +26,7 @@ export function calcRadioItemReport(
         },
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           ...content,
@@ -36,7 +36,7 @@ export function calcRadioItemReport(
     }
   } else {
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           [answer.content]: 1,
@@ -44,7 +44,7 @@ export function calcRadioItemReport(
         },
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           na: 1,

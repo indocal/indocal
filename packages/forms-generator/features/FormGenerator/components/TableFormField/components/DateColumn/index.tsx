@@ -32,7 +32,7 @@ export const DateColumn: React.FC<DateColumnProps> = ({
 
   return (
     <ControlledDatePicker
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       control={control}
       datePickerProps={{ disabled: isSubmitting }}
       textFieldProps={{

@@ -9,14 +9,14 @@ export function calcCheckboxColumnReport(
   answer: TableFormFieldColumnAnswer,
   map: Map<string, TableFormFieldColumnReport>
 ): void {
-  const record = map.get(answer.column.heading);
+  const record = map.get(answer.column.id);
 
   if (record) {
     const content = record.content as CheckboxFormFieldReport;
 
     if (typeof answer.content === 'boolean') {
       if (answer.content) {
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             yes: content.yes + 1,
@@ -25,7 +25,7 @@ export function calcCheckboxColumnReport(
           },
         });
       } else {
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             yes: content.yes,
@@ -35,7 +35,7 @@ export function calcCheckboxColumnReport(
         });
       }
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           yes: content.yes,
@@ -47,7 +47,7 @@ export function calcCheckboxColumnReport(
   } else {
     if (typeof answer.content === 'boolean') {
       if (answer.content) {
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             yes: 1,
@@ -56,7 +56,7 @@ export function calcCheckboxColumnReport(
           },
         });
       } else {
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             yes: 0,
@@ -66,7 +66,7 @@ export function calcCheckboxColumnReport(
         });
       }
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           yes: 0,

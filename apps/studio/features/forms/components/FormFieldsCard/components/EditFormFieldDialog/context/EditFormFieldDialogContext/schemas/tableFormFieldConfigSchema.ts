@@ -71,6 +71,14 @@ const columnConfigSchema = zod.object({
 });
 
 const columnSchema = zod.object({
+  id: zod
+    .string({
+      description: 'ID de la columna',
+      required_error: 'Debe ingresar el ID de la columna',
+      invalid_type_error: 'Formato no válido',
+    })
+    .uuid('Debe ingresar un UUID válido'),
+
   type: zod
     .enum<string, [TableFormFieldColumnType, ...TableFormFieldColumnType[]]>(
       [

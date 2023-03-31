@@ -31,7 +31,7 @@ export const CheckboxColumn: React.FC<CheckboxColumnProps> = ({
 
   return (
     <ControlledCheckbox
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       label={column.heading}
       control={control}
       formControlProps={{

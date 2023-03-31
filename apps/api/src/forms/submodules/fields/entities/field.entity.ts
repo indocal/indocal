@@ -129,6 +129,7 @@ export type SectionFormFieldConfig = CommonFormFieldConfig & {
 };
 
 export type SectionFormFieldItem = {
+  id: UUID;
   type: SectionFormFieldItemType;
   title: string;
   description: string | null;
@@ -179,6 +180,7 @@ export type TableFormFieldConfig = CommonFormFieldConfig & {
 };
 
 export type TableFormFieldColumn = {
+  id: UUID;
   type: TableFormFieldColumnType;
   heading: string;
   config: TableFormFieldColumnConfig | null;

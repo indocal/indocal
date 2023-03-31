@@ -9,7 +9,7 @@ export function calcRatingColumnReport(
   answer: TableFormFieldColumnAnswer,
   map: Map<string, TableFormFieldColumnReport>
 ): void {
-  const record = map.get(answer.column.heading);
+  const record = map.get(answer.column.id);
 
   let total = 0;
 
@@ -19,7 +19,7 @@ export function calcRatingColumnReport(
     if (typeof answer.content === 'number') {
       total += answer.content;
 
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: content.count + 1,
@@ -28,7 +28,7 @@ export function calcRatingColumnReport(
         },
       });
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: content.count,
@@ -41,7 +41,7 @@ export function calcRatingColumnReport(
     if (typeof answer.content === 'number') {
       total += answer.content;
 
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: 1,
@@ -50,7 +50,7 @@ export function calcRatingColumnReport(
         },
       });
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: 0,

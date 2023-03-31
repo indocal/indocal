@@ -11,13 +11,13 @@ export function calcUsersColumnReport(
   answer: TableFormFieldColumnAnswer,
   map: Map<string, TableFormFieldColumnReport>
 ): void {
-  const record = map.get(answer.column.heading);
+  const record = map.get(answer.column.id);
 
   if (record) {
     const content = record.content as UsersFormFieldReport;
 
     if (typeof answer.content === 'string') {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: content.count + 1,
@@ -29,13 +29,13 @@ export function calcUsersColumnReport(
       const users = answer.content as UUID[];
 
       users.forEach((user) => {
-        const record = map.get(answer.column.heading);
+        const record = map.get(answer.column.id);
 
         if (!record) return;
 
         const content = record.content as UsersFormFieldReport;
 
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             count: content.count + 1,
@@ -45,7 +45,7 @@ export function calcUsersColumnReport(
         });
       });
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: content.count,
@@ -56,7 +56,7 @@ export function calcUsersColumnReport(
     }
   } else {
     if (typeof answer.content === 'string') {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: 1,
@@ -67,7 +67,7 @@ export function calcUsersColumnReport(
     } else if (Array.isArray(answer.content)) {
       const users = answer.content as UUID[];
 
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: 0,
@@ -77,13 +77,13 @@ export function calcUsersColumnReport(
       });
 
       users.forEach((user) => {
-        const record = map.get(answer.column.heading);
+        const record = map.get(answer.column.id);
 
         if (!record) return;
 
         const content = record.content as UsersFormFieldReport;
 
-        map.set(answer.column.heading, {
+        map.set(answer.column.id, {
           column: answer.column,
           content: {
             count: content.count + 1,
@@ -93,7 +93,7 @@ export function calcUsersColumnReport(
         });
       });
     } else {
-      map.set(answer.column.heading, {
+      map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: 0,

@@ -27,7 +27,7 @@ export const SelectItem: React.FC<SelectItemProps> = ({ field, item }) => {
 
   return (
     <ControlledSelect
-      name={`${field.id}.${item.title}`}
+      name={`${field.id}.${item.id}`}
       label={item.title}
       description={item.description}
       control={control}

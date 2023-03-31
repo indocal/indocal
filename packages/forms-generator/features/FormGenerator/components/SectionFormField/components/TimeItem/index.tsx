@@ -27,7 +27,7 @@ export const TimeItem: React.FC<TimeItemProps> = ({ field, item }) => {
 
   return (
     <ControlledTimePicker
-      name={`${field.id}.${item.title}`}
+      name={`${field.id}.${item.id}`}
       label={item.title}
       description={item.description}
       control={control}

@@ -28,7 +28,7 @@ export const UsersItem: React.FC<UsersItemProps> = ({ field, item }) => {
     <ControlledUsersAutocomplete
       required={config?.required}
       multiple={config?.multiple}
-      name={`${field.id}.${item.title}`}
+      name={`${field.id}.${item.id}`}
       label={item.title}
       description={item.description}
       control={control}

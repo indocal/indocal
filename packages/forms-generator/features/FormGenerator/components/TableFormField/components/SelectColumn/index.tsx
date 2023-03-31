@@ -32,7 +32,7 @@ export const SelectColumn: React.FC<SelectColumnProps> = ({
 
   return (
     <ControlledSelect
-      name={`${field.id}.${row}.${column.heading}`}
+      name={`${field.id}.${row}.${column.id}`}
       control={control}
       formControlProps={{
         fullWidth: true,

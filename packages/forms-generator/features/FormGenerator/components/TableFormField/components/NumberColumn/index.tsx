@@ -38,7 +38,7 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
       size="small"
       placeholder="#"
       disabled={isSubmitting}
-      inputProps={register(`${field.id}.${row}.${column.heading}`, {
+      inputProps={register(`${field.id}.${row}.${column.id}`, {
         valueAsNumber: true,
 
         required: {
@@ -65,17 +65,13 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
       error={Boolean(
         errors[field.id] &&
           (errors[field.id] as FieldErrors)[row] &&
-          ((errors[field.id] as FieldErrors)[row] as FieldErrors)[
-            column.heading
-          ]
+          ((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.id]
       )}
       helperText={
         errors[field.id] &&
         (errors[field.id] as FieldErrors)[row] &&
-        ((errors[field.id] as FieldErrors)[row] as FieldErrors)[
-          column.heading
-        ] &&
-        (((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.heading]
+        ((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.id] &&
+        (((errors[field.id] as FieldErrors)[row] as FieldErrors)[column.id]
           ?.message as string)
       }
       FormHelperTextProps={{ sx: { marginX: 0 } }}

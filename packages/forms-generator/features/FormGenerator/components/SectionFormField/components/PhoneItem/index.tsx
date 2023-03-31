@@ -26,7 +26,7 @@ export const PhoneItem: React.FC<PhoneItemProps> = ({ field, item }) => {
 
   return (
     <ControlledPhoneTextField
-      name={`${field.id}.${item.title}`}
+      name={`${field.id}.${item.id}`}
       label={item.title}
       description={item.description}
       control={control}

@@ -9,13 +9,13 @@ export function calcSelectItemReport(
   answer: SectionFormFieldItemAnswer,
   map: Map<string, SectionFormFieldItemReport>
 ): void {
-  const record = map.get(answer.item.title);
+  const record = map.get(answer.item.id);
 
   if (record) {
     const content = record.content as SelectFormFieldReport;
 
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           ...content,
@@ -28,14 +28,14 @@ export function calcSelectItemReport(
     } else if (Array.isArray(answer.content)) {
       const options = answer.content as string[];
 
-      const record = map.get(answer.item.title);
+      const record = map.get(answer.item.id);
 
       if (!record) return;
 
       const content = record.content as SelectFormFieldReport;
 
       options.forEach((option) => {
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             ...content,
@@ -45,7 +45,7 @@ export function calcSelectItemReport(
         });
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           ...content,
@@ -55,7 +55,7 @@ export function calcSelectItemReport(
     }
   } else {
     if (typeof answer.content === 'string') {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           [answer.content]: 1,
@@ -65,7 +65,7 @@ export function calcSelectItemReport(
     } else if (Array.isArray(answer.content)) {
       const options = answer.content as string[];
 
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           na: 0,
@@ -73,13 +73,13 @@ export function calcSelectItemReport(
       });
 
       options.forEach((option) => {
-        const record = map.get(answer.item.title);
+        const record = map.get(answer.item.id);
 
         if (!record) return;
 
         const content = record.content as SelectFormFieldReport;
 
-        map.set(answer.item.title, {
+        map.set(answer.item.id, {
           item: answer.item,
           content: {
             ...content,
@@ -89,7 +89,7 @@ export function calcSelectItemReport(
         });
       });
     } else {
-      map.set(answer.item.title, {
+      map.set(answer.item.id, {
         item: answer.item,
         content: {
           na: 1,
