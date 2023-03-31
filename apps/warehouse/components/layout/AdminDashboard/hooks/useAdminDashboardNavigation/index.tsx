@@ -40,7 +40,11 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
       {
         type: 'ITEM',
         item: {
-          show: true,
+          show:
+            ability.can('count', 'supply') ||
+            ability.can('count', 'supplier') ||
+            ability.can('count', 'order') ||
+            ability.can('count', 'inventoryMovement'),
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,
