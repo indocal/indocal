@@ -22,6 +22,8 @@ import {
   calcTimeItemReport,
   calcDateItemReport,
   calcDateTimeItemReport,
+  calcRatingItemReport,
+  calcNetPromoterScoreItemReport,
   calcUsersItemReport,
   calcFilesItemReport,
 } from './utils';
@@ -52,6 +54,9 @@ export function calcSectionFormFieldReport(
     TIME: calcTimeItemReport,
     DATE: calcDateItemReport,
     DATETIME: calcDateTimeItemReport,
+
+    RATING: calcRatingItemReport,
+    NET_PROMOTER_SCORE: calcNetPromoterScoreItemReport,
 
     FILES: calcUsersItemReport,
 

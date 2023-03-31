@@ -14,6 +14,8 @@ export * from './calcTimeColumnReport';
 export * from './calcDateColumnReport';
 export * from './calcDateTimeColumnReport';
 
+export * from './calcRatingColumnReport';
+
 export * from './calcUsersColumnReport';
 
 export * from './calcFilesColumnReport';

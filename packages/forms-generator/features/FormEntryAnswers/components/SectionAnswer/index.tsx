@@ -31,6 +31,8 @@ import {
   TimeItemAnswer,
   DateItemAnswer,
   DateTimeItemAnswer,
+  RatingItemAnswer,
+  NetPromoterScoreItemAnswer,
   FilesItemAnswer,
   UsersItemAnswer,
 } from './components';
@@ -64,6 +66,9 @@ export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
       TIME: TimeItemAnswer,
       DATE: DateItemAnswer,
       DATETIME: DateTimeItemAnswer,
+
+      RATING: RatingItemAnswer,
+      NET_PROMOTER_SCORE: NetPromoterScoreItemAnswer,
 
       FILES: FilesItemAnswer,
 

@@ -18,6 +18,8 @@ import {
   TimeItem,
   DateItem,
   DateTimeItem,
+  RatingItem,
+  NetPromoterScoreItem,
   FilesItem,
   UsersItem,
 } from './components';
@@ -55,6 +57,9 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
       TIME: TimeItem,
       DATE: DateItem,
       DATETIME: DateTimeItem,
+
+      RATING: RatingItem,
+      NET_PROMOTER_SCORE: NetPromoterScoreItem,
 
       FILES: FilesItem,
 
@@ -110,22 +115,25 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
         )}
       </Stack>
 
-      {field.description && (
-        <Typography
-          component="pre"
-          variant="caption"
-          color="text.secondary"
-          sx={{
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
-            ...(errors[field.id] && {
-              color: (theme) => theme.palette.error.main,
-            }),
-          }}
-        >
-          {field.description}
-        </Typography>
-      )}
+      {field.description &&
+        config &&
+        config.items &&
+        config.items.length > 0 && (
+          <Typography
+            component="pre"
+            variant="caption"
+            color="text.secondary"
+            sx={{
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              ...(errors[field.id] && {
+                color: (theme) => theme.palette.error.main,
+              }),
+            }}
+          >
+            {field.description}
+          </Typography>
+        )}
     </Stack>
   );
 };

@@ -116,6 +116,8 @@ export type SectionFormFieldItemAnswer = {
     | TimeFormFieldAnswer
     | DateFormFieldAnswer
     | DateTimeFormFieldAnswer
+    | RatingFormFieldAnswer
+    | NetPromoterScoreFormFieldAnswer
     | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | null;
@@ -140,6 +142,7 @@ export type TableFormFieldColumnAnswer = {
     | TimeFormFieldAnswer
     | DateFormFieldAnswer
     | DateTimeFormFieldAnswer
+    | RatingFormFieldAnswer
     | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | null;

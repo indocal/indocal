@@ -18,6 +18,8 @@ import {
   parseTimeItemAnswer,
   parseDateItemAnswer,
   parseDateTimeItemAnswer,
+  parseRatingItemAnswer,
+  parseNetPromoterScoreItemAnswer,
   parseFilesItemAnswer,
   parseUsersItemAnswer,
 } from './utils';
@@ -36,6 +38,8 @@ export type SectionFormFieldFormData = Record<
   | Parameters<typeof parseTimeItemAnswer>[number]['content']
   | Parameters<typeof parseDateItemAnswer>[number]['content']
   | Parameters<typeof parseDateTimeItemAnswer>[number]['content']
+  | Parameters<typeof parseRatingItemAnswer>[number]['content']
+  | Parameters<typeof parseNetPromoterScoreItemAnswer>[number]['content']
   | Parameters<typeof parseFilesItemAnswer>[number]['content']
   | Parameters<typeof parseUsersItemAnswer>[number]['content']
 >;
@@ -62,6 +66,9 @@ export function parseSectionFormFieldAnswer(
     TIME: parseTimeItemAnswer,
     DATE: parseDateItemAnswer,
     DATETIME: parseDateTimeItemAnswer,
+
+    RATING: parseRatingItemAnswer,
+    NET_PROMOTER_SCORE: parseNetPromoterScoreItemAnswer,
 
     FILES: parseFilesItemAnswer,
 

@@ -148,6 +148,8 @@ export type SectionFormFieldItemType =
   | 'TIME'
   | 'DATE'
   | 'DATETIME'
+  | 'RATING'
+  | 'NET_PROMOTER_SCORE'
   | 'FILES'
   | 'USERS';
 
@@ -164,6 +166,8 @@ export type SectionFormFieldItemConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | RatingFormFieldConfig
+  | NetPromoterScoreFormFieldConfig
   | FilesFormFieldConfig
   | UsersFormFieldConfig
 >;
@@ -193,6 +197,7 @@ export type TableFormFieldColumnType =
   | 'TIME'
   | 'DATE'
   | 'DATETIME'
+  | 'RATING'
   | 'FILES'
   | 'USERS';
 
@@ -209,6 +214,7 @@ export type TableFormFieldColumnConfig = Partial<
   | TimeFormFieldConfig
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
+  | RatingFormFieldConfig
   | FilesFormFieldConfig
   | UsersFormFieldConfig
 >;

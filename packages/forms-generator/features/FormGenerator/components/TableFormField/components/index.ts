@@ -14,6 +14,8 @@ export * from './TimeColumn';
 export * from './DateColumn';
 export * from './DateTimeColumn';
 
+export * from './RatingColumn';
+
 export * from './FilesColumn';
 
 export * from './UsersColumn';
