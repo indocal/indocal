@@ -38,14 +38,6 @@ async function main() {
       actions: ['count', 'read', 'create', 'update', 'delete'],
     },
     {
-      scope: 'event',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
-    },
-    {
-      scope: 'eventGuest',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
-    },
-    {
       scope: 'form',
       actions: [
         'count',
@@ -114,7 +106,6 @@ async function main() {
               studio: 'ADMIN',
               hub: 'ADMIN',
               nobu: 'ADMIN',
-              events: 'ADMIN',
               trainings: 'ADMIN',
               warehouse: 'ADMIN',
             },

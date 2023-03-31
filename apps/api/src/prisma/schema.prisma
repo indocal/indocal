@@ -202,51 +202,6 @@ model FormEntry {
 // Nobu Management //
 /////////////////////
 
-///////////////////////
-// Events Management //
-///////////////////////
-
-model Event {
-  id          String  @id @default(uuid())
-  slug        String  @unique
-  title       String
-  description String?
-
-  status EventStatus @default(SCHEDULED)
-
-  guests EventGuest[]
-
-  scheduledAt DateTime
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum EventStatus {
-  SCHEDULED
-  OVERDUED
-}
-
-model EventGuest {
-  id   String @id @default(uuid())
-  dni  String
-  name String
-
-  email String
-  phone String
-
-  from     String
-  position String
-
-  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([dni, eventId])
-}
-
 //////////////////////////
 // Trainings Management //
 //////////////////////////

@@ -350,85 +350,85 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
         ],
       },
       {
-        label: 'Eventos',
+        label: 'Librería de archivos',
         subPanels: [
           {
-            scope: 'event',
+            scope: 'file',
             permissions: [
               {
                 label: 'Contar',
                 action: 'count',
                 checked:
-                  Boolean(permissions?.event) &&
-                  Boolean(permissions?.event['count']),
+                  Boolean(permissions?.file) &&
+                  Boolean(permissions?.file['count']),
               },
               {
                 label: 'Leer',
                 action: 'read',
                 checked:
-                  Boolean(permissions?.event) &&
-                  Boolean(permissions?.event['read']),
+                  Boolean(permissions?.file) &&
+                  Boolean(permissions?.file['read']),
               },
               {
-                label: 'Crear',
-                action: 'create',
+                label: 'Cargar archivos',
+                action: 'upload',
                 checked:
-                  Boolean(permissions?.event) &&
-                  Boolean(permissions?.event['create']),
+                  Boolean(permissions?.file) &&
+                  Boolean(permissions?.file['upload']),
               },
               {
                 label: 'Modificar',
                 action: 'update',
                 checked:
-                  Boolean(permissions?.event) &&
-                  Boolean(permissions?.event['update']),
+                  Boolean(permissions?.file) &&
+                  Boolean(permissions?.file['update']),
               },
               {
                 label: 'Borrar',
                 action: 'delete',
                 checked:
-                  Boolean(permissions?.event) &&
-                  Boolean(permissions?.event['delete']),
+                  Boolean(permissions?.file) &&
+                  Boolean(permissions?.file['delete']),
               },
             ],
           },
           {
-            scope: 'eventGuest',
+            scope: 'folder',
             permissions: [
               {
                 label: 'Contar',
                 action: 'count',
                 checked:
-                  Boolean(permissions?.eventGuest) &&
-                  Boolean(permissions?.eventGuest['count']),
+                  Boolean(permissions?.folder) &&
+                  Boolean(permissions?.folder['count']),
               },
               {
                 label: 'Leer',
                 action: 'read',
                 checked:
-                  Boolean(permissions?.eventGuest) &&
-                  Boolean(permissions?.eventGuest['read']),
+                  Boolean(permissions?.folder) &&
+                  Boolean(permissions?.folder['read']),
               },
               {
                 label: 'Crear',
                 action: 'create',
                 checked:
-                  Boolean(permissions?.eventGuest) &&
-                  Boolean(permissions?.eventGuest['create']),
+                  Boolean(permissions?.folder) &&
+                  Boolean(permissions?.folder['create']),
               },
               {
                 label: 'Modificar',
                 action: 'update',
                 checked:
-                  Boolean(permissions?.eventGuest) &&
-                  Boolean(permissions?.eventGuest['update']),
+                  Boolean(permissions?.folder) &&
+                  Boolean(permissions?.folder['update']),
               },
               {
                 label: 'Borrar',
                 action: 'delete',
                 checked:
-                  Boolean(permissions?.eventGuest) &&
-                  Boolean(permissions?.eventGuest['delete']),
+                  Boolean(permissions?.folder) &&
+                  Boolean(permissions?.folder['delete']),
               },
             ],
           },
@@ -674,91 +674,6 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                 checked:
                   Boolean(permissions?.inventoryMovementItem) &&
                   Boolean(permissions?.inventoryMovementItem['delete']),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        label: 'Librería de archivos',
-        subPanels: [
-          {
-            scope: 'file',
-            permissions: [
-              {
-                label: 'Contar',
-                action: 'count',
-                checked:
-                  Boolean(permissions?.file) &&
-                  Boolean(permissions?.file['count']),
-              },
-              {
-                label: 'Leer',
-                action: 'read',
-                checked:
-                  Boolean(permissions?.file) &&
-                  Boolean(permissions?.file['read']),
-              },
-              {
-                label: 'Cargar archivos',
-                action: 'upload',
-                checked:
-                  Boolean(permissions?.file) &&
-                  Boolean(permissions?.file['upload']),
-              },
-              {
-                label: 'Modificar',
-                action: 'update',
-                checked:
-                  Boolean(permissions?.file) &&
-                  Boolean(permissions?.file['update']),
-              },
-              {
-                label: 'Borrar',
-                action: 'delete',
-                checked:
-                  Boolean(permissions?.file) &&
-                  Boolean(permissions?.file['delete']),
-              },
-            ],
-          },
-          {
-            scope: 'folder',
-            permissions: [
-              {
-                label: 'Contar',
-                action: 'count',
-                checked:
-                  Boolean(permissions?.folder) &&
-                  Boolean(permissions?.folder['count']),
-              },
-              {
-                label: 'Leer',
-                action: 'read',
-                checked:
-                  Boolean(permissions?.folder) &&
-                  Boolean(permissions?.folder['read']),
-              },
-              {
-                label: 'Crear',
-                action: 'create',
-                checked:
-                  Boolean(permissions?.folder) &&
-                  Boolean(permissions?.folder['create']),
-              },
-              {
-                label: 'Modificar',
-                action: 'update',
-                checked:
-                  Boolean(permissions?.folder) &&
-                  Boolean(permissions?.folder['update']),
-              },
-              {
-                label: 'Borrar',
-                action: 'delete',
-                checked:
-                  Boolean(permissions?.folder) &&
-                  Boolean(permissions?.folder['delete']),
               },
             ],
           },

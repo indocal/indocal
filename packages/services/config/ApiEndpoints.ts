@@ -18,8 +18,10 @@ export enum ApiEndpoints {
   FORMS_ENTRIES = '/entries',
   FORMS_ENTRIES_COUNT = '/entries/count',
 
-  EVENTS = '/events',
-  EVENTS_COUNT = '/events/count',
+  FOLDERS = 'uploads/folders',
+  FOLDERS_COUNT = 'uploads/folders/count',
+  FILES = 'uploads/files',
+  FILES_COUNT = 'uploads/files/count',
 
   SUPPLIES = 'warehouse/supplies',
   SUPPLIES_COUNT = 'warehouse/supplies/count',
@@ -30,11 +32,6 @@ export enum ApiEndpoints {
   ORDERS_ACTIONS = 'warehouse/orders/actions',
   INVENTORY_MOVEMENTS = 'warehouse/movements',
   INVENTORY_MOVEMENTS_COUNT = 'warehouse/movements/count',
-
-  FOLDERS = 'uploads/folders',
-  FOLDERS_COUNT = 'uploads/folders/count',
-  FILES = 'uploads/files',
-  FILES_COUNT = 'uploads/files/count',
 }
 
 export default ApiEndpoints;

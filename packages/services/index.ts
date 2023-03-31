@@ -1,7 +1,6 @@
 import {
   AuthService,
   FormsService,
-  EventsService,
   WarehouseService,
   UploadsService,
 } from './modules';
@@ -11,7 +10,6 @@ export class INDOCAL {
   config: Config;
   auth: AuthService;
   forms: FormsService;
-  events: EventsService;
   warehouse: WarehouseService;
   uploads: UploadsService;
 
@@ -19,7 +17,6 @@ export class INDOCAL {
     this.config = new Config(options);
     this.auth = new AuthService(this.config);
     this.forms = new FormsService(this.config);
-    this.events = new EventsService(this.config);
     this.warehouse = new WarehouseService(this.config);
     this.uploads = new UploadsService(this.config);
   }

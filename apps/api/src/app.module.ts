@@ -15,18 +15,16 @@ import { PrismaModule, PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { LoggingModule } from '@/logging';
 import { AuthModule } from '@/auth';
 import { FormsModule } from '@/forms';
-import { EventsModule } from '@/events';
-import { WarehouseModule } from '@/warehouse';
 import { UploadsModule } from '@/uploads';
+import { WarehouseModule } from '@/warehouse';
 
 @Module({
   imports: [
     LoggingModule,
     AuthModule,
     FormsModule,
-    EventsModule,
-    WarehouseModule,
     UploadsModule,
+    WarehouseModule,
     PrismaModule.forRoot(),
     ScheduleModule.forRoot(),
   ],

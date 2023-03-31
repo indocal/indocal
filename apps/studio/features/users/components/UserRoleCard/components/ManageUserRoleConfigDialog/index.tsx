@@ -19,7 +19,6 @@ import {
   Dashboard as StudioAppIcon,
   Hub as HubIcon,
   SupportAgent as NobuAppIcon,
-  Event as EventsAppIcon,
   CardMembership as TrainingsAppIcon,
   Warehouse as WarehouseAppIcon,
 } from '@mui/icons-material';
@@ -91,7 +90,6 @@ export const ManageUserRoleConfigDialog: React.FC<
         studio: role.config?.access?.studio || 'NONE',
         hub: role.config?.access?.hub || 'NONE',
         nobu: role.config?.access?.nobu || 'NONE',
-        events: role.config?.access?.events || 'NONE',
         trainings: role.config?.access?.trainings || 'NONE',
         warehouse: role.config?.access?.warehouse || 'NONE',
       },
@@ -114,11 +112,6 @@ export const ManageUserRoleConfigDialog: React.FC<
         name: 'nobu',
         label: 'Nobu',
         icon: <NobuAppIcon />,
-      },
-      {
-        name: 'events',
-        label: 'Eventos',
-        icon: <EventsAppIcon />,
       },
       {
         name: 'trainings',
