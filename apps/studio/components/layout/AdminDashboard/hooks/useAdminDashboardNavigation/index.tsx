@@ -44,7 +44,13 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
       {
         type: 'ITEM',
         item: {
-          show: true,
+          show:
+            ability.can('count', 'user') ||
+            ability.can('count', 'userRole') ||
+            ability.can('count', 'userGroup') ||
+            ability.can('count', 'form') ||
+            ability.can('count', 'file') ||
+            ability.can('count', 'folder'),
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,

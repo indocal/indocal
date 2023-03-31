@@ -13,11 +13,13 @@ import {
 import { LockOutlined as LockOutlinedIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import { PasswordTextField } from '@indocal/ui';
+import { ApiEndpoints } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -53,6 +55,8 @@ const schema = zod.object(
 export const SignIn: React.FC = () => {
   const router = useRouter();
 
+  const { mutate } = useSWRConfig();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -84,8 +88,10 @@ export const SignIn: React.FC = () => {
 
           const callbackUrl = searchParams.get('callbackUrl');
 
+          await mutate(ApiEndpoints.ME);
           await router.push(callbackUrl ?? Pages.ROOT);
         } else {
+          await mutate(ApiEndpoints.ME);
           await router.push(Pages.ROOT);
         }
       } catch (error) {
@@ -97,7 +103,7 @@ export const SignIn: React.FC = () => {
         );
       }
     },
-    [router, enqueueSnackbar]
+    [router, mutate, enqueueSnackbar]
   );
 
   return (

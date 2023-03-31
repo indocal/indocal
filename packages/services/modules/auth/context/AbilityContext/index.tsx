@@ -1,4 +1,4 @@
-import { useRef, useEffect, createContext } from 'react';
+import { useState, useEffect, createContext } from 'react';
 import useSWR from 'swr/immutable';
 import { createMongoAbility, MongoAbility } from '@casl/ability';
 import { useAbility as useCASLAbility } from '@casl/react';
@@ -8,12 +8,18 @@ import { MultipleEntitiesResponse } from '../../../../common';
 import { AuthenticatedUser, UserRole } from '../../../../modules';
 import { ApiEndpoints } from '../../../../config';
 
+import { TOKEN_KEY } from '../../config';
+
 export const AbilityContext = createContext(createMongoAbility());
 
 export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { data: me } = useSWR<AuthenticatedUser | null>(ApiEndpoints.ME);
+  const { data: me } = useSWR<AuthenticatedUser | null>(
+    typeof document !== 'undefined' && document.cookie.includes(TOKEN_KEY)
+      ? ApiEndpoints.ME
+      : null
+  );
 
   const { data: roles } = useSWR<MultipleEntitiesResponse<UserRole>>(() =>
     me
@@ -23,26 +29,28 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
       : null
   );
 
-  const ability = useRef(createMongoAbility());
+  const [ability, setAbility] = useState(createMongoAbility());
 
   useEffect(() => {
     if (roles?.entities) {
-      ability.current.update(
-        roles.entities
-          .map((role) =>
-            role.permissions.map((permission) => {
-              const [scope, action] = permission.action.split('::');
+      setAbility(
+        createMongoAbility(
+          roles.entities
+            .map((role) =>
+              role.permissions.map((permission) => {
+                const [scope, action] = permission.action.split('::');
 
-              return { action, subject: scope };
-            })
-          )
-          .flat()
+                return { action, subject: scope };
+              })
+            )
+            .flat()
+        )
       );
     }
   }, [roles?.entities]);
 
   return (
-    <AbilityContext.Provider value={ability.current}>
+    <AbilityContext.Provider value={ability}>
       {children}
     </AbilityContext.Provider>
   );
