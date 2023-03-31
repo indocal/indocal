@@ -14,6 +14,8 @@ export * from './TimeColumnAnswer';
 export * from './DateColumnAnswer';
 export * from './DateTimeColumnAnswer';
 
+export * from './RatingColumnAnswer';
+
 export * from './FilesColumnAnswer';
 
 export * from './UsersColumnAnswer';

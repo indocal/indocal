@@ -15,6 +15,8 @@ import timeFormFieldConfigSchema from './timeFormFieldConfigSchema';
 import dateFormFieldConfigSchema from './dateFormFieldConfigSchema';
 import dateTimeFormFieldConfigSchema from './dateTimeFormFieldConfigSchema';
 import filesFormFieldConfigSchema from './filesFormFieldConfigSchema';
+import ratingFormFieldConfigSchema from './ratingFormFieldConfigSchema';
+import netPromoterScoreFormFieldConfigSchema from './netPromoterScoreFormFieldConfigSchema';
 import usersFormFieldConfigSchema from './usersFormFieldConfigSchema';
 
 const commonItemConfigSchema = zod.object({
@@ -64,6 +66,8 @@ const itemConfigSchema = zod.object({
   ...timeFormFieldConfigSchema.shape,
   ...dateFormFieldConfigSchema.shape,
   ...dateTimeFormFieldConfigSchema.shape,
+  ...ratingFormFieldConfigSchema.shape,
+  ...netPromoterScoreFormFieldConfigSchema.shape,
   ...filesFormFieldConfigSchema.shape,
   ...usersFormFieldConfigSchema.shape,
 });
@@ -87,6 +91,9 @@ const itemSchema = zod.object({
         'TIME',
         'DATE',
         'DATETIME',
+
+        'RATING',
+        'NET_PROMOTER_SCORE',
 
         'FILES',
 

@@ -14,6 +14,8 @@ export * from './TimeColumnConfig';
 export * from './DateColumnConfig';
 export * from './DateTimeColumnConfig';
 
+export * from './RatingColumnConfig';
+
 export * from './FilesColumnConfig';
 
 export * from './UsersColumnConfig';

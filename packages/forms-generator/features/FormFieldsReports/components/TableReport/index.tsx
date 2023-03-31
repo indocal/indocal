@@ -31,6 +31,7 @@ import {
   TimeColumnReport,
   DateColumnReport,
   DateTimeColumnReport,
+  RatingColumnReport,
   FilesColumnReport,
   UsersColumnReport,
 } from './components';
@@ -64,6 +65,8 @@ export const TableReport: React.FC<TableReportProps> = ({ report }) => {
       TIME: TimeColumnReport,
       DATE: DateColumnReport,
       DATETIME: DateTimeColumnReport,
+
+      RATING: RatingColumnReport,
 
       FILES: FilesColumnReport,
 

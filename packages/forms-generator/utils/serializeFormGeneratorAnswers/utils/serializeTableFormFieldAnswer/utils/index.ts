@@ -14,6 +14,8 @@ export * from './serializeTimeColumnAnswer';
 export * from './serializeDateColumnAnswer';
 export * from './serializeDateTimeColumnAnswer';
 
+export * from './serializeRatingColumnAnswer';
+
 export * from './serializeFilesColumnAnswer';
 
 export * from './serializeUsersColumnAnswer';
