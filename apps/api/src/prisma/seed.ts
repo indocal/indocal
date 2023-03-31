@@ -47,7 +47,14 @@ async function main() {
     },
     {
       scope: 'form',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
+      actions: [
+        'count',
+        'read',
+        'create',
+        'update',
+        'delete',
+        'generate-reports',
+      ],
     },
     {
       scope: 'formField',
@@ -55,7 +62,7 @@ async function main() {
     },
     {
       scope: 'formEntry',
-      actions: ['count', 'read', 'create'],
+      actions: ['count', 'read', 'create', 'delete'],
     },
     {
       scope: 'supply',
