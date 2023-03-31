@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Param,
   Query,
   Body,
@@ -117,6 +118,19 @@ export class FormsEntriesController {
     });
 
     return entry ? this.createEnhancedFormEntry(entry) : null;
+  }
+
+  @Delete(':id')
+  @CheckPolicies((ability) => ability.can('delete', 'formEntry'))
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<EnhancedFormEntry>> {
+    const entry = await this.prismaService.formEntry.delete({
+      where: { id },
+      include: { answeredBy: true, form: true },
+    });
+
+    return this.createEnhancedFormEntry(entry);
   }
 }
 
