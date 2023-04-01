@@ -24,10 +24,7 @@ export const AdminDashboardDrawerHeader: React.FC = () => {
             spacing={1}
             sx={{ width: '100%', height: '100%' }}
           >
-            <Avatar
-              alt={session?.user.username}
-              sx={{ width: 40, height: 40 }}
-            />
+            <Avatar alt={session?.user.name} sx={{ width: 40, height: 40 }} />
 
             <Stack sx={{ width: '100%' }}>
               <Typography
@@ -41,7 +38,7 @@ export const AdminDashboardDrawerHeader: React.FC = () => {
                   wordBreak: 'break-word',
                 }}
               >
-                {session?.user.username}
+                {session?.user.name}
               </Typography>
 
               <Typography
