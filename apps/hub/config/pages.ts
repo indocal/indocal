@@ -5,6 +5,8 @@ export enum Pages {
   // Sections
   ROOT = '/',
   FORMS = '/forms',
+  TICKETS = '/tickets',
+  WAREHOUSE = '/warehouse',
 }
 
 export default Pages;

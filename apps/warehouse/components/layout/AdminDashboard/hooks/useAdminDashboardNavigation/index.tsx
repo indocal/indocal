@@ -44,7 +44,7 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
             ability.can('count', 'supply') ||
             ability.can('count', 'supplier') ||
             ability.can('count', 'order') ||
-            ability.can('count', 'inventoryMovement'),
+            ability.can('get-prices', 'supply'),
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,

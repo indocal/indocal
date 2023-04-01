@@ -2,6 +2,9 @@ import { useMemo } from 'react';
 import {
   Dashboard as OverviewIcon,
   Feed as FormsIcon,
+  ConfirmationNumber as RequestICon,
+  SupportAgent as TicketsIcon,
+  Warehouse as WarehouseIcon,
 } from '@mui/icons-material';
 
 import {
@@ -50,6 +53,27 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Formularios',
           icon: <FormsIcon />,
           href: Pages.FORMS,
+        },
+      },
+      {
+        type: 'MENU',
+        menu: {
+          label: 'Solicitudes',
+          icon: <RequestICon />,
+          items: [
+            {
+              show: true, // TODO: Add validation
+              label: 'Soporte técnico',
+              icon: <TicketsIcon />,
+              href: Pages.TICKETS,
+            },
+            {
+              show: true, // TODO: Add validation
+              label: 'Almacén & Suministro',
+              icon: <WarehouseIcon />,
+              href: Pages.WAREHOUSE,
+            },
+          ],
         },
       },
     ],
