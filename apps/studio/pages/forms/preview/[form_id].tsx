@@ -1,37 +1,34 @@
 import { useCallback } from 'react';
-import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { getToken } from 'next-auth/jwt';
 import { Container } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { Page } from '@indocal/ui';
+import { Page, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import {
   FormGenerator,
   serializeFormGeneratorAnswers,
   FormGeneratorAnswers,
 } from '@indocal/forms-generator';
-import { INDOCAL, UUID, Form } from '@indocal/services';
+import { useForm, UUID } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
-type FormPreviewPageParams = {
-  form_id: UUID;
-};
+const FormPreviewPage: EnhancedNextPage = () => {
+  const router = useRouter();
 
-type FormPreviewPageProps = {
-  form: Form;
-};
-
-const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
   const { data: session } = useSession();
+
+  const { loading, form, error } = useForm(router.query.form_id as UUID);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const handleOnSubmit = useCallback(
     async (answers: FormGeneratorAnswers) => {
+      if (!form) return;
+
       const data = await serializeFormGeneratorAnswers(answers, indocal);
 
       const { error } = await indocal.forms.entries.create({
@@ -60,42 +57,31 @@ const FormPreviewPage: EnhancedNextPage<FormPreviewPageProps> = ({ form }) => {
   );
 
   return (
-    <Page transition="right" title={`Formulario: ${form.title}`}>
+    <Page
+      transition="right"
+      title={
+        loading
+          ? 'Cargando...'
+          : form
+          ? `Formulario: ${form.title}`
+          : 'Formulario no encontrado'
+      }
+    >
       <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-        <FormGenerator form={form} onSubmit={handleOnSubmit} />
+        {loading ? (
+          <Loader invisible message="Cargando datos..." />
+        ) : error ? (
+          <ErrorInfo error={error} />
+        ) : form ? (
+          <FormGenerator form={form} onSubmit={handleOnSubmit} />
+        ) : (
+          <NotFound />
+        )}
       </Container>
     </Page>
   );
 };
 
 FormPreviewPage.getLayout = (page) => <AdminDashboard>{page}</AdminDashboard>;
-
-export const getServerSideProps: GetServerSideProps<
-  FormPreviewPageProps,
-  FormPreviewPageParams
-> = async (ctx) => {
-  const token = await getToken(ctx);
-
-  const indocal = new INDOCAL({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
-    token: token?.access_token,
-  });
-
-  const { form } = await indocal.forms.findOneByUUID(
-    ctx.params?.form_id as string
-  );
-
-  if (!form) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      form,
-    },
-  };
-};
 
 export default FormPreviewPage;
