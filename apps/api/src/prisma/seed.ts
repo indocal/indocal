@@ -76,6 +76,10 @@ async function main() {
       scope: 'inventoryMovement',
       actions: ['count', 'read', 'create'],
     },
+    {
+      scope: 'supplyRequest',
+      actions: ['count', 'read', 'create'],
+    },
   ];
 
   await prisma.user.create({

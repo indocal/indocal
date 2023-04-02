@@ -557,6 +557,32 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
               },
             ],
           },
+          {
+            scope: 'supplyRequest',
+            permissions: [
+              {
+                label: 'Contar',
+                action: 'count',
+                checked:
+                  Boolean(permissions?.supplyRequest) &&
+                  Boolean(permissions?.supplyRequest['count']),
+              },
+              {
+                label: 'Leer',
+                action: 'read',
+                checked:
+                  Boolean(permissions?.supplyRequest) &&
+                  Boolean(permissions?.supplyRequest['read']),
+              },
+              {
+                label: 'Crear',
+                action: 'create',
+                checked:
+                  Boolean(permissions?.supplyRequest) &&
+                  Boolean(permissions?.supplyRequest['create']),
+              },
+            ],
+          },
         ],
       },
     ],
