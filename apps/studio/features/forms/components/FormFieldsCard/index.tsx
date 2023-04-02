@@ -1,7 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import {
   Paper,
-  Stack,
   List,
   ListSubheader,
   ListItem,
@@ -13,8 +12,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 import {
-  LockOpen as PublicIcon,
-  Lock as PrivateIcon,
+  ContentCopy as CopyToClipboardIcon,
   FactCheck as ManageFormFields,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -41,16 +39,7 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const publicUrl = useMemo(
-    () =>
-      new URL(
-        `${Pages.PUBLIC_FORMS}/${form?.id}`,
-        process.env.NEXT_PUBLIC_SITE_URL
-      ),
-    [form?.id]
-  );
-
-  const privateUrl = useMemo(
+  const url = useMemo(
     () =>
       new URL(
         `${Pages.FORMS_PREVIEW}/${form?.id}`,
@@ -59,32 +48,29 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
     [form?.id]
   );
 
-  const handleCopyToClipboard = useCallback(
-    async (url: URL) => {
-      try {
-        if (form) {
-          await navigator.clipboard.writeText(url.toString());
+  const handleCopyToClipboard = useCallback(async () => {
+    try {
+      if (form) {
+        await navigator.clipboard.writeText(url.toString());
 
-          enqueueSnackbar('Enlace copiado', {
-            variant: 'info',
-            anchorOrigin: {
-              vertical: 'bottom',
-              horizontal: 'center',
-            },
-          });
-        }
-      } catch {
-        enqueueSnackbar('Error al copiar el enlace', {
-          variant: 'error',
+        enqueueSnackbar('Enlace copiado', {
+          variant: 'info',
           anchorOrigin: {
             vertical: 'bottom',
             horizontal: 'center',
           },
         });
       }
-    },
-    [form, enqueueSnackbar]
-  );
+    } catch {
+      enqueueSnackbar('Error al copiar el enlace', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center',
+        },
+      });
+    }
+  }, [form, url, enqueueSnackbar]);
 
   return (
     <Paper
@@ -143,38 +129,17 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
                 Campos del formulario
               </Typography>
 
-              <Stack direction="row" spacing={1}>
-                <Tooltip title="Copiar enlace público">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleCopyToClipboard(publicUrl)}
-                  >
-                    <PublicIcon />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title="Copiar enlace privado">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleCopyToClipboard(privateUrl)}
-                  >
-                    <PrivateIcon />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
+              <Tooltip title="Copiar enlace">
+                <IconButton size="small" onClick={handleCopyToClipboard}>
+                  <CopyToClipboardIcon />
+                </IconButton>
+              </Tooltip>
             </ListSubheader>
 
             <ListItem dense divider>
               <ListItemText
-                primary="Enlance del formulario (Público))"
-                secondary={publicUrl.toString()}
-              />
-            </ListItem>
-
-            <ListItem dense divider>
-              <ListItemText
-                primary="Enlance del formulario (Privado))"
-                secondary={privateUrl.toString()}
+                primary="Enlance del formulario"
+                secondary={url.toString()}
               />
             </ListItem>
 

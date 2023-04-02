@@ -9,7 +9,7 @@ export default withAuth({
   },
 });
 
-export const config = { matcher: '/((?!favicon.ico|static|public|api).*)' };
+export const config = { matcher: '/((?!favicon.ico|static|api).*)' };
 
 /*
  * Match all request paths except for the ones starting with:
