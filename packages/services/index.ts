@@ -1,24 +1,27 @@
 import {
+  LogsService,
   AuthService,
   FormsService,
-  WarehouseService,
   UploadsService,
+  WarehouseService,
 } from './modules';
 import { Config, ConfigOptions } from './config';
 
 export class INDOCAL {
   config: Config;
+  logs: LogsService;
   auth: AuthService;
   forms: FormsService;
-  warehouse: WarehouseService;
   uploads: UploadsService;
+  warehouse: WarehouseService;
 
   constructor(options: ConfigOptions) {
     this.config = new Config(options);
+    this.logs = new LogsService(this.config);
     this.auth = new AuthService(this.config);
     this.forms = new FormsService(this.config);
-    this.warehouse = new WarehouseService(this.config);
     this.uploads = new UploadsService(this.config);
+    this.warehouse = new WarehouseService(this.config);
   }
 }
 

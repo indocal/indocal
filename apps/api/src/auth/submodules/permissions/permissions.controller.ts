@@ -1,11 +1,7 @@
 import {
   Controller,
   Get,
-  Post,
-  Patch,
-  Delete,
   Param,
-  Body,
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
@@ -20,10 +16,6 @@ import { CheckPolicies } from '../../decorators/check-policies.decorator';
 import { UserRoleEntity } from '../roles/entities';
 
 import { UserRolePermissionEntity } from './entities';
-import {
-  CreateUserRolePermissionDto,
-  UpdateUserRolePermissionDto,
-} from './dto';
 
 class EnhancedUserRolePermission extends UserRolePermissionEntity {
   role: UserRoleEntity;
@@ -46,23 +38,6 @@ export class UsersRolesPermissionsController {
     permission.role = new UserRoleEntity(role);
 
     return permission;
-  }
-
-  @Post('auth/roles/:role_id/permissions')
-  @CheckPolicies((ability) => ability.can('create', 'userRolePermission'))
-  async create(
-    @Param('role_id') roleId: UUID,
-    @Body() createPermissionDto: CreateUserRolePermissionDto
-  ): Promise<SingleEntityResponse<EnhancedUserRolePermission>> {
-    const permission = await this.prismaService.userRolePermission.create({
-      data: {
-        action: createPermissionDto.action,
-        role: { connect: { id: roleId } },
-      },
-      include: { role: true },
-    });
-
-    return this.createEnhancedUserRolePermission(permission);
   }
 
   @Get('auth/roles/:role_id/permissions/count')
@@ -109,34 +84,6 @@ export class UsersRolesPermissionsController {
     return permission
       ? this.createEnhancedUserRolePermission(permission)
       : null;
-  }
-
-  @Patch('auth/roles/permissions/:id')
-  @CheckPolicies((ability) => ability.can('update', 'userRolePermission'))
-  async update(
-    @Param('id', ParseUUIDPipe) id: UUID,
-    @Body() updatePermissionDto: UpdateUserRolePermissionDto
-  ): Promise<SingleEntityResponse<EnhancedUserRolePermission>> {
-    const permission = await this.prismaService.userRolePermission.update({
-      where: { id },
-      data: { action: updatePermissionDto.action },
-      include: { role: true },
-    });
-
-    return this.createEnhancedUserRolePermission(permission);
-  }
-
-  @Delete('auth/roles/permissions/:id')
-  @CheckPolicies((ability) => ability.can('delete', 'userRolePermission'))
-  async delete(
-    @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<SingleEntityResponse<EnhancedUserRolePermission>> {
-    const permission = await this.prismaService.userRolePermission.delete({
-      where: { id },
-      include: { role: true },
-    });
-
-    return this.createEnhancedUserRolePermission(permission);
   }
 }
 

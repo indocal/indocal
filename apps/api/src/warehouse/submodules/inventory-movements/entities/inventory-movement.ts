@@ -21,6 +21,9 @@ export class InventoryMovementEntity implements Entity, InventoryMovement {
   @Exclude()
   destinationId: UUID | null;
 
+  @Exclude()
+  requestId: UUID | null;
+
   createdAt: Date;
   updatedAt: Date;
 }

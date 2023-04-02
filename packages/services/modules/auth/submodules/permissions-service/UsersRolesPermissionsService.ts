@@ -1,5 +1,3 @@
-import { AxiosResponse } from 'axios';
-
 import {
   ServiceError,
   createServiceError,
@@ -11,16 +9,7 @@ import { Config, ApiEndpoints } from '../../../../config';
 
 import { UserRole } from '../roles-service';
 
-import {
-  UserRolePermission,
-  CreateUserRolePermissionDto,
-  UpdateUserRolePermissionDto,
-} from './types';
-
-export interface CreateUserRolePermissionReturn {
-  permission: UserRolePermission | null;
-  error: ServiceError | null;
-}
+import { UserRolePermission } from './types';
 
 export interface CountUserRolePermissionsReturn {
   count: number | null;
@@ -38,47 +27,11 @@ export interface FindOneUserRolePermissionByUUIDReturn {
   error: ServiceError | null;
 }
 
-export interface UpdateUserRolePermissionReturn {
-  permission: UserRolePermission | null;
-  error: ServiceError | null;
-}
-
-export interface DeleteUserRolePermissionReturn {
-  permission: UserRolePermission | null;
-  error: ServiceError | null;
-}
-
 export class UsersRolesPermissionsService {
   constructor(private config: Config) {}
 
   private getUUID(role: UUID | UserRole): UUID {
     return typeof role === 'string' ? role : role.id;
-  }
-
-  async create(
-    role: UUID | UserRole,
-    data: CreateUserRolePermissionDto
-  ): Promise<CreateUserRolePermissionReturn> {
-    try {
-      const response = await this.config.axios.post<
-        SingleEntityResponse<UserRolePermission>,
-        AxiosResponse<
-          SingleEntityResponse<UserRolePermission>,
-          CreateUserRolePermissionDto
-        >,
-        CreateUserRolePermissionDto
-      >(`${ApiEndpoints.USERS_ROLES}/${this.getUUID(role)}/permissions`, data);
-
-      return {
-        permission: response.data,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        permission: null,
-        error: createServiceError(error),
-      };
-    }
   }
 
   async count(role: UUID | UserRole): Promise<CountUserRolePermissionsReturn> {
@@ -131,50 +84,6 @@ export class UsersRolesPermissionsService {
 
       return {
         permission: response.data || null,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        permission: null,
-        error: createServiceError(error),
-      };
-    }
-  }
-
-  async update(
-    id: UUID,
-    data: UpdateUserRolePermissionDto
-  ): Promise<UpdateUserRolePermissionReturn> {
-    try {
-      const response = await this.config.axios.patch<
-        SingleEntityResponse<UserRolePermission>,
-        AxiosResponse<
-          SingleEntityResponse<UserRolePermission>,
-          UpdateUserRolePermissionDto
-        >,
-        UpdateUserRolePermissionDto
-      >(`${ApiEndpoints.USERS_ROLES}/permissions/${id}`, data);
-
-      return {
-        permission: response.data,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        permission: null,
-        error: createServiceError(error),
-      };
-    }
-  }
-
-  async delete(id: UUID): Promise<DeleteUserRolePermissionReturn> {
-    try {
-      const response = await this.config.axios.delete<
-        SingleEntityResponse<UserRolePermission>
-      >(`${ApiEndpoints.USERS_ROLES}/permissions/${id}`);
-
-      return {
-        permission: response.data,
         error: null,
       };
     } catch (error) {

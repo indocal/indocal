@@ -50,7 +50,7 @@ export class FormsStatsController {
 
   @Get('forms/:id/stats/entries-per-month')
   @CheckPolicies((ability) => ability.can('generate-reports', 'form'))
-  async formEntriesPerMonth(
+  async calcFormEntriesPerMonth(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Query() query: CalcFormEntriesPerMonthParamsDto
   ): Promise<FormEntriesPerMonth[]> {
@@ -94,7 +94,7 @@ export class FormsStatsController {
 
   @Get('forms/:id/stats/fields-reports')
   @CheckPolicies((ability) => ability.can('generate-reports', 'form'))
-  async generateFormFieldsReports(
+  async calcFormFieldsReports(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Query() query: CalcFormFieldsReportsParamsDto
   ): Promise<FormFieldReport[]> {

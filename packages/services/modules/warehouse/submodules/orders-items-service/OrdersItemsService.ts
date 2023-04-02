@@ -1,5 +1,3 @@
-import { AxiosResponse } from 'axios';
-
 import {
   ServiceError,
   createServiceError,
@@ -11,12 +9,7 @@ import { Config, ApiEndpoints } from '../../../../config';
 
 import { Order } from '../orders-service';
 
-import { OrderItem, CreateOrderItemDto, UpdateOrderItemDto } from './types';
-
-export interface CreateOrderItemReturn {
-  item: OrderItem | null;
-  error: ServiceError | null;
-}
+import { OrderItem } from './types';
 
 export interface CountOrderItemsReturn {
   count: number | null;
@@ -34,44 +27,11 @@ export interface FindOneOrderItemByUUIDReturn {
   error: ServiceError | null;
 }
 
-export interface UpdateOrderItemReturn {
-  item: OrderItem | null;
-  error: ServiceError | null;
-}
-
-export interface DeleteOrderItemReturn {
-  item: OrderItem | null;
-  error: ServiceError | null;
-}
-
 export class OrdersItemsService {
   constructor(private config: Config) {}
 
   private getUUID(order: UUID | Order): UUID {
     return typeof order === 'string' ? order : order.id;
-  }
-
-  async create(
-    order: UUID | Order,
-    data: CreateOrderItemDto
-  ): Promise<CreateOrderItemReturn> {
-    try {
-      const response = await this.config.axios.post<
-        SingleEntityResponse<OrderItem>,
-        AxiosResponse<SingleEntityResponse<OrderItem>, CreateOrderItemDto>,
-        CreateOrderItemDto
-      >(`${ApiEndpoints.ORDERS}/${this.getUUID(order)}/items`, data);
-
-      return {
-        item: response.data,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        item: null,
-        error: createServiceError(error),
-      };
-    }
   }
 
   async count(order: UUID | Order): Promise<CountOrderItemsReturn> {
@@ -120,47 +80,6 @@ export class OrdersItemsService {
 
       return {
         item: response.data || null,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        item: null,
-        error: createServiceError(error),
-      };
-    }
-  }
-
-  async update(
-    id: UUID,
-    data: UpdateOrderItemDto
-  ): Promise<UpdateOrderItemReturn> {
-    try {
-      const response = await this.config.axios.patch<
-        SingleEntityResponse<OrderItem>,
-        AxiosResponse<SingleEntityResponse<OrderItem>, UpdateOrderItemDto>,
-        UpdateOrderItemDto
-      >(`${ApiEndpoints.ORDERS}/items/${id}`, data);
-
-      return {
-        item: response.data,
-        error: null,
-      };
-    } catch (error) {
-      return {
-        item: null,
-        error: createServiceError(error),
-      };
-    }
-  }
-
-  async delete(id: UUID): Promise<DeleteOrderItemReturn> {
-    try {
-      const response = await this.config.axios.delete<
-        SingleEntityResponse<OrderItem>
-      >(`${ApiEndpoints.ORDERS}/items/${id}`);
-
-      return {
-        item: response.data,
         error: null,
       };
     } catch (error) {

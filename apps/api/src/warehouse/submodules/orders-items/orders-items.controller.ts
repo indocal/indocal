@@ -1,11 +1,7 @@
 import {
   Controller,
   Get,
-  Post,
-  Patch,
-  Delete,
   Param,
-  Body,
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
@@ -19,7 +15,6 @@ import { SupplyEntity } from '../supplies/entities';
 import { OrderEntity } from '../orders/entities';
 
 import { OrderItemEntity } from './entities';
-import { CreateOrderItemDto, UpdateOrderItemDto } from './dto';
 
 class EnhancedOrderItem extends OrderItemEntity {
   supply: SupplyEntity;
@@ -46,25 +41,6 @@ export class OrdersItemsController {
     item.order = new OrderEntity(order);
 
     return item;
-  }
-
-  @Post('warehouse/orders/:order_id/items')
-  @CheckPolicies((ability) => ability.can('create', 'orderItem'))
-  async create(
-    @Param('order_id') orderId: UUID,
-    @Body() createItemDto: CreateOrderItemDto
-  ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
-    const item = await this.prismaService.orderItem.create({
-      data: {
-        price: createItemDto.price,
-        quantity: createItemDto.quantity,
-        supply: { connect: { id: createItemDto.supply } },
-        order: { connect: { id: orderId } },
-      },
-      include: { order: true, supply: true },
-    });
-
-    return this.createEnhancedOrderItem(item);
   }
 
   @Get('warehouse/orders/:order_id/items/count')
@@ -107,38 +83,6 @@ export class OrdersItemsController {
     });
 
     return item ? this.createEnhancedOrderItem(item) : null;
-  }
-
-  @Patch('warehouse/orders/items/:id')
-  @CheckPolicies((ability) => ability.can('update', 'orderItem'))
-  async update(
-    @Param('id', ParseUUIDPipe) id: UUID,
-    @Body() updateItemDto: UpdateOrderItemDto
-  ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
-    const item = await this.prismaService.orderItem.update({
-      where: { id },
-      data: {
-        price: updateItemDto.price,
-        quantity: updateItemDto.quantity,
-        received: updateItemDto.received,
-      },
-      include: { order: true, supply: true },
-    });
-
-    return this.createEnhancedOrderItem(item);
-  }
-
-  @Delete('warehouse/orders/items/:id')
-  @CheckPolicies((ability) => ability.can('delete', 'orderItem'))
-  async delete(
-    @Param('id', ParseUUIDPipe) id: UUID
-  ): Promise<SingleEntityResponse<EnhancedOrderItem>> {
-    const item = await this.prismaService.orderItem.delete({
-      where: { id },
-      include: { order: true, supply: true },
-    });
-
-    return this.createEnhancedOrderItem(item);
   }
 }
 

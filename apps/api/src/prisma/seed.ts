@@ -31,7 +31,7 @@ async function main() {
     },
     {
       scope: 'userRolePermission',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
+      actions: ['count', 'read'],
     },
     {
       scope: 'userGroup',
@@ -57,6 +57,14 @@ async function main() {
       actions: ['count', 'read', 'create', 'delete'],
     },
     {
+      scope: 'file',
+      actions: ['count', 'read', 'upload', 'update', 'delete'],
+    },
+    {
+      scope: 'folder',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
       scope: 'supply',
       actions: ['count', 'read', 'create', 'update', 'delete', 'get-prices'],
     },
@@ -70,7 +78,7 @@ async function main() {
     },
     {
       scope: 'orderItem',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
+      actions: ['count', 'read'],
     },
     {
       scope: 'inventoryMovement',
@@ -78,15 +86,7 @@ async function main() {
     },
     {
       scope: 'inventoryMovementItem',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
-    },
-    {
-      scope: 'file',
-      actions: ['count', 'read', 'upload', 'update', 'delete'],
-    },
-    {
-      scope: 'folder',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
+      actions: ['count', 'read'],
     },
   ];
 

@@ -154,27 +154,6 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.userRolePermission) &&
                   Boolean(permissions?.userRolePermission['read']),
               },
-              {
-                label: 'Crear',
-                action: 'create',
-                checked:
-                  Boolean(permissions?.userRolePermission) &&
-                  Boolean(permissions?.userRolePermission['create']),
-              },
-              {
-                label: 'Modificar',
-                action: 'update',
-                checked:
-                  Boolean(permissions?.userRolePermission) &&
-                  Boolean(permissions?.userRolePermission['update']),
-              },
-              {
-                label: 'Borrar',
-                action: 'delete',
-                checked:
-                  Boolean(permissions?.userRolePermission) &&
-                  Boolean(permissions?.userRolePermission['delete']),
-              },
             ],
           },
         ],
@@ -588,27 +567,6 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.orderItem) &&
                   Boolean(permissions?.orderItem['read']),
               },
-              {
-                label: 'Crear',
-                action: 'create',
-                checked:
-                  Boolean(permissions?.orderItem) &&
-                  Boolean(permissions?.orderItem['create']),
-              },
-              {
-                label: 'Modificar',
-                action: 'update',
-                checked:
-                  Boolean(permissions?.orderItem) &&
-                  Boolean(permissions?.orderItem['update']),
-              },
-              {
-                label: 'Borrar',
-                action: 'delete',
-                checked:
-                  Boolean(permissions?.orderItem) &&
-                  Boolean(permissions?.orderItem['delete']),
-              },
             ],
           },
           {
@@ -653,27 +611,6 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                 checked:
                   Boolean(permissions?.inventoryMovementItem) &&
                   Boolean(permissions?.inventoryMovementItem['read']),
-              },
-              {
-                label: 'Crear',
-                action: 'create',
-                checked:
-                  Boolean(permissions?.inventoryMovementItem) &&
-                  Boolean(permissions?.inventoryMovementItem['create']),
-              },
-              {
-                label: 'Modificar',
-                action: 'update',
-                checked:
-                  Boolean(permissions?.inventoryMovementItem) &&
-                  Boolean(permissions?.inventoryMovementItem['update']),
-              },
-              {
-                label: 'Borrar',
-                action: 'delete',
-                checked:
-                  Boolean(permissions?.inventoryMovementItem) &&
-                  Boolean(permissions?.inventoryMovementItem['delete']),
               },
             ],
           },
