@@ -137,25 +137,6 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
               },
             ],
           },
-          {
-            scope: 'userRolePermission',
-            permissions: [
-              {
-                label: 'Contar',
-                action: 'count',
-                checked:
-                  Boolean(permissions?.userRolePermission) &&
-                  Boolean(permissions?.userRolePermission['count']),
-              },
-              {
-                label: 'Leer',
-                action: 'read',
-                checked:
-                  Boolean(permissions?.userRolePermission) &&
-                  Boolean(permissions?.userRolePermission['read']),
-              },
-            ],
-          },
         ],
       },
       {
@@ -551,25 +532,6 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
             ],
           },
           {
-            scope: 'orderItem',
-            permissions: [
-              {
-                label: 'Contar',
-                action: 'count',
-                checked:
-                  Boolean(permissions?.orderItem) &&
-                  Boolean(permissions?.orderItem['count']),
-              },
-              {
-                label: 'Leer',
-                action: 'read',
-                checked:
-                  Boolean(permissions?.orderItem) &&
-                  Boolean(permissions?.orderItem['read']),
-              },
-            ],
-          },
-          {
             scope: 'inventoryMovement',
             permissions: [
               {
@@ -592,25 +554,6 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                 checked:
                   Boolean(permissions?.inventoryMovement) &&
                   Boolean(permissions?.inventoryMovement['create']),
-              },
-            ],
-          },
-          {
-            scope: 'inventoryMovementItem',
-            permissions: [
-              {
-                label: 'Contar',
-                action: 'count',
-                checked:
-                  Boolean(permissions?.inventoryMovementItem) &&
-                  Boolean(permissions?.inventoryMovementItem['count']),
-              },
-              {
-                label: 'Leer',
-                action: 'read',
-                checked:
-                  Boolean(permissions?.inventoryMovementItem) &&
-                  Boolean(permissions?.inventoryMovementItem['read']),
               },
             ],
           },

@@ -30,10 +30,6 @@ async function main() {
       actions: ['count', 'read', 'create', 'update', 'delete'],
     },
     {
-      scope: 'userRolePermission',
-      actions: ['count', 'read'],
-    },
-    {
       scope: 'userGroup',
       actions: ['count', 'read', 'create', 'update', 'delete'],
     },
@@ -77,16 +73,8 @@ async function main() {
       actions: ['count', 'read', 'create', 'update', 'delete', 'receive-items'],
     },
     {
-      scope: 'orderItem',
-      actions: ['count', 'read'],
-    },
-    {
       scope: 'inventoryMovement',
       actions: ['count', 'read', 'create'],
-    },
-    {
-      scope: 'inventoryMovementItem',
-      actions: ['count', 'read'],
     },
   ];
 
