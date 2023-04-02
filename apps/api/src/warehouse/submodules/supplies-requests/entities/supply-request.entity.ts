@@ -9,6 +9,7 @@ export class SupplyRequestEntity implements Entity, SupplyRequest {
   }
 
   id: UUID;
+  description: string;
   status: SupplyRequestStatus;
 
   @Exclude()

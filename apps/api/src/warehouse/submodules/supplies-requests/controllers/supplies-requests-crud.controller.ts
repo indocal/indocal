@@ -70,6 +70,7 @@ export class SuppliesRequestsCRUDController {
   ): Promise<SingleEntityResponse<EnhancedSupplyRequest>> {
     const request = await this.prismaService.supplyRequest.create({
       data: {
+        description: createSupplyRequestDto.description,
         requestedBy: { connect: { id: createSupplyRequestDto.requestedBy } },
         items: {
           createMany: {

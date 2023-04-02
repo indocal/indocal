@@ -355,7 +355,8 @@ model InventoryMovementItem {
 }
 
 model SupplyRequest {
-  id String @id @default(uuid())
+  id          String @id @default(uuid())
+  description String
 
   status SupplyRequestStatus @default(PENDING)
 

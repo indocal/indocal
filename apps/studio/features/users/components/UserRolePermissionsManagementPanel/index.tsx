@@ -581,6 +581,13 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.supplyRequest) &&
                   Boolean(permissions?.supplyRequest['create']),
               },
+              {
+                label: 'Despachar artículos',
+                action: 'dispatch-items',
+                checked:
+                  Boolean(permissions?.supplyRequest) &&
+                  Boolean(permissions?.supplyRequest['dispatch-items']),
+              },
             ],
           },
         ],

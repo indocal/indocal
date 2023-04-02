@@ -32,6 +32,9 @@ export enum ApiEndpoints {
   ORDERS_ACTIONS = 'warehouse/orders/actions',
   INVENTORY_MOVEMENTS = 'warehouse/movements',
   INVENTORY_MOVEMENTS_COUNT = 'warehouse/movements/count',
+  SUPPLIES_REQUESTS = 'warehouse/requests',
+  SUPPLIES_REQUESTS_COUNT = 'warehouse/requests/count',
+  SUPPLIES_REQUESTS_ACTIONS = 'warehouse/requests/actions',
 }
 
 export default ApiEndpoints;

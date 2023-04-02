@@ -19,6 +19,7 @@ type Supplier = Entity & {
 
 type Order = Entity & {
   code: string;
+  concept: string;
   status: OrderStatus;
   supplier: Supplier;
   deliveryAt: string[];

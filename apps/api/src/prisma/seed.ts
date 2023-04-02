@@ -78,7 +78,7 @@ async function main() {
     },
     {
       scope: 'supplyRequest',
-      actions: ['count', 'read', 'create'],
+      actions: ['count', 'read', 'create', 'dispatch-items'],
     },
   ];
 

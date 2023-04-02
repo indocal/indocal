@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   Dashboard as OverviewIcon,
+  ConfirmationNumber as RequestsIcon,
   Inventory as InventoryIcon,
   LocalShipping as SuppliersIcon,
   LocalMall as OrdersIcon,
@@ -48,6 +49,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'supplyRequest'),
+          label: 'Solicitudes',
+          icon: <RequestsIcon />,
+          href: Pages.SUPPLIES_REQUESTS,
         },
       },
       {

@@ -5,6 +5,7 @@ import {
   SuppliersService,
   OrdersService,
   InventoryMovementsService,
+  SuppliesRequestsService,
 } from './submodules';
 
 export class WarehouseService {
@@ -12,12 +13,14 @@ export class WarehouseService {
   suppliers: SuppliersService;
   orders: OrdersService;
   movements: InventoryMovementsService;
+  requests: SuppliesRequestsService;
 
   constructor(private config: Config) {
     this.supplies = new SuppliesService(config);
     this.suppliers = new SuppliersService(config);
     this.orders = new OrdersService(config);
     this.movements = new InventoryMovementsService(config);
+    this.requests = new SuppliesRequestsService(config);
   }
 }
 

@@ -44,7 +44,7 @@ export class SuppliesRequestsItemsController {
   }
 
   @Get('warehouse/requests/:request_id/items/count')
-  @CheckPolicies((ability) => ability.can('count', 'supplyRequestItem'))
+  @CheckPolicies((ability) => ability.can('count', 'supplyRequest'))
   async count(@Param('request_id') requestId: UUID): Promise<number> {
     return await this.prismaService.supplyRequestItem.count({
       where: { request: { id: requestId } },
@@ -52,7 +52,7 @@ export class SuppliesRequestsItemsController {
   }
 
   @Get('warehouse/requests/:request_id/items')
-  @CheckPolicies((ability) => ability.can('read', 'supplyRequestItem'))
+  @CheckPolicies((ability) => ability.can('read', 'supplyRequest'))
   async findAll(
     @Param('request_id') requestId: UUID
   ): Promise<MultipleEntitiesResponse<EnhancedSupplyRequestItem>> {
@@ -73,7 +73,7 @@ export class SuppliesRequestsItemsController {
   }
 
   @Get('warehouse/requests/items/:id')
-  @CheckPolicies((ability) => ability.can('read', 'supplyRequestItem'))
+  @CheckPolicies((ability) => ability.can('read', 'supplyRequest'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedSupplyRequestItem | null>> {

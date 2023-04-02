@@ -14,7 +14,7 @@ export class SuppliesRequestsActionsController {
   constructor(private prismaService: PrismaService) {}
 
   @Patch('dispatch-items')
-  @CheckPolicies((ability) => ability.can('dispatch-items', 'request'))
+  @CheckPolicies((ability) => ability.can('dispatch-items', 'supplyRequest'))
   async dispatchItems(
     @Body() dispatchItemsDto: DispatchItemsDto
   ): Promise<void> {
@@ -78,7 +78,7 @@ export class SuppliesRequestsActionsController {
             supply: {
               update: {
                 quantity: {
-                  increment: target.received,
+                  decrement: target.received,
                 },
               },
             },
@@ -108,8 +108,8 @@ export class SuppliesRequestsActionsController {
 
       await tx.inventoryMovement.create({
         data: {
-          type: 'INPUT',
-          concept: '',
+          type: 'OUTPUT',
+          concept: request.description,
           request: { connect: { id: request.id } },
           items: {
             createMany: {

@@ -13,6 +13,7 @@ type Supply = Entity & {
 
 type Order = Entity & {
   code: string;
+  concept: string;
   status: OrderStatus;
   deliveryAt: string[];
 };

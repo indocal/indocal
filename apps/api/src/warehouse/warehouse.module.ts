@@ -10,6 +10,8 @@ import {
   OrdersItemsModule,
   InventoryMovementsModule,
   InventoryMovementsItemsModule,
+  SuppliesRequestsModule,
+  SuppliesRequestsItemsModule,
 } from './submodules';
 
 @Module({
@@ -21,6 +23,8 @@ import {
     OrdersItemsModule,
     InventoryMovementsModule,
     InventoryMovementsItemsModule,
+    SuppliesRequestsModule,
+    SuppliesRequestsItemsModule,
   ],
   providers: [PrismaService],
 })
