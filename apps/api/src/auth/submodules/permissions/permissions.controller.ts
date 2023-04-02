@@ -41,7 +41,7 @@ export class UsersRolesPermissionsController {
   }
 
   @Get('auth/roles/:role_id/permissions/count')
-  @CheckPolicies((ability) => ability.can('count', 'userRolePermission'))
+  @CheckPolicies((ability) => ability.can('count', 'userRole'))
   async count(@Param('role_id') roleId: UUID): Promise<number> {
     return await this.prismaService.userRolePermission.count({
       where: { role: { id: roleId } },
@@ -49,7 +49,7 @@ export class UsersRolesPermissionsController {
   }
 
   @Get('auth/roles/:role_id/permissions')
-  @CheckPolicies((ability) => ability.can('read', 'userRolePermission'))
+  @CheckPolicies((ability) => ability.can('read', 'userRole'))
   async findAll(
     @Param('role_id') roleId: UUID
   ): Promise<MultipleEntitiesResponse<EnhancedUserRolePermission>> {
@@ -72,7 +72,7 @@ export class UsersRolesPermissionsController {
   }
 
   @Get('auth/roles/permissions/:id')
-  @CheckPolicies((ability) => ability.can('read', 'userRolePermission'))
+  @CheckPolicies((ability) => ability.can('read', 'userRole'))
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserRolePermission | null>> {
