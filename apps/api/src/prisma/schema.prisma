@@ -38,10 +38,11 @@ model User {
 
   status UserStatus @default(ENABLED)
 
-  logs    Log[]
-  roles   UserRole[]
-  groups  UserGroup[]
-  entries FormEntry[]
+  logs     Log[]
+  roles    UserRole[]
+  groups   UserGroup[]
+  entries  FormEntry[]
+  requests SupplyRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -222,6 +223,7 @@ model Supply {
 
   movementHistory InventoryMovementItem[]
   orderHistory    OrderItem[]
+  requestHistory  SupplyRequestItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -323,6 +325,9 @@ model InventoryMovement {
   destination   UserGroup? @relation(name: "AssignmentHistory", fields: [destinationId], references: [id])
   destinationId String?
 
+  request   SupplyRequest? @relation(fields: [requestId], references: [id], onDelete: Restrict)
+  requestId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -347,6 +352,55 @@ model InventoryMovementItem {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SupplyRequest {
+  id String @id @default(uuid())
+
+  status SupplyRequestStatus @default(PENDING)
+
+  items SupplyRequestItem[]
+
+  movements InventoryMovement[]
+
+  requestedBy   User   @relation(fields: [requestedById], references: [id], onDelete: Restrict)
+  requestedById String
+
+  deliveryAt DateTime[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SupplyRequestStatus {
+  PENDING
+  PARTIAL
+  COMPLETED
+  CANCELLED
+}
+
+model SupplyRequestItem {
+  id String @id @default(uuid())
+
+  quantity Int
+  received Int[] @default([])
+
+  deliveryStatus SupplyRequestItemDeliveryStatus @default(PENDING)
+
+  supply   Supply @relation(fields: [supplyId], references: [id], onDelete: Restrict)
+  supplyId String
+
+  request   SupplyRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  requestId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SupplyRequestItemDeliveryStatus {
+  PENDING
+  PARTIAL
+  COMPLETED
 }
 
 ////////////////////////
