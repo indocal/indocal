@@ -15,6 +15,8 @@ import {
   Supply,
   Order,
   Supplier,
+  SupplyRequest,
+  User,
   UserGroup,
 } from '@prisma/client';
 
@@ -25,6 +27,8 @@ import { InventoryMovementItemEntity } from '../inventory-movements-items/entiti
 import { SupplyEntity } from '../supplies/entities';
 import { OrderEntity } from '../orders/entities';
 import { SupplierEntity } from '../suppliers/entities';
+import { SupplyRequestEntity } from '../supplies-requests/entities';
+import { UserEntity } from '../../../auth/submodules/users/entities';
 import { UserGroupEntity } from '../../../auth/submodules/groups/entities';
 
 import {
@@ -48,9 +52,14 @@ class EnhancedOrder extends OrderEntity {
   requestedBy: UserGroupEntity;
 }
 
+class EnhancedSupplyRequest extends SupplyRequestEntity {
+  requestedBy: UserEntity;
+}
+
 class EnhancedInventoryMovement extends InventoryMovementEntity {
   items: EnhancedInventoryMovementItem[];
   order: EnhancedOrder | null;
+  request: EnhancedSupplyRequest | null;
   origin: UserGroupEntity | null;
   destination: UserGroupEntity | null;
 }
@@ -58,6 +67,7 @@ class EnhancedInventoryMovement extends InventoryMovementEntity {
 type CreateEnhancedInventoryMovement = InventoryMovement & {
   items: (InventoryMovementItem & { supply: Supply })[];
   order: (Order & { supplier: Supplier; requestedBy: UserGroup }) | null;
+  request: (SupplyRequest & { requestedBy: User }) | null;
   origin: UserGroup | null;
   destination: UserGroup | null;
 };
@@ -70,6 +80,7 @@ export class InventoryMovementsController {
   createEnhancedInventoryMovement({
     items,
     order,
+    request,
     origin,
     destination,
     ...rest
@@ -82,6 +93,13 @@ export class InventoryMovementsController {
       movement.order.requestedBy = new UserGroupEntity(order.requestedBy);
     } else {
       movement.order = null;
+    }
+
+    if (request) {
+      movement.request = new EnhancedSupplyRequest(request);
+      movement.request.requestedBy = new UserEntity(request.requestedBy);
+    } else {
+      movement.request = null;
     }
 
     movement.origin = origin ? new UserGroupEntity(origin) : null;
@@ -140,6 +158,7 @@ export class InventoryMovementsController {
         include: {
           items: { include: { supply: true } },
           order: { include: { supplier: true, requestedBy: true } },
+          request: { include: { requestedBy: true } },
           origin: true,
           destination: true,
         },
@@ -270,6 +289,7 @@ export class InventoryMovementsController {
         include: {
           items: { include: { supply: true } },
           order: { include: { supplier: true, requestedBy: true } },
+          request: { include: { requestedBy: true } },
           origin: true,
           destination: true,
         },
@@ -298,6 +318,7 @@ export class InventoryMovementsController {
       include: {
         items: { include: { supply: true } },
         order: { include: { supplier: true, requestedBy: true } },
+        request: { include: { requestedBy: true } },
         origin: true,
         destination: true,
       },

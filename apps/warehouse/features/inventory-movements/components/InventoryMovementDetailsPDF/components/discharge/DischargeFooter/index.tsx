@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 20,
+    gap: 30,
     paddingHorizontal: 20,
     fontFamily: 'Times-Roman',
     fontSize: 12,

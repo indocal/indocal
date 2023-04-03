@@ -1,2 +1,2 @@
-export * from './FormsGallery';
+export * from './forms';
 export * from './supplies-requests';

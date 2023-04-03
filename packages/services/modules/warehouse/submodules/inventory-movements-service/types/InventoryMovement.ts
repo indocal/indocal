@@ -2,6 +2,8 @@ import { Entity } from '../../../../../common';
 
 import { SupplyUnit } from '../../supplies-service';
 import { OrderStatus } from '../../orders-service';
+import { SupplyRequestStatus } from '../../supplies-requests-service';
+import { UserStatus } from '../../../../auth/submodules/users-service';
 
 type Supply = Entity & {
   code: string;
@@ -21,7 +23,7 @@ type Supplier = Entity & {
   description: string | null;
 };
 
-type RequestedBy = Entity & {
+type UserGroup = Entity & {
   name: string;
   description: string | null;
 };
@@ -31,8 +33,22 @@ type Order = Entity & {
   concept: string;
   status: OrderStatus;
   supplier: Supplier;
-  requestedBy: RequestedBy;
+  requestedBy: UserGroup;
   deliveryAt: string[];
+};
+
+type User = Entity & {
+  username: string;
+  email: string;
+  name: string;
+  status: UserStatus;
+};
+
+type SupplyRequest = Entity & {
+  description: string;
+  status: SupplyRequestStatus;
+  deliveryAt: string[];
+  requestedBy: User;
 };
 
 type Origin = Entity & {
@@ -57,6 +73,7 @@ export interface InventoryMovement extends Entity {
   type: InventoryMovementType;
   items: InventoryMovementItem[];
   order: Order | null;
+  request: SupplyRequest | null;
   origin: Origin | null;
   destination: Destination | null;
 }

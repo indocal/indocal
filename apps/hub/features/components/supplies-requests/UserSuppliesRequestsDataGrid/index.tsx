@@ -4,11 +4,17 @@ import { useAbility, useSuppliesRequests, UUID, User } from '@indocal/services';
 
 import { GenericUserSuppliesRequestsDataGrid } from '@/features';
 
+import {
+  UserSuppliesRequestsDataGridProvider,
+  useUserSuppliesRequestsDataGrid,
+} from './context';
+import { AddSupplyRequestDialog } from './components';
+
 export interface UserSuppliesRequestsDataGridProps {
   user: UUID | User;
 }
 
-export const UserSuppliesRequestsDataGrid: React.FC<
+const UserSuppliesRequestsDataGrid: React.FC<
   UserSuppliesRequestsDataGridProps
 > = ({ user }) => {
   const ability = useAbility();
@@ -40,15 +46,26 @@ export const UserSuppliesRequestsDataGrid: React.FC<
     orderBy: { createdAt: 'desc' },
   });
 
+  const { isAddSupplyRequestDialogOpen, toggleAddSupplyRequestDialog } =
+    useUserSuppliesRequestsDataGrid();
+
+  const handleAdd = useCallback(
+    () => toggleAddSupplyRequestDialog(),
+    [toggleAddSupplyRequestDialog]
+  );
+
   const handleRefetch = useCallback(async () => {
     await refetch();
   }, [refetch]);
 
   return (
     <>
+      {isAddSupplyRequestDialogOpen && <AddSupplyRequestDialog user={user} />}
+
       <GenericUserSuppliesRequestsDataGrid
         title={`Solicitudes (${count})`}
         requests={requests}
+        onAddButtonClick={ability.can('create', 'supplyRequest') && handleAdd}
         onRefreshButtonClick={
           ability.can('read', 'supplyRequest') && handleRefetch
         }
@@ -79,4 +96,14 @@ export const UserSuppliesRequestsDataGrid: React.FC<
   );
 };
 
-export default UserSuppliesRequestsDataGrid;
+const UserSuppliesRequestsDataGridWrapper: React.FC<
+  UserSuppliesRequestsDataGridProps
+> = (props) => (
+  <UserSuppliesRequestsDataGridProvider>
+    <UserSuppliesRequestsDataGrid {...props} />
+  </UserSuppliesRequestsDataGridProvider>
+);
+
+export { UserSuppliesRequestsDataGridWrapper as UserSuppliesRequestsDataGrid };
+
+export default UserSuppliesRequestsDataGridWrapper;

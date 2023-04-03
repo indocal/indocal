@@ -32,6 +32,13 @@ const styles = StyleSheet.create({
   },
   line: {
     flex: 1,
+    textAlign: 'center',
+    fontFamily: 'Times-Italic',
+    fontSize: 10,
+    borderBottom: '1px solid black',
+  },
+  line__blank: {
+    flex: 1,
     marginTop: 10,
     textAlign: 'center',
     fontFamily: 'Times-Italic',
@@ -53,15 +60,23 @@ export const OutputContent: React.FC<OutputContentProps> = ({ movement }) => (
     <View style={styles.info}>
       <View style={styles.section}>
         <View style={styles.item}>
-          <Text>Área Solicitante:</Text>
+          <Text>Usuario Solicitante:</Text>
 
-          <Text style={styles.line}></Text>
+          {movement.request ? (
+            <Text style={styles.line}>
+              {`${movement.request.requestedBy.name} (${movement.request.requestedBy.username})`}
+            </Text>
+          ) : (
+            <Text style={styles.line__blank} />
+          )}
         </View>
 
         <View style={styles.item}>
           <Text>Fecha de Solicitud:</Text>
 
-          <Text style={styles.line}>(DD/MM/AAAA)</Text>
+          <Text style={styles.line}>
+            {new Date(movement.createdAt).toLocaleDateString('es-do')}
+          </Text>
         </View>
       </View>
 
@@ -69,13 +84,15 @@ export const OutputContent: React.FC<OutputContentProps> = ({ movement }) => (
         <View style={styles.item}>
           <Text>Firma Autorizada:</Text>
 
-          <Text style={styles.line}>(Responsable del Área Solicitante)</Text>
+          <Text style={styles.line__blank}>
+            (Responsable del Área Solicitante)
+          </Text>
         </View>
 
         <View style={styles.item}>
           <Text>Recibido Conforme por:</Text>
 
-          <Text style={styles.line}>
+          <Text style={styles.line__blank}>
             (Persona que Recibe del Área Solicitante)
           </Text>
         </View>
