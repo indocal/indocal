@@ -74,9 +74,13 @@ export const OutputContent: React.FC<OutputContentProps> = ({ movement }) => (
         <View style={styles.item}>
           <Text>Fecha de Solicitud:</Text>
 
-          <Text style={styles.line}>
-            {new Date(movement.createdAt).toLocaleDateString('es-do')}
-          </Text>
+          {movement.request ? (
+            <Text style={styles.line}>
+              {new Date(movement.request.createdAt).toLocaleDateString('es-do')}
+            </Text>
+          ) : (
+            <Text style={styles.line__blank} />
+          )}
         </View>
       </View>
 
