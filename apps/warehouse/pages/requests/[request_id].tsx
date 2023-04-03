@@ -7,6 +7,7 @@ import { useSupplyRequest, getShortUUID, UUID } from '@indocal/services';
 import {
   SupplyRequestCard,
   SupplyRequestItemsDetails,
+  SupplyRequestMovementsList,
   SupplyRequestItemsTable,
 } from '@/features';
 import { AdminDashboard } from '@/components';
@@ -42,15 +43,21 @@ const SupplyRequestPage: EnhancedNextPage = () => {
             alignItems="center"
             spacing={1}
           >
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={4}>
               <Widget>
                 <SupplyRequestCard request={request} />
               </Widget>
             </Grid>
 
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={4}>
               <Widget>
                 <SupplyRequestItemsDetails request={request} />
+              </Widget>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Widget>
+                <SupplyRequestMovementsList request={request} />
               </Widget>
             </Grid>
 

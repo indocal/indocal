@@ -69,7 +69,7 @@ export const SupplyRequestItemsDetails: React.FC<
           <CardHeader
             subheader="Detalles de los artículos"
             sx={{
-              brequestBottom: (theme) => `1px solid ${theme.palette.divider}`,
+              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
             }}
           />
 
