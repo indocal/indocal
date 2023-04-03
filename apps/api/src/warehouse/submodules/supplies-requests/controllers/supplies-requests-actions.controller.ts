@@ -52,12 +52,21 @@ export class SuppliesRequestsActionsController {
       });
 
       for await (const target of targets) {
-        if (target.received > target.remaining)
+        if (target.received > target.remaining) {
           throw new InsufficientQuantityException({
             supply: target.supply.name,
             remaining: target.remaining,
             requested: target.item.quantity,
           });
+        }
+
+        if (target.received > target.supply.quantity) {
+          throw new InsufficientQuantityException({
+            supply: target.supply.name,
+            remaining: target.supply.quantity,
+            requested: target.received,
+          });
+        }
 
         const allItemsDelivered = target.remaining - target.received === 0;
 
