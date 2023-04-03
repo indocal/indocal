@@ -88,6 +88,12 @@ export const DispatchSupplyRequestItemsDialog: React.FC<
         );
       } else {
         await mutate(`${ApiEndpoints.SUPPLIES_REQUESTS}/${request.id}`);
+        await mutate(
+          (key) =>
+            typeof key === 'string' &&
+            key.startsWith(ApiEndpoints.INVENTORY_MOVEMENTS) &&
+            key.includes(typeof request === 'string' ? request : request.id)
+        );
 
         enqueueSnackbar('Artículos despachados exitosamente', {
           variant: 'success',
@@ -95,13 +101,7 @@ export const DispatchSupplyRequestItemsDialog: React.FC<
         });
       }
     },
-    [
-      request.id,
-      request.items,
-      mutate,
-      toggleDispatchSupplyRequestItemsDialog,
-      enqueueSnackbar,
-    ]
+    [request, mutate, toggleDispatchSupplyRequestItemsDialog, enqueueSnackbar]
   );
 
   const handleOnClose = useCallback(async () => {
