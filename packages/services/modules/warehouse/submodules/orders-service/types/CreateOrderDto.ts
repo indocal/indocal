@@ -1,6 +1,6 @@
 import { UUID } from '../../../../../common';
 
-type Item = {
+type OrdenItem = {
   price: number;
   quantity: number;
   supply: UUID;
@@ -11,7 +11,7 @@ export type CreateOrderDto = {
   concept: string;
   supplier: UUID;
   requestedBy: UUID;
-  items: Item[];
+  items: OrdenItem[];
 };
 
 export default CreateOrderDto;

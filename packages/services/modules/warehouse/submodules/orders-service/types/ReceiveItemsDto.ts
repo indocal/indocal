@@ -6,8 +6,8 @@ type Item = {
 };
 
 export type ReceiveItemsDto = {
-  received: Item[];
   order: UUID;
+  received: Item[];
 };
 
 export default ReceiveItemsDto;

@@ -6,8 +6,8 @@ type Item = {
 };
 
 export type DispatchItemsDto = {
-  received: Item[];
   request: UUID;
+  received: Item[];
 };
 
 export default DispatchItemsDto;

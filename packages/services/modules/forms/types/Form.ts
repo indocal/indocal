@@ -21,11 +21,6 @@ export type FormConfig = Partial<{
   webhooks: FormWebhook[];
 }>;
 
-export type FormWebhook = {
-  name: string;
-  url: string;
-};
-
 export interface Form extends Entity {
   slug: string;
   title: string;
@@ -38,3 +33,12 @@ export interface Form extends Entity {
 }
 
 export default Form;
+
+////////////////////////
+// FormConfig Schemas //
+////////////////////////
+
+export type FormWebhook = {
+  name: string;
+  url: string;
+};

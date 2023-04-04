@@ -1,18 +1,29 @@
-import { IsObject, IsUUID } from 'class-validator';
+import {
+  IsUUID,
+  IsNumber,
+  ArrayMinSize,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 import { UUID } from '@/common';
 
-type Item = {
+class Item {
+  @IsNumber()
   quantity: number;
-  item: UUID;
-};
-
-export class DispatchItemsDto {
-  @IsObject({ each: true }) // TODO: Validate this object
-  received: Item[];
 
   @IsUUID()
+  item: UUID;
+}
+
+export class DispatchItemsDto {
+  @IsUUID()
   request: UUID;
+
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => Item)
+  received: Item[];
 }
 
 export default DispatchItemsDto;
