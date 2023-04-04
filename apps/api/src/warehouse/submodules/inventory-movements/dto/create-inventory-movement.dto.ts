@@ -1,18 +1,24 @@
 import {
   IsEnum,
   IsString,
-  IsObject,
   IsUUID,
+  IsNumber,
   IsOptional,
+  ArrayMinSize,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { InventoryMovementType } from '@prisma/client';
 
 import { TrimParam, UUID } from '@/common';
 
-type Item = {
+class InventoryMovementItem {
+  @IsNumber()
   quantity: number;
+
+  @IsUUID()
   supply: UUID;
-};
+}
 
 export class CreateInventoryMovementDto {
   @IsEnum(InventoryMovementType)
@@ -21,9 +27,6 @@ export class CreateInventoryMovementDto {
   @IsString()
   @TrimParam()
   concept: string;
-
-  @IsObject({ each: true }) // TODO: Validate this object
-  items: Item[];
 
   @IsUUID()
   @IsOptional()
@@ -36,6 +39,11 @@ export class CreateInventoryMovementDto {
   @IsUUID()
   @IsOptional()
   destination?: UUID;
+
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => InventoryMovementItem)
+  items: InventoryMovementItem[];
 }
 
 export default CreateInventoryMovementDto;

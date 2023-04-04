@@ -5,7 +5,13 @@ import { Entity, UUID } from '@/common';
 export type UserRoleAccessType = 'NONE' | 'STANDARD' | 'ADMIN';
 
 export type UserRoleConfig = Partial<{
-  access: Record<string, UserRoleAccessType>;
+  access: {
+    studio: UserRoleAccessType;
+    hub: UserRoleAccessType;
+    nobu: UserRoleAccessType;
+    trainings: UserRoleAccessType;
+    warehouse: UserRoleAccessType;
+  };
 }>;
 
 export class UserRoleEntity implements Entity, UserRole {

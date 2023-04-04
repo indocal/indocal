@@ -1,6 +1,6 @@
 import { UUID } from '../../../../../common';
 
-type Item = {
+type SupplyRequestItem = {
   quantity: number;
   supply: UUID;
 };
@@ -8,7 +8,7 @@ type Item = {
 export type CreateSupplyRequestDto = {
   description: string;
   requestedBy: UUID;
-  items: Item[];
+  items: SupplyRequestItem[];
 };
 
 export default CreateSupplyRequestDto;

@@ -1,12 +1,24 @@
-import { IsString, IsUUID, IsObject } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  IsNumber,
+  ArrayMinSize,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 import { TrimParam, UUID } from '@/common';
 
-type Item = {
+class OrdenItem {
+  @IsNumber()
   price: number;
+
+  @IsNumber()
   quantity: number;
+
+  @IsUUID()
   supply: UUID;
-};
+}
 
 export class CreateOrderDto {
   @IsString()
@@ -23,8 +35,10 @@ export class CreateOrderDto {
   @IsUUID()
   requestedBy: UUID;
 
-  @IsObject({ each: true }) // TODO: Validate this object
-  items: Item[];
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => OrdenItem)
+  items: OrdenItem[];
 }
 
 export default CreateOrderDto;

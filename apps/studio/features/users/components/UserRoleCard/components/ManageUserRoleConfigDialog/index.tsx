@@ -44,12 +44,33 @@ type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    access: zod.record(
-      zod.enum<string, [UserRoleAccessType, ...UserRoleAccessType[]]>([
-        'NONE',
-        'STANDARD',
-        'ADMIN',
-      ]),
+    access: zod.object(
+      {
+        studio: zod.enum<
+          UserRoleAccessType,
+          [UserRoleAccessType, ...UserRoleAccessType[]]
+        >(['NONE', 'STANDARD', 'ADMIN']),
+
+        hub: zod.enum<
+          UserRoleAccessType,
+          [UserRoleAccessType, ...UserRoleAccessType[]]
+        >(['NONE', 'STANDARD', 'ADMIN']),
+
+        nobu: zod.enum<
+          UserRoleAccessType,
+          [UserRoleAccessType, ...UserRoleAccessType[]]
+        >(['NONE', 'STANDARD', 'ADMIN']),
+
+        trainings: zod.enum<
+          UserRoleAccessType,
+          [UserRoleAccessType, ...UserRoleAccessType[]]
+        >(['NONE', 'STANDARD', 'ADMIN']),
+
+        warehouse: zod.enum<
+          UserRoleAccessType,
+          [UserRoleAccessType, ...UserRoleAccessType[]]
+        >(['NONE', 'STANDARD', 'ADMIN']),
+      },
       {
         description: 'Accesos del rol',
         required_error: 'Debe seleccionar los accesos del rol',
@@ -205,7 +226,7 @@ export const ManageUserRoleConfigDialog: React.FC<
                   </ListItemText>
 
                   <Controller
-                    name={`access.${app.name}`}
+                    name={`access.${app.name as keyof FormData['access']}`}
                     control={control}
                     render={({ field: { value, onChange } }) => (
                       <ToggleButtonGroup

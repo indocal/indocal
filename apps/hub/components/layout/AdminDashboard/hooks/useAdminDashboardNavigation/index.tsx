@@ -62,13 +62,13 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           icon: <RequestICon />,
           items: [
             {
-              show: true, // TODO: Add validation
+              show: ability.can('read', 'ticket'),
               label: 'Soporte técnico',
               icon: <TicketsIcon />,
               href: Pages.TICKETS,
             },
             {
-              show: true, // TODO: Add validation
+              show: ability.can('read', 'supplyRequest'),
               label: 'Almacén & Suministro',
               icon: <WarehouseIcon />,
               href: Pages.WAREHOUSE,

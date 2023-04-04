@@ -2,7 +2,7 @@ import { UUID } from '../../../../../common';
 
 import { InventoryMovementType } from './InventoryMovement';
 
-type Item = {
+type InventoryMovementItem = {
   quantity: number;
   supply: UUID;
 };
@@ -10,10 +10,10 @@ type Item = {
 export type CreateInventoryMovementDto = {
   type: InventoryMovementType;
   concept: string;
-  items: Item[];
   order?: UUID;
   origin?: UUID;
   destination?: UUID;
+  items: InventoryMovementItem[];
 };
 
 export default CreateInventoryMovementDto;
