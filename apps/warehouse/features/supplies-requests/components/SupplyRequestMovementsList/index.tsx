@@ -102,7 +102,7 @@ export const SupplyRequestMovementsList: React.FC<
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 gap: (theme) => theme.spacing(1),
-                padding: (theme) => theme.spacing(0.9, 2),
+                padding: (theme) => theme.spacing(1.5, 2),
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
               }}
             >
@@ -126,7 +126,7 @@ export const SupplyRequestMovementsList: React.FC<
                     <ListItem
                       key={movement.id}
                       divider
-                      sx={{ paddingY: (theme) => theme.spacing(1.75) }}
+                      sx={{ paddingY: (theme) => theme.spacing(1.625) }}
                     >
                       <Tooltip title={movement.concept}>
                         <ListItemIcon>
