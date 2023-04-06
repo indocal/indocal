@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Paper, Grid } from '@mui/material';
+import { Paper, Unstable_Grid2 } from '@mui/material';
 
 import { Widget, NoData } from '@indocal/ui';
 import { Form } from '@indocal/services';
@@ -24,15 +24,20 @@ export const FormsGallery: React.FC<FormsGalleryProps> = ({ forms }) => {
   return (
     <>
       {forms.length > 0 ? (
-        <Grid container justifyContent="center" alignItems="center" spacing={1}>
+        <Unstable_Grid2
+          container
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
           {formsByGroup.map(({ group, forms }) => (
-            <Grid key={group.id} item xs={12} md={4}>
+            <Unstable_Grid2 key={group.id} xs={12} md={4}>
               <Widget>
                 <GroupFormsList group={group} forms={forms} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
           ))}
-        </Grid>
+        </Unstable_Grid2>
       ) : (
         <Paper sx={{ margin: 'auto', padding: (theme) => theme.spacing(4) }}>
           <NoData message="Sin formularios" />

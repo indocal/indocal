@@ -1,4 +1,4 @@
-import { Grid, Typography, Chip } from '@mui/material';
+import { Unstable_Grid2, Typography, Chip } from '@mui/material';
 
 import { Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useUsers, UUID } from '@indocal/services';
@@ -26,18 +26,18 @@ export const LastUsersAnswers: React.FC<LastUsersAnswers> = ({
             Ultimas respuestas
           </Typography>
 
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
           >
             {users.map((user) => (
-              <Grid key={user.id} item>
+              <Unstable_Grid2 key={user.id}>
                 <Chip label={user.name} sx={{ fontStyle: 'italic' }} />
-              </Grid>
+              </Unstable_Grid2>
             ))}
-          </Grid>
+          </Unstable_Grid2>
         </>
       ) : (
         <NotFound />

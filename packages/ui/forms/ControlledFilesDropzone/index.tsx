@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import {
   Stack,
-  Grid,
+  Unstable_Grid2,
   Divider,
   FormControl,
   FormHelperText,
@@ -142,7 +142,7 @@ export const ControlledFilesDropzone: React.FC<
                 </Stack>
 
                 {value && (
-                  <Grid
+                  <Unstable_Grid2
                     container
                     spacing={1}
                     sx={{
@@ -154,15 +154,15 @@ export const ControlledFilesDropzone: React.FC<
                       const [mime] = file.type.split('/');
 
                       return (
-                        <Grid item key={`${index}-${file.name}`}>
+                        <Unstable_Grid2 key={`${index}-${file.name}`}>
                           <Chip
                             label={file.name}
                             icon={icons[mime] ?? <FileIcon />}
                           />
-                        </Grid>
+                        </Unstable_Grid2>
                       );
                     })}
-                  </Grid>
+                  </Unstable_Grid2>
                 )}
               </Stack>
             </FormControl>

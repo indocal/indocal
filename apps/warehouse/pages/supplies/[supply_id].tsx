@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Container, Grid } from '@mui/material';
+import { Container, Unstable_Grid2 } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useSupply, UUID } from '@indocal/services';
@@ -29,42 +29,49 @@ const SupplyPage: EnhancedNextPage = () => {
           : 'Recurso no encontrado'
       }
     >
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
+      <Container
+        fixed
+        sx={{
+          display: 'grid',
+          placeContent: 'start',
+          paddingY: (theme) => theme.spacing(2),
+        }}
+      >
         {loading ? (
           <Loader invisible message="Cargando datos..." />
         ) : error ? (
           <ErrorInfo error={error} />
         ) : supply ? (
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
           >
-            <Grid item xs={12} md={4}>
+            <Unstable_Grid2 xs={12} md={4}>
               <Widget>
                 <SupplyCard supply={supply} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12} md={8}>
+            <Unstable_Grid2 xs={12} md={8}>
               <Widget>
                 <SupplyPricesChart supply={supply} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12} md={7}>
+            <Unstable_Grid2 xs={12} md={7}>
               <Widget>
                 <SupplyOrdersDataGrid supply={supply} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12} md={5}>
+            <Unstable_Grid2 xs={12} md={5}>
               <Widget>
                 <SupplyMovementsList supply={supply} />
               </Widget>
-            </Grid>
-          </Grid>
+            </Unstable_Grid2>
+          </Unstable_Grid2>
         ) : (
           <NotFound />
         )}

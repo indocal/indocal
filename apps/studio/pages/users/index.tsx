@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { Container, Grid, Alert, Button } from '@mui/material';
+import { Container, Unstable_Grid2, Alert, Button } from '@mui/material';
 import { Launch as ViewDetailsIcon } from '@mui/icons-material';
 
 import { Page, Widget } from '@indocal/ui';
@@ -12,9 +12,16 @@ import { EnhancedNextPage } from '@/types';
 
 const UsersPage: EnhancedNextPage = () => (
   <Page title="Usuarios" transition="down">
-    <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
+    <Container
+      fixed
+      sx={{
+        display: 'grid',
+        placeContent: 'start',
+        paddingY: (theme) => theme.spacing(2),
+      }}
+    >
+      <Unstable_Grid2 container spacing={1}>
+        <Unstable_Grid2 xs={12}>
           <Can I="update" an="userRole">
             <Alert
               severity="info"
@@ -33,9 +40,9 @@ const UsersPage: EnhancedNextPage = () => (
               Roles / Permisos
             </Alert>
           </Can>
-        </Grid>
+        </Unstable_Grid2>
 
-        <Grid item xs={12}>
+        <Unstable_Grid2 xs={12}>
           <Can I="update" an="userGroup">
             <Alert
               severity="info"
@@ -54,14 +61,14 @@ const UsersPage: EnhancedNextPage = () => (
               Grupos
             </Alert>
           </Can>
-        </Grid>
+        </Unstable_Grid2>
 
-        <Grid item xs={12}>
+        <Unstable_Grid2 xs={12}>
           <Widget height={500}>
             <UsersDataGrid />
           </Widget>
-        </Grid>
-      </Grid>
+        </Unstable_Grid2>
+      </Unstable_Grid2>
     </Container>
   </Page>
 );

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Container, Grid, Stack } from '@mui/material';
+import { Container, Unstable_Grid2, Stack } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { FormEntryAnswers } from '@indocal/forms-generator';
@@ -25,20 +25,27 @@ const FormEntryPage: EnhancedNextPage = () => {
           : 'Entrada no encontrada'
       }
     >
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
+      <Container
+        fixed
+        sx={{
+          display: 'grid',
+          placeContent: 'start',
+          paddingY: (theme) => theme.spacing(2),
+        }}
+      >
         {loading ? (
           <Loader invisible message="Cargando datos..." />
         ) : error ? (
           <ErrorInfo error={error} />
         ) : entry ? (
-          <Grid container justifyContent="center" spacing={1}>
-            <Grid item xs={12} md={8}>
+          <Unstable_Grid2 container justifyContent="center" spacing={1}>
+            <Unstable_Grid2 xs={12} md={8}>
               <Widget disableDefaultSizes>
                 <FormEntryAnswers entry={entry} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12} md={4}>
+            <Unstable_Grid2 xs={12} md={4}>
               <Stack spacing={1}>
                 <Widget>
                   <FormEntryCard entry={entry} />
@@ -50,8 +57,8 @@ const FormEntryPage: EnhancedNextPage = () => {
                   </Widget>
                 )}
               </Stack>
-            </Grid>
-          </Grid>
+            </Unstable_Grid2>
+          </Unstable_Grid2>
         ) : (
           <NotFound />
         )}

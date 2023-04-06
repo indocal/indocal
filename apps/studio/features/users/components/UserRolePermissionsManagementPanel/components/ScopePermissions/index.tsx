@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react';
 import {
   Box,
-  Grid,
+  Unstable_Grid2,
   Stack,
   Accordion,
   AccordionSummary,
@@ -117,9 +117,9 @@ export const ScopePermissions: React.FC<ScopePermissionsProps> = ({
                     />
                   </Stack>
 
-                  <Grid container spacing={0.25}>
+                  <Unstable_Grid2 container spacing={0.25}>
                     {subPanel.permissions.map(({ label, action, checked }) => (
-                      <Grid key={action} item sx={{ width: 180 }}>
+                      <Unstable_Grid2 key={action} sx={{ width: 180 }}>
                         <FormControlLabel
                           label={label}
                           control={
@@ -132,9 +132,9 @@ export const ScopePermissions: React.FC<ScopePermissionsProps> = ({
                             />
                           }
                         />
-                      </Grid>
+                      </Unstable_Grid2>
                     ))}
-                  </Grid>
+                  </Unstable_Grid2>
                 </Stack>
               ))}
             </Stack>

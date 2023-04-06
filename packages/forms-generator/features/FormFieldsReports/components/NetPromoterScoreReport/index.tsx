@@ -3,7 +3,7 @@ import {
   Paper,
   Stack,
   Divider,
-  Grid,
+  Unstable_Grid2,
   Typography,
   Chip,
   Rating,
@@ -138,7 +138,7 @@ export const NetPromoterScoreReport: React.FC<NetPromoterScoreReportProps> = ({
             Satisfacción promedio
           </Typography>
 
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
@@ -157,7 +157,7 @@ export const NetPromoterScoreReport: React.FC<NetPromoterScoreReportProps> = ({
                 },
               }}
             />
-          </Grid>
+          </Unstable_Grid2>
         </Stack>
       </Stack>
     </Stack>

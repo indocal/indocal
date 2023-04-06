@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material';
+import { Container, Unstable_Grid2 } from '@mui/material';
 
 import { Page, Widget, NotFound } from '@indocal/ui';
 import { Form } from '@indocal/services';
@@ -18,13 +18,13 @@ const FormsPage: EnhancedNextPage<FormsPageProps> = ({ forms = [] }) => (
       sx={{ display: 'flex', paddingY: (theme) => theme.spacing(2) }}
     >
       {forms.length > 0 ? (
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
+        <Unstable_Grid2 container spacing={1}>
+          <Unstable_Grid2 xs={12}>
             <Widget disableDefaultSizes>
               <FormsGallery forms={forms} />
             </Widget>
-          </Grid>
-        </Grid>
+          </Unstable_Grid2>
+        </Unstable_Grid2>
       ) : (
         <NotFound
           caption="Formularios no encontrados"

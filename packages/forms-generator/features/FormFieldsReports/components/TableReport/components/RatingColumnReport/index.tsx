@@ -3,7 +3,7 @@ import {
   Paper,
   Stack,
   Divider,
-  Grid,
+  Unstable_Grid2,
   Typography,
   Chip,
   Rating,
@@ -98,14 +98,14 @@ export const RatingColumnReport: React.FC<RatingColumnReportProps> = ({
             Puntación promedio
           </Typography>
 
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
           >
             <Rating readOnly max={config?.levels} value={content.average} />
-          </Grid>
+          </Unstable_Grid2>
         </Stack>
       </Stack>
     </Stack>

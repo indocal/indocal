@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material';
+import { Container, Unstable_Grid2 } from '@mui/material';
 
 import { Page, Widget } from '@indocal/ui';
 
@@ -8,14 +8,21 @@ import { EnhancedNextPage } from '@/types';
 
 const UsersRolesPage: EnhancedNextPage = () => (
   <Page title="Roles" transition="down">
-    <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
+    <Container
+      fixed
+      sx={{
+        display: 'grid',
+        placeContent: 'start',
+        paddingY: (theme) => theme.spacing(2),
+      }}
+    >
+      <Unstable_Grid2 container spacing={1}>
+        <Unstable_Grid2 xs={12}>
           <Widget height={500}>
             <UsersRolesDataGrid />
           </Widget>
-        </Grid>
-      </Grid>
+        </Unstable_Grid2>
+      </Unstable_Grid2>
     </Container>
   </Page>
 );

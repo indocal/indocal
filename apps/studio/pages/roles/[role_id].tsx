@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Container, Grid } from '@mui/material';
+import { Container, Unstable_Grid2 } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useUserRole, UUID } from '@indocal/services';
@@ -28,36 +28,43 @@ const UserRolePage: EnhancedNextPage = () => {
           : 'Rol no encontrado'
       }
     >
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
+      <Container
+        fixed
+        sx={{
+          display: 'grid',
+          placeContent: 'start',
+          paddingY: (theme) => theme.spacing(2),
+        }}
+      >
         {loading ? (
           <Loader invisible message="Cargando datos..." />
         ) : error ? (
           <ErrorInfo error={error} />
         ) : role ? (
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
           >
-            <Grid item xs={12} md={4}>
+            <Unstable_Grid2 xs={12} md={4}>
               <Widget>
                 <UserRoleCard role={role} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12} md={8}>
+            <Unstable_Grid2 xs={12} md={8}>
               <Widget>
                 <RoleUsersDataGrid role={role} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12}>
+            <Unstable_Grid2 xs={12}>
               <Widget disableDefaultSizes>
                 <UserRolePermissionsManagementPanel role={role} />
               </Widget>
-            </Grid>
-          </Grid>
+            </Unstable_Grid2>
+          </Unstable_Grid2>
         ) : (
           <NotFound />
         )}

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Container, Grid } from '@mui/material';
+import { Container, Unstable_Grid2 } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useSupplyRequest, getShortUUID, UUID } from '@indocal/services';
@@ -31,42 +31,49 @@ const SupplyRequestPage: EnhancedNextPage = () => {
           : 'Solicitud no encontrada'
       }
     >
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
+      <Container
+        fixed
+        sx={{
+          display: 'grid',
+          placeContent: 'start',
+          paddingY: (theme) => theme.spacing(2),
+        }}
+      >
         {loading ? (
           <Loader invisible message="Cargando datos..." />
         ) : error ? (
           <ErrorInfo error={error} />
         ) : request ? (
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
           >
-            <Grid item xs={12} md={4}>
+            <Unstable_Grid2 xs={12} md={4}>
               <Widget>
                 <SupplyRequestCard request={request} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12} md={4}>
+            <Unstable_Grid2 xs={12} md={4}>
               <Widget>
                 <SupplyRequestItemsDetails request={request} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12} md={4}>
+            <Unstable_Grid2 xs={12} md={4}>
               <Widget>
                 <SupplyRequestMovementsList request={request} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12}>
+            <Unstable_Grid2 xs={12}>
               <Widget disableDefaultSizes>
                 <SupplyRequestItemsTable request={request} />
               </Widget>
-            </Grid>
-          </Grid>
+            </Unstable_Grid2>
+          </Unstable_Grid2>
         ) : (
           <NotFound />
         )}

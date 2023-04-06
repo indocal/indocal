@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import {
-  Grid,
+  Unstable_Grid2,
   Stack,
   Dialog,
   DialogTitle,
@@ -183,17 +183,16 @@ export const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
       <DialogTitle>Editar archivo</DialogTitle>
 
       <DialogContent dividers>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
+        <Unstable_Grid2 container spacing={1}>
+          <Unstable_Grid2 xs={12}>
             <FileDetails file={file} />
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid item xs={12} md={6} sx={{ height: 250 }}>
+          <Unstable_Grid2 xs={12} md={6} sx={{ height: 250 }}>
             <FileViewer file={file} />
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid
-            item
+          <Unstable_Grid2
             xs={12}
             md={6}
             sx={{
@@ -255,8 +254,8 @@ export const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
                 />
               </Can>
             </Stack>
-          </Grid>
-        </Grid>
+          </Unstable_Grid2>
+        </Unstable_Grid2>
       </DialogContent>
 
       <DialogActions>

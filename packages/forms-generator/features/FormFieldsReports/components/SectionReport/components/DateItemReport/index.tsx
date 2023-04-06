@@ -1,5 +1,12 @@
 import { useMemo } from 'react';
-import { Paper, Stack, Divider, Grid, Typography, Chip } from '@mui/material';
+import {
+  Paper,
+  Stack,
+  Divider,
+  Unstable_Grid2,
+  Typography,
+  Chip,
+} from '@mui/material';
 
 import { Chart, ChartSeries, ChartOptions } from '@indocal/ui';
 import {
@@ -96,21 +103,21 @@ export const DateItemReport: React.FC<DateItemReportProps> = ({ report }) => {
             Ultimas respuestas
           </Typography>
 
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
           >
             {content.lastAnswers.map((answer, index) => (
-              <Grid key={`${answer}-${index}`} item>
+              <Unstable_Grid2 key={`${answer}-${index}`}>
                 <Chip
                   label={new Date(answer).toLocaleDateString()}
                   sx={{ fontStyle: 'italic' }}
                 />
-              </Grid>
+              </Unstable_Grid2>
             ))}
-          </Grid>
+          </Unstable_Grid2>
         </Stack>
       </Stack>
     </Stack>

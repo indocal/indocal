@@ -3,7 +3,7 @@ import {
   Paper,
   Stack,
   Divider,
-  Grid,
+  Unstable_Grid2,
   Typography,
   Chip,
   Tooltip,
@@ -92,14 +92,14 @@ export const NumberColumnReport: React.FC<NumberColumnReportProps> = ({
             Ultimas respuestas
           </Typography>
 
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={1}
           >
             {content.lastAnswers.map((answer, index) => (
-              <Grid key={`${answer}-${index}`} item>
+              <Unstable_Grid2 key={`${answer}-${index}`}>
                 <Tooltip title={answer.toLocaleString()}>
                   <Chip
                     label={answer.toLocaleString()}
@@ -111,9 +111,9 @@ export const NumberColumnReport: React.FC<NumberColumnReportProps> = ({
                     }}
                   />
                 </Tooltip>
-              </Grid>
+              </Unstable_Grid2>
             ))}
-          </Grid>
+          </Unstable_Grid2>
         </Stack>
       </Stack>
     </Stack>

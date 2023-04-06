@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material';
+import { Container, Unstable_Grid2 } from '@mui/material';
 
 import { Page, Stat } from '@indocal/ui';
 import {
@@ -45,9 +45,21 @@ const DashboardPage: EnhancedNextPage = () => {
 
   return (
     <Page title="Dashboard" transition="down">
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-        <Grid container justifyContent="center" alignItems="center" spacing={1}>
-          <Grid item>
+      <Container
+        fixed
+        sx={{
+          display: 'grid',
+          placeContent: 'start',
+          paddingY: (theme) => theme.spacing(2),
+        }}
+      >
+        <Unstable_Grid2
+          container
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <Unstable_Grid2>
             <Stat
               title="Usuarios"
               description="Usuarios registrados"
@@ -55,9 +67,9 @@ const DashboardPage: EnhancedNextPage = () => {
               loading={usersCountLoading}
               validating={usersCountValidating}
             />
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid item>
+          <Unstable_Grid2>
             <Stat
               title="Roles"
               description="Roles definidos"
@@ -65,9 +77,9 @@ const DashboardPage: EnhancedNextPage = () => {
               loading={rolesCountLoading}
               validating={rolesCountValidating}
             />
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid item>
+          <Unstable_Grid2>
             <Stat
               title="Grupos"
               description="Grupos definidos"
@@ -75,9 +87,9 @@ const DashboardPage: EnhancedNextPage = () => {
               loading={groupsCountLoading}
               validating={groupsCountValidating}
             />
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid item>
+          <Unstable_Grid2>
             <Stat
               title="Formularios"
               description="Formularios digitalizados"
@@ -85,9 +97,9 @@ const DashboardPage: EnhancedNextPage = () => {
               loading={formsCountLoading}
               validating={formsCountValidating}
             />
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid item>
+          <Unstable_Grid2>
             <Stat
               title="Archivos"
               description="Archivos cargados"
@@ -95,8 +107,8 @@ const DashboardPage: EnhancedNextPage = () => {
               loading={filesCountLoading}
               validating={filesCountValidating}
             />
-          </Grid>
-        </Grid>
+          </Unstable_Grid2>
+        </Unstable_Grid2>
       </Container>
     </Page>
   );

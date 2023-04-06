@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
-  Grid,
+  Unstable_Grid2,
   Stack,
   Divider,
   Paper,
@@ -108,29 +108,29 @@ const FoldersGallery: React.FC<FoldersGalleryProps> = ({ title, folders }) => {
       {isAddFolderDialogOpen && <AddFolderDialog />}
       {isEditFolderDialogOpen && folder && <EditFolderDialog folder={folder} />}
 
-      <Grid container alignItems="center" spacing={1}>
-        <Grid
-          item
+      <Unstable_Grid2 container alignItems="center" spacing={1}>
+        <Unstable_Grid2
+
           container
           justifyContent={{ xs: 'center', sm: 'space-between' }}
           alignItems="center"
           spacing={1}
           xs={12}
         >
-          <Grid item>
+          <Unstable_Grid2 >
             <Typography variant="h6">{title}</Typography>
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid item onClick={toggleAddFolderDialog}>
+          <Unstable_Grid2  onClick={toggleAddFolderDialog}>
             <Button size="small" variant="contained">
               Agregar carpeta
             </Button>
-          </Grid>
-        </Grid>
+          </Unstable_Grid2>
+        </Unstable_Grid2>
 
         {folders.length > 0 ? (
           folders.map((folder) => (
-            <Grid key={folder.id} item xs={12} sm={6} md={4} lg={3}>
+            <Unstable_Grid2 key={folder.id}  xs={12} sm={6} md={4} lg={3}>
               <Card sx={{ display: 'flex', height: 125 }}>
                 <Stack
                   divider={<Divider flexItem />}
@@ -189,7 +189,7 @@ const FoldersGallery: React.FC<FoldersGalleryProps> = ({ title, folders }) => {
 
                 <CardMedia
                   sx={{
-                    display: 'grid',
+                    display: 'Unstable_Grid2',
                     placeContent: 'center',
                     placeItems: 'center',
                     padding: (theme) => theme.spacing(1),
@@ -208,16 +208,16 @@ const FoldersGallery: React.FC<FoldersGalleryProps> = ({ title, folders }) => {
                   </IconButton>
                 </CardMedia>
               </Card>
-            </Grid>
+            </Unstable_Grid2>
           ))
         ) : (
-          <Grid item xs={12}>
+          <Unstable_Grid2  xs={12}>
             <Paper>
               <NoData />
             </Paper>
-          </Grid>
+          </Unstable_Grid2>
         )}
-      </Grid>
+      </Unstable_Grid2>
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import {
-  Grid,
+  Unstable_Grid2,
   Stack,
   Paper,
   Card,
@@ -47,32 +47,31 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
       {isAddFileDialogOpen && <AddFileDialog />}
       {isEditFileDialogOpen && file && <EditFileDialog file={file} />}
 
-      <Grid container alignItems="center" spacing={1}>
-        <Grid
-          item
+      <Unstable_Grid2 container alignItems="center" spacing={1}>
+        <Unstable_Grid2
           container
           justifyContent={{ xs: 'center', sm: 'space-between' }}
           alignItems="center"
           spacing={1}
           xs={12}
         >
-          <Grid item>
+          <Unstable_Grid2>
             <Typography variant="h6">{title}</Typography>
-          </Grid>
+          </Unstable_Grid2>
 
-          <Grid item onClick={toggleAddFileDialog}>
+          <Unstable_Grid2 onClick={toggleAddFileDialog}>
             <Button size="small" variant="contained">
               Agregar archivos
             </Button>
-          </Grid>
-        </Grid>
+          </Unstable_Grid2>
+        </Unstable_Grid2>
 
         {files.length > 0 ? (
           files.map((file) => {
             const url = new URL(file.path, process.env.NEXT_PUBLIC_BACKEND_URL);
 
             return (
-              <Grid key={file.id} item xs={12} sm={6} md={4} lg={3}>
+              <Unstable_Grid2 key={file.id} xs={12} sm={6} md={4} lg={3}>
                 <Card>
                   <CardActionArea
                     onClick={() => handleEdit(file)}
@@ -160,17 +159,17 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
                     </CardContent>
                   </CardActionArea>
                 </Card>
-              </Grid>
+              </Unstable_Grid2>
             );
           })
         ) : (
-          <Grid item xs={12}>
+          <Unstable_Grid2 xs={12}>
             <Paper>
               <NoData />
             </Paper>
-          </Grid>
+          </Unstable_Grid2>
         )}
-      </Grid>
+      </Unstable_Grid2>
     </>
   );
 };

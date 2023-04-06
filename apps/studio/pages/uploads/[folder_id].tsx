@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Container, Grid, Divider } from '@mui/material';
+import { Container, Unstable_Grid2, Divider } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useFolder, UUID } from '@indocal/services';
@@ -28,42 +28,49 @@ const UploadsByFolderPage: EnhancedNextPage = () => {
           : 'Carpeta no encontrado'
       }
     >
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
+      <Container
+        fixed
+        sx={{
+          display: 'grid',
+          placeContent: 'start',
+          paddingY: (theme) => theme.spacing(2),
+        }}
+      >
         {loading ? (
           <Loader invisible message="Cargando datos..." />
         ) : error ? (
           <ErrorInfo error={error} />
         ) : folder ? (
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
             spacing={2}
           >
-            <Grid item xs={12}>
+            <Unstable_Grid2 xs={12}>
               <FolderTreeBreadcrumbs folder={folder} />
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12}>
+            <Unstable_Grid2 xs={12}>
               <Divider flexItem />
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12}>
+            <Unstable_Grid2 xs={12}>
               <Widget disableDefaultSizes>
                 <FolderFoldersGallery folder={folder} />
               </Widget>
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12}>
+            <Unstable_Grid2 xs={12}>
               <Divider flexItem />
-            </Grid>
+            </Unstable_Grid2>
 
-            <Grid item xs={12}>
+            <Unstable_Grid2 xs={12}>
               <Widget disableDefaultSizes>
                 <FolderFilesGallery folder={folder} />
               </Widget>
-            </Grid>
-          </Grid>
+            </Unstable_Grid2>
+          </Unstable_Grid2>
         ) : (
           <NotFound />
         )}

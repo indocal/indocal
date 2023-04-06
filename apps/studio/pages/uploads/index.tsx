@@ -1,4 +1,4 @@
-import { Container, Grid, Divider } from '@mui/material';
+import { Container, Unstable_Grid2, Divider } from '@mui/material';
 
 import { Page, Widget } from '@indocal/ui';
 
@@ -8,24 +8,36 @@ import { EnhancedNextPage } from '@/types';
 
 const UploadsPage: EnhancedNextPage = () => (
   <Page title="Librería de archivos" transition="down">
-    <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-      <Grid container justifyContent="center" alignItems="center" spacing={2}>
-        <Grid item xs={12}>
+    <Container
+      fixed
+      sx={{
+        display: 'grid',
+        placeContent: 'start',
+        paddingY: (theme) => theme.spacing(2),
+      }}
+    >
+      <Unstable_Grid2
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+      >
+        <Unstable_Grid2 xs={12}>
           <Widget disableDefaultSizes>
             <LastFoldersGallery />
           </Widget>
-        </Grid>
+        </Unstable_Grid2>
 
-        <Grid item xs={12}>
+        <Unstable_Grid2 xs={12}>
           <Divider flexItem />
-        </Grid>
+        </Unstable_Grid2>
 
-        <Grid item xs={12}>
+        <Unstable_Grid2 xs={12}>
           <Widget disableDefaultSizes>
             <LastFilesGallery />
           </Widget>
-        </Grid>
-      </Grid>
+        </Unstable_Grid2>
+      </Unstable_Grid2>
     </Container>
   </Page>
 );

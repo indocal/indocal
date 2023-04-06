@@ -13,7 +13,14 @@ const WarehousePage: EnhancedNextPage = () => {
 
   return (
     <Page title="Almacén & Suministro" transition="down">
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
+      <Container
+        fixed
+        sx={{
+          display: 'grid',
+          placeContent: 'start',
+          paddingY: (theme) => theme.spacing(2),
+        }}
+      >
         <Widget height={500}>
           <UserSuppliesRequestsDataGrid user={session?.user.id as UUID} />
         </Widget>

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Grid, Typography, Button, Link } from '@mui/material';
+import { Unstable_Grid2, Typography, Button, Link } from '@mui/material';
 import {
   FilePresent as FileIcon,
   Image as ImageIcon,
@@ -43,7 +43,7 @@ export const LastFilesAnswers: React.FC<LastFilesAnswersProps> = ({
             Ultimas respuestas
           </Typography>
 
-          <Grid
+          <Unstable_Grid2
             container
             justifyContent="center"
             alignItems="center"
@@ -56,7 +56,7 @@ export const LastFilesAnswers: React.FC<LastFilesAnswersProps> = ({
               );
 
               return (
-                <Grid key={file.id} item>
+                <Unstable_Grid2 key={file.id}>
                   <Button
                     key={file.id}
                     component={Link}
@@ -69,10 +69,10 @@ export const LastFilesAnswers: React.FC<LastFilesAnswersProps> = ({
                   >
                     {file.name}
                   </Button>
-                </Grid>
+                </Unstable_Grid2>
               );
             })}
-          </Grid>
+          </Unstable_Grid2>
         </>
       ) : (
         <NotFound />

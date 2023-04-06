@@ -5,7 +5,7 @@ import {
   Box,
   Stack,
   Paper,
-  Grid,
+  Unstable_Grid2,
   TextField,
   Avatar,
   Typography,
@@ -107,12 +107,11 @@ export const SignIn: React.FC = () => {
   );
 
   return (
-    <Grid
+    <Unstable_Grid2
       container
       sx={{ width: '100vw', height: '100vh', overflow: 'hidden' }}
     >
-      <Grid
-        item
+      <Unstable_Grid2
         xs={0}
         sm={6}
         md={8}
@@ -128,10 +127,9 @@ export const SignIn: React.FC = () => {
         }}
       />
 
-      <Grid
+      <Unstable_Grid2
         component={Paper}
         square
-        item
         xs={12}
         sm={6}
         md={4}
@@ -223,8 +221,8 @@ export const SignIn: React.FC = () => {
             {`© ${new Date().getFullYear()} - Todos los derechos reservados`}
           </Typography>
         </Box>
-      </Grid>
-    </Grid>
+      </Unstable_Grid2>
+    </Unstable_Grid2>
   );
 };
 
