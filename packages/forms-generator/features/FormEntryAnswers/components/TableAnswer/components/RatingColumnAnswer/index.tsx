@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
-import { Paper, Stack, Divider, Typography, Chip, Rating } from '@mui/material';
+import { Paper, Rating } from '@mui/material';
 
 import { NoData } from '@indocal/ui';
 import {
-  translateFormFieldType,
   TableFormFieldColumnAnswer,
   RatingFormFieldAnswer,
   RatingFormFieldConfig,
@@ -27,31 +26,13 @@ export const RatingColumnAnswer: React.FC<RatingColumnAnswerProps> = ({
   );
 
   return (
-    <Stack
-      component={Paper}
-      spacing={1}
-      divider={<Divider flexItem />}
-      sx={{ padding: (theme) => theme.spacing(2) }}
-    >
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        spacing={1}
-      >
-        <Stack>
-          <Typography variant="h6">{answer.column.heading}</Typography>
-        </Stack>
-
-        <Chip label={translateFormFieldType(answer.column.type)} />
-      </Stack>
-
+    <Paper elevation={5} sx={{ padding: (theme) => theme.spacing(1) }}>
       {typeof content === 'number' ? (
         <Rating readOnly max={config?.levels} defaultValue={content} />
       ) : (
         <NoData message="Campo no respondido" />
       )}
-    </Stack>
+    </Paper>
   );
 };
 

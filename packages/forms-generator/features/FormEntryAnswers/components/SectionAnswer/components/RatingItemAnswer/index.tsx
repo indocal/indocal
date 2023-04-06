@@ -29,6 +29,7 @@ export const RatingItemAnswer: React.FC<RatingItemAnswerProps> = ({
   return (
     <Stack
       component={Paper}
+      elevation={4}
       spacing={1}
       divider={<Divider flexItem />}
       sx={{ padding: (theme) => theme.spacing(2) }}
