@@ -55,7 +55,7 @@ const schema = zod.object(
               required_error: 'Debe ingresar la URL del webhook',
               invalid_type_error: 'Formato no válido',
             })
-            .min(1, 'Debe ingresar la URL del webhook'),
+            .url('Debe ingresar una URL válida'),
         },
         {
           description: 'Datos del webhook',

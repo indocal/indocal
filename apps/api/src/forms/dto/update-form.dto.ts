@@ -3,6 +3,7 @@ import {
   IsString,
   IsEnum,
   IsUUID,
+  IsUrl,
   IsOptional,
   ValidateNested,
 } from 'class-validator';
@@ -54,8 +55,7 @@ class FormConfigWebhooksSchema {
   @TrimParam()
   name: string;
 
-  @IsString()
-  @TrimParam()
+  @IsUrl()
   url: string;
 }
 
