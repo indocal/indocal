@@ -12,7 +12,8 @@ const UploadsPage: EnhancedNextPage = () => (
       fixed
       sx={{
         display: 'grid',
-        placeContent: 'start',
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr',
         paddingY: (theme) => theme.spacing(2),
       }}
     >
@@ -20,7 +21,8 @@ const UploadsPage: EnhancedNextPage = () => (
         container
         justifyContent="center"
         alignItems="center"
-        spacing={2}
+        spacing={1}
+        sx={{ height: 'fit-content' }}
       >
         <Unstable_Grid2 xs={12}>
           <Widget disableDefaultSizes>

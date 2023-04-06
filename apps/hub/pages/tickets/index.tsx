@@ -7,14 +7,7 @@ import { EnhancedNextPage } from '@/types';
 
 const TicketsPage: EnhancedNextPage = () => (
   <Page title="Soporte técnico" transition="down">
-    <Container
-      fixed
-      sx={{
-        display: 'grid',
-        placeContent: 'start',
-        paddingY: (theme) => theme.spacing(2),
-      }}
-    />
+    <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }} />
   </Page>
 );
 

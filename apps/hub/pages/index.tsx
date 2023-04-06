@@ -7,14 +7,7 @@ import { EnhancedNextPage } from '@/types';
 
 const DashboardPage: EnhancedNextPage = () => (
   <Page title="Dashboard" transition="down">
-    <Container
-      fixed
-      sx={{
-        display: 'grid',
-        placeContent: 'start',
-        paddingY: (theme) => theme.spacing(2),
-      }}
-    />
+    <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }} />
   </Page>
 );
 

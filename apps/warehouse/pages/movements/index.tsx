@@ -12,11 +12,18 @@ const InventoryMovementsPage: EnhancedNextPage = () => (
       fixed
       sx={{
         display: 'grid',
-        placeContent: 'start',
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr',
         paddingY: (theme) => theme.spacing(2),
       }}
     >
-      <Unstable_Grid2 container spacing={1}>
+      <Unstable_Grid2
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={1}
+        sx={{ height: 'fit-content' }}
+      >
         <Unstable_Grid2 xs={12}>
           <Widget height={500}>
             <InventoryMovementsDataGrid />

@@ -49,7 +49,8 @@ const DashboardPage: EnhancedNextPage = () => {
         fixed
         sx={{
           display: 'grid',
-          placeContent: 'start',
+          gridTemplateColumns: '1fr',
+          gridTemplateRows: '1fr',
           paddingY: (theme) => theme.spacing(2),
         }}
       >
@@ -58,6 +59,7 @@ const DashboardPage: EnhancedNextPage = () => {
           justifyContent="center"
           alignItems="center"
           spacing={1}
+          sx={{ height: 'fit-content' }}
         >
           <Unstable_Grid2>
             <Stat

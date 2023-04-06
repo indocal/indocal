@@ -29,7 +29,8 @@ const FormEntryPage: EnhancedNextPage = () => {
         fixed
         sx={{
           display: 'grid',
-          placeContent: 'start',
+          gridTemplateColumns: '1fr',
+          gridTemplateRows: '1fr',
           paddingY: (theme) => theme.spacing(2),
         }}
       >
@@ -38,7 +39,13 @@ const FormEntryPage: EnhancedNextPage = () => {
         ) : error ? (
           <ErrorInfo error={error} />
         ) : entry ? (
-          <Unstable_Grid2 container justifyContent="center" spacing={1}>
+          <Unstable_Grid2
+            container
+            justifyContent="center"
+            alignItems="flex-start"
+            spacing={1}
+            sx={{ height: 'fit-content' }}
+          >
             <Unstable_Grid2 xs={12} md={8}>
               <Widget disableDefaultSizes>
                 <FormEntryAnswers entry={entry} />

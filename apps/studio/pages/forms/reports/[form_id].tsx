@@ -32,7 +32,8 @@ const FormReportsPage: EnhancedNextPage = () => {
         fixed
         sx={{
           display: 'grid',
-          placeContent: 'start',
+          gridTemplateColumns: '1fr',
+          gridTemplateRows: '1fr',
           paddingY: (theme) => theme.spacing(2),
         }}
       >
@@ -46,6 +47,7 @@ const FormReportsPage: EnhancedNextPage = () => {
             justifyContent="center"
             alignItems="center"
             spacing={1}
+            sx={{ height: 'fit-content' }}
           >
             <Unstable_Grid2 xs={12} md={4}>
               <Widget>

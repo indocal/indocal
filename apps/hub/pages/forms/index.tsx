@@ -15,10 +15,21 @@ const FormsPage: EnhancedNextPage<FormsPageProps> = ({ forms = [] }) => (
   <Page title="Formularios" transition="down">
     <Container
       fixed
-      sx={{ display: 'flex', paddingY: (theme) => theme.spacing(2) }}
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr',
+        paddingY: (theme) => theme.spacing(2),
+      }}
     >
       {forms.length > 0 ? (
-        <Unstable_Grid2 container spacing={1}>
+        <Unstable_Grid2
+          container
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+          sx={{ height: 'fit-content' }}
+        >
           <Unstable_Grid2 xs={12}>
             <Widget disableDefaultSizes>
               <FormsGallery forms={forms} />
