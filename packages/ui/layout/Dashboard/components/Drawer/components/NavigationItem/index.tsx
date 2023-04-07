@@ -72,6 +72,7 @@ export const DashboardDrawerNavigationItem: React.FC<
               margin: (theme) => theme.spacing(0.5, 1),
             }),
             ...(!isDrawerOpen && {
+              margin: (theme) => theme.spacing(0.25),
               padding: (theme) => theme.spacing(1.5, 2),
             }),
             ...(nested && {

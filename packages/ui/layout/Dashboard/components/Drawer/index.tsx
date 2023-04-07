@@ -40,7 +40,7 @@ export const DashboardDrawer: React.FC<DashboardDrawerProps> = ({
               duration: theme.transitions.duration.enteringScreen,
             }),
           ...(!isDrawerOpen && {
-            width: (theme) => theme.spacing(7),
+            width: (theme) => theme.spacing(7.5),
             transition: (theme) =>
               theme.transitions.create('width', {
                 easing: theme.transitions.easing.sharp,
@@ -69,11 +69,33 @@ export const DashboardDrawer: React.FC<DashboardDrawerProps> = ({
           flexDirection: 'column',
           width: '100%',
           height: `calc(100% - ${DASHBOARD_SIZES.HEADER_HEIGHT})`,
-          overflowX: 'hidden',
-          overflowY: 'auto',
         }}
       >
-        <Box sx={{ paddingY: (theme) => theme.spacing(0.5) }}>
+        <Box
+          sx={{
+            height: '100%',
+            overflowX: 'hidden',
+            overflowY: 'auto',
+
+            ...(!isDrawerOpen && {
+              '&::-webkit-scrollbar': (theme) => ({
+                width: theme.spacing(0),
+                height: theme.spacing(0),
+                backgroundColor: theme.palette.background.paper,
+              }),
+
+              '&::-webkit-scrollbar-track': (theme) => ({
+                borderRadius: theme.spacing(0),
+                backgroundColor: theme.palette.background.paper,
+              }),
+
+              '&::-webkit-scrollbar-thumb': (theme) => ({
+                borderRadius: theme.spacing(0),
+                backgroundColor: theme.palette.primary.main,
+              }),
+            }),
+          }}
+        >
           {navigation?.map((element) =>
             element.type === 'MENU' ? (
               <DashboardDrawerNavigationMenu
