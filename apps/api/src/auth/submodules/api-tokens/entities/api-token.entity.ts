@@ -9,7 +9,7 @@ export class ApiTokenEntity implements Entity, ApiToken {
 
   id: UUID;
   name: string;
-  description: string | null;
+  description: string;
   token: string;
   type: ApiTokenType;
   status: ApiTokenStatus;

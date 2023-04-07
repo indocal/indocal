@@ -2,7 +2,7 @@ import { ApiTokenType } from './ApiToken';
 
 export type CreateApiTokenDto = {
   name: string;
-  description?: string;
+  description: string;
   type: ApiTokenType;
 };
 

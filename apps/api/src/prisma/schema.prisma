@@ -12,9 +12,9 @@ datasource db {
 ///////////////////////////
 
 model ApiToken {
-  id          String  @id @default(uuid())
+  id          String @id @default(uuid())
   name        String
-  description String?
+  description String
 
   token String @unique
 

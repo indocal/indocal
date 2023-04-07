@@ -5,7 +5,7 @@ export type ApiTokenStatus = 'ENABLED' | 'DISABLED';
 
 export interface ApiToken extends Entity {
   name: string;
-  description: string | null;
+  description: string;
   token: string;
   type: ApiTokenType;
   status: ApiTokenStatus;

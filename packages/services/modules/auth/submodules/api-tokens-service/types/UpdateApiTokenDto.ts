@@ -2,7 +2,7 @@ import { ApiTokenStatus } from './ApiToken';
 
 export type UpdateApiTokenDto = Partial<{
   name: string;
-  description: string | null;
+  description: string;
   status: ApiTokenStatus;
 }>;
 

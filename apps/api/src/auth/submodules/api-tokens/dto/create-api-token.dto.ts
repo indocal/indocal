@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEnum } from 'class-validator';
 import { ApiTokenType } from '@prisma/client';
 
 import { TrimParam } from '@/common';
@@ -9,9 +9,8 @@ export class CreateApiTokenDto {
   name: string;
 
   @IsString()
-  @IsOptional()
   @TrimParam()
-  description?: string;
+  description: string;
 
   @IsEnum(ApiTokenType)
   type: ApiTokenType;
