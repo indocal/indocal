@@ -6,6 +6,8 @@ export enum ApiEndpoints {
   RESTORE_PASSWORD = '/auth/local/restore-password',
   ME = '/auth/me',
 
+  API_TOKENS = '/auth/api-tokens',
+  API_TOKENS_COUNT = '/auth/api-tokens/count',
   USERS = '/auth/users',
   USERS_COUNT = '/auth/users/count',
   USERS_ROLES = '/auth/roles',

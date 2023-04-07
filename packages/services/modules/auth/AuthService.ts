@@ -14,6 +14,7 @@ import {
 } from './types';
 
 import {
+  ApiTokensService,
   UsersService,
   UsersRolesService,
   UsersGroupsService,
@@ -34,12 +35,15 @@ export interface SendRestorePasswordEmailReturn {
 }
 
 export class AuthService {
-  persistence: AuthTokenPersistence = AuthTokenPersistence.NONE;
+  apiTokens: ApiTokensService;
   users: UsersService;
   roles: UsersRolesService;
   groups: UsersGroupsService;
 
+  persistence: AuthTokenPersistence = AuthTokenPersistence.NONE;
+
   constructor(private config: Config) {
+    this.apiTokens = new ApiTokensService(config);
     this.users = new UsersService(config);
     this.roles = new UsersRolesService(config);
     this.groups = new UsersGroupsService(config);

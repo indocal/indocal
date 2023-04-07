@@ -7,6 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+///////////////////////////
+// API Tokens Management //
+///////////////////////////
+
+model ApiToken {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  token String @unique
+
+  type   ApiTokenType
+  status ApiTokenStatus @default(ENABLED)
+
+  logs Log[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ApiTokenType {
+  READ_ONLY
+  READ_WRITE
+}
+
+enum ApiTokenStatus {
+  ENABLED
+  DISABLED
+}
+
 ////////////////////////
 // Logging Management //
 ////////////////////////
@@ -20,6 +50,9 @@ model Log {
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Restrict)
   userId String?
+
+  apiToken   ApiToken? @relation(fields: [apiTokenId], references: [id], onDelete: Restrict)
+  apiTokenId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

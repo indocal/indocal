@@ -19,6 +19,9 @@ export class LogEntity implements Entity, Log {
   @Exclude()
   userId: UUID | null;
 
+  @Exclude()
+  apiTokenId: UUID | null;
+
   createdAt: Date;
   updatedAt: Date;
 }

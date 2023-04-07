@@ -4,6 +4,7 @@ import {
   Feed as FormsIcon,
   SnippetFolder as UploadsIcon,
   ManageAccounts as UsersPanelControl,
+  Key as ApiTokensIcon,
   Groups as UsersIcon,
   AccountTree as RolesIcon,
   GroupWork as GroupsIcon,
@@ -81,6 +82,12 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Control de usuarios',
           icon: <UsersPanelControl />,
           items: [
+            {
+              show: ability.can('read', 'apiToken'),
+              label: 'API Tokens',
+              icon: <ApiTokensIcon />,
+              href: Pages.API_TOKENS,
+            },
             {
               show: ability.can('read', 'user'),
               label: 'Usuarios',

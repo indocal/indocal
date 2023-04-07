@@ -9,9 +9,9 @@ import {
 import { Control, ControllerProps } from 'react-hook-form';
 
 import { ControlledSelect } from '@indocal/ui';
-import { FormVisibility, translateFormVisibility } from '@indocal/services';
+import { ApiTokenStatus, translateApiTokenStatus } from '@indocal/services';
 
-export interface ControlledFormVisibilitySelectProps {
+export interface ControlledApiTokenStatusSelect {
   name: string;
   label?: string;
   description?: string | null;
@@ -25,8 +25,8 @@ export interface ControlledFormVisibilitySelectProps {
   selectProps?: Omit<SelectProps, 'label' | 'value' | 'onChange'>;
 }
 
-export const ControlledFormVisibilitySelect: React.FC<
-  ControlledFormVisibilitySelectProps
+export const ControlledApiTokenStatusSelect: React.FC<
+  ControlledApiTokenStatusSelect
 > = ({
   name,
   label,
@@ -40,10 +40,7 @@ export const ControlledFormVisibilitySelect: React.FC<
   inputLabelProps,
   selectProps,
 }) => {
-  const visibilities = useMemo<FormVisibility[]>(
-    () => ['PUBLIC', 'PROTECTED', 'PRIVATE'],
-    []
-  );
+  const status = useMemo<ApiTokenStatus[]>(() => ['ENABLED', 'DISABLED'], []);
 
   return (
     <ControlledSelect
@@ -57,13 +54,13 @@ export const ControlledFormVisibilitySelect: React.FC<
       inputLabelProps={inputLabelProps}
       selectProps={selectProps}
     >
-      {visibilities.map((visibility) => (
-        <MenuItem key={visibility} value={visibility}>
-          {translateFormVisibility(visibility)}
+      {status.map((status) => (
+        <MenuItem key={status} value={status}>
+          {translateApiTokenStatus(status)}
         </MenuItem>
       ))}
     </ControlledSelect>
   );
 };
 
-export default ControlledFormVisibilitySelect;
+export default ControlledApiTokenStatusSelect;

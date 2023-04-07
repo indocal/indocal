@@ -9,6 +9,7 @@ export enum Pages {
   FORMS_ENTRIES = '/forms/entries',
   FORMS_REPORTS = '/forms/reports',
   UPLOADS = '/uploads',
+  API_TOKENS = '/api-tokens',
   USERS = '/users',
   USERS_ROLES = '/roles',
   USERS_GROUPS = '/groups',

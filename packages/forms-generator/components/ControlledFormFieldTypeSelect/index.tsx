@@ -40,7 +40,7 @@ export const ControlledFormFieldTypeSelect: React.FC<
   inputLabelProps,
   selectProps,
 }) => {
-  const status = useMemo<FormFieldType[]>(
+  const types = useMemo<FormFieldType[]>(
     () => [
       'TEXT',
       'TEXTAREA',
@@ -83,9 +83,9 @@ export const ControlledFormFieldTypeSelect: React.FC<
       inputLabelProps={inputLabelProps}
       selectProps={selectProps}
     >
-      {status.map((status) => (
-        <MenuItem key={status} value={status}>
-          {translateFormFieldType(status)}
+      {types.map((type) => (
+        <MenuItem key={type} value={type}>
+          {translateFormFieldType(type)}
         </MenuItem>
       ))}
     </ControlledSelect>

@@ -26,6 +26,51 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
   const panels = useMemo<ScopePermissionsPanel[]>(
     () => [
       {
+        label: 'API Tokens',
+        subPanels: [
+          {
+            scope: 'apiToken',
+            permissions: [
+              {
+                label: 'Contar',
+                action: 'count',
+                checked:
+                  Boolean(permissions?.apiToken) &&
+                  Boolean(permissions?.apiToken['count']),
+              },
+              {
+                label: 'Leer',
+                action: 'read',
+                checked:
+                  Boolean(permissions?.apiToken) &&
+                  Boolean(permissions?.apiToken['read']),
+              },
+              {
+                label: 'Crear',
+                action: 'create',
+                checked:
+                  Boolean(permissions?.apiToken) &&
+                  Boolean(permissions?.apiToken['create']),
+              },
+              {
+                label: 'Modificar',
+                action: 'update',
+                checked:
+                  Boolean(permissions?.apiToken) &&
+                  Boolean(permissions?.apiToken['update']),
+              },
+              {
+                label: 'Borrar',
+                action: 'delete',
+                checked:
+                  Boolean(permissions?.apiToken) &&
+                  Boolean(permissions?.apiToken['delete']),
+              },
+            ],
+          },
+        ],
+      },
+      {
         label: 'Registros',
         subPanels: [
           {

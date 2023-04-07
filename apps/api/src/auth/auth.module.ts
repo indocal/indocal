@@ -17,6 +17,7 @@ import {
 import { JWT_MODULE_OPTIONS } from './config';
 
 import {
+  ApiTokensModule,
   UsersModule,
   UsersRolesModule,
   UsersRolesPermissionsModule,
@@ -25,6 +26,7 @@ import {
 
 @Module({
   imports: [
+    ApiTokensModule,
     UsersModule,
     UsersRolesModule,
     UsersRolesPermissionsModule,

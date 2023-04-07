@@ -18,6 +18,10 @@ async function main() {
 
   const permissions = [
     {
+      scope: 'apiToken',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
       scope: 'log',
       actions: ['count', 'read'],
     },
