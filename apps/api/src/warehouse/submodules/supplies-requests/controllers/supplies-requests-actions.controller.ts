@@ -14,7 +14,10 @@ export class SuppliesRequestsActionsController {
   constructor(private prismaService: PrismaService) {}
 
   @Patch('dispatch-items')
-  @CheckPolicies((ability) => ability.can('dispatch-items', 'supplyRequest'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('dispatch-items', 'supplyRequest'),
+  })
   async dispatchItems(
     @Body() dispatchItemsDto: DispatchItemsDto
   ): Promise<void> {

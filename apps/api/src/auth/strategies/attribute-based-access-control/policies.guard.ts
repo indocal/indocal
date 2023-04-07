@@ -5,43 +5,60 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import { Request } from 'express';
 import { MongoAbility } from '@casl/ability';
 
 import { CHECK_POLICIES_KEY } from '../../decorators';
-import { AuthenticatedUser } from '../../types';
+import { JWT } from '../../types';
 
 import { AbilityFactory } from './ability.factory';
 
-export interface PolicyHandler {
-  handle(ability: MongoAbility): boolean;
-}
-
-export type PolicyHandlerCallback = (ability: MongoAbility) => boolean;
-
-export type Policy = PolicyHandler | PolicyHandlerCallback;
+export type Policies = {
+  apiToken: { ANON: boolean; SERVICE: boolean };
+  user: (ability: MongoAbility) => boolean;
+};
 
 @Injectable()
 export class PoliciesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private abilityFactory: AbilityFactory
+    private abilityFactory: AbilityFactory,
+    private prismaService: PrismaService
   ) {}
 
   async canActivate(context: ExecutionContext) {
     const { user } = context.switchToHttp().getRequest<Request>();
 
-    if (!user) throw new UnauthorizedException();
+    const jwt = user as JWT | null;
 
-    const ability = await this.abilityFactory.build(user as AuthenticatedUser);
+    if (!jwt) throw new UnauthorizedException();
 
-    const policies =
-      this.reflector.get<Policy[]>(CHECK_POLICIES_KEY, context.getHandler()) ||
-      [];
+    if (jwt.type === 'api-token') {
+      const policies = this.reflector.get<Policies | null>(
+        CHECK_POLICIES_KEY,
+        context.getHandler()
+      );
 
-    return policies.every((handler) =>
-      typeof handler === 'function' ? handler(ability) : handler.handle(ability)
-    );
+      const apiToken = await this.prismaService.apiToken.findUnique({
+        where: { id: jwt.apiToken.id },
+      });
+
+      if (!policies || !apiToken) return false;
+
+      return policies.apiToken[apiToken.type];
+    } else {
+      const policies = this.reflector.get<Policies | null>(
+        CHECK_POLICIES_KEY,
+        context.getHandler()
+      );
+
+      const ability = await this.abilityFactory.build(jwt.user);
+
+      if (!policies) return false;
+
+      return policies.user(ability);
+    }
   }
 }
 

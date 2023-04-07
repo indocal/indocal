@@ -55,7 +55,10 @@ export class FilesController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can('upload', 'file'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('upload', 'file'),
+  })
   @UseInterceptors(AnyFilesInterceptor())
   async upload(
     @UploadedFiles() uploads: Array<Express.Multer.File>,
@@ -104,7 +107,10 @@ export class FilesController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can('count', 'file'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('count', 'file'),
+  })
   async count(@Query() query: CountFilesParamsDto): Promise<number> {
     return await this.prismaService.file.count({
       where: query.filters,
@@ -113,7 +119,10 @@ export class FilesController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can('read', 'file'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'file'),
+  })
   async findMany(
     @Query() query: FindManyFilesParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedFile>> {
@@ -140,7 +149,10 @@ export class FilesController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can('read', 'file'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'file'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFile | null>> {
@@ -153,7 +165,10 @@ export class FilesController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can('update', 'file'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('update', 'file'),
+  })
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateFileDto: UpdateFileDto
@@ -173,7 +188,10 @@ export class FilesController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can('delete', 'file'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('delete', 'file'),
+  })
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFile>> {

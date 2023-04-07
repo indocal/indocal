@@ -44,7 +44,10 @@ export class OrdersItemsController {
   }
 
   @Get('warehouse/orders/:order_id/items/count')
-  @CheckPolicies((ability) => ability.can('count', 'order'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('count', 'order'),
+  })
   async count(@Param('order_id') orderId: UUID): Promise<number> {
     return await this.prismaService.orderItem.count({
       where: { order: { id: orderId } },
@@ -52,7 +55,10 @@ export class OrdersItemsController {
   }
 
   @Get('warehouse/orders/:order_id/items')
-  @CheckPolicies((ability) => ability.can('read', 'order'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'order'),
+  })
   async findAll(
     @Param('order_id') orderId: UUID
   ): Promise<MultipleEntitiesResponse<EnhancedOrderItem>> {
@@ -73,7 +79,10 @@ export class OrdersItemsController {
   }
 
   @Get('warehouse/orders/items/:id')
-  @CheckPolicies((ability) => ability.can('read', 'order'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'order'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedOrderItem | null>> {

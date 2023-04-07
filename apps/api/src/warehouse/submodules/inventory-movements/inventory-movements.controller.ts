@@ -118,7 +118,10 @@ export class InventoryMovementsController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can('create', 'inventoryMovement'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('create', 'inventoryMovement'),
+  })
   async create(
     @Body() createInventoryMovementDto: CreateInventoryMovementDto
   ): Promise<SingleEntityResponse<EnhancedInventoryMovement>> {
@@ -263,7 +266,10 @@ export class InventoryMovementsController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can('count', 'inventoryMovement'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('count', 'inventoryMovement'),
+  })
   async count(
     @Query() query: CountInventoryMovementsParamsDto
   ): Promise<number> {
@@ -274,7 +280,10 @@ export class InventoryMovementsController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can('read', 'inventoryMovement'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'inventoryMovement'),
+  })
   async findMany(
     @Query() query: FindManyInventoryMovementsParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedInventoryMovement>> {
@@ -309,7 +318,10 @@ export class InventoryMovementsController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can('read', 'inventoryMovement'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'inventoryMovement'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedInventoryMovement | null>> {

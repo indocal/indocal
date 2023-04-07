@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { AuthenticatedUser } from '@/auth';
+import { JWT } from '@/auth';
 
 import LoggingService from './logging.service';
 
@@ -29,14 +29,18 @@ export class LoggingInterceptor implements NestInterceptor {
 
     switch (type) {
       case 'http': {
-        const { method, params, query, body, user } = context
-          .switchToHttp()
-          .getRequest<Request>();
+        const {
+          method,
+          params,
+          query,
+          body,
+          user: jwt,
+        } = context.switchToHttp().getRequest<Request>();
 
         await this.loggingService.log({
           context: controller,
           action: `${method}::${handler}`,
-          user: (user as AuthenticatedUser) || null,
+          jwt: jwt as JWT | null,
           metadata: {
             contextType: type,
             ...(Object.entries(params).length > 0 && { params }),

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 
-import { AuthenticatedUser } from '@/auth';
+import { JWT } from '@/auth';
 
 import { LogMetadata } from './entities';
 
 export type CreateLogArgs = {
   context: string;
   action: string; // method::handler
-  user: AuthenticatedUser | null;
+  jwt: JWT | null;
   metadata: LogMetadata;
 };
 
@@ -16,15 +16,43 @@ export type CreateLogArgs = {
 export class LoggingService {
   constructor(private prismaService: PrismaService) {}
 
-  async log({ context, action, user, metadata }: CreateLogArgs): Promise<void> {
-    await this.prismaService.log.create({
-      data: {
-        context,
-        action,
-        metadata,
-        ...(user && { user: { connect: { id: user.id } } }),
-      },
-    });
+  async log({ context, action, jwt, metadata }: CreateLogArgs): Promise<void> {
+    switch (jwt?.type) {
+      case 'api-token': {
+        await this.prismaService.log.create({
+          data: {
+            context,
+            action,
+            metadata,
+            apiToken: { connect: { id: jwt.apiToken.id } },
+          },
+        });
+        break;
+      }
+
+      case 'user': {
+        await this.prismaService.log.create({
+          data: {
+            context,
+            action,
+            metadata,
+            user: { connect: { id: jwt.user.id } },
+          },
+        });
+        break;
+      }
+
+      default: {
+        await this.prismaService.log.create({
+          data: {
+            context,
+            action,
+            metadata,
+          },
+        });
+        break;
+      }
+    }
   }
 }
 

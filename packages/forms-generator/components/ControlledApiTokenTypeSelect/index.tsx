@@ -40,7 +40,7 @@ export const ControlledApiTokenTypeSelect: React.FC<
   inputLabelProps,
   selectProps,
 }) => {
-  const types = useMemo<ApiTokenType[]>(() => ['READ_ONLY', 'READ_WRITE'], []);
+  const types = useMemo<ApiTokenType[]>(() => ['ANON', 'SERVICE'], []);
 
   return (
     <ControlledSelect

@@ -7,8 +7,11 @@ import * as bcrypt from 'bcrypt';
 import { UUID } from '@/common';
 import { NodemailerService } from '@/mailer';
 
-import { InvalidCredentialsException, InvalidEmailException } from './errors';
-import { Session, AuthenticatedUser } from './types';
+import {
+  InvalidUserCredentialsException,
+  InvalidEmailException,
+} from './errors';
+import { Session, AuthenticatedUser, UserJwt } from './types';
 import { restorePasswordEmailTemplate } from './mails';
 
 @Injectable()
@@ -20,11 +23,14 @@ export class AuthService {
   ) {}
 
   generateSession(payload: AuthenticatedUser): Session {
-    const jwt = this.jwtService.sign(payload);
+    const jwt: UserJwt = {
+      type: 'user',
+      user: payload,
+    };
 
     return {
       user: payload,
-      access_token: jwt,
+      access_token: this.jwtService.sign(jwt),
       issued_at: new Date().toISOString(),
     };
   }
@@ -68,7 +74,7 @@ export class AuthService {
     });
 
     if (!user || !bcrypt.compareSync(currentPassword, user.password))
-      throw new InvalidCredentialsException();
+      throw new InvalidUserCredentialsException();
 
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(newPassword, salt);

@@ -19,7 +19,10 @@ export class SuppliesStatsController {
   constructor(private prismaService: PrismaService) {}
 
   @Get('warehouse/supplies/stats/prices')
-  @CheckPolicies((ability) => ability.can('get-prices', 'supply'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('get-prices', 'supply'),
+  })
   async suppliesPrices(): Promise<SupplyPrices[]> {
     const supplies = await this.prismaService.supply.findMany({
       include: { orderHistory: { orderBy: { createdAt: 'asc' } } },
@@ -35,7 +38,10 @@ export class SuppliesStatsController {
   }
 
   @Get('warehouse/supplies/:id/stats/prices')
-  @CheckPolicies((ability) => ability.can('get-prices', 'supply'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('get-prices', 'supply'),
+  })
   async supplyPrices(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SupplyPrices> {

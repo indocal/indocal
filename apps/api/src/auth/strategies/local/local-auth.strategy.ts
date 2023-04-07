@@ -5,7 +5,7 @@ import { Strategy } from 'passport-local';
 import { AuthService } from '../../auth.service';
 import { AuthenticatedUser } from '../../types';
 import {
-  InvalidCredentialsException,
+  InvalidUserCredentialsException,
   DisabledUserException,
 } from '../../errors';
 
@@ -24,7 +24,7 @@ export class LocalAuthStrategy extends PassportStrategy(Strategy) {
       password
     );
 
-    if (!user) throw new InvalidCredentialsException();
+    if (!user) throw new InvalidUserCredentialsException();
     if (user.status === 'DISABLED') throw new DisabledUserException();
 
     return {

@@ -4,7 +4,7 @@ import { Request } from 'express';
 import AuthService from './auth.service';
 import { LocalAuthGuard } from './strategies';
 import { SkipAuthentication } from './decorators';
-import { Session, AuthenticatedUser, RestorePasswordDto } from './types';
+import { Session, AuthenticatedUser, JWT, RestorePasswordDto } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -29,8 +29,8 @@ export class AuthController {
   }
 
   @Get('me')
-  me(@Req() req: Request): AuthenticatedUser {
-    return req.user as AuthenticatedUser;
+  me(@Req() req: Request): JWT {
+    return req.user as JWT;
   }
 }
 

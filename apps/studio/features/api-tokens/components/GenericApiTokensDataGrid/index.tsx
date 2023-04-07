@@ -85,8 +85,8 @@ export const GenericApiTokensDataGrid: React.FC<
 
   const typesColors: Record<ApiTokenType, ChipProps['color']> = useMemo(
     () => ({
-      READ_ONLY: 'success',
-      READ_WRITE: 'warning',
+      ANON: 'success',
+      SERVICE: 'warning',
     }),
     []
   );

@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { ApiToken, ApiTokenType, ApiTokenStatus } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
@@ -10,7 +11,10 @@ export class ApiTokenEntity implements Entity, ApiToken {
   id: UUID;
   name: string;
   description: string;
+
+  @Exclude()
   token: string;
+
   type: ApiTokenType;
   status: ApiTokenStatus;
   createdAt: Date;

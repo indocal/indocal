@@ -14,7 +14,10 @@ export class OrdersActionsController {
   constructor(private prismaService: PrismaService) {}
 
   @Patch('receive-items')
-  @CheckPolicies((ability) => ability.can('receive-items', 'order'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('receive-items', 'order'),
+  })
   async receiveItems(@Body() receiveItemsDto: ReceiveItemsDto): Promise<void> {
     await this.prismaService.$transaction(async (tx) => {
       const order = await tx.order.findUniqueOrThrow({

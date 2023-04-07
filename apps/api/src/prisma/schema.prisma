@@ -28,8 +28,8 @@ model ApiToken {
 }
 
 enum ApiTokenType {
-  READ_ONLY
-  READ_WRITE
+  ANON
+  SERVICE
 }
 
 enum ApiTokenStatus {

@@ -18,6 +18,7 @@ import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 
 import { PoliciesGuard } from '../../strategies/attribute-based-access-control';
 import { CheckPolicies } from '../../decorators/check-policies.decorator';
+import { ApiTokenJwt } from '../../types';
 
 import { ApiTokenEntity } from './entities';
 import {
@@ -36,17 +37,23 @@ export class ApiTokensController {
   ) {}
 
   @Post()
-  @CheckPolicies((ability) => ability.can('create', 'apiToken'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: false },
+    user: (ability) => ability.can('create', 'apiToken'),
+  })
   async create(
     @Body() createApiTokenDto: CreateApiTokenDto
   ): Promise<SingleEntityResponse<ApiTokenEntity>> {
     const uuid = randomUUID();
 
-    const jwt = this.jwtService.sign({
-      id: uuid,
-      name: createApiTokenDto.name,
-      description: createApiTokenDto.description,
-    });
+    const jwt: ApiTokenJwt = {
+      type: 'api-token',
+      apiToken: {
+        id: uuid,
+        name: createApiTokenDto.name,
+        description: createApiTokenDto.description,
+      },
+    };
 
     const apiToken = await this.prismaService.apiToken.create({
       data: {
@@ -54,7 +61,7 @@ export class ApiTokensController {
         name: createApiTokenDto.name,
         description: createApiTokenDto.description,
         type: createApiTokenDto.type,
-        token: jwt,
+        token: this.jwtService.sign(jwt),
       },
     });
 
@@ -62,7 +69,10 @@ export class ApiTokensController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can('count', 'apiToken'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: false },
+    user: (ability) => ability.can('count', 'apiToken'),
+  })
   async count(@Query() query: CountApiTokensParamsDto): Promise<number> {
     return await this.prismaService.apiToken.count({
       where: query.filters,
@@ -71,7 +81,10 @@ export class ApiTokensController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can('read', 'apiToken'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: false },
+    user: (ability) => ability.can('read', 'apiToken'),
+  })
   async findMany(
     @Query() query: FindManyApiTokensParamsDto
   ): Promise<MultipleEntitiesResponse<ApiTokenEntity>> {
@@ -97,7 +110,10 @@ export class ApiTokensController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can('read', 'apiToken'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: false },
+    user: (ability) => ability.can('read', 'apiToken'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<ApiTokenEntity | null>> {
@@ -109,7 +125,10 @@ export class ApiTokensController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can('update', 'apiToken'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: false },
+    user: (ability) => ability.can('update', 'apiToken'),
+  })
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateApiTokenDto: UpdateApiTokenDto
@@ -127,7 +146,10 @@ export class ApiTokensController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can('delete', 'apiToken'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: false },
+    user: (ability) => ability.can('delete', 'apiToken'),
+  })
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<ApiTokenEntity>> {

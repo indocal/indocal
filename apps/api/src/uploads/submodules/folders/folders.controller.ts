@@ -48,7 +48,10 @@ export class FoldersController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can('create', 'folder'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('create', 'folder'),
+  })
   async create(
     @Body() createFolderDto: CreateFolderDto
   ): Promise<SingleEntityResponse<EnhancedFolder>> {
@@ -66,7 +69,10 @@ export class FoldersController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can('count', 'folder'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('count', 'folder'),
+  })
   async count(@Query() query: CountFoldersParamsDto): Promise<number> {
     return await this.prismaService.folder.count({
       where: query.filters,
@@ -75,7 +81,10 @@ export class FoldersController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can('read', 'folder'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'folder'),
+  })
   async findMany(
     @Query() query: FindManyFoldersParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedFolder>> {
@@ -102,7 +111,10 @@ export class FoldersController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can('read', 'folder'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'folder'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFolder | null>> {
@@ -115,7 +127,10 @@ export class FoldersController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can('update', 'folder'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('update', 'folder'),
+  })
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateFolderDto: UpdateFolderDto
@@ -133,7 +148,10 @@ export class FoldersController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can('delete', 'folder'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('delete', 'folder'),
+  })
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFolder>> {

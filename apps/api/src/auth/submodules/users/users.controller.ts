@@ -58,7 +58,10 @@ export class UsersController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can('create', 'user'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('create', 'user'),
+  })
   async create(
     @Body() createUserDto: CreateUserDto
   ): Promise<SingleEntityResponse<EnhancedUser>> {
@@ -79,7 +82,10 @@ export class UsersController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can('count', 'user'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('count', 'user'),
+  })
   async count(@Query() query: CountUsersParamsDto): Promise<number> {
     return await this.prismaService.user.count({
       where: query.filters,
@@ -88,7 +94,10 @@ export class UsersController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can('read', 'user'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'user'),
+  })
   async findMany(
     @Query() query: FindManyUsersParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedUser>> {
@@ -115,7 +124,10 @@ export class UsersController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can('read', 'user'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'user'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUser | null>> {
@@ -128,7 +140,10 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can('update', 'user'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('update', 'user'),
+  })
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateUserDto: UpdateUserDto
@@ -156,7 +171,10 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can('delete', 'user'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('delete', 'user'),
+  })
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUser>> {

@@ -44,7 +44,10 @@ export class FormsFieldsController {
   }
 
   @Post('forms/:form_id/fields')
-  @CheckPolicies((ability) => ability.can('create', 'formField'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('create', 'formField'),
+  })
   async create(
     @Param('form_id') formId: UUID,
     @Body() createFieldDto: CreateFormFieldDto
@@ -63,7 +66,10 @@ export class FormsFieldsController {
   }
 
   @Get('forms/:form_id/fields/count')
-  @CheckPolicies((ability) => ability.can('count', 'formField'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('count', 'formField'),
+  })
   async count(@Param('form_id') formId: UUID): Promise<number> {
     return await this.prismaService.formField.count({
       where: { form: { id: formId } },
@@ -71,7 +77,10 @@ export class FormsFieldsController {
   }
 
   @Get('forms/:form_id/fields')
-  @CheckPolicies((ability) => ability.can('read', 'formField'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'formField'),
+  })
   async findAll(
     @Param('form_id') formId: UUID
   ): Promise<MultipleEntitiesResponse<EnhancedFormField>> {
@@ -92,7 +101,10 @@ export class FormsFieldsController {
   }
 
   @Get('forms/fields/:id')
-  @CheckPolicies((ability) => ability.can('read', 'formField'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'formField'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFormField | null>> {
@@ -105,7 +117,10 @@ export class FormsFieldsController {
   }
 
   @Patch('forms/fields/:id')
-  @CheckPolicies((ability) => ability.can('update', 'formField'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('update', 'formField'),
+  })
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateFieldDto: UpdateFormFieldDto
@@ -124,7 +139,10 @@ export class FormsFieldsController {
   }
 
   @Delete('forms/fields/:id')
-  @CheckPolicies((ability) => ability.can('delete', 'formField'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('delete', 'formField'),
+  })
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedFormField>> {

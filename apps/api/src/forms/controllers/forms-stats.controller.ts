@@ -49,7 +49,10 @@ export class FormsStatsController {
   constructor(private prismaService: PrismaService) {}
 
   @Get('forms/:id/stats/entries-per-month')
-  @CheckPolicies((ability) => ability.can('generate-reports', 'form'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('generate-reports', 'form'),
+  })
   async calcFormEntriesPerMonth(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Query() query: CalcFormEntriesPerMonthParamsDto
@@ -93,7 +96,10 @@ export class FormsStatsController {
   }
 
   @Get('forms/:id/stats/fields-reports')
-  @CheckPolicies((ability) => ability.can('generate-reports', 'form'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('generate-reports', 'form'),
+  })
   async calcFormFieldsReports(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Query() query: CalcFormFieldsReportsParamsDto

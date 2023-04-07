@@ -52,7 +52,10 @@ export class UsersGroupsController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can('create', 'userGroup'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('create', 'userGroup'),
+  })
   async create(
     @Body() createGroupDto: CreateUserGroupDto
   ): Promise<SingleEntityResponse<EnhancedUserGroup>> {
@@ -68,7 +71,10 @@ export class UsersGroupsController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can('count', 'userGroup'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('count', 'userGroup'),
+  })
   async count(@Query() query: CountUsersGroupsParamsDto): Promise<number> {
     return await this.prismaService.userGroup.count({
       where: query.filters,
@@ -77,7 +83,10 @@ export class UsersGroupsController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can('read', 'userGroup'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'userGroup'),
+  })
   async findMany(
     @Query() query: FindManyUsersGroupsParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedUserGroup>> {
@@ -104,7 +113,10 @@ export class UsersGroupsController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can('read', 'userGroup'))
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'userGroup'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserGroup | null>> {
@@ -117,7 +129,10 @@ export class UsersGroupsController {
   }
 
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can('update', 'userGroup'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('update', 'userGroup'),
+  })
   async update(
     @Param('id', ParseUUIDPipe) id: UUID,
     @Body() updateGroupDto: UpdateUserGroupDto
@@ -141,7 +156,10 @@ export class UsersGroupsController {
   }
 
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can('delete', 'userGroup'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('delete', 'userGroup'),
+  })
   async delete(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedUserGroup>> {

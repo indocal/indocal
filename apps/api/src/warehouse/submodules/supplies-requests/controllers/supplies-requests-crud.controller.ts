@@ -64,7 +64,10 @@ export class SuppliesRequestsCRUDController {
   }
 
   @Post()
-  @CheckPolicies((ability) => ability.can('create', 'supplyRequest'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('create', 'supplyRequest'),
+  })
   async create(
     @Body() createSupplyRequestDto: CreateSupplyRequestDto
   ): Promise<SingleEntityResponse<EnhancedSupplyRequest>> {
@@ -94,7 +97,10 @@ export class SuppliesRequestsCRUDController {
   }
 
   @Get('count')
-  @CheckPolicies((ability) => ability.can('count', 'supplyRequest'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('count', 'supplyRequest'),
+  })
   async count(@Query() query: CountSuppliesRequestsParamsDto): Promise<number> {
     return await this.prismaService.supplyRequest.count({
       where: query.filters,
@@ -103,7 +109,10 @@ export class SuppliesRequestsCRUDController {
   }
 
   @Get()
-  @CheckPolicies((ability) => ability.can('read', 'supplyRequest'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'supplyRequest'),
+  })
   async findMany(
     @Query() query: FindManySuppliesRequestsParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedSupplyRequest>> {
@@ -135,7 +144,10 @@ export class SuppliesRequestsCRUDController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can('read', 'supplyRequest'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'supplyRequest'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedSupplyRequest | null>> {

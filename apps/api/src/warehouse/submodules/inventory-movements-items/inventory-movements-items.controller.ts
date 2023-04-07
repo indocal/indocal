@@ -101,7 +101,10 @@ export class InventoryMovementsItemsController {
   }
 
   @Get('warehouse/movements/:movement_id/items/count')
-  @CheckPolicies((ability) => ability.can('count', 'inventoryMovement'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('count', 'inventoryMovement'),
+  })
   async count(@Param('movement_id') movementId: UUID): Promise<number> {
     return await this.prismaService.inventoryMovementItem.count({
       where: { movement: { id: movementId } },
@@ -109,7 +112,10 @@ export class InventoryMovementsItemsController {
   }
 
   @Get('warehouse/movements/:movement_id/items')
-  @CheckPolicies((ability) => ability.can('read', 'inventoryMovement'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'inventoryMovement'),
+  })
   async findAll(
     @Param('movement_id') movementId: UUID
   ): Promise<MultipleEntitiesResponse<EnhancedInventoryMovementItem>> {
@@ -142,7 +148,10 @@ export class InventoryMovementsItemsController {
   }
 
   @Get('warehouse/movements/items/:id')
-  @CheckPolicies((ability) => ability.can('read', 'inventoryMovement'))
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('read', 'inventoryMovement'),
+  })
   async findOneByUUID(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<EnhancedInventoryMovementItem | null>> {

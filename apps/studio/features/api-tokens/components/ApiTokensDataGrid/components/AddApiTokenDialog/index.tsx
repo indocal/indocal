@@ -45,14 +45,11 @@ const schema = zod.object(
       .trim(),
 
     type: zod
-      .enum<string, [ApiTokenType, ...ApiTokenType[]]>(
-        ['READ_ONLY', 'READ_WRITE'],
-        {
-          description: 'Tipo del API Token',
-          required_error: 'Debe seleccionar el tipo del API Token',
-          invalid_type_error: 'Formato no válido',
-        }
-      )
+      .enum<string, [ApiTokenType, ...ApiTokenType[]]>(['ANON', 'SERVICE'], {
+        description: 'Tipo del API Token',
+        required_error: 'Debe seleccionar el tipo del API Token',
+        invalid_type_error: 'Formato no válido',
+      })
       .describe('Tipo del API Token'),
   },
   {
@@ -79,7 +76,7 @@ export const AddApiTokenDialog: React.FC = () => {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: 'READ_ONLY',
+      type: 'ANON',
     },
   });
 

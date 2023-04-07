@@ -4,9 +4,11 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PrismaService } from 'nestjs-prisma';
 
 import { JWT_MODULE_OPTIONS } from '../../config';
-import { AuthenticatedUser } from '../../types';
+import { JWT } from '../../types';
 import {
-  InvalidCredentialsException,
+  InvalidApiTokenException,
+  DisabledApiTokenException,
+  InvalidUserCredentialsException,
   DisabledUserException,
 } from '../../errors';
 
@@ -20,20 +22,41 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: AuthenticatedUser): Promise<AuthenticatedUser> {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: payload.id },
-    });
+  async validate(payload: JWT): Promise<JWT> {
+    if (payload.type === 'api-token') {
+      const apiToken = await this.prismaService.apiToken.findUnique({
+        where: { id: payload.apiToken.id },
+      });
 
-    if (!user) throw new InvalidCredentialsException();
-    if (user.status === 'DISABLED') throw new DisabledUserException();
+      if (!apiToken) throw new InvalidApiTokenException();
+      if (apiToken.status === 'DISABLED') throw new DisabledApiTokenException();
 
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      name: user.name,
-    };
+      return {
+        type: 'api-token',
+        apiToken: {
+          id: apiToken.id,
+          name: apiToken.name,
+          description: apiToken.description,
+        },
+      };
+    } else {
+      const user = await this.prismaService.user.findUnique({
+        where: { id: payload.user.id },
+      });
+
+      if (!user) throw new InvalidUserCredentialsException();
+      if (user.status === 'DISABLED') throw new DisabledUserException();
+
+      return {
+        type: 'user',
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          name: user.name,
+        },
+      };
+    }
   }
 }
 
