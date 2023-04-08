@@ -13,7 +13,9 @@ export async function serializeFilesFormFieldAnswer(
   const content = answer.content as File[] | null;
 
   if (config?.multiple && content) {
-    const { files } = await client.uploads.files.upload(content);
+    const { files, error } = await client.uploads.files.upload(content);
+
+    if (error) throw error;
 
     return {
       field: answer.field,
@@ -22,7 +24,9 @@ export async function serializeFilesFormFieldAnswer(
   }
 
   if (content) {
-    const { files } = await client.uploads.files.upload(content);
+    const { files, error } = await client.uploads.files.upload(content);
+
+    if (error) throw error;
 
     return {
       field: answer.field,

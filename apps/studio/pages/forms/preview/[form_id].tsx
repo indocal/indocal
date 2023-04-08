@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { Container } from '@mui/material';
@@ -10,7 +10,7 @@ import {
   serializeFormGeneratorAnswers,
   FormGeneratorAnswers,
 } from '@indocal/forms-generator';
-import { useForm, UUID } from '@indocal/services';
+import { useForm, createServiceError, UUID } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { AdminDashboard } from '@/components';
@@ -25,19 +25,40 @@ const FormPreviewPage: EnhancedNextPage = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
+
   const handleOnSubmit = useCallback(
     async (answers: FormGeneratorAnswers) => {
-      if (!form) return;
+      try {
+        if (!form) return;
 
-      const data = await serializeFormGeneratorAnswers(answers, indocal);
+        const data = await serializeFormGeneratorAnswers(answers, indocal);
 
-      const { error } = await indocal.forms.entries.create({
-        answers: data,
-        form: form.id,
-        answeredBy: session?.user.id,
-      });
+        const { error } = await indocal.forms.entries.create({
+          answers: data,
+          form: form.id,
+          answeredBy: session?.user.id,
+        });
 
-      if (error) {
+        if (error) {
+          enqueueSnackbar(
+            error.details
+              ? error.details.reduce(
+                  (acc, current) => (acc ? `${acc} | ${current}` : current),
+                  ``
+                )
+              : error.message,
+            { variant: 'error' }
+          );
+        } else {
+          enqueueSnackbar('Respuestas guardadas exitosamente', {
+            variant: 'success',
+            onEntered: () => setIsSubmitSuccessful(true),
+          });
+        }
+      } catch (exeption) {
+        const error = createServiceError(exeption);
+
         enqueueSnackbar(
           error.details
             ? error.details.reduce(
@@ -47,10 +68,6 @@ const FormPreviewPage: EnhancedNextPage = () => {
             : error.message,
           { variant: 'error' }
         );
-      } else {
-        enqueueSnackbar('Respuestas guardadas exitosamente', {
-          variant: 'success',
-        });
       }
     },
     [form, session?.user.id, enqueueSnackbar]
@@ -73,7 +90,12 @@ const FormPreviewPage: EnhancedNextPage = () => {
         ) : error ? (
           <ErrorInfo error={error} />
         ) : form ? (
-          <FormGenerator form={form} onSubmit={handleOnSubmit} />
+          <FormGenerator
+            form={form}
+            showThankYouMessage={isSubmitSuccessful}
+            onSubmit={handleOnSubmit}
+            onReset={() => setIsSubmitSuccessful(false)}
+          />
         ) : (
           <NotFound />
         )}

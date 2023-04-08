@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { getToken } from 'next-auth/jwt';
@@ -11,7 +11,7 @@ import {
   serializeFormGeneratorAnswers,
   FormGeneratorAnswers,
 } from '@indocal/forms-generator';
-import { INDOCAL, UUID, Form } from '@indocal/services';
+import { createServiceError, UUID, Form } from '@indocal/services';
 
 import { indocal } from '@/lib';
 import { Pages } from '@/config';
@@ -30,17 +30,38 @@ const FormPage: EnhancedNextPage<FormPageProps> = ({ form }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
+
   const handleOnSubmit = useCallback(
     async (answers: FormGeneratorAnswers) => {
-      const data = await serializeFormGeneratorAnswers(answers, indocal);
+      try {
+        const data = await serializeFormGeneratorAnswers(answers, indocal);
 
-      const { error } = await indocal.forms.entries.create({
-        answers: data,
-        form: form.id,
-        answeredBy: session?.user.id,
-      });
+        const { error } = await indocal.forms.entries.create({
+          answers: data,
+          form: form.id,
+          answeredBy: session?.user.id,
+        });
 
-      if (error) {
+        if (error) {
+          enqueueSnackbar(
+            error.details
+              ? error.details.reduce(
+                  (acc, current) => (acc ? `${acc} | ${current}` : current),
+                  ``
+                )
+              : error.message,
+            { variant: 'error' }
+          );
+        } else {
+          enqueueSnackbar('Respuestas guardadas exitosamente', {
+            variant: 'success',
+            onEntered: () => setIsSubmitSuccessful(true),
+          });
+        }
+      } catch (exeption) {
+        const error = createServiceError(exeption);
+
         enqueueSnackbar(
           error.details
             ? error.details.reduce(
@@ -50,10 +71,6 @@ const FormPage: EnhancedNextPage<FormPageProps> = ({ form }) => {
             : error.message,
           { variant: 'error' }
         );
-      } else {
-        enqueueSnackbar('Respuestas guardadas exitosamente', {
-          variant: 'success',
-        });
       }
     },
     [form, session?.user.id, enqueueSnackbar]
@@ -62,7 +79,12 @@ const FormPage: EnhancedNextPage<FormPageProps> = ({ form }) => {
   return (
     <Page transition="right" title={`Formulario: ${form.title}`}>
       <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-        <FormGenerator form={form} onSubmit={handleOnSubmit} />
+        <FormGenerator
+          form={form}
+          showThankYouMessage={isSubmitSuccessful}
+          onSubmit={handleOnSubmit}
+          onReset={() => setIsSubmitSuccessful(false)}
+        />
       </Container>
     </Page>
   );
@@ -74,16 +96,10 @@ export const getServerSideProps: GetServerSideProps<
   FormPageProps,
   FormPageParams
 > = async (ctx) => {
-  const token = await getToken(ctx);
-
-  const indocal = new INDOCAL({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
-    token: process.env.INDOCAL_API_KEY,
-  });
-
-  const { form } = await indocal.forms.findOneByUUID(
-    ctx.params?.form_id as string
-  );
+  const [token, { form }] = await Promise.all([
+    getToken(ctx),
+    indocal.forms.findOneByUUID(ctx.params?.form_id as string),
+  ]);
 
   if (!form || form.status !== 'PUBLISHED') {
     return {
@@ -99,35 +115,31 @@ export const getServerSideProps: GetServerSideProps<
     };
   }
 
-  if (form.visibility === 'PROTECTED') {
-    if (token) {
+  if (form.visibility === 'PROTECTED' && token) {
+    return {
+      props: {
+        form,
+      },
+    };
+  }
+
+  if (form.visibility === 'PRIVATE' && token) {
+    const { user } = await indocal.auth.users.findOneByUUID(token.user.id);
+
+    const isMember = user?.groups
+      .map((group) => group.id)
+      .includes(form.group.id);
+
+    if (isMember) {
       return {
         props: {
           form,
         },
       };
-    }
-  }
-
-  if (form.visibility === 'PRIVATE') {
-    if (token) {
-      const { user } = await indocal.auth.users.findOneByUUID(token.user.id);
-
-      const isMember = user?.groups
-        .map((group) => group.id)
-        .includes(form.group.id);
-
-      if (isMember) {
-        return {
-          props: {
-            form,
-          },
-        };
-      } else {
-        return {
-          notFound: true,
-        };
-      }
+    } else {
+      return {
+        notFound: true,
+      };
     }
   }
 

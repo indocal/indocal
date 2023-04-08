@@ -12,7 +12,9 @@ export async function serializeFilesItemAnswer(
   const content = answer.content as File[] | null;
 
   if (config?.multiple && content) {
-    const { files } = await client.uploads.files.upload(content);
+    const { files, error } = await client.uploads.files.upload(content);
+
+    if (error) throw error;
 
     return {
       item: answer.item,
@@ -21,7 +23,9 @@ export async function serializeFilesItemAnswer(
   }
 
   if (content) {
-    const { files } = await client.uploads.files.upload(content);
+    const { files, error } = await client.uploads.files.upload(content);
+
+    if (error) throw error;
 
     return {
       item: answer.item,

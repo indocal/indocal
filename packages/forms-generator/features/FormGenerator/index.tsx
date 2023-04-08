@@ -98,12 +98,19 @@ export type FormGeneratorAnswers = Array<
 
 export interface FormGeneratorProps {
   form: Form;
+  showThankYouMessage?: boolean;
   onSubmit: (answers: FormGeneratorAnswers) => void | Promise<void>;
+  onReset?: () => void | Promise<void>;
 }
 
-const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
+const FormGenerator: React.FC<FormGeneratorProps> = ({
+  form,
+  showThankYouMessage,
+  onSubmit,
+  onReset,
+}) => {
   const {
-    formState: { isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting },
     handleSubmit,
     reset,
   } = useFormContext();
@@ -183,7 +190,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
 
   return (
     <Paper sx={{ padding: (theme) => theme.spacing(2) }}>
-      {isSubmitSuccessful ? (
+      {showThankYouMessage ? (
         <Stack
           justifyContent="center"
           alignItems="center"
@@ -203,15 +210,17 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ form, onSubmit }) => {
             la mejor experiencia
           </Typography>
 
-          <Button
-            variant="contained"
-            size="small"
-            endIcon={<ResetIcon />}
-            onClick={() => reset()}
-            sx={{ marginTop: (theme) => theme.spacing(1.5) }}
-          >
-            Enviar otra respuesta
-          </Button>
+          {onReset && (
+            <Button
+              variant="contained"
+              size="small"
+              endIcon={<ResetIcon />}
+              onClick={() => reset(async () => await onReset())}
+              sx={{ marginTop: (theme) => theme.spacing(1.5) }}
+            >
+              Enviar otra respuesta
+            </Button>
+          )}
         </Stack>
       ) : (
         <Stack spacing={1} divider={<Divider flexItem />}>
