@@ -14,7 +14,7 @@ import {
 
 import { getShortUUID, Log } from '@indocal/services';
 
-import { UserCard } from '@/features';
+import { ApiTokenCard, UserCard } from '@/features';
 
 import { useGenericLogsDataGrid } from '../../context';
 
@@ -74,6 +74,12 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({ log }) => {
               </ListItem>
             </List>
           </Box>
+
+          {log.apiToken && (
+            <Box sx={{ flex: 5, height: 'fit-content' }}>
+              <ApiTokenCard apiToken={log.apiToken.id} />
+            </Box>
+          )}
 
           {log.user && (
             <Box sx={{ flex: 5, height: 'fit-content' }}>

@@ -7,21 +7,24 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Log, User } from '@prisma/client';
+import { Log, ApiToken, User } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
+import { ApiTokenEntity } from '../auth/submodules/api-tokens/entities';
 import { UserEntity } from '../auth/submodules/users/entities';
 
 import { LogEntity } from './entities';
 import { FindManyLogsParamsDto, CountLogsParamsDto } from './dto';
 
 class EnhancedLog extends LogEntity {
+  apiToken: ApiTokenEntity | null;
   user: UserEntity | null;
 }
 
 type CreateEnhancedLog = Log & {
+  apiToken: ApiToken | null;
   user: User | null;
 };
 
@@ -30,8 +33,13 @@ type CreateEnhancedLog = Log & {
 export class LoggingController {
   constructor(private prismaService: PrismaService) {}
 
-  createEnhancedLog({ user, ...rest }: CreateEnhancedLog): EnhancedLog {
+  createEnhancedLog({
+    user,
+    apiToken,
+    ...rest
+  }: CreateEnhancedLog): EnhancedLog {
     const log = new EnhancedLog(rest);
+    log.apiToken = apiToken ? new ApiTokenEntity(apiToken) : null;
     log.user = user ? new UserEntity(user) : null;
 
     return log;
@@ -65,7 +73,7 @@ export class LoggingController {
         skip: query.pagination?.skip && Number(query.pagination.skip),
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
-        include: { user: true },
+        include: { apiToken: true, user: true },
       }),
       this.prismaService.log.count({
         where: query.filters,
@@ -89,7 +97,7 @@ export class LoggingController {
   ): Promise<SingleEntityResponse<EnhancedLog | null>> {
     const log = await this.prismaService.log.findUnique({
       where: { id },
-      include: { user: true },
+      include: { apiToken: true, user: true },
     });
 
     return log ? this.createEnhancedLog(log) : null;

@@ -1,10 +1,16 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useLogs } from '@indocal/services';
+import { useAbility, useLogs, ApiToken } from '@indocal/services';
 
 import { GenericLogsDataGrid } from '@/features';
 
-export const LogsDataGrid: React.FC = () => {
+export interface ApiTokenLogsDataGridProps {
+  apiToken: ApiToken;
+}
+
+export const ApiTokenLogsDataGrid: React.FC<ApiTokenLogsDataGridProps> = ({
+  apiToken,
+}) => {
   const ability = useAbility();
 
   const [search, setSearch] = useState('');
@@ -18,26 +24,16 @@ export const LogsDataGrid: React.FC = () => {
     error: serviceError,
     refetch,
   } = useLogs({
-    ...(search && {
-      filters: {
+    filters: {
+      apiToken: { id: apiToken.id },
+      ...(search && {
         OR: [
           { id: { mode: 'insensitive', contains: search } },
           { context: { mode: 'insensitive', contains: search } },
           { action: { mode: 'insensitive', contains: search } },
-
-          { apiToken: { name: { mode: 'insensitive', contains: search } } },
-          {
-            apiToken: {
-              description: { mode: 'insensitive', contains: search },
-            },
-          },
-
-          { user: { username: { mode: 'insensitive', contains: search } } },
-          { user: { email: { mode: 'insensitive', contains: search } } },
-          { user: { name: { mode: 'insensitive', contains: search } } },
         ],
-      },
-    }),
+      }),
+    },
     pagination: {
       skip: pagination.page * pagination.pageSize,
       take: pagination.pageSize,
@@ -51,10 +47,11 @@ export const LogsDataGrid: React.FC = () => {
 
   return (
     <GenericLogsDataGrid
-      title={`Registros (${count})`}
+      title={`Registros del API Token (${count})`}
       logs={logs}
       onRefreshButtonClick={ability.can('read', 'log') && handleRefetch}
       enhancedDataGridProps={{
+        density: 'compact',
         loading: loading || validating,
         error: serviceError,
 
@@ -80,4 +77,4 @@ export const LogsDataGrid: React.FC = () => {
   );
 };
 
-export default LogsDataGrid;
+export default ApiTokenLogsDataGrid;

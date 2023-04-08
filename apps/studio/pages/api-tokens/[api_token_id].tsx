@@ -4,7 +4,7 @@ import { Container, Unstable_Grid2 } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useApiToken, UUID } from '@indocal/services';
 
-import { ApiTokenCard } from '@/features';
+import { ApiTokenCard, ApiTokenLogsDataGrid } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -50,6 +50,12 @@ const ApiTokenPage: EnhancedNextPage = () => {
             <Unstable_Grid2 xs={12} md={4}>
               <Widget>
                 <ApiTokenCard apiToken={apiToken} />
+              </Widget>
+            </Unstable_Grid2>
+
+            <Unstable_Grid2 xs={12} md={8}>
+              <Widget>
+                <ApiTokenLogsDataGrid apiToken={apiToken} />
               </Widget>
             </Unstable_Grid2>
           </Unstable_Grid2>
