@@ -232,6 +232,49 @@ model FormEntry {
   updatedAt DateTime @updatedAt
 }
 
+////////////////////////
+// Uploads Management //
+////////////////////////
+
+model File {
+  id   String @id @default(uuid())
+  path String @unique
+
+  mime      String
+  extension String
+
+  size       Int
+  dimensions Int[]
+
+  name    String
+  caption String?
+  alt     String?
+
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, folderId])
+}
+
+model Folder {
+  id   String @id @default(uuid())
+  name String
+
+  files   File[]
+  folders Folder[] @relation("FolderFolders")
+
+  folder   Folder? @relation(name: "FolderFolders", fields: [folderId], references: [id], onDelete: Cascade)
+  folderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, folderId])
+}
+
 /////////////////////
 // Nobu Management //
 /////////////////////
@@ -435,47 +478,4 @@ enum SupplyRequestItemDeliveryStatus {
   PENDING
   PARTIAL
   COMPLETED
-}
-
-////////////////////////
-// Uploads Management //
-////////////////////////
-
-model File {
-  id   String @id @default(uuid())
-  path String @unique
-
-  mime      String
-  extension String
-
-  size       Int
-  dimensions Int[]
-
-  name    String
-  caption String?
-  alt     String?
-
-  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  folderId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([name, folderId])
-}
-
-model Folder {
-  id   String @id @default(uuid())
-  name String
-
-  files   File[]
-  folders Folder[] @relation("FolderFolders")
-
-  folder   Folder? @relation(name: "FolderFolders", fields: [folderId], references: [id], onDelete: Cascade)
-  folderId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([name, folderId])
 }
