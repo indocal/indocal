@@ -66,6 +66,13 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.apiToken) &&
                   Boolean(permissions?.apiToken['delete']),
               },
+              {
+                label: 'Consultar token de acceso',
+                action: 'get-access-token',
+                checked:
+                  Boolean(permissions?.apiToken) &&
+                  Boolean(permissions?.apiToken['get-access-token']),
+              },
             ],
           },
         ],

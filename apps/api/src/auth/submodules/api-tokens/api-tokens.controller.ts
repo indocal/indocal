@@ -159,6 +159,21 @@ export class ApiTokensController {
 
     return new ApiTokenEntity(apiToken);
   }
+
+  @Get(':id/get-access-token')
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: false },
+    user: (ability) => ability.can('get-access-token', 'apiToken'),
+  })
+  async getAccessToken(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<string>> {
+    const apiToken = await this.prismaService.apiToken.findFirstOrThrow({
+      where: { id },
+    });
+
+    return apiToken.token;
+  }
 }
 
 export default ApiTokensController;

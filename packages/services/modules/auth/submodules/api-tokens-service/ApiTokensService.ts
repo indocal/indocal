@@ -48,6 +48,11 @@ export interface DeleteApiTokenReturn {
   error: ServiceError | null;
 }
 
+export interface GetAccessTokenReturn {
+  access_token: string | null;
+  error: ServiceError | null;
+}
+
 export class ApiTokensService {
   constructor(private config: Config) {}
 
@@ -166,6 +171,24 @@ export class ApiTokensService {
     } catch (error) {
       return {
         apiToken: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async getAccessToken(id: UUID): Promise<GetAccessTokenReturn> {
+    try {
+      const response = await this.config.axios.get<
+        SingleEntityResponse<string>
+      >(`${ApiEndpoints.API_TOKENS}/${id}/get-access-token`);
+
+      return {
+        access_token: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        access_token: null,
         error: createServiceError(error),
       };
     }

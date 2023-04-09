@@ -1,19 +1,24 @@
+import { useCallback } from 'react';
 import NextLink from 'next/link';
 import {
   Stack,
   Card,
   CardHeader,
   CardContent,
+  CardActions,
   List,
   ListItem,
   ListItemText,
+  Button,
   IconButton,
   LinearProgress,
 } from '@mui/material';
 import {
   Launch as ViewDetailsIcon,
   Edit as EditIcon,
+  ContentCopy as CopyToClipboardIcon,
 } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import {
@@ -26,6 +31,7 @@ import {
   ApiToken,
 } from '@indocal/services';
 
+import { indocal } from '@/lib';
 import { Pages } from '@/config';
 
 import { ApiTokenCardProvider, useApiTokenCard } from './context';
@@ -42,6 +48,47 @@ const ApiTokenCard: React.FC<ApiTokenCardProps> = ({ apiToken: entity }) => {
 
   const { isEditApiTokenDialogOpen, toggleEditApiTokenDialog } =
     useApiTokenCard();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleCopyToClipboard = useCallback(async () => {
+    try {
+      if (!apiToken) return;
+
+      const { access_token, error } =
+        await indocal.auth.apiTokens.getAccessToken(apiToken.id);
+
+      if (error) {
+        enqueueSnackbar(
+          error.details
+            ? error.details.reduce(
+                (acc, current) => (acc ? `${acc} | ${current}` : current),
+                ``
+              )
+            : error.message,
+          { variant: 'error' }
+        );
+      } else {
+        await navigator.clipboard.writeText(access_token as string);
+
+        enqueueSnackbar('Token de acceso copiado', {
+          variant: 'info',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+        });
+      }
+    } catch {
+      enqueueSnackbar('Error al copiar el token de acceso', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center',
+        },
+      });
+    }
+  }, [apiToken, enqueueSnackbar]);
 
   return (
     <Card
@@ -160,6 +207,20 @@ const ApiTokenCard: React.FC<ApiTokenCardProps> = ({ apiToken: entity }) => {
               </ListItem>
             </List>
           </CardContent>
+
+          <Can do="get-access-token" on="apiToken">
+            <CardActions>
+              <Button
+                fullWidth
+                size="small"
+                variant="contained"
+                endIcon={<CopyToClipboardIcon />}
+                onClick={handleCopyToClipboard}
+              >
+                Copiar token de acceso
+              </Button>
+            </CardActions>
+          </Can>
         </>
       ) : (
         <NoData message="No se han encontrado datos del token" />
