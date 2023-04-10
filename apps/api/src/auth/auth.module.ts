@@ -7,7 +7,6 @@ import { PrismaService } from 'nestjs-prisma';
 import { NodemailerService } from '@/mailer';
 
 import AuthController from './auth.controller';
-import AuthService from './auth.service';
 import {
   JwtAuthGuard,
   LocalAuthStrategy,
@@ -42,7 +41,6 @@ import {
     },
     PrismaService,
     NodemailerService,
-    AuthService,
     LocalAuthStrategy,
     JwtAuthStrategy,
     AbilityFactory,

@@ -1,31 +1,83 @@
 import { Controller, Get, Post, Req, Body, UseGuards } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from 'nestjs-prisma';
 import { Request } from 'express';
+import { addHours } from 'date-fns';
 
-import AuthService from './auth.service';
+import { NodemailerService } from '@/mailer';
+
 import { LocalAuthGuard } from './strategies';
 import { SkipAuthentication } from './decorators';
-import { Session, AuthenticatedUser, JWT, RestorePasswordDto } from './types';
+import { restorePasswordEmailTemplate } from './mails';
+import { InvalidEmailException } from './errors';
+import {
+  JWT,
+  UserJwt,
+  AuthenticatedUser,
+  Session,
+  ResetPasswordToken,
+  RestorePasswordDto,
+} from './types';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private jwtService: JwtService,
+    private nodemailerService: NodemailerService,
+    private prismaService: PrismaService
+  ) {}
 
   @Post('local/sign-in')
   @SkipAuthentication()
   @UseGuards(LocalAuthGuard)
   signIn(@Req() req: Request): Session {
-    return this.authService.generateSession(req.user as AuthenticatedUser);
+    const payload = req.user as AuthenticatedUser;
+
+    const jwt: UserJwt = {
+      type: 'user',
+      user: payload,
+    };
+
+    return {
+      user: payload,
+      access_token: this.jwtService.sign(jwt),
+      issued_at: new Date().toISOString(),
+    };
   }
 
-  // TODO: complete this feature
   @Post('local/restore-password')
   @SkipAuthentication()
   async restorePassword(
     @Body() restorePasswordDto: RestorePasswordDto
   ): Promise<void> {
-    return await this.authService.sendRestorePasswordEmail(
-      restorePasswordDto.email
-    );
+    const user = await this.prismaService.user.findUnique({
+      where: { email: restorePasswordDto.email },
+    });
+
+    if (!user) throw new InvalidEmailException();
+
+    const payload: AuthenticatedUser = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      name: user.name,
+    };
+
+    const token: ResetPasswordToken = {
+      token: this.jwtService.sign({ user: payload }, { expiresIn: '1h' }),
+      expiresAt: addHours(Date.now(), 1),
+    };
+
+    await this.nodemailerService.transporter.sendMail({
+      from: process.env.NODEMAILER_FROM,
+      to: user.email,
+      subject: `Restablecer contraseña: ${user.username}`,
+      html: restorePasswordEmailTemplate({
+        user: payload,
+        reset_token: token,
+        redirectUrl: restorePasswordDto.redirectUrl,
+      }),
+    });
   }
 
   @Get('me')

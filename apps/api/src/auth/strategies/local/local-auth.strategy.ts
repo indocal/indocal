@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
+import { PrismaService } from 'nestjs-prisma';
+import * as bcrypt from 'bcrypt';
 
-import { AuthService } from '../../auth.service';
 import { AuthenticatedUser } from '../../types';
 import {
   InvalidUserCredentialsException,
@@ -11,7 +12,7 @@ import {
 
 @Injectable()
 export class LocalAuthStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(private prismaService: PrismaService) {
     super();
   }
 
@@ -19,12 +20,13 @@ export class LocalAuthStrategy extends PassportStrategy(Strategy) {
     username: string,
     password: string
   ): Promise<AuthenticatedUser> {
-    const user = await this.authService.validateUserByCredentials(
-      username,
-      password
-    );
+    const user = await this.prismaService.user.findUnique({
+      where: { username },
+    });
 
-    if (!user) throw new InvalidUserCredentialsException();
+    if (!user || !bcrypt.compareSync(password, user.password))
+      throw new InvalidUserCredentialsException();
+
     if (user.status === 'DISABLED') throw new DisabledUserException();
 
     return {

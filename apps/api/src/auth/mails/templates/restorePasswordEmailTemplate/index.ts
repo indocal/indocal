@@ -1,53 +1,44 @@
-import { User } from '@prisma/client';
 import mjml2html from 'mjml';
 
-// TODO: complete this feature
-export const restorePasswordEmailTemplate = (user: User): string => {
-  const logo =
-    'http://localhost:5000/public/assets/images/logos/logo--full.png';
+import { AuthenticatedUser, ResetPasswordToken } from '../../../types';
 
-  const output = mjml2html(
-    `
-      <mjml>
-        <mj-head>
-          <mj-title>Restablecer contraseña: ${user.username}</mj-title>
-        </mj-head>
+export type RestorePasswordEmailTemplateParams = {
+  user: AuthenticatedUser;
+  reset_token: ResetPasswordToken;
+  redirectUrl: string;
+};
 
-        <mj-body>
-          <mj-section>
-            <mj-column>
-              <mj-image alt="Logo del INDOCAL" src="${logo}" />
-            </mj-column>
-          </mj-section>
+export const restorePasswordEmailTemplate = ({
+  user,
+  reset_token,
+  redirectUrl,
+}: RestorePasswordEmailTemplateParams): string => {
+  const url = new URL(redirectUrl);
 
-          <mj-section padding-top="0" padding-bottom="0">
-            <mj-column>
-              <mj-divider border-width="2px" border-color="lightgrey" />
+  url.searchParams.append('reset_token', reset_token.token);
 
-              <mj-text align="center" font-weight="bold" font-size="16px" color="darkorange">
-                Si no solicitó este correo electrónico, puede ignorarlo con seguridad.
-              </mj-text>
+  const output = mjml2html(`
+    <mjml>
+      <mj-body>
+        <mj-section>
+          <mj-column>
+            <mj-text>
+              <h1>Restablecer contraseña</h1>
+              <p>Hola ${user.name},</p>
+              <p>Has solicitado restablecer tu contraseña.</p>
+              <p>Para restablecer tu contraseña, haz click en el siguiente enlace:</p>
 
-              <mj-divider border-width="2px" border-color="lightgrey" />
-            </mj-column>
-          </mj-section>
+              <p><a href=${url.toString()}>Restablecer contraseña</a><p>
 
-          <mj-section padding="0">
-            <mj-column>
-              <mj-social icon-size="32px" mode="horizontal">
-                <mj-social-element name="web" />
-                <mj-social-element name="instagram" />
-              </mj-social>
+              <p>Si no has solicitado restablecer tu contraseña, ignora este correo.</p>
 
-              <mj-text align="center" color="gray">
-                © ${new Date().getFullYear()} INDOCAL. Todos los derechos reservados
-              </mj-text>
-            </mj-column>
-          </mj-section>
-        </mj-body>
-      </mjml>
-    `
-  );
+              <i>Este enlace expirará en 1 hora.</i>
+            </mj-text>
+          </mj-column>
+        </mj-section>
+      </mj-body>
+    </mjml>
+  `);
 
   return output.html;
 };

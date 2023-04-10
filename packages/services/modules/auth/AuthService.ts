@@ -7,10 +7,10 @@ import { Config, ApiEndpoints } from '../../config';
 
 import { TOKEN_KEY, AuthTokenPersistence } from './config';
 import {
+  JWT,
   Session,
-  AuthenticatedUser,
   SignInByCredentialsDto,
-  SendRestorePasswordDto,
+  RestorePasswordDto,
 } from './types';
 
 import {
@@ -26,7 +26,7 @@ export interface SignInReturn {
 }
 
 export interface MeReturn {
-  me: AuthenticatedUser | null;
+  me: JWT | null;
   error: ServiceError | null;
 }
 
@@ -35,12 +35,12 @@ export interface SendRestorePasswordEmailReturn {
 }
 
 export class AuthService {
+  persistence: AuthTokenPersistence = AuthTokenPersistence.NONE;
+
   apiTokens: ApiTokensService;
   users: UsersService;
   roles: UsersRolesService;
   groups: UsersGroupsService;
-
-  persistence: AuthTokenPersistence = AuthTokenPersistence.NONE;
 
   constructor(private config: Config) {
     this.apiTokens = new ApiTokensService(config);
@@ -49,16 +49,16 @@ export class AuthService {
     this.groups = new UsersGroupsService(config);
   }
 
+  setPersistence(persistence: AuthTokenPersistence): void {
+    this.persistence = persistence;
+  }
+
   static getToken(): string | null {
     return Cookies.get(TOKEN_KEY) || null;
   }
 
   static setToken(token: string, options?: CookieAttributes): void {
     Cookies.set(TOKEN_KEY, token, options);
-  }
-
-  async setPersistence(persistence: AuthTokenPersistence): Promise<void> {
-    this.persistence = persistence;
   }
 
   async signInByCredentials(
@@ -103,9 +103,7 @@ export class AuthService {
 
   async me(): Promise<MeReturn> {
     try {
-      const response = await this.config.axios.get<AuthenticatedUser>(
-        ApiEndpoints.ME
-      );
+      const response = await this.config.axios.get<JWT>(ApiEndpoints.ME);
 
       return {
         me: response.data,
@@ -120,14 +118,15 @@ export class AuthService {
   }
 
   async sendRestorePasswordEmail(
-    email: string
+    email: string,
+    redirectUrl: string
   ): Promise<SendRestorePasswordEmailReturn> {
     try {
       await this.config.axios.post<
-        AuthenticatedUser,
-        AxiosResponse<Session, SendRestorePasswordDto>,
-        SendRestorePasswordDto
-      >(ApiEndpoints.RESTORE_PASSWORD, { email });
+        void,
+        AxiosResponse<Session, RestorePasswordDto>,
+        RestorePasswordDto
+      >(ApiEndpoints.RESTORE_PASSWORD, { email, redirectUrl });
 
       return {
         error: null,

@@ -5,7 +5,7 @@ import { useAbility as useCASLAbility } from '@casl/react';
 import qs from 'qs';
 
 import { MultipleEntitiesResponse } from '../../../../common';
-import { AuthenticatedUser, UserRole } from '../../../../modules';
+import { JWT, UserRole } from '../../../../modules';
 import { ApiEndpoints } from '../../../../config';
 
 import { TOKEN_KEY } from '../../config';
@@ -15,16 +15,16 @@ export const AbilityContext = createContext(createMongoAbility());
 export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { data: me } = useSWR<AuthenticatedUser | null>(
+  const { data: me } = useSWR<JWT | null>(
     typeof document !== 'undefined' && document.cookie.includes(TOKEN_KEY)
       ? ApiEndpoints.ME
       : null
   );
 
   const { data: roles } = useSWR<MultipleEntitiesResponse<UserRole>>(() =>
-    me
+    me && me.type === 'user'
       ? `${ApiEndpoints.USERS_ROLES}?${qs.stringify({
-          filters: { users: { some: { id: me.id } } },
+          filters: { users: { some: { id: me.user.id } } },
         })}`
       : null
   );
