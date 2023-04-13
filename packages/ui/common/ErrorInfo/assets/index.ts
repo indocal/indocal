@@ -1,3 +1,3 @@
-import warning from './warning.svg';
+import warning from './warning.png';
 
 export { warning };

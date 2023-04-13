@@ -1,3 +1,3 @@
-import notFound from './not-found.svg';
+import notFound from './not-found.png';
 
 export { notFound };
