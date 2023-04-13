@@ -1,7 +1,7 @@
-import { Stack, Divider, TextField } from '@mui/material';
+import { Stack, Divider } from '@mui/material';
 import { useFormContext, Control } from 'react-hook-form';
 
-import { ControlledCheckbox } from '@indocal/ui';
+import { NumberTextField, ControlledCheckbox } from '@indocal/ui';
 
 import { EditFormFieldDialogData } from '../../../../../../context';
 
@@ -26,10 +26,9 @@ export const NumberItemConfig: React.FC<NumberItemConfigProps> = ({ item }) => {
       />
 
       <Stack direction="row" spacing={2}>
-        <TextField
+        <NumberTextField
           fullWidth
           size="small"
-          type="number"
           autoComplete="off"
           label="Valor mínimo"
           disabled={isSubmitting}
@@ -48,10 +47,9 @@ export const NumberItemConfig: React.FC<NumberItemConfigProps> = ({ item }) => {
           }
         />
 
-        <TextField
+        <NumberTextField
           fullWidth
           size="small"
-          type="number"
           autoComplete="off"
           label="Valor máximo"
           disabled={isSubmitting}

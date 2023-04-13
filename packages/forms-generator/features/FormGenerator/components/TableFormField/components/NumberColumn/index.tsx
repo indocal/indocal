@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { TextField } from '@mui/material';
 import { useFormContext, FieldErrors } from 'react-hook-form';
 
+import { NumberTextField } from '@indocal/ui';
 import {
   Form,
   TableFormFieldColumn,
@@ -31,8 +31,7 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
   );
 
   return (
-    <TextField
-      type="number"
+    <NumberTextField
       required={config?.required}
       fullWidth
       size="small"

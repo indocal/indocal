@@ -1,4 +1,6 @@
+export * from './NumberTextField';
 export * from './PasswordTextField';
+
 export * from './ControlledDniTextField';
 export * from './ControlledPhoneTextField';
 

@@ -12,14 +12,13 @@ import {
   TableRow,
   TableCell,
   Typography,
-  TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 
-import { NoData } from '@indocal/ui';
+import { NoData, NumberTextField } from '@indocal/ui';
 import { SupplyRequest, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
@@ -171,9 +170,8 @@ export const DispatchSupplyRequestItemsDialog: React.FC<
                             `1px solid ${theme.palette.divider}`,
                         }}
                       >
-                        <TextField
+                        <NumberTextField
                           size="small"
-                          type="number"
                           autoComplete="off"
                           placeholder="#"
                           disabled={

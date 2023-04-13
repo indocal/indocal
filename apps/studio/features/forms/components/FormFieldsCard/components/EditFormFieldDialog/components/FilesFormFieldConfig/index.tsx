@@ -1,8 +1,12 @@
 import { useMemo } from 'react';
-import { Stack, Divider, TextField, MenuItem } from '@mui/material';
+import { Stack, Divider, MenuItem } from '@mui/material';
 import { useFormContext, Control } from 'react-hook-form';
 
-import { ControlledCheckbox, ControlledSelect } from '@indocal/ui';
+import {
+  NumberTextField,
+  ControlledCheckbox,
+  ControlledSelect,
+} from '@indocal/ui';
 
 import { EditFormFieldDialogData } from '../../context';
 
@@ -42,10 +46,9 @@ export const FilesFormFieldConfig: React.FC = () => {
       </Stack>
 
       <Stack direction="row" spacing={2}>
-        <TextField
+        <NumberTextField
           fullWidth
           size="small"
-          type="number"
           autoComplete="off"
           label="Archivos mínimos"
           disabled={isSubmitting}
@@ -54,10 +57,9 @@ export const FilesFormFieldConfig: React.FC = () => {
           helperText={errors.config?.minFiles?.message}
         />
 
-        <TextField
+        <NumberTextField
           fullWidth
           size="small"
-          type="number"
           autoComplete="off"
           label="Archivos máximos"
           disabled={isSubmitting}

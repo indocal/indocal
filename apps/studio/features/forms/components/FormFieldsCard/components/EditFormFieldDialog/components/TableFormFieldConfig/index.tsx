@@ -20,7 +20,7 @@ import {
 } from '@mui/icons-material';
 import { useFormContext, useFieldArray, Control } from 'react-hook-form';
 
-import { NoData, ControlledCheckbox } from '@indocal/ui';
+import { NoData, NumberTextField, ControlledCheckbox } from '@indocal/ui';
 import { generateUUID } from '@indocal/utils';
 
 import { EditFormFieldDialogData } from '../../context';
@@ -80,10 +80,9 @@ const TableFormFieldConfig: React.FC = () => {
         />
 
         <Stack direction="row" spacing={2}>
-          <TextField
+          <NumberTextField
             fullWidth
             size="small"
-            type="number"
             autoComplete="off"
             label="Filas mínimas"
             disabled={isSubmitting}
@@ -92,10 +91,9 @@ const TableFormFieldConfig: React.FC = () => {
             helperText={errors.config?.minRows?.message}
           />
 
-          <TextField
+          <NumberTextField
             fullWidth
             size="small"
-            type="number"
             autoComplete="off"
             label="Filas máximas"
             disabled={isSubmitting}

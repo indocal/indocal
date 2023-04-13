@@ -14,6 +14,7 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { NumberTextField } from '@indocal/ui';
 import { ControlledSupplyUnitSelect } from '@indocal/forms-generator';
 import { SupplyUnit } from '@indocal/services';
 
@@ -199,8 +200,7 @@ export const AddSupplyDialog: React.FC = () => {
             disabled={isSubmitting}
           />
 
-          <TextField
-            type="number"
+          <NumberTextField
             autoComplete="off"
             label="Cantidad inicial"
             disabled={isSubmitting}
