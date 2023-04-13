@@ -77,7 +77,7 @@ const FormPage: EnhancedNextPage<FormPageProps> = ({ form }) => {
   );
 
   return (
-    <Page transition="right" title={`Formulario: ${form.title}`}>
+    <Page title={`Formulario: ${form.title}`}>
       <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
         <FormGenerator
           form={form}
@@ -126,9 +126,7 @@ export const getServerSideProps: GetServerSideProps<
   if (form.visibility === 'PRIVATE' && token) {
     const { user } = await indocal.auth.users.findOneByUUID(token.user.id);
 
-    const isMember = user?.groups
-      .map((group) => group.id)
-      .includes(form.group.id);
+    const isMember = user?.groups.some((group) => group.id === form.group.id);
 
     if (isMember) {
       return {
