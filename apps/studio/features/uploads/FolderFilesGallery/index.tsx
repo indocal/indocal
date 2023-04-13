@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { Stack, Paper, TextField, Pagination } from '@mui/material';
+import {
+  Stack,
+  Paper,
+  Autocomplete,
+  TextField,
+  Pagination,
+  CircularProgress,
+  debounce,
+} from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
 import { Loader, ErrorInfo } from '@indocal/ui';
@@ -17,8 +25,9 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 10 });
 
-  const { loading, files, count, error } = useFiles({
+  const { loading, validating, files, count, error } = useFiles({
     filters: {
+      folder: { id: typeof folder === 'string' ? folder : folder.id },
       ...(search && {
         OR: [
           { id: { mode: 'insensitive', contains: search } },
@@ -27,7 +36,6 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
           { alt: { mode: 'insensitive', contains: search } },
         ],
       }),
-      folder: { id: typeof folder === 'string' ? folder : folder.id },
     },
     pagination: {
       skip: pagination.page * pagination.pageSize,
@@ -44,18 +52,32 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
         alignItems="center"
         spacing={1}
       >
-        <TextField
+        <Autocomplete
+          freeSolo
           size="small"
-          placeholder="Buscar..."
-          inputProps={{
-            onKeyDown: (e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                setSearch(e.currentTarget.value);
-              }
-            },
-          }}
-          InputProps={{ endAdornment: <SearchIcon /> }}
+          options={[]}
+          onInputChange={debounce((e) => setSearch(e.target.value), 500)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              placeholder="Buscar..."
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading || validating ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : (
+                      <SearchIcon />
+                    )}
+
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          )}
+          sx={{ width: 225 }}
         />
 
         {count > 0 && (
