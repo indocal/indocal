@@ -1,8 +1,8 @@
 import { TextField, TextFieldProps } from '@mui/material';
 
-export type NumberTextFieldProps = Omit<TextFieldProps, 'type'>;
+export type NumberFieldProps = Omit<TextFieldProps, 'type'>;
 
-export const NumberTextField: React.FC<NumberTextFieldProps> = (props) => (
+export const NumberField: React.FC<NumberFieldProps> = (props) => (
   <TextField
     {...props}
     type="number"
@@ -14,4 +14,4 @@ export const NumberTextField: React.FC<NumberTextFieldProps> = (props) => (
   />
 );
 
-export default NumberTextField;
+export default NumberField;

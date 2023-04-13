@@ -18,7 +18,7 @@ import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 
-import { NoData, NumberTextField } from '@indocal/ui';
+import { NoData, NumberField } from '@indocal/ui';
 import { Order, ApiEndpoints } from '@indocal/services';
 
 import { indocal } from '@/lib';
@@ -168,7 +168,7 @@ export const ReceiveOrderItemsDialog: React.FC<
                             `1px solid ${theme.palette.divider}`,
                         }}
                       >
-                        <NumberTextField
+                        <NumberField
                           size="small"
                           autoComplete="off"
                           placeholder="#"

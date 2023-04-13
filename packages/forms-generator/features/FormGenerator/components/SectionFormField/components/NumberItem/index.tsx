@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useFormContext, FieldErrors } from 'react-hook-form';
 
-import { NumberTextField } from '@indocal/ui';
+import { NumberField } from '@indocal/ui';
 import {
   Form,
   SectionFormFieldItem,
@@ -25,7 +25,7 @@ export const NumberItem: React.FC<NumberItemProps> = ({ field, item }) => {
   );
 
   return (
-    <NumberTextField
+    <NumberField
       required={config?.required}
       fullWidth
       size="small"

@@ -1,7 +1,7 @@
 import { Stack, Divider } from '@mui/material';
 import { useFormContext, Control } from 'react-hook-form';
 
-import { NumberTextField, ControlledCheckbox } from '@indocal/ui';
+import { NumberField, ControlledCheckbox } from '@indocal/ui';
 
 import { EditFormFieldDialogData } from '../../../../../../context';
 
@@ -27,7 +27,7 @@ export const RatingColumnConfig: React.FC<RatingColumnConfigProps> = ({
         formControlProps={{ disabled: isSubmitting }}
       />
 
-      <NumberTextField
+      <NumberField
         fullWidth
         size="small"
         autoComplete="off"

@@ -20,7 +20,7 @@ import {
 } from '@mui/icons-material';
 import { useFormContext, useFieldArray, Control } from 'react-hook-form';
 
-import { NoData, NumberTextField } from '@indocal/ui';
+import { NoData, NumberField } from '@indocal/ui';
 import { ControlledSuppliesAutocomplete } from '@indocal/forms-generator';
 
 import { AddOrderDialogData } from '../../context';
@@ -177,7 +177,7 @@ export const OrderItemsTable: React.FC = () => {
                   </TableCell>
 
                   <TableCell align="center" sx={{ width: 175 }}>
-                    <NumberTextField
+                    <NumberField
                       size="small"
                       autoComplete="off"
                       placeholder="#"
@@ -199,7 +199,7 @@ export const OrderItemsTable: React.FC = () => {
                   </TableCell>
 
                   <TableCell align="center" sx={{ width: 175 }}>
-                    <NumberTextField
+                    <NumberField
                       size="small"
                       autoComplete="off"
                       placeholder="#.##"

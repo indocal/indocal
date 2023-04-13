@@ -20,7 +20,7 @@ import {
 } from '@mui/icons-material';
 import { useFormContext, useFieldArray, Control } from 'react-hook-form';
 
-import { NumberTextField, NoData } from '@indocal/ui';
+import { NumberField, NoData } from '@indocal/ui';
 import { ControlledSuppliesAutocomplete } from '@indocal/forms-generator';
 
 import { AddSupplyRequestDialogData } from '../../context';
@@ -166,7 +166,7 @@ export const SupplyRequestItemsTable: React.FC = () => {
                   </TableCell>
 
                   <TableCell align="center" sx={{ width: 175 }}>
-                    <NumberTextField
+                    <NumberField
                       size="small"
                       autoComplete="off"
                       placeholder="#"

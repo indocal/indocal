@@ -1,4 +1,4 @@
-export * from './NumberTextField';
+export * from './NumberField';
 export * from './PasswordTextField';
 
 export * from './ControlledDniTextField';

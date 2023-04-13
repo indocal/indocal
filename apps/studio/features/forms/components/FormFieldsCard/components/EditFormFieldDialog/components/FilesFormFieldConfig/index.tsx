@@ -2,11 +2,7 @@ import { useMemo } from 'react';
 import { Stack, Divider, MenuItem } from '@mui/material';
 import { useFormContext, Control } from 'react-hook-form';
 
-import {
-  NumberTextField,
-  ControlledCheckbox,
-  ControlledSelect,
-} from '@indocal/ui';
+import { NumberField, ControlledCheckbox, ControlledSelect } from '@indocal/ui';
 
 import { EditFormFieldDialogData } from '../../context';
 
@@ -46,7 +42,7 @@ export const FilesFormFieldConfig: React.FC = () => {
       </Stack>
 
       <Stack direction="row" spacing={2}>
-        <NumberTextField
+        <NumberField
           fullWidth
           size="small"
           autoComplete="off"
@@ -57,7 +53,7 @@ export const FilesFormFieldConfig: React.FC = () => {
           helperText={errors.config?.minFiles?.message}
         />
 
-        <NumberTextField
+        <NumberField
           fullWidth
           size="small"
           autoComplete="off"

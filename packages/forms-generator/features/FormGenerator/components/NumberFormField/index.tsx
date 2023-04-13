@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useFormContext } from 'react-hook-form';
 
-import { NumberTextField } from '@indocal/ui';
+import { NumberField } from '@indocal/ui';
 import { Form, NumberFormFieldConfig } from '@indocal/services';
 
 export interface NumberFormFieldProps {
@@ -21,7 +21,7 @@ export const NumberFormField: React.FC<NumberFormFieldProps> = ({ field }) => {
   );
 
   return (
-    <NumberTextField
+    <NumberField
       required={config?.required}
       label={field.title}
       disabled={isSubmitting}
