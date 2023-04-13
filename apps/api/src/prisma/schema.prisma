@@ -13,7 +13,7 @@ datasource db {
 
 model ApiToken {
   id          String @id @default(uuid())
-  name        String
+  name        String @unique
   description String
 
   token String @unique
@@ -71,11 +71,12 @@ model User {
 
   status UserStatus @default(ENABLED)
 
-  logs     Log[]
-  roles    UserRole[]
-  groups   UserGroup[]
-  entries  FormEntry[]
-  requests SupplyRequest[]
+  logs   Log[]
+  roles  UserRole[]
+  groups UserGroup[]
+
+  formEntryHistory     FormEntry[]
+  supplyRequestHistory SupplyRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -289,7 +290,7 @@ model Folder {
 
 model Supply {
   id          String  @id @default(uuid())
-  code        String
+  code        String  @unique
   name        String
   description String?
 
@@ -331,13 +332,12 @@ model Supplier {
 
 model Order {
   id      String @id @default(uuid())
-  code    String
+  code    String @unique
   concept String
 
   status OrderStatus @default(PENDING)
 
-  items OrderItem[]
-
+  items     OrderItem[]
   movements InventoryMovement[]
 
   supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Restrict)
@@ -436,8 +436,7 @@ model SupplyRequest {
 
   status SupplyRequestStatus @default(PENDING)
 
-  items SupplyRequestItem[]
-
+  items     SupplyRequestItem[]
   movements InventoryMovement[]
 
   requestedBy   User   @relation(fields: [requestedById], references: [id], onDelete: Restrict)
