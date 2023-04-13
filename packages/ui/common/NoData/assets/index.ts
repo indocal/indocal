@@ -1,3 +1,3 @@
-import notData from './no-data.svg';
+import notData from './no-data.png';
 
 export { notData };
