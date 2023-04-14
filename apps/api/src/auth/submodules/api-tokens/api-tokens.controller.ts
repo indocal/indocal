@@ -168,7 +168,7 @@ export class ApiTokensController {
   async getAccessToken(
     @Param('id', ParseUUIDPipe) id: UUID
   ): Promise<SingleEntityResponse<string>> {
-    const apiToken = await this.prismaService.apiToken.findFirstOrThrow({
+    const apiToken = await this.prismaService.apiToken.findUniqueOrThrow({
       where: { id },
     });
 

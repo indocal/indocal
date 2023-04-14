@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   Dashboard as OverviewIcon,
+  ShoppingCart as ServicesIcon,
   Feed as FormsIcon,
   SnippetFolder as UploadsIcon,
   ManageAccounts as UsersPanelControl,
@@ -56,6 +57,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'service'),
+          label: 'Servicios',
+          icon: <ServicesIcon />,
+          href: Pages.SERVICES,
         },
       },
       {

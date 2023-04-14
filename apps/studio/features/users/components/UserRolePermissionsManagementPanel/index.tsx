@@ -237,6 +237,91 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
         ],
       },
       {
+        label: 'Servicios',
+        subPanels: [
+          {
+            scope: 'service',
+            permissions: [
+              {
+                label: 'Contar',
+                action: 'count',
+                checked:
+                  Boolean(permissions?.service) &&
+                  Boolean(permissions?.service['count']),
+              },
+              {
+                label: 'Leer',
+                action: 'read',
+                checked:
+                  Boolean(permissions?.service) &&
+                  Boolean(permissions?.service['read']),
+              },
+              {
+                label: 'Crear',
+                action: 'create',
+                checked:
+                  Boolean(permissions?.service) &&
+                  Boolean(permissions?.service['create']),
+              },
+              {
+                label: 'Modificar',
+                action: 'update',
+                checked:
+                  Boolean(permissions?.service) &&
+                  Boolean(permissions?.service['update']),
+              },
+              {
+                label: 'Borrar',
+                action: 'delete',
+                checked:
+                  Boolean(permissions?.service) &&
+                  Boolean(permissions?.service['delete']),
+              },
+            ],
+          },
+          {
+            scope: 'serviceRequest',
+            permissions: [
+              {
+                label: 'Contar',
+                action: 'count',
+                checked:
+                  Boolean(permissions?.serviceRequest) &&
+                  Boolean(permissions?.serviceRequest['count']),
+              },
+              {
+                label: 'Leer',
+                action: 'read',
+                checked:
+                  Boolean(permissions?.serviceRequest) &&
+                  Boolean(permissions?.serviceRequest['read']),
+              },
+              {
+                label: 'Crear',
+                action: 'create',
+                checked:
+                  Boolean(permissions?.serviceRequest) &&
+                  Boolean(permissions?.serviceRequest['create']),
+              },
+              {
+                label: 'Modificar',
+                action: 'update',
+                checked:
+                  Boolean(permissions?.serviceRequest) &&
+                  Boolean(permissions?.serviceRequest['update']),
+              },
+              {
+                label: 'Borrar',
+                action: 'delete',
+                checked:
+                  Boolean(permissions?.serviceRequest) &&
+                  Boolean(permissions?.serviceRequest['delete']),
+              },
+            ],
+          },
+        ],
+      },
+      {
         label: 'Formularios',
         subPanels: [
           {

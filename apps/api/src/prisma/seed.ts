@@ -64,6 +64,14 @@ async function main() {
       actions: ['count', 'read', 'create', 'delete'],
     },
     {
+      scope: 'service',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'serviceRequest',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
       scope: 'file',
       actions: ['count', 'read', 'upload', 'update', 'delete'],
     },

@@ -246,8 +246,8 @@ model Service {
   title       String
   description String?
 
-  visibility ServiceVisibility @default(DRAFT)
-  status     ServiceStatus[]
+  status                 ServiceStatus          @default(DRAFT)
+  supportedRequestStatus ServiceRequestStatus[]
 
   requests ServiceRequest[]
 
@@ -258,25 +258,16 @@ model Service {
   updatedAt DateTime @updatedAt
 }
 
-enum ServiceVisibility {
+enum ServiceStatus {
   DRAFT
   PUBLISHED
   HIDDEN
 }
 
-enum ServiceStatus {
-  PENDING
-  PENDING_APPROVAL
-  PENDING_PAYMENT
-  IN_PROGRESS
-  COMPLETED
-  CANCELED
-}
-
 model ServiceRequest {
   id String @id @default(uuid())
 
-  status ServiceStatus @default(PENDING)
+  status ServiceRequestStatus @default(PENDING)
 
   entry   FormEntry @relation(fields: [entryId], references: [id], onDelete: Restrict)
   entryId String    @unique
@@ -289,6 +280,15 @@ model ServiceRequest {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum ServiceRequestStatus {
+  PENDING
+  PENDING_APPROVAL
+  PENDING_PAYMENT
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
 }
 
 ////////////////////////
