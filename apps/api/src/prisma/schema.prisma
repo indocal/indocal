@@ -75,8 +75,9 @@ model User {
   roles  UserRole[]
   groups UserGroup[]
 
-  formEntryHistory     FormEntry[]
-  supplyRequestHistory SupplyRequest[]
+  formEntryHistory      FormEntry[]
+  serviceRequestHistory ServiceRequest[]
+  supplyRequestHistory  SupplyRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -147,8 +148,9 @@ model Form {
   status     FormStatus     @default(DRAFT)
   visibility FormVisibility @default(PRIVATE)
 
-  fields  FormField[]
-  entries FormEntry[]
+  fields   FormField[]
+  entries  FormEntry[]
+  services Service[]
 
   group   UserGroup @relation(fields: [groupId], references: [id], onDelete: Restrict)
   groupId String
@@ -226,8 +228,64 @@ model FormEntry {
   answeredBy   User?   @relation(fields: [answeredById], references: [id], onDelete: Restrict)
   answeredById String?
 
+  request ServiceRequest?
+
   form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
   formId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/////////////////////////
+// Services Management //
+/////////////////////////
+
+model Service {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+
+  visibility ServiceVisibility @default(DRAFT)
+  status     ServiceStatus[]
+
+  requests ServiceRequest[]
+
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
+  formId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ServiceVisibility {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+}
+
+enum ServiceStatus {
+  PENDING
+  PENDING_APPROVAL
+  PENDING_PAYMENT
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+model ServiceRequest {
+  id String @id @default(uuid())
+
+  status ServiceStatus @default(PENDING)
+
+  entry   FormEntry @relation(fields: [entryId], references: [id], onDelete: Restrict)
+  entryId String    @unique
+
+  requestedBy   User   @relation(fields: [requestedById], references: [id], onDelete: Restrict)
+  requestedById String
+
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  serviceId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
