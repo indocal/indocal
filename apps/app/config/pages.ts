@@ -5,6 +5,7 @@ export enum Pages {
 
   // Sections
   ROOT = '/',
+  SETTINGS = '/settings',
 }
 
 export default Pages;

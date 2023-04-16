@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { Dashboard as OverviewIcon } from '@mui/icons-material';
+import {
+  Dashboard as OverviewIcon,
+  Settings as SettingsIcon,
+} from '@mui/icons-material';
 
 import {
   DrawerNavigation,
@@ -38,6 +41,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: true,
+          label: 'Configuración',
+          icon: <SettingsIcon />,
+          href: Pages.SETTINGS,
         },
       },
     ],
