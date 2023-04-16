@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   Dashboard as OverviewIcon,
+  ShoppingCart as ServicesIcon,
   Settings as SettingsIcon,
 } from '@mui/icons-material';
 
@@ -41,6 +42,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
           label: 'Resumen',
           icon: <OverviewIcon />,
           href: Pages.ROOT,
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'service'),
+          label: 'Servicios',
+          icon: <ServicesIcon />,
+          href: Pages.SERVICES,
         },
       },
       {
