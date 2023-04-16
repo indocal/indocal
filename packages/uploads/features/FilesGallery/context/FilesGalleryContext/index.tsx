@@ -1,5 +1,7 @@
 import { useReducer, useCallback, useContext, createContext } from 'react';
 
+import { INDOCAL } from '@indocal/services';
+
 ///////////
 // State //
 ///////////
@@ -49,6 +51,7 @@ export const initialContextValue: FilesGalleryContextValue = {
   toggleAddFileDialog: () => undefined,
   isEditFileDialogOpen: initialContextState.isEditFileDialogOpen,
   toggleEditFileDialog: () => undefined,
+  client: {} as INDOCAL,
 };
 
 export interface FilesGalleryContextValue {
@@ -56,14 +59,19 @@ export interface FilesGalleryContextValue {
   toggleAddFileDialog: () => void;
   isEditFileDialogOpen: boolean;
   toggleEditFileDialog: () => void;
+  client: INDOCAL;
 }
 
 const FilesGalleryContext =
   createContext<FilesGalleryContextValue>(initialContextValue);
 
-export const FilesGalleryProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export interface FilesGalleryProviderProps {
+  client: INDOCAL;
+}
+
+export const FilesGalleryProvider: React.FC<
+  React.PropsWithChildren<FilesGalleryProviderProps>
+> = ({ client, children }) => {
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   const handleToggleAddFileDialog = useCallback(
@@ -79,6 +87,7 @@ export const FilesGalleryProvider: React.FC<React.PropsWithChildren> = ({
   return (
     <FilesGalleryContext.Provider
       value={{
+        client,
         isAddFileDialogOpen: state.isAddFileDialogOpen,
         toggleAddFileDialog: handleToggleAddFileDialog,
         isEditFileDialogOpen: state.isEditFileDialogOpen,

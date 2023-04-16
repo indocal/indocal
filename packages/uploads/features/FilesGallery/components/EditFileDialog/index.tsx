@@ -19,8 +19,6 @@ import { z as zod } from 'zod';
 import { ControlledFoldersAutocomplete } from '@indocal/forms-generator';
 import { Can, File, ApiEndpoints } from '@indocal/services';
 
-import { indocal } from '@/lib';
-
 import { useFilesGallery } from '../../context';
 
 import { FileDetails, FileViewer } from './components';
@@ -90,7 +88,8 @@ export const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
 
   const { mutate } = useSWRConfig();
 
-  const { isEditFileDialogOpen, toggleEditFileDialog } = useFilesGallery();
+  const { client, isEditFileDialogOpen, toggleEditFileDialog } =
+    useFilesGallery();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -112,7 +111,7 @@ export const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { error } = await indocal.uploads.files.update(file.id, {
+      const { error } = await client.uploads.files.update(file.id, {
         name: formData.name,
         alt: formData.alt,
         caption: formData.caption,
@@ -152,6 +151,7 @@ export const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
     [
       file.id,
       router.query.folder_id,
+      client,
       mutate,
       toggleEditFileDialog,
       enqueueSnackbar,

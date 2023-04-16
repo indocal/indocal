@@ -11,9 +11,10 @@ import {
 import { Search as SearchIcon } from '@mui/icons-material';
 
 import { Loader, ErrorInfo } from '@indocal/ui';
+import { FilesGallery } from '@indocal/uploads';
 import { useFiles } from '@indocal/services';
 
-import { FilesGallery } from '@/features';
+import { indocal } from '@/lib';
 
 export const LastFilesGallery: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -94,7 +95,11 @@ export const LastFilesGallery: React.FC = () => {
           <ErrorInfo error={error} />
         </Paper>
       ) : (
-        <FilesGallery title={`Últimos archivos (${count})`} files={files} />
+        <FilesGallery
+          title={`Últimos archivos (${count})`}
+          files={files}
+          client={indocal}
+        />
       )}
     </Stack>
   );

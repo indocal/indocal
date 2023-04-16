@@ -11,9 +11,11 @@ import {
 import { Search as SearchIcon } from '@mui/icons-material';
 
 import { Loader, ErrorInfo } from '@indocal/ui';
+import { FoldersGallery } from '@indocal/uploads';
 import { useFolders } from '@indocal/services';
 
-import { FoldersGallery } from '@/features';
+import { indocal } from '@/lib';
+import { Pages } from '@/config';
 
 export const LastFoldersGallery: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -95,6 +97,8 @@ export const LastFoldersGallery: React.FC = () => {
         <FoldersGallery
           title={`Últimas carpetas (${count})`}
           folders={folders}
+          client={indocal}
+          basePath={Pages.UPLOADS}
         />
       )}
     </Stack>

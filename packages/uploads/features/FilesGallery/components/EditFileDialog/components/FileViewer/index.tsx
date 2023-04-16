@@ -12,8 +12,6 @@ import { useSWRConfig } from 'swr';
 
 import { File, ApiEndpoints } from '@indocal/services';
 
-import { indocal } from '@/lib';
-
 import { useFilesGallery } from '../../../../context';
 
 export interface FileViewerProps {
@@ -25,7 +23,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
 
   const { mutate } = useSWRConfig();
 
-  const { toggleEditFileDialog } = useFilesGallery();
+  const { client, toggleEditFileDialog } = useFilesGallery();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -53,7 +51,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
 
     if (!answer) return;
 
-    const { error } = await indocal.uploads.files.delete(file.id);
+    const { error } = await client.uploads.files.delete(file.id);
 
     if (error) {
       enqueueSnackbar(
@@ -87,6 +85,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
   }, [
     file.id,
     router.query.folder_id,
+    client,
     mutate,
     toggleEditFileDialog,
     enqueueSnackbar,

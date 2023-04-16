@@ -15,57 +15,84 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { ApiEndpoints } from '@indocal/services';
-
-import { indocal } from '@/lib';
+import { ControlledFoldersAutocomplete } from '@indocal/forms-generator';
+import { Can, Folder, ApiEndpoints } from '@indocal/services';
 
 import { useFoldersGallery } from '../../context';
 
 type FormData = zod.infer<typeof schema>;
 
-const schema = zod.object(
-  {
-    name: zod
-      .string({
-        description: 'Nombre de la carpeta',
-        required_error: 'Debe ingresar el nombre de la carpeta',
-        invalid_type_error: 'Formato no válido',
-      })
-      .min(1, 'Debe ingresar el nombre de la carpeta')
-      .trim(),
-  },
-  {
-    description: 'Datos de la carpeta',
-    required_error: 'Debe ingresar los datos de la carpeta',
-    invalid_type_error: 'Formato no válido',
-  }
-);
+const schema = zod
+  .object(
+    {
+      name: zod
+        .string({
+          description: 'Nombre de la carpeta',
+          required_error: 'Debe ingresar el nombre de la carpeta',
+          invalid_type_error: 'Formato no válido',
+        })
+        .min(1, 'Debe ingresar el nombre de la carpeta')
+        .trim(),
 
-export const AddFolderDialog: React.FC = () => {
+      folder: zod
+        .object(
+          {
+            id: zod.string().uuid(),
+            name: zod.string(),
+            createdAt: zod.string(),
+            updatedAt: zod.string(),
+          },
+          {
+            description: 'Carpeta',
+            required_error: 'Debe seleccionar la carpeta',
+            invalid_type_error: 'Formato no válido',
+          }
+        )
+        .nullable(),
+    },
+    {
+      description: 'Datos de la carpeta',
+      required_error: 'Debe ingresar los datos de la carpeta',
+      invalid_type_error: 'Formato no válido',
+    }
+  )
+  .partial();
+
+export interface EditFolderDialogProps {
+  folder: Folder;
+}
+
+export const EditFolderDialog: React.FC<EditFolderDialogProps> = ({
+  folder,
+}) => {
   const router = useRouter();
 
   const { mutate } = useSWRConfig();
 
-  const { isAddFolderDialogOpen, toggleAddFolderDialog } = useFoldersGallery();
+  const { client, isEditFolderDialogOpen, toggleEditFolderDialog } =
+    useFoldersGallery();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
+    control,
     handleSubmit,
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      name: folder.name,
+      folder: folder.folder,
+    },
   });
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { error } = await indocal.uploads.folders.create({
+      const { error } = await client.uploads.folders.update(folder.id, {
         name: formData.name,
-        ...(typeof router.query.folder_id === 'string' && {
-          folder: router.query.folder_id,
-        }),
+        folder: formData.folder ? formData.folder.id : null,
       });
 
       if (error) {
@@ -92,18 +119,25 @@ export const AddFolderDialog: React.FC = () => {
             : typeof key === 'string' && key.startsWith(ApiEndpoints.FOLDERS)
         );
 
-        enqueueSnackbar('Carpeta agregada exitosamente', {
+        enqueueSnackbar('Carpeta editada exitosamente', {
           variant: 'success',
-          onEntered: toggleAddFolderDialog,
+          onEntered: toggleEditFolderDialog,
         });
       }
     },
-    [router, mutate, toggleAddFolderDialog, enqueueSnackbar]
+    [
+      folder.id,
+      router.query.folder_id,
+      client,
+      mutate,
+      toggleEditFolderDialog,
+      enqueueSnackbar,
+    ]
   );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
-      toggleAddFolderDialog();
+      toggleEditFolderDialog();
     } else {
       const answer = window.confirm(
         '¿Estás seguro de que deseas cancelar esta acción?'
@@ -111,14 +145,14 @@ export const AddFolderDialog: React.FC = () => {
 
       if (!answer) return;
 
-      toggleAddFolderDialog();
+      toggleEditFolderDialog();
       reset();
     }
-  }, [isDirty, reset, toggleAddFolderDialog]);
+  }, [isDirty, reset, toggleEditFolderDialog]);
 
   return (
-    <Dialog fullWidth open={isAddFolderDialogOpen} onClose={handleOnClose}>
-      <DialogTitle>Agregar carpeta</DialogTitle>
+    <Dialog fullWidth open={isEditFolderDialogOpen} onClose={handleOnClose}>
+      <DialogTitle>Editar carpeta</DialogTitle>
 
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
@@ -131,6 +165,19 @@ export const AddFolderDialog: React.FC = () => {
             error={Boolean(errors.name)}
             helperText={errors.name?.message}
           />
+
+          <Can I="read" a="folder">
+            <ControlledFoldersAutocomplete
+              required
+              name="folder"
+              label="Carpeta"
+              control={control}
+              disabled={isSubmitting}
+              autocompleteProps={{
+                getOptionDisabled: (option) => option.id === folder.id,
+              }}
+            />
+          </Can>
         </Stack>
       </DialogContent>
 
@@ -143,11 +190,11 @@ export const AddFolderDialog: React.FC = () => {
           disabled={!isDirty}
           onClick={handleSubmit(onSubmit)}
         >
-          Agregar
+          Editar
         </LoadingButton>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddFolderDialog;
+export default EditFolderDialog;

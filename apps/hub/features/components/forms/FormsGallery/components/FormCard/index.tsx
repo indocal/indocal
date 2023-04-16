@@ -23,9 +23,9 @@ export const FormCard: React.FC<FormCardProps> = ({ form }) => (
     sx={{
       display: 'flex',
       flexDirection: 'column',
-      minWidth: 250,
-      maxWidth: 250,
-      height: 150,
+      minWidth: 225,
+      maxWidth: 225,
+      height: 250,
     }}
   >
     <CardContent>
@@ -35,8 +35,8 @@ export const FormCard: React.FC<FormCardProps> = ({ form }) => (
           sx={{
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 1,
-            lineClamp: 1,
+            WebkitLineClamp: 2,
+            lineClamp: 2,
             textOverflow: 'ellipsis',
             overflow: 'hidden',
             wordBreak: 'break-word',
@@ -54,8 +54,8 @@ export const FormCard: React.FC<FormCardProps> = ({ form }) => (
             sx={{
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 1,
-              lineClamp: 1,
+              WebkitLineClamp: 3,
+              lineClamp: 3,
               textOverflow: 'ellipsis',
               overflow: 'hidden',
               wordBreak: 'break-word',

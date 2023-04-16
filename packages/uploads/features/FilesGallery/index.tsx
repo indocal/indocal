@@ -14,7 +14,7 @@ import {
 import { FileCopy as FileIcon } from '@mui/icons-material';
 
 import { NoData } from '@indocal/ui';
-import { File } from '@indocal/services';
+import { INDOCAL, File } from '@indocal/services';
 
 import { FilesGalleryProvider, useFilesGallery } from './context';
 import { AddFileDialog, EditFileDialog } from './components';
@@ -174,9 +174,13 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
   );
 };
 
-const FilesGalleryWrapper: React.FC<FilesGalleryProps> = (props) => (
-  <FilesGalleryProvider>
-    <FilesGallery {...props} />
+interface FilesGalleryWrapperProps extends FilesGalleryProps {
+  client: INDOCAL;
+}
+
+const FilesGalleryWrapper: React.FC<FilesGalleryWrapperProps> = (props) => (
+  <FilesGalleryProvider client={props.client}>
+    <FilesGallery title={props.title} files={props.files} />
   </FilesGalleryProvider>
 );
 

@@ -11,9 +11,11 @@ import {
 import { Search as SearchIcon } from '@mui/icons-material';
 
 import { Loader, ErrorInfo } from '@indocal/ui';
+import { FoldersGallery } from '@indocal/uploads';
 import { useFolders, UUID, Folder } from '@indocal/services';
 
-import { FoldersGallery } from '@/features';
+import { indocal } from '@/lib';
+import { Pages } from '@/config';
 
 export interface FolderFoldersGalleryProps {
   folder: UUID | Folder;
@@ -99,7 +101,12 @@ export const FolderFoldersGallery: React.FC<FolderFoldersGalleryProps> = ({
           <ErrorInfo error={error} />
         </Paper>
       ) : (
-        <FoldersGallery title={`Carpetas (${count})`} folders={folders} />
+        <FoldersGallery
+          title={`Carpetas (${count})`}
+          folders={folders}
+          client={indocal}
+          basePath={Pages.UPLOADS}
+        />
       )}
     </Stack>
   );

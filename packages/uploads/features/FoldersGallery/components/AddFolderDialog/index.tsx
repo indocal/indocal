@@ -6,49 +6,52 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
-import { useForm, Control } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { ControlledFilesDropzone } from '@indocal/ui';
 import { ApiEndpoints } from '@indocal/services';
 
-import { indocal } from '@/lib';
+import { useFoldersGallery } from '../../context';
 
-import { useFilesGallery } from '../../context';
+type FormData = zod.infer<typeof schema>;
 
-export const AddFileDialog: React.FC = () => {
-  type FormData = zod.infer<typeof schema>;
+const schema = zod.object(
+  {
+    name: zod
+      .string({
+        description: 'Nombre de la carpeta',
+        required_error: 'Debe ingresar el nombre de la carpeta',
+        invalid_type_error: 'Formato no válido',
+      })
+      .min(1, 'Debe ingresar el nombre de la carpeta')
+      .trim(),
+  },
+  {
+    description: 'Datos de la carpeta',
+    required_error: 'Debe ingresar los datos de la carpeta',
+    invalid_type_error: 'Formato no válido',
+  }
+);
 
-  const schema = zod.object(
-    {
-      files: zod
-        .instanceof(File)
-        .array()
-        .min(1, 'Debe seleccionar al menos un archivo'),
-    },
-    {
-      description: 'Archivos a cargar',
-      required_error: 'Debe seleccionar los archivos a cargar',
-      invalid_type_error: 'Formato no válido',
-    }
-  );
-
+export const AddFolderDialog: React.FC = () => {
   const router = useRouter();
 
   const { mutate } = useSWRConfig();
 
-  const { isAddFileDialogOpen, toggleAddFileDialog } = useFilesGallery();
+  const { client, isAddFolderDialogOpen, toggleAddFolderDialog } =
+    useFoldersGallery();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    formState: { isDirty, isSubmitting },
-    control,
+    formState: { isDirty, isSubmitting, errors },
+    register,
     handleSubmit,
     reset,
   } = useForm<FormData>({
@@ -57,7 +60,8 @@ export const AddFileDialog: React.FC = () => {
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { error } = await indocal.uploads.files.upload(formData.files, {
+      const { error } = await client.uploads.folders.create({
+        name: formData.name,
         ...(typeof router.query.folder_id === 'string' && {
           folder: router.query.folder_id,
         }),
@@ -82,23 +86,23 @@ export const AddFileDialog: React.FC = () => {
         await mutate((key) =>
           folder
             ? typeof key === 'string' &&
-              key.startsWith(ApiEndpoints.FILES) &&
+              key.startsWith(ApiEndpoints.FOLDERS) &&
               key.includes(folder)
-            : typeof key === 'string' && key.startsWith(ApiEndpoints.FILES)
+            : typeof key === 'string' && key.startsWith(ApiEndpoints.FOLDERS)
         );
 
-        enqueueSnackbar('Archivos agregados exitosamente', {
+        enqueueSnackbar('Carpeta agregada exitosamente', {
           variant: 'success',
-          onEntered: toggleAddFileDialog,
+          onEntered: toggleAddFolderDialog,
         });
       }
     },
-    [router.query.folder_id, mutate, toggleAddFileDialog, enqueueSnackbar]
+    [router, client, mutate, toggleAddFolderDialog, enqueueSnackbar]
   );
 
   const handleOnClose = useCallback(async () => {
     if (!isDirty) {
-      toggleAddFileDialog();
+      toggleAddFolderDialog();
     } else {
       const answer = window.confirm(
         '¿Estás seguro de que deseas cancelar esta acción?'
@@ -106,23 +110,25 @@ export const AddFileDialog: React.FC = () => {
 
       if (!answer) return;
 
-      toggleAddFileDialog();
+      toggleAddFolderDialog();
       reset();
     }
-  }, [isDirty, reset, toggleAddFileDialog]);
+  }, [isDirty, reset, toggleAddFolderDialog]);
 
   return (
-    <Dialog fullWidth open={isAddFileDialogOpen} onClose={handleOnClose}>
-      <DialogTitle>Agregar archivos</DialogTitle>
+    <Dialog fullWidth open={isAddFolderDialogOpen} onClose={handleOnClose}>
+      <DialogTitle>Agregar carpeta</DialogTitle>
 
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
-          <ControlledFilesDropzone
+          <TextField
             required
-            multiple
-            name="files"
-            control={control as unknown as Control}
+            autoComplete="off"
+            label="Nombre"
             disabled={isSubmitting}
+            inputProps={register('name')}
+            error={Boolean(errors.name)}
+            helperText={errors.name?.message}
           />
         </Stack>
       </DialogContent>
@@ -143,4 +149,4 @@ export const AddFileDialog: React.FC = () => {
   );
 };
 
-export default AddFileDialog;
+export default AddFolderDialog;

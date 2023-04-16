@@ -1,5 +1,7 @@
 import { useReducer, useCallback, useContext, createContext } from 'react';
 
+import { INDOCAL } from '@indocal/services';
+
 ///////////
 // State //
 ///////////
@@ -49,6 +51,7 @@ export const initialContextValue: FoldersGalleryContextValue = {
   toggleAddFolderDialog: () => undefined,
   isEditFolderDialogOpen: initialContextState.isEditFolderDialogOpen,
   toggleEditFolderDialog: () => undefined,
+  client: {} as INDOCAL,
 };
 
 export interface FoldersGalleryContextValue {
@@ -56,14 +59,19 @@ export interface FoldersGalleryContextValue {
   toggleAddFolderDialog: () => void;
   isEditFolderDialogOpen: boolean;
   toggleEditFolderDialog: () => void;
+  client: INDOCAL;
 }
 
 const FoldersGalleryContext =
   createContext<FoldersGalleryContextValue>(initialContextValue);
 
-export const FoldersGalleryProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export interface FoldersGalleryProviderProps {
+  client: INDOCAL;
+}
+
+export const FoldersGalleryProvider: React.FC<
+  React.PropsWithChildren<FoldersGalleryProviderProps>
+> = ({ client, children }) => {
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   const handleToggleAddFolderDialog = useCallback(
@@ -79,6 +87,7 @@ export const FoldersGalleryProvider: React.FC<React.PropsWithChildren> = ({
   return (
     <FoldersGalleryContext.Provider
       value={{
+        client,
         isAddFolderDialogOpen: state.isAddFolderDialogOpen,
         toggleAddFolderDialog: handleToggleAddFolderDialog,
         isEditFolderDialogOpen: state.isEditFolderDialogOpen,
