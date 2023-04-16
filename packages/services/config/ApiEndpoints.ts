@@ -15,6 +15,11 @@ export enum ApiEndpoints {
   USERS_GROUPS = '/auth/groups',
   USERS_GROUPS_COUNT = '/auth/groups/count',
 
+  SERVICES = '/services',
+  SERVICES_COUNT = '/services/count',
+  SERVICES_REQUESTS = '/requests',
+  SERVICES_REQUESTS_COUNT = '/requests/count',
+
   FORMS = '/forms',
   FORMS_COUNT = '/forms/count',
   FORMS_ENTRIES = '/entries',

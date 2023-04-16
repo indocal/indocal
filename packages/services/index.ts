@@ -2,6 +2,7 @@ import {
   LogsService,
   AuthService,
   FormsService,
+  ServicesService,
   UploadsService,
   WarehouseService,
 } from './modules';
@@ -12,6 +13,7 @@ export class INDOCAL {
   logs: LogsService;
   auth: AuthService;
   forms: FormsService;
+  services: ServicesService;
   uploads: UploadsService;
   warehouse: WarehouseService;
 
@@ -20,6 +22,7 @@ export class INDOCAL {
     this.logs = new LogsService(this.config);
     this.auth = new AuthService(this.config);
     this.forms = new FormsService(this.config);
+    this.services = new ServicesService(this.config);
     this.uploads = new UploadsService(this.config);
     this.warehouse = new WarehouseService(this.config);
   }
