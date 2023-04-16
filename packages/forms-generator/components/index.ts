@@ -9,6 +9,10 @@ export * from './ControlledUsersGroupsAutocomplete';
 export * from './ControlledFormStatusSelect';
 export * from './ControlledFormVisibilitySelect';
 export * from './ControlledFormFieldTypeSelect';
+export * from './ControlledFormsAutocomplete';
+
+export * from './ControlledServiceStatusSelect';
+export * from './ControlledServiceRequestStatusSelect';
 
 export * from './ControlledSupplyUnitSelect';
 export * from './ControlledInventoryMovementTypeSelect';

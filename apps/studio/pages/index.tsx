@@ -6,6 +6,7 @@ import {
   useUsersRolesCount,
   useUsersGroupsCount,
   useFormsCount,
+  useServicesCount,
   useFilesCount,
 } from '@indocal/services';
 
@@ -36,6 +37,12 @@ const DashboardPage: EnhancedNextPage = () => {
     validating: formsCountValidating,
     count: formsCount,
   } = useFormsCount();
+
+  const {
+    loading: servicesCountLoading,
+    validating: servicesCountValidating,
+    count: servicesCount,
+  } = useServicesCount();
 
   const {
     loading: filesCountLoading,
@@ -98,6 +105,16 @@ const DashboardPage: EnhancedNextPage = () => {
               value={formsCount ?? 'N/A'}
               loading={formsCountLoading}
               validating={formsCountValidating}
+            />
+          </Unstable_Grid2>
+
+          <Unstable_Grid2>
+            <Stat
+              title="Servicios"
+              description="Servicios disponibles"
+              value={servicesCount ?? 'N/A'}
+              loading={servicesCountLoading}
+              validating={servicesCountValidating}
             />
           </Unstable_Grid2>
 

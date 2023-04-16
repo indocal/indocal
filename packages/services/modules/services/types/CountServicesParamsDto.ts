@@ -3,8 +3,8 @@ import { Prisma } from '@prisma/client';
 import { CountParams } from '../../../common';
 
 export type CountServicesParamsDto = CountParams<
-  Prisma.FormWhereInput,
-  Prisma.Enumerable<Prisma.FormScalarFieldEnum>
+  Prisma.ServiceWhereInput,
+  Prisma.Enumerable<Prisma.ServiceScalarFieldEnum>
 >;
 
 export default CountServicesParamsDto;
