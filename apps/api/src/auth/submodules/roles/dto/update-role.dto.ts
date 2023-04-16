@@ -55,6 +55,9 @@ class UserRoleConfigAccessSchema {
   hub: UserRoleAccessType;
 
   @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
+  app: UserRoleAccessType;
+
+  @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
   nobu: UserRoleAccessType;
 
   @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })

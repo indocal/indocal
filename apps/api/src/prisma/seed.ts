@@ -116,6 +116,7 @@ async function main() {
             access: {
               studio: 'ADMIN',
               hub: 'ADMIN',
+              app: 'ADMIN',
               nobu: 'ADMIN',
               trainings: 'ADMIN',
               warehouse: 'ADMIN',

@@ -18,6 +18,7 @@ import {
   AdminPanelSettings as AdminAccessIcon,
   Dashboard as StudioAppIcon,
   Hub as HubIcon,
+  Apps as AppIcon,
   SupportAgent as NobuAppIcon,
   CardMembership as TrainingsAppIcon,
   Warehouse as WarehouseAppIcon,
@@ -52,6 +53,11 @@ const schema = zod.object(
         >(['NONE', 'STANDARD', 'ADMIN']),
 
         hub: zod.enum<
+          UserRoleAccessType,
+          [UserRoleAccessType, ...UserRoleAccessType[]]
+        >(['NONE', 'STANDARD', 'ADMIN']),
+
+        app: zod.enum<
           UserRoleAccessType,
           [UserRoleAccessType, ...UserRoleAccessType[]]
         >(['NONE', 'STANDARD', 'ADMIN']),
@@ -110,6 +116,7 @@ export const ManageUserRoleConfigDialog: React.FC<
       access: {
         studio: role.config?.access?.studio || 'NONE',
         hub: role.config?.access?.hub || 'NONE',
+        app: role.config?.access?.app || 'NONE',
         nobu: role.config?.access?.nobu || 'NONE',
         trainings: role.config?.access?.trainings || 'NONE',
         warehouse: role.config?.access?.warehouse || 'NONE',
@@ -128,6 +135,11 @@ export const ManageUserRoleConfigDialog: React.FC<
         name: 'hub',
         label: 'Hub',
         icon: <HubIcon />,
+      },
+      {
+        name: 'app',
+        label: 'App',
+        icon: <AppIcon />,
       },
       {
         name: 'nobu',

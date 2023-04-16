@@ -19,6 +19,7 @@ export type UserRoleConfig = Partial<{
   access: {
     studio: UserRoleAccessType;
     hub: UserRoleAccessType;
+    app: UserRoleAccessType;
     nobu: UserRoleAccessType;
     trainings: UserRoleAccessType;
     warehouse: UserRoleAccessType;
