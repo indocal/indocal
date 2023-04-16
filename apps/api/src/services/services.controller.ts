@@ -11,11 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Service, Form } from '@prisma/client';
+import { Service, Form, UserGroup } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
+import { UserGroupEntity } from '../auth/submodules/groups/entities';
 import { FormEntity } from '../forms/entities';
 
 import { ServiceEntity } from './entities';
@@ -28,10 +29,11 @@ import {
 
 class EnhancedService extends ServiceEntity {
   form: FormEntity;
+  group: UserGroupEntity;
 }
 
 type CreateEnhancedService = Service & {
-  form: Form;
+  form: Form & { group: UserGroup };
 };
 
 @Controller('services')
@@ -40,11 +42,12 @@ export class ServicesController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedService({
-    form,
+    form: { group, ...form },
     ...rest
   }: CreateEnhancedService): EnhancedService {
     const service = new EnhancedService(rest);
     service.form = new FormEntity(form);
+    service.group = new UserGroupEntity(group);
 
     return service;
   }
@@ -64,7 +67,7 @@ export class ServicesController {
         supportedRequestStatus: createServiceDto.supportedRequestStatus,
         form: { connect: { id: createServiceDto.form } },
       },
-      include: { form: true },
+      include: { form: { include: { group: true } } },
     });
 
     return this.createEnhancedService(service);
@@ -98,7 +101,7 @@ export class ServicesController {
         skip: query.pagination?.skip && Number(query.pagination.skip),
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
-        include: { form: true },
+        include: { form: { include: { group: true } } },
       }),
       this.prismaService.service.count({
         where: query.filters,
@@ -122,7 +125,7 @@ export class ServicesController {
   ): Promise<SingleEntityResponse<EnhancedService | null>> {
     const service = await this.prismaService.service.findUnique({
       where: { id },
-      include: { form: true },
+      include: { form: { include: { group: true } } },
     });
 
     return service ? this.createEnhancedService(service) : null;
@@ -149,7 +152,7 @@ export class ServicesController {
           form: { connect: { id: updateServiceDto.form } },
         }),
       },
-      include: { form: true },
+      include: { form: { include: { group: true } } },
     });
 
     return this.createEnhancedService(service);
@@ -165,7 +168,7 @@ export class ServicesController {
   ): Promise<SingleEntityResponse<EnhancedService>> {
     const service = await this.prismaService.service.delete({
       where: { id },
-      include: { form: true },
+      include: { form: { include: { group: true } } },
     });
 
     return this.createEnhancedService(service);

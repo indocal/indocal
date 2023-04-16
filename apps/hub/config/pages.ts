@@ -8,6 +8,7 @@ export enum Pages {
 
   // Sections
   ROOT = '/',
+  SERVICES = '/services',
   FORMS = '/forms',
   TICKETS = '/tickets',
   WAREHOUSE = '/warehouse',

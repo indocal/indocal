@@ -13,6 +13,11 @@ type Form = Entity & {
   visibility: FormVisibility;
 };
 
+type Group = Entity & {
+  name: string;
+  description: string | null;
+};
+
 export type ServiceStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';
 
 export interface Service extends Entity {
@@ -21,6 +26,7 @@ export interface Service extends Entity {
   status: ServiceStatus;
   supportedRequestStatus: ServiceRequestStatus[];
   form: Form;
+  group: Group;
 }
 
 export default Service;
