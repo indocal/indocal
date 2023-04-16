@@ -10,6 +10,7 @@ export enum Pages {
   ROOT = '/',
   SERVICES = '/services',
   FORMS = '/forms',
+  FORMS_REPORTS = '/forms/reports',
   TICKETS = '/tickets',
   WAREHOUSE = '/warehouse',
 }

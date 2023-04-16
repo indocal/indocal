@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import {
   Card,
   CardContent,
@@ -11,7 +12,9 @@ import {
   HistoryEdu as AddIcon,
 } from '@mui/icons-material';
 
-import { Form } from '@indocal/services';
+import { Can, Form } from '@indocal/services';
+
+import { Pages } from '@/config';
 
 import { FormCardProvider, useFormCard } from './context';
 import { AddEntryDialog } from './components';
@@ -83,17 +86,26 @@ const FormCard: React.FC<FormCardProps> = ({ form }) => {
             borderTop: (theme) => `1px solid ${theme.palette.divider}`,
           }}
         >
-          <Tooltip title="Ver reportes">
-            <IconButton>
-              <ReportsIcon />
-            </IconButton>
-          </Tooltip>
+          <Can do="generate-reports" on="form">
+            <Tooltip title="Ver reportes">
+              <IconButton
+                LinkComponent={NextLink}
+                href={`${Pages.FORMS_REPORTS}/${form.id}`}
+                size="small"
+                sx={{ display: 'flex' }}
+              >
+                <ReportsIcon />
+              </IconButton>
+            </Tooltip>
+          </Can>
 
-          <Tooltip title="Agregar entrada">
-            <IconButton onClick={toggleAddEntryDialog}>
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
+          <Can I="create" a="formEntry">
+            <Tooltip title="Agregar entrada">
+              <IconButton onClick={toggleAddEntryDialog}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </Can>
         </CardActions>
       </Card>
     </>
