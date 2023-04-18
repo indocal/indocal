@@ -1,6 +1,11 @@
 import { useState, useEffect, createContext } from 'react';
 import useSWR from 'swr/immutable';
-import { createMongoAbility, MongoAbility } from '@casl/ability';
+import {
+  createMongoAbility,
+  MongoAbility,
+  AbilityTuple,
+  MongoQuery,
+} from '@casl/ability';
 import { useAbility as useCASLAbility } from '@casl/react';
 import qs from 'qs';
 
@@ -10,7 +15,9 @@ import { ApiEndpoints } from '../../../../config';
 
 import { TOKEN_KEY } from '../../config';
 
-export const AbilityContext = createContext(createMongoAbility());
+export type AppAbility = MongoAbility<AbilityTuple, MongoQuery>;
+
+export const AbilityContext = createContext(createMongoAbility<AppAbility>());
 
 export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
   children,
@@ -29,12 +36,12 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
       : null
   );
 
-  const [ability, setAbility] = useState(createMongoAbility());
+  const [ability, setAbility] = useState(createMongoAbility<AppAbility>());
 
   useEffect(() => {
     if (roles?.entities) {
       setAbility(
-        createMongoAbility(
+        createMongoAbility<AppAbility>(
           roles.entities
             .map((role) =>
               role.permissions.map((permission) => {
@@ -56,7 +63,7 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
   );
 };
 
-export function useAbility(): MongoAbility {
+export function useAbility(): AppAbility {
   return useCASLAbility(AbilityContext);
 }
 

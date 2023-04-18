@@ -5,6 +5,10 @@ import { ApexOptions } from 'apexcharts';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
+export type ChartProps = ApexChartProps;
+export type ChartSeries = ApexOptions['series'];
+export type ChartOptions = ApexOptions;
+
 export const Chart: React.FC<ApexChartProps> = ({ options, ...rest }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -18,7 +22,3 @@ export const Chart: React.FC<ApexChartProps> = ({ options, ...rest }) => {
 };
 
 export default Chart;
-
-export type { ApexChartProps as ChartProps };
-export type ChartSeries = ApexOptions['series'];
-export type { ApexOptions as ChartOptions };

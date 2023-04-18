@@ -5,20 +5,20 @@
   "dependencies": {
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
-    "@mui/icons-material": "5.11.11",
-    "@mui/material": "5.11.14",
-    "@mui/x-data-grid": "6.0.3",
-    "@mui/x-date-pickers": "6.0.3",
+    "@mui/icons-material": "5.11.16",
+    "@mui/material": "5.12.1",
+    "@mui/x-data-grid": "6.2.0",
+    "@mui/x-date-pickers": "6.2.0",
     "date-fns": "2.29.3",
-    "next": "13.2.4",
+    "next": "13.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",
     "@indocal/typescript-config": "*",
-    "@types/node": "18.15.10",
-    "@types/react": "18.0.29",
-    "typescript": "5.0.2"
+    "@types/node": "18.15.11",
+    "@types/react": "18.0.37",
+    "typescript": "5.0.4"
   }
 }

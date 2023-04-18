@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { MongoAbility, createMongoAbility } from '@casl/ability';
+import {
+  createMongoAbility,
+  MongoAbility,
+  AbilityTuple,
+  MongoQuery,
+} from '@casl/ability';
 import { PrismaService } from 'nestjs-prisma';
 
 import { AuthenticatedUser } from '../../types';
+
+export type AppAbility = MongoAbility<AbilityTuple, MongoQuery>;
 
 @Injectable()
 export class AbilityFactory {
   constructor(private prismaService: PrismaService) {}
 
-  async build(user: AuthenticatedUser): Promise<MongoAbility> {
+  async build(user: AuthenticatedUser): Promise<AppAbility> {
     const permissions = await this.prismaService.userRolePermission.findMany({
       where: {
         role: {
@@ -29,7 +36,7 @@ export class AbilityFactory {
       })
       .flat();
 
-    return createMongoAbility(rules);
+    return createMongoAbility<AppAbility>(rules);
   }
 }
 

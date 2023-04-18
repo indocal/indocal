@@ -14,7 +14,9 @@ const DniMask = forwardRef<HTMLElement, { onChange: (value: unknown) => void }>(
         {...rest}
         overwrite
         mask="###-#######-#"
-        definitions={{ '#': /[0-9]/ }}
+        definitions={{
+          '#': /[0-9]/ as unknown as IMask.MaskedPattern.PatternDefinition,
+        }}
         onAccept={(value) => onChange(value)}
         inputRef={ref as RefCallback<IMask.MaskElement>}
       />
