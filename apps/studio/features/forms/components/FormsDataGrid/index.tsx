@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useForms } from '@indocal/services';
+import { useAppAbility, useForms } from '@indocal/services';
 
 import { GenericFormsDataGrid } from '@/features';
 
@@ -8,7 +8,7 @@ import { FormsDataGridProvider, useFormsDataGrid } from './context';
 import { AddFormDialog } from './components';
 
 const FormsDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

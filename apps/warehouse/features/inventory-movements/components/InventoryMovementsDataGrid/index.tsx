@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useInventoryMovements } from '@indocal/services';
+import { useAppAbility, useInventoryMovements } from '@indocal/services';
 
 import { GenericInventoryMovementsDataGrid } from '@/features';
 
@@ -11,7 +11,7 @@ import {
 import { AddInventoryMovementDialog } from './components';
 
 const InventoryMovementsDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useOrders, Supplier } from '@indocal/services';
+import { useAppAbility, useOrders, Supplier } from '@indocal/services';
 
 import { GenericOrdersDataGrid } from '@/features';
 
@@ -11,7 +11,7 @@ export interface SupplierOrdersDataGridProps {
 export const SupplierOrdersDataGrid: React.FC<SupplierOrdersDataGridProps> = ({
   supplier,
 }) => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

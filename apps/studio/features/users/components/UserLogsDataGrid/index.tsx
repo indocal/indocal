@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useLogs, User } from '@indocal/services';
+import { useAppAbility, useLogs, User } from '@indocal/services';
 
 import { GenericLogsDataGrid } from '@/features';
 
@@ -9,7 +9,7 @@ export interface UserLogsDataGridProps {
 }
 
 export const UserLogsDataGrid: React.FC<UserLogsDataGridProps> = ({ user }) => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useUsers, UserGroup } from '@indocal/services';
+import { useAppAbility, useUsers, UserGroup } from '@indocal/services';
 
 import { GenericUsersDataGrid } from '@/features';
 
@@ -12,7 +12,7 @@ export interface GroupUsersDataGridProps {
 }
 
 const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

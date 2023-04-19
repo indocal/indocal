@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useServices } from '@indocal/services';
+import { useAppAbility, useServices } from '@indocal/services';
 
 import { GenericServicesDataGrid } from '@/features';
 
@@ -8,7 +8,7 @@ import { ServicesDataGridProvider, useServicesDataGrid } from './context';
 import { AddServiceDialog } from './components';
 
 const ServicesDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useFormsEntries, Form } from '@indocal/services';
+import { useAppAbility, useFormsEntries, Form } from '@indocal/services';
 
 import { GenericFormsEntriesDataGrid } from '@/features';
 import { Pages } from '@/config';
@@ -12,7 +12,7 @@ export interface FormEntriesDataGridProps {
 export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
   form,
 }) => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

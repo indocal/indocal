@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useSuppliers } from '@indocal/services';
+import { useAppAbility, useSuppliers } from '@indocal/services';
 
 import { GenericSuppliersDataGrid } from '@/features';
 
@@ -8,7 +8,7 @@ import { SuppliersDataGridProvider, useSuppliersDataGrid } from './context';
 import { AddSupplierDialog } from './components';
 
 const SuppliersDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

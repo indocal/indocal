@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useLogs, ApiToken } from '@indocal/services';
+import { useAppAbility, useLogs, ApiToken } from '@indocal/services';
 
 import { GenericLogsDataGrid } from '@/features';
 
@@ -11,7 +11,7 @@ export interface ApiTokenLogsDataGridProps {
 export const ApiTokenLogsDataGrid: React.FC<ApiTokenLogsDataGridProps> = ({
   apiToken,
 }) => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

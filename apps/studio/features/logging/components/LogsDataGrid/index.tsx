@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useLogs } from '@indocal/services';
+import { useAppAbility, useLogs } from '@indocal/services';
 
 import { GenericLogsDataGrid } from '@/features';
 
 export const LogsDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

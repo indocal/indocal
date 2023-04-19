@@ -1,6 +1,11 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useSuppliesRequests, UUID, User } from '@indocal/services';
+import {
+  useAppAbility,
+  useSuppliesRequests,
+  UUID,
+  User,
+} from '@indocal/services';
 
 import { GenericUserSuppliesRequestsDataGrid } from '@/features';
 
@@ -17,7 +22,7 @@ export interface UserSuppliesRequestsDataGridProps {
 const UserSuppliesRequestsDataGrid: React.FC<
   UserSuppliesRequestsDataGridProps
 > = ({ user }) => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

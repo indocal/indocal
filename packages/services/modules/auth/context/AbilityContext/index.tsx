@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from 'react';
+import { useMemo, createContext } from 'react';
 import useSWR from 'swr/immutable';
 import {
   createMongoAbility,
@@ -6,7 +6,7 @@ import {
   AbilityTuple,
   MongoQuery,
 } from '@casl/ability';
-import { useAbility as useCASLAbility } from '@casl/react';
+import { useAbility } from '@casl/react';
 import qs from 'qs';
 
 import { MultipleEntitiesResponse } from '../../../../common';
@@ -36,25 +36,21 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
       : null
   );
 
-  const [ability, setAbility] = useState(createMongoAbility<AppAbility>());
+  const ability = useMemo(
+    () =>
+      createMongoAbility<AppAbility>(
+        roles?.entities
+          .map((role) =>
+            role.permissions.map((permission) => {
+              const [scope, action] = permission.action.split('::');
 
-  useEffect(() => {
-    if (roles?.entities) {
-      setAbility(
-        createMongoAbility<AppAbility>(
-          roles.entities
-            .map((role) =>
-              role.permissions.map((permission) => {
-                const [scope, action] = permission.action.split('::');
-
-                return { action, subject: scope };
-              })
-            )
-            .flat()
-        )
-      );
-    }
-  }, [roles?.entities]);
+              return { action, subject: scope };
+            })
+          )
+          .flat()
+      ),
+    [roles?.entities]
+  );
 
   return (
     <AbilityContext.Provider value={ability}>
@@ -63,8 +59,8 @@ export const AbilityProvider: React.FC<React.PropsWithChildren> = ({
   );
 };
 
-export function useAbility(): AppAbility {
-  return useCASLAbility(AbilityContext);
+export function useAppAbility(): AppAbility {
+  return useAbility(AbilityContext);
 }
 
 export default AbilityProvider;

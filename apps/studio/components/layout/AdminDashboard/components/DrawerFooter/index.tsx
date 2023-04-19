@@ -10,12 +10,12 @@ import { Logout as SignOutIcon } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
 import { useDashboard } from '@indocal/ui';
-import { useAbility } from '@indocal/services';
+import { useAppAbility } from '@indocal/services';
 
 import { indocal } from '@/lib';
 
 export const AdminDashboardDrawerFooter: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const { isDrawerOpen, drawerPosition } = useDashboard();
 

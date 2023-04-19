@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useUsersRoles } from '@indocal/services';
+import { useAppAbility, useUsersRoles } from '@indocal/services';
 
 import { GenericUsersRolesDataGrid } from '@/features';
 
@@ -8,7 +8,7 @@ import { UsersRolesDataGridProvider, useUsersRolesDataGrid } from './context';
 import { AddUserRoleDialog } from './components';
 
 const UsersRolesDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

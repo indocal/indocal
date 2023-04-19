@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useApiTokens } from '@indocal/services';
+import { useAppAbility, useApiTokens } from '@indocal/services';
 
 import { GenericApiTokensDataGrid } from '@/features';
 
@@ -8,7 +8,7 @@ import { ApiTokensDataGridProvider, useApiTokensDataGrid } from './context';
 import { AddApiTokenDialog } from './components';
 
 const ApiTokensDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });

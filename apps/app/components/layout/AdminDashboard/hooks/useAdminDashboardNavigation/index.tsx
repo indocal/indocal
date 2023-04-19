@@ -10,7 +10,7 @@ import {
   DrawerNavigationItem,
   DrawerNavigationMenu,
 } from '@indocal/ui';
-import { useAbility } from '@indocal/services';
+import { useAppAbility } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -31,7 +31,7 @@ type Navigation =
     };
 
 export function useAdminDashboardNavigation(): DrawerNavigation[] {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const navigation = useMemo<Navigation[]>(
     () => [

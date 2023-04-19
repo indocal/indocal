@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 
-import { useAbility, useSuppliesRequests } from '@indocal/services';
+import { useAppAbility, useSuppliesRequests } from '@indocal/services';
 
 import { GenericSuppliesRequestsDataGrid } from '@/features';
 
 export const SuppliesRequestsDataGrid: React.FC = () => {
-  const ability = useAbility();
+  const ability = useAppAbility();
 
   const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState({ page: 0, pageSize: 50 });
