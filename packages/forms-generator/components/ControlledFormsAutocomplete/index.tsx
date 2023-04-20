@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Autocomplete,
   TextField,
@@ -69,6 +69,11 @@ export const ControlledFormsAutocomplete: React.FC<
     orderBy: { title: 'asc' },
   });
 
+  const sortedByGroup = useMemo(
+    () => forms.sort((a, b) => a.group.name.localeCompare(b.group.name)),
+    [forms]
+  );
+
   return (
     <Controller
       {...controllerProps}
@@ -83,12 +88,13 @@ export const ControlledFormsAutocomplete: React.FC<
           multiple={multiple}
           loading={loading || validating}
           disabled={disabled}
-          options={forms}
+          options={sortedByGroup}
           value={multiple ? value ?? [] : value ?? null}
           onChange={(_, value) => onChange(value)}
           onInputChange={(_, value) => setInput(value)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={(option) => option.title}
+          groupBy={(option) => option.group.name}
           renderInput={(params) => (
             <TextField
               {...params}

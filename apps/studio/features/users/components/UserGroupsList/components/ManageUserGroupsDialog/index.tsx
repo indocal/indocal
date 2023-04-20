@@ -15,6 +15,7 @@ import { z as zod } from 'zod';
 
 import { ControlledUsersGroupsAutocomplete } from '@indocal/forms-generator';
 import { User, ApiEndpoints } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
@@ -24,22 +25,11 @@ type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    groups: zod
-      .object(
-        {
-          id: zod.string().uuid(),
-          name: zod.string(),
-          description: zod.string().nullable(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        },
-        {
-          description: 'Grupos a los que pertenece el usuario',
-          required_error: 'Debe seleccionar al menos un grupo',
-          invalid_type_error: 'Formato no válido',
-        }
-      )
-      .array(),
+    groups: entitySchema({
+      description: 'Grupos a los que pertenece el usuario',
+      required_error: 'Debe seleccionar al menos un grupo',
+      invalid_type_error: 'Formato no válido',
+    }).array(),
   },
   {
     description: 'Grupos a los que pertenece el usuario',

@@ -15,6 +15,7 @@ import { z as zod } from 'zod';
 
 import { ControlledUsersRolesAutocomplete } from '@indocal/forms-generator';
 import { User, ApiEndpoints } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
@@ -24,23 +25,11 @@ type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    roles: zod
-      .object(
-        {
-          id: zod.string().uuid(),
-          type: zod.string(),
-          name: zod.string(),
-          description: zod.string(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        },
-        {
-          description: 'Roles asignados al usuario',
-          required_error: 'Debe seleccionar al menos un rol',
-          invalid_type_error: 'Formato no válido',
-        }
-      )
-      .array(),
+    roles: entitySchema({
+      description: 'Roles asignados al usuario',
+      required_error: 'Debe seleccionar al menos un rol',
+      invalid_type_error: 'Formato no válido',
+    }).array(),
   },
   {
     description: 'Roles asignados al usuario',

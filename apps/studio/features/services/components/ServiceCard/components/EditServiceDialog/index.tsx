@@ -24,10 +24,9 @@ import {
   Service,
   ServiceStatus,
   ServiceRequestStatus,
-  FormStatus,
-  FormVisibility,
   ApiEndpoints,
 } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
@@ -88,31 +87,11 @@ const schema = zod
         .array()
         .min(2, 'Debe seleccionar al menos dos estados'),
 
-      form: zod.object(
-        {
-          id: zod.string().uuid(),
-          slug: zod.string(),
-          title: zod.string(),
-          description: zod.string().nullable(),
-          status: zod.enum<string, [FormStatus, ...FormStatus[]]>([
-            'DRAFT',
-            'PUBLISHED',
-            'HIDDEN',
-          ]),
-          visibility: zod.enum<string, [FormVisibility, ...FormVisibility[]]>([
-            'PUBLIC',
-            'PROTECTED',
-            'PRIVATE',
-          ]),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        },
-        {
-          description: 'Formulario del servicio',
-          required_error: 'Debe seleccionar el formulario del servicio',
-          invalid_type_error: 'Formato no válido',
-        }
-      ),
+      form: entitySchema({
+        description: 'Formulario del servicio',
+        required_error: 'Debe seleccionar el formulario del servicio',
+        invalid_type_error: 'Formato no válido',
+      }),
     },
     {
       description: 'Datos del servicio',

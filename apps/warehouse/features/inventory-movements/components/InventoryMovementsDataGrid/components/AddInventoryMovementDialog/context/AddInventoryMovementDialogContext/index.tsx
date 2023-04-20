@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import { InventoryMovementType } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 export type AddInventoryMovementDialogData = zod.infer<typeof schema>;
 
@@ -16,23 +17,11 @@ const itemSchema = zod.object(
       })
       .int('Debe ingresar una cantidad válida'),
 
-    supply: zod.object(
-      {
-        id: zod.string().uuid(),
-        code: zod.string(),
-        name: zod.string(),
-        description: zod.string().nullable(),
-        quantity: zod.number(),
-        unit: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      },
-      {
-        description: 'Recurso',
-        required_error: 'Debe seleccionar el recurso',
-        invalid_type_error: 'Formato no válido',
-      }
-    ),
+    supply: entitySchema({
+      description: 'Recurso',
+      required_error: 'Debe seleccionar el recurso',
+      invalid_type_error: 'Formato no válido',
+    }),
   },
   {
     description: 'Datos del artículo',
@@ -67,39 +56,17 @@ const schema = zod.object(
 
     items: itemSchema.array().min(1, 'Debe ingresar al menos un artículo'),
 
-    origin: zod
-      .object(
-        {
-          id: zod.string().uuid(),
-          name: zod.string(),
-          description: zod.string().nullable(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        },
-        {
-          description: 'Área origen',
-          required_error: 'Debe seleccionar el área origen',
-          invalid_type_error: 'Formato no válido',
-        }
-      )
-      .nullish(),
+    origin: entitySchema({
+      description: 'Área origen',
+      required_error: 'Debe seleccionar el área origen',
+      invalid_type_error: 'Formato no válido',
+    }).nullish(),
 
-    destination: zod
-      .object(
-        {
-          id: zod.string().uuid(),
-          name: zod.string(),
-          description: zod.string().nullable(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        },
-        {
-          description: 'Área destino',
-          required_error: 'Debe seleccionar el área destino',
-          invalid_type_error: 'Formato no válido',
-        }
-      )
-      .nullish(),
+    destination: entitySchema({
+      description: 'Área destino',
+      required_error: 'Debe seleccionar el área destino',
+      invalid_type_error: 'Formato no válido',
+    }).nullish(),
   },
   {
     description: 'Datos del movimiento',

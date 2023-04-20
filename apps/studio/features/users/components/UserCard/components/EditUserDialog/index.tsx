@@ -20,6 +20,7 @@ import {
   ControlledUsersGroupsAutocomplete,
 } from '@indocal/forms-generator';
 import { Can, User, UserStatus, ApiEndpoints } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
@@ -65,40 +66,17 @@ const schema = zod
         })
         .describe('Estado del usuario'),
 
-      roles: zod
-        .object(
-          {
-            id: zod.string().uuid(),
-            type: zod.string(),
-            name: zod.string(),
-            description: zod.string(),
-            createdAt: zod.string(),
-            updatedAt: zod.string(),
-          },
-          {
-            description: 'Roles asignados al usuario',
-            required_error: 'Debe seleccionar al menos un rol',
-            invalid_type_error: 'Formato no válido',
-          }
-        )
-        .array(),
+      roles: entitySchema({
+        description: 'Roles asignados al usuario',
+        required_error: 'Debe seleccionar al menos un rol',
+        invalid_type_error: 'Formato no válido',
+      }).array(),
 
-      groups: zod
-        .object(
-          {
-            id: zod.string().uuid(),
-            name: zod.string(),
-            description: zod.string().nullable(),
-            createdAt: zod.string(),
-            updatedAt: zod.string(),
-          },
-          {
-            description: 'Grupos a los que pertenece el usuario',
-            required_error: 'Debe seleccionar al menos un grupo',
-            invalid_type_error: 'Formato no válido',
-          }
-        )
-        .array(),
+      groups: entitySchema({
+        description: 'Grupos a los que pertenece el usuario',
+        required_error: 'Debe seleccionar al menos un grupo',
+        invalid_type_error: 'Formato no válido',
+      }).array(),
     },
     {
       description: 'Datos del usuario',

@@ -2,6 +2,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { entitySchema } from '@indocal/utils';
+
 export type AddSupplyRequestDialogData = zod.infer<typeof schema>;
 
 const itemSchema = zod.object(
@@ -15,23 +17,11 @@ const itemSchema = zod.object(
       .int('Debe ingresar una cantidad válida')
       .positive('Debe ingresar una cantidad válida'),
 
-    supply: zod.object(
-      {
-        id: zod.string().uuid(),
-        code: zod.string(),
-        name: zod.string(),
-        description: zod.string().nullable(),
-        quantity: zod.number(),
-        unit: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      },
-      {
-        description: 'Recurso',
-        required_error: 'Debe seleccionar el recurso',
-        invalid_type_error: 'Formato no válido',
-      }
-    ),
+    supply: entitySchema({
+      description: 'Recurso',
+      required_error: 'Debe seleccionar el recurso',
+      invalid_type_error: 'Formato no válido',
+    }),
   },
   {
     description: 'Datos del artículo',

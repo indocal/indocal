@@ -26,6 +26,7 @@ import {
   FormVisibility,
   ApiEndpoints,
 } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
@@ -85,20 +86,11 @@ const schema = zod
         )
         .describe('Visibilidad del formulario'),
 
-      group: zod.object(
-        {
-          id: zod.string().uuid(),
-          name: zod.string(),
-          description: zod.string().nullable(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        },
-        {
-          description: 'Grupo al que pertenece el formulario',
-          required_error: 'Debe seleccionar el grupo',
-          invalid_type_error: 'Formato no válido',
-        }
-      ),
+      group: entitySchema({
+        description: 'Grupo al que pertenece el formulario',
+        required_error: 'Debe seleccionar el grupo',
+        invalid_type_error: 'Formato no válido',
+      }),
     },
     {
       description: 'Datos del formulario',
@@ -140,7 +132,7 @@ export const EditFormDialog: React.FC<EditFormDialogProps> = ({ form }) => {
   const onSubmit = useCallback(
     async (formData: FormData) => {
       const { form: updated, error } = await indocal.forms.update(form.id, {
-        slug: formData.slug,
+        slug: formData.slug?.toLowerCase().replace(/ /g, '-'),
         title: formData.title,
         description: formData.description || null,
         status: formData.status,

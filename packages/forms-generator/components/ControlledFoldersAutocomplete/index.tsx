@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Autocomplete,
   TextField,
@@ -69,6 +69,23 @@ export const ControlledFoldersAutocomplete: React.FC<
     orderBy: { name: 'asc' },
   });
 
+  const sortedByFolder = useMemo(
+    () =>
+      folders.sort((a, b) => {
+        if (a.folder && b.folder) {
+          return a.folder.name.localeCompare(b.folder.name);
+        } else if (a.folder) {
+          return 1;
+        } else if (b.folder) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }),
+
+    [folders]
+  );
+
   return (
     <Controller
       {...controllerProps}
@@ -83,13 +100,13 @@ export const ControlledFoldersAutocomplete: React.FC<
           multiple={multiple}
           loading={loading || validating}
           disabled={disabled}
-          options={folders}
+          options={sortedByFolder}
           value={multiple ? value ?? [] : value ?? null}
           onChange={(_, value) => onChange(value)}
           onInputChange={(_, value) => setInput(value)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={(option) => option.name}
-          groupBy={(option) => option.folder?.name ?? 'Librería de archivos'}
+          groupBy={({ folder }) => folder?.name ?? 'Librería de archivos'}
           renderInput={(params) => (
             <TextField
               {...params}

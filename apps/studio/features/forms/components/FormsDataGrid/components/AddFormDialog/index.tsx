@@ -15,6 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import { ControlledUsersGroupsAutocomplete } from '@indocal/forms-generator';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 import { Pages } from '@/config';
@@ -43,20 +44,11 @@ const schema = zod.object(
       .trim()
       .optional(),
 
-    group: zod.object(
-      {
-        id: zod.string().uuid(),
-        name: zod.string(),
-        description: zod.string().nullable(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      },
-      {
-        description: 'Grupo al que pertenece el formulario',
-        required_error: 'Debe seleccionar el grupo',
-        invalid_type_error: 'Formato no válido',
-      }
-    ),
+    group: entitySchema({
+      description: 'Grupo al que pertenece el formulario',
+      required_error: 'Debe seleccionar el grupo',
+      invalid_type_error: 'Formato no válido',
+    }),
   },
   {
     description: 'Datos del formulario',
@@ -85,11 +77,7 @@ export const AddFormDialog: React.FC = () => {
   const onSubmit = useCallback(
     async (formData: FormData) => {
       const { form, error } = await indocal.forms.create({
-        slug: [formData.group.name, formData.title]
-          .join(' ')
-          .replaceAll(' ', '-')
-          .toLowerCase(),
-
+        slug: formData.title.toLowerCase().replace(/ /g, '-'),
         title: formData.title,
         ...(formData.description && { description: formData.description }),
         group: formData.group.id,

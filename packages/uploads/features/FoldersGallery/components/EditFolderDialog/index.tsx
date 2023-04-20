@@ -17,6 +17,7 @@ import { z as zod } from 'zod';
 
 import { ControlledFoldersAutocomplete } from '@indocal/forms-generator';
 import { Can, Folder, ApiEndpoints } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { useFoldersGallery } from '../../context';
 
@@ -34,21 +35,11 @@ const schema = zod
         .min(1, 'Debe ingresar el nombre de la carpeta')
         .trim(),
 
-      folder: zod
-        .object(
-          {
-            id: zod.string().uuid(),
-            name: zod.string(),
-            createdAt: zod.string(),
-            updatedAt: zod.string(),
-          },
-          {
-            description: 'Carpeta',
-            required_error: 'Debe seleccionar la carpeta',
-            invalid_type_error: 'Formato no válido',
-          }
-        )
-        .nullable(),
+      folder: entitySchema({
+        description: 'Carpeta',
+        required_error: 'Debe seleccionar la carpeta',
+        invalid_type_error: 'Formato no válido',
+      }).nullable(),
     },
     {
       description: 'Datos de la carpeta',
@@ -174,7 +165,8 @@ export const EditFolderDialog: React.FC<EditFolderDialogProps> = ({
               control={control}
               disabled={isSubmitting}
               autocompleteProps={{
-                getOptionDisabled: (option) => option.id === folder.id,
+                getOptionDisabled: (option) =>
+                  option.id === folder.id || option.id === folder.folder?.id,
               }}
             />
           </Can>

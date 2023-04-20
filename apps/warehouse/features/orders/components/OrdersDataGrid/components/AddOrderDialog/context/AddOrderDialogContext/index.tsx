@@ -2,6 +2,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
+import { entitySchema } from '@indocal/utils';
+
 export type AddOrderDialogData = zod.infer<typeof schema>;
 
 const itemSchema = zod.object(
@@ -23,23 +25,11 @@ const itemSchema = zod.object(
       .int('Debe ingresar una cantidad válida')
       .positive('Debe ingresar una cantidad válida'),
 
-    supply: zod.object(
-      {
-        id: zod.string().uuid(),
-        code: zod.string(),
-        name: zod.string(),
-        description: zod.string().nullable(),
-        quantity: zod.number(),
-        unit: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      },
-      {
-        description: 'Recurso',
-        required_error: 'Debe seleccionar el recurso',
-        invalid_type_error: 'Formato no válido',
-      }
-    ),
+    supply: entitySchema({
+      description: 'Recurso',
+      required_error: 'Debe seleccionar el recurso',
+      invalid_type_error: 'Formato no válido',
+    }),
   },
   {
     description: 'Datos del artículo',
@@ -68,35 +58,17 @@ const schema = zod.object(
       .min(1, 'Debe ingresar el concepto de la orden')
       .trim(),
 
-    supplier: zod.object(
-      {
-        id: zod.string().uuid(),
-        name: zod.string(),
-        description: zod.string().nullable(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      },
-      {
-        description: 'Suplidor de la orden',
-        required_error: 'Debe seleccionar el suplidor',
-        invalid_type_error: 'Formato no válido',
-      }
-    ),
+    supplier: entitySchema({
+      description: 'Suplidor de la orden',
+      required_error: 'Debe seleccionar el suplidor',
+      invalid_type_error: 'Formato no válido',
+    }),
 
-    requestedBy: zod.object(
-      {
-        id: zod.string().uuid(),
-        name: zod.string(),
-        description: zod.string().nullable(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      },
-      {
-        description: 'Solicitante de la orden',
-        required_error: 'Debe seleccionar el solicitante',
-        invalid_type_error: 'Formato no válido',
-      }
-    ),
+    requestedBy: entitySchema({
+      description: 'Solicitante de la orden',
+      required_error: 'Debe seleccionar el solicitante',
+      invalid_type_error: 'Formato no válido',
+    }),
 
     items: itemSchema.array().min(1, 'Debe ingresar al menos un artículo'),
   },

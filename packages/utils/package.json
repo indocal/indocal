@@ -2,6 +2,9 @@
   "name": "@indocal/utils",
   "version": "0.0.0",
   "private": true,
+  "dependencies": {
+    "zod": "3.21.4"
+  },
   "devDependencies": {
     "@types/node": "18.15.11",
     "typescript": "5.0.4"

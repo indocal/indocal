@@ -18,6 +18,7 @@ import { z as zod } from 'zod';
 
 import { ControlledFoldersAutocomplete } from '@indocal/forms-generator';
 import { Can, File, ApiEndpoints } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { useFilesGallery } from '../../context';
 
@@ -55,21 +56,11 @@ const schema = zod
         .trim()
         .nullable(),
 
-      folder: zod
-        .object(
-          {
-            id: zod.string().uuid(),
-            name: zod.string(),
-            createdAt: zod.string(),
-            updatedAt: zod.string(),
-          },
-          {
-            description: 'Carpeta',
-            required_error: 'Debe seleccionar la carpeta',
-            invalid_type_error: 'Formato no válido',
-          }
-        )
-        .nullable(),
+      folder: entitySchema({
+        description: 'Carpeta',
+        required_error: 'Debe seleccionar la carpeta',
+        invalid_type_error: 'Formato no válido',
+      }).nullable(),
     },
     {
       description: 'Datos del archivo',

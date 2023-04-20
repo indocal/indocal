@@ -14,7 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
-import { UserGroup, UserStatus, ApiEndpoints } from '@indocal/services';
+import { UserGroup, ApiEndpoints } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
@@ -24,27 +25,11 @@ type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
   {
-    users: zod
-      .object(
-        {
-          id: zod.string().uuid(),
-          username: zod.string(),
-          email: zod.string().email(),
-          name: zod.string(),
-          status: zod.enum<string, [UserStatus, ...UserStatus[]]>([
-            'ENABLED',
-            'DISABLED',
-          ]),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        },
-        {
-          description: 'Miembros que pertenecen al grupo',
-          required_error: 'Debe seleccionar al menos un miembro',
-          invalid_type_error: 'Formato no válido',
-        }
-      )
-      .array(),
+    users: entitySchema({
+      description: 'Miembros que pertenecen al grupo',
+      required_error: 'Debe seleccionar al menos un miembro',
+      invalid_type_error: 'Formato no válido',
+    }).array(),
   },
   {
     description: 'Miembros que pertenecen al grupo',
