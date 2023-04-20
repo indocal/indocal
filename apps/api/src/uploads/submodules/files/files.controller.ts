@@ -2,17 +2,19 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Patch,
   Delete,
   Param,
   Query,
   Body,
   ParseUUIDPipe,
+  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
 import { PrismaService } from 'nestjs-prisma';
 import { File, Folder } from '@prisma/client';
 import imageSize from 'image-size';
@@ -162,6 +164,58 @@ export class FilesController {
     });
 
     return file ? this.createEnhancedFile(file) : null;
+  }
+
+  @Put(':id')
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('replace', 'file'),
+  })
+  @UseInterceptors(FileInterceptor('upload'))
+  async replace(
+    @Param('id', ParseUUIDPipe) id: UUID,
+    @UploadedFile() upload: Express.Multer.File
+  ): Promise<SingleEntityResponse<EnhancedFile>> {
+    const file = await this.prismaService.$transaction(async (tx) => {
+      const file = await tx.file.findUniqueOrThrow({
+        where: { id },
+        include: { folder: true },
+      });
+
+      if (fs.existsSync(path.join(process.cwd(), file.path))) {
+        fs.unlinkSync(path.join(process.cwd(), file.path));
+      }
+
+      const location = path.join(rootFolder, upload.filename);
+
+      const [mime] = upload.mimetype.split('/');
+
+      let width, height;
+
+      if (mime === 'image') {
+        const result = imageSize(location);
+
+        if (result) {
+          width = result.width;
+          height = result.height;
+        }
+      }
+
+      return await tx.file.update({
+        where: { id },
+        data: {
+          path: upload.path,
+          mime: upload.mimetype,
+          extension: path.extname(upload.filename),
+          size: upload.size,
+          name: Buffer.from(upload.originalname, 'latin1').toString('utf8'),
+          dimensions: width && height ? [width, height] : [],
+        },
+        include: { folder: true },
+      });
+    });
+
+    return this.createEnhancedFile(file);
   }
 
   @Patch(':id')

@@ -39,6 +39,11 @@ export interface FindOneFileByUUIDReturn {
   error: ServiceError | null;
 }
 
+export interface ReplaceFileReturn {
+  file: ApiFile | null;
+  error: ServiceError | null;
+}
+
 export interface UpdateFileReturn {
   file: ApiFile | null;
   error: ServiceError | null;
@@ -129,6 +134,30 @@ export class FilesService {
 
       return {
         file: response.data || null,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        file: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async replace(id: UUID, upload: File): Promise<ReplaceFileReturn> {
+    try {
+      const response = await this.config.axios.put<
+        SingleEntityResponse<ApiFile>,
+        AxiosResponse<SingleEntityResponse<ApiFile>, { upload: File }>,
+        { upload: File }
+      >(
+        `${ApiEndpoints.FILES}/${id}`,
+        { upload },
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+
+      return {
+        file: response.data,
         error: null,
       };
     } catch (error) {

@@ -154,7 +154,7 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
                           fontWeight: 'bolder',
                         }}
                       >
-                        {file.name}
+                        {file.caption || file.name}
                       </Typography>
                     </CardContent>
                   </CardActionArea>

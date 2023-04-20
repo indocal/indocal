@@ -5,14 +5,17 @@ import {
   FileCopy as FileIcon,
   ContentCopy as CopyIcon,
   Download as DownloadIcon,
+  CloudSync as ReplaceIcon,
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { useSWRConfig } from 'swr';
 
-import { File, ApiEndpoints } from '@indocal/services';
+import { Can, File, ApiEndpoints } from '@indocal/services';
 
 import { useFilesGallery } from '../../../../context';
+
+import { useEditFileDialog } from '../../context';
 
 export interface FileViewerProps {
   file: File;
@@ -24,6 +27,8 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
   const { mutate } = useSWRConfig();
 
   const { client, toggleEditFileDialog } = useFilesGallery();
+
+  const { toggleReplaceFileDialog } = useEditFileDialog();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -136,9 +141,17 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
           <DownloadIcon fontSize="small" />
         </IconButton>
 
-        <IconButton size="small" onClick={handleDelete}>
-          <DeleteIcon fontSize="small" color="error" />
-        </IconButton>
+        <Can I="replace" a="file">
+          <IconButton size="small" onClick={toggleReplaceFileDialog}>
+            <ReplaceIcon fontSize="small" />
+          </IconButton>
+        </Can>
+
+        <Can I="delete" a="file">
+          <IconButton size="small" onClick={handleDelete}>
+            <DeleteIcon fontSize="small" color="error" />
+          </IconButton>
+        </Can>
       </Stack>
 
       {file.mime.split('/')[0] !== 'audio' &&

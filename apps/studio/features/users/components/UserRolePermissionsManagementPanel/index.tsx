@@ -474,6 +474,13 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.file['upload']),
               },
               {
+                label: 'Reemplazar archivos',
+                action: 'replace',
+                checked:
+                  Boolean(permissions?.file) &&
+                  Boolean(permissions?.file['replace']),
+              },
+              {
                 label: 'Modificar',
                 action: 'update',
                 checked:

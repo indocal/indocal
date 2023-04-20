@@ -22,7 +22,8 @@ import { entitySchema } from '@indocal/utils';
 
 import { useFilesGallery } from '../../context';
 
-import { FileDetails, FileViewer } from './components';
+import { EditFileDialogProvider, useEditFileDialog } from './context';
+import { FileDetails, FileViewer, ReplaceFileDialog } from './components';
 
 type FormData = zod.infer<typeof schema>;
 
@@ -74,13 +75,15 @@ export interface EditFileDialogProps {
   file: File;
 }
 
-export const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
+const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
   const router = useRouter();
 
   const { mutate } = useSWRConfig();
 
   const { client, isEditFileDialogOpen, toggleEditFileDialog } =
     useFilesGallery();
+
+  const { isReplaceFileDialogOpen } = useEditFileDialog();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -165,104 +168,116 @@ export const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
   }, [isDirty, reset, toggleEditFileDialog]);
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="md"
-      open={isEditFileDialogOpen}
-      onClose={handleOnClose}
-    >
-      <DialogTitle>Editar archivo</DialogTitle>
+    <>
+      {isReplaceFileDialogOpen && <ReplaceFileDialog file={file} />}
 
-      <DialogContent dividers>
-        <Unstable_Grid2 container spacing={1}>
-          <Unstable_Grid2 xs={12}>
-            <FileDetails file={file} />
-          </Unstable_Grid2>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open={isEditFileDialogOpen}
+        onClose={handleOnClose}
+      >
+        <DialogTitle>Editar archivo</DialogTitle>
 
-          <Unstable_Grid2 xs={12} md={6} sx={{ height: 250 }}>
-            <FileViewer file={file} />
-          </Unstable_Grid2>
+        <DialogContent dividers>
+          <Unstable_Grid2 container spacing={1}>
+            <Unstable_Grid2 xs={12}>
+              <FileDetails file={file} />
+            </Unstable_Grid2>
 
-          <Unstable_Grid2
-            xs={12}
-            md={6}
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 250,
-            }}
-          >
-            <Stack
-              component="form"
-              autoComplete="off"
-              spacing={2}
-              sx={{ width: '100%' }}
+            <Unstable_Grid2 xs={12} md={6} sx={{ height: 250 }}>
+              <FileViewer file={file} />
+            </Unstable_Grid2>
+
+            <Unstable_Grid2
+              xs={12}
+              md={6}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
             >
-              <TextField
-                required
+              <Stack
+                component="form"
                 autoComplete="off"
-                size="small"
-                label="Nombre"
-                disabled={isSubmitting}
-                inputProps={register('name')}
-                error={Boolean(errors.name)}
-                helperText={errors.name?.message}
-              />
-
-              <TextField
-                autoComplete="off"
-                size="small"
-                label="Texto Alternativo"
-                disabled={isSubmitting}
-                inputProps={register('alt')}
-                error={Boolean(errors.alt)}
-                helperText={errors.alt?.message}
-              />
-
-              <TextField
-                autoComplete="off"
-                size="small"
-                label="Título"
-                disabled={isSubmitting}
-                inputProps={register('caption')}
-                error={Boolean(errors.caption)}
-                helperText={errors.caption?.message}
-              />
-
-              <Can I="read" a="folder">
-                <ControlledFoldersAutocomplete
+                spacing={2}
+                sx={{ width: '100%' }}
+              >
+                <TextField
                   required
-                  name="folder"
-                  label="Carpeta"
-                  control={control}
+                  autoComplete="off"
+                  size="small"
+                  label="Nombre"
                   disabled={isSubmitting}
-                  autocompleteProps={{
-                    getOptionDisabled: (option) =>
-                      option.id === file.folder?.id,
-                  }}
-                  textFieldProps={{ size: 'small' }}
+                  inputProps={register('name')}
+                  error={Boolean(errors.name)}
+                  helperText={errors.name?.message}
                 />
-              </Can>
-            </Stack>
-          </Unstable_Grid2>
-        </Unstable_Grid2>
-      </DialogContent>
 
-      <DialogActions>
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          color="primary"
-          loading={isSubmitting}
-          disabled={!isDirty}
-          onClick={handleSubmit(onSubmit)}
-        >
-          Editar
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
+                <TextField
+                  autoComplete="off"
+                  size="small"
+                  label="Texto Alternativo"
+                  disabled={isSubmitting}
+                  inputProps={register('alt')}
+                  error={Boolean(errors.alt)}
+                  helperText={errors.alt?.message}
+                />
+
+                <TextField
+                  autoComplete="off"
+                  size="small"
+                  label="Título"
+                  disabled={isSubmitting}
+                  inputProps={register('caption')}
+                  error={Boolean(errors.caption)}
+                  helperText={errors.caption?.message}
+                />
+
+                <Can I="read" a="folder">
+                  <ControlledFoldersAutocomplete
+                    required
+                    name="folder"
+                    label="Carpeta"
+                    control={control}
+                    disabled={isSubmitting}
+                    autocompleteProps={{
+                      getOptionDisabled: (option) =>
+                        option.id === file.folder?.id,
+                    }}
+                    textFieldProps={{ size: 'small' }}
+                  />
+                </Can>
+              </Stack>
+            </Unstable_Grid2>
+          </Unstable_Grid2>
+        </DialogContent>
+
+        <DialogActions>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            loading={isSubmitting}
+            disabled={!isDirty}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Editar
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
-export default EditFileDialog;
+const EditFileDialogWrapper: React.FC<EditFileDialogProps> = (props) => (
+  <EditFileDialogProvider>
+    <EditFileDialog {...props} />
+  </EditFileDialogProvider>
+);
+
+export { EditFileDialogWrapper as EditFileDialog };
+
+export default EditFileDialogWrapper;
