@@ -97,14 +97,20 @@ export const PhoneColumnReport: React.FC<PhoneColumnReportProps> = ({
             alignItems="center"
             spacing={1}
           >
-            {content.lastAnswers.map((answer, index) => (
-              <Unstable_Grid2 key={`${answer}-${index}`}>
-                <Chip
-                  label={formatPhone(answer, 'UI')}
-                  sx={{ fontStyle: 'italic' }}
-                />
-              </Unstable_Grid2>
-            ))}
+            {content.lastAnswers.length > 0 ? (
+              content.lastAnswers.map((answer, index) => (
+                <Unstable_Grid2 key={`${answer}-${index}`}>
+                  <Chip
+                    label={formatPhone(answer, 'UI')}
+                    sx={{ fontStyle: 'italic' }}
+                  />
+                </Unstable_Grid2>
+              ))
+            ) : (
+              <Typography variant="caption" color="text.secondary">
+                Sin datos
+              </Typography>
+            )}
           </Unstable_Grid2>
         </Stack>
       </Stack>

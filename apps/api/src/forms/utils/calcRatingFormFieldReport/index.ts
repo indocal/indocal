@@ -10,13 +10,11 @@ export function calcRatingFormFieldReport(
 ): void {
   const record = map.get(answer.field.id);
 
-  let total = 0;
-
   if (record) {
     const content = record.content as RatingFormFieldReport;
 
     if (typeof answer.content === 'number') {
-      total += answer.content;
+      const total = content.average * content.count + answer.content;
 
       map.set(answer.field.id, {
         field: answer.field,
@@ -38,14 +36,12 @@ export function calcRatingFormFieldReport(
     }
   } else {
     if (typeof answer.content === 'number') {
-      total += answer.content;
-
       map.set(answer.field.id, {
         field: answer.field,
         content: {
           count: 1,
           na: 0,
-          average: total,
+          average: answer.content,
         },
       });
     } else {

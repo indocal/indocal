@@ -110,21 +110,27 @@ export const TextItemReport: React.FC<TextItemReportProps> = ({ report }) => {
             alignItems="center"
             spacing={1}
           >
-            {content.lastAnswers.map((answer, index) => (
-              <Unstable_Grid2 key={`${answer}-${index}`}>
-                <Tooltip title={answer}>
-                  <Chip
-                    label={JSON.stringify(answer)}
-                    sx={{
-                      maxWidth: 200,
-                      textOverflow: 'ellipsis',
-                      fontStyle: 'italic',
-                      overflow: 'hidden',
-                    }}
-                  />
-                </Tooltip>
-              </Unstable_Grid2>
-            ))}
+            {content.lastAnswers.length > 0 ? (
+              content.lastAnswers.map((answer, index) => (
+                <Unstable_Grid2 key={`${answer}-${index}`}>
+                  <Tooltip title={answer}>
+                    <Chip
+                      label={JSON.stringify(answer)}
+                      sx={{
+                        maxWidth: 200,
+                        textOverflow: 'ellipsis',
+                        fontStyle: 'italic',
+                        overflow: 'hidden',
+                      }}
+                    />
+                  </Tooltip>
+                </Unstable_Grid2>
+              ))
+            ) : (
+              <Typography variant="caption" color="text.secondary">
+                Sin datos
+              </Typography>
+            )}
           </Unstable_Grid2>
         </Stack>
       </Stack>

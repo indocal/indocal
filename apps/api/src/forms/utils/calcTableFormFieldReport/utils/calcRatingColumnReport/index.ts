@@ -11,13 +11,11 @@ export function calcRatingColumnReport(
 ): void {
   const record = map.get(answer.column.id);
 
-  let total = 0;
-
   if (record) {
     const content = record.content as RatingFormFieldReport;
 
     if (typeof answer.content === 'number') {
-      total += answer.content;
+      const total = content.average * content.count + answer.content;
 
       map.set(answer.column.id, {
         column: answer.column,
@@ -39,14 +37,12 @@ export function calcRatingColumnReport(
     }
   } else {
     if (typeof answer.content === 'number') {
-      total += answer.content;
-
       map.set(answer.column.id, {
         column: answer.column,
         content: {
           count: 1,
           na: 0,
-          average: total,
+          average: answer.content,
         },
       });
     } else {

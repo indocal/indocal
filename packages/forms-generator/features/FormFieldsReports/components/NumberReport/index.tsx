@@ -110,21 +110,27 @@ export const NumberReport: React.FC<NumberReportProps> = ({ report }) => {
             alignItems="center"
             spacing={1}
           >
-            {content.lastAnswers.map((answer, index) => (
-              <Unstable_Grid2 key={`${answer}-${index}`}>
-                <Tooltip title={answer.toLocaleString()}>
-                  <Chip
-                    label={answer.toLocaleString()}
-                    sx={{
-                      maxWidth: 200,
-                      textOverflow: 'ellipsis',
-                      fontStyle: 'italic',
-                      overflow: 'hidden',
-                    }}
-                  />
-                </Tooltip>
-              </Unstable_Grid2>
-            ))}
+            {content.lastAnswers.length > 0 ? (
+              content.lastAnswers.map((answer, index) => (
+                <Unstable_Grid2 key={`${answer}-${index}`}>
+                  <Tooltip title={answer.toLocaleString()}>
+                    <Chip
+                      label={answer.toLocaleString()}
+                      sx={{
+                        maxWidth: 200,
+                        textOverflow: 'ellipsis',
+                        fontStyle: 'italic',
+                        overflow: 'hidden',
+                      }}
+                    />
+                  </Tooltip>
+                </Unstable_Grid2>
+              ))
+            ) : (
+              <Typography variant="caption" color="text.secondary">
+                Sin datos
+              </Typography>
+            )}
           </Unstable_Grid2>
         </Stack>
       </Stack>

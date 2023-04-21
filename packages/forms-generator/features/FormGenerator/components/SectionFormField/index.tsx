@@ -124,8 +124,10 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
             variant="caption"
             color="text.secondary"
             sx={{
+              paddingTop: (theme) => theme.spacing(1),
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
+              borderTop: (theme) => `1px solid ${theme.palette.divider}`,
               ...(errors[field.id] && {
                 color: (theme) => theme.palette.error.main,
               }),
