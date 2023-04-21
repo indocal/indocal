@@ -7,6 +7,7 @@ import {
   Typography,
   Chip,
   Rating,
+  Tooltip,
 } from '@mui/material';
 
 import { Chart, ChartSeries, ChartOptions } from '@indocal/ui';
@@ -110,14 +111,21 @@ export const RatingReport: React.FC<RatingReportProps> = ({ report }) => {
             Puntación promedio
           </Typography>
 
-          <Unstable_Grid2
-            container
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-          >
-            <Rating readOnly max={config?.levels} value={content.average} />
-          </Unstable_Grid2>
+          <Tooltip title={content.average.toFixed(2)}>
+            <Unstable_Grid2
+              container
+              justifyContent="center"
+              alignItems="center"
+              spacing={1}
+            >
+              <Rating
+                readOnly
+                precision={0.1}
+                max={config?.levels}
+                value={content.average}
+              />
+            </Unstable_Grid2>
+          </Tooltip>
         </Stack>
       </Stack>
     </Stack>
