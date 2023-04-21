@@ -4,7 +4,12 @@ import { Container, Unstable_Grid2 } from '@mui/material';
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { useService, UUID } from '@indocal/services';
 
-import { ServiceCard, FormCard, UserGroupCard } from '@/features';
+import {
+  ServiceCard,
+  FormCard,
+  UserGroupCard,
+  ServiceRequestsDataGrid,
+} from '@/features';
 
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -63,6 +68,12 @@ const ServicePage: EnhancedNextPage = () => {
             <Unstable_Grid2 xs={12} md={4}>
               <Widget>
                 <UserGroupCard group={service.group.id} />
+              </Widget>
+            </Unstable_Grid2>
+
+            <Unstable_Grid2 xs={12}>
+              <Widget>
+                <ServiceRequestsDataGrid service={service} />
               </Widget>
             </Unstable_Grid2>
           </Unstable_Grid2>
