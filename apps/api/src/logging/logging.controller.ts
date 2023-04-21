@@ -12,15 +12,13 @@ import { Log, ApiToken, User } from '@prisma/client';
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { ApiTokenEntity } from '../auth/submodules/api-tokens/entities';
-import { UserEntity } from '../auth/submodules/users/entities';
+import { JWT } from '../auth/types';
 
 import { LogEntity } from './entities';
 import { FindManyLogsParamsDto, CountLogsParamsDto } from './dto';
 
 class EnhancedLog extends LogEntity {
-  apiToken: ApiTokenEntity | null;
-  user: UserEntity | null;
+  authentication: JWT | null;
 }
 
 type CreateEnhancedLog = Log & {
@@ -39,8 +37,27 @@ export class LoggingController {
     ...rest
   }: CreateEnhancedLog): EnhancedLog {
     const log = new EnhancedLog(rest);
-    log.apiToken = apiToken ? new ApiTokenEntity(apiToken) : null;
-    log.user = user ? new UserEntity(user) : null;
+
+    log.authentication = apiToken
+      ? {
+          type: 'api-token',
+          apiToken: {
+            id: apiToken.id,
+            name: apiToken.name,
+            description: apiToken.description,
+          },
+        }
+      : user
+      ? {
+          type: 'user',
+          user: {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            name: user.name,
+          },
+        }
+      : null;
 
     return log;
   }

@@ -75,17 +75,16 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({ log }) => {
             </List>
           </Box>
 
-          {log.apiToken && (
-            <Box sx={{ flex: 5, height: 'fit-content' }}>
-              <ApiTokenCard apiToken={log.apiToken.id} />
-            </Box>
-          )}
-
-          {log.user && (
-            <Box sx={{ flex: 5, height: 'fit-content' }}>
-              <UserCard user={log.user.id} />
-            </Box>
-          )}
+          {log.authentication &&
+            (log.authentication.type === 'api-token' ? (
+              <Box sx={{ flex: 5, height: 'fit-content' }}>
+                <ApiTokenCard apiToken={log.authentication.apiToken.id} />
+              </Box>
+            ) : (
+              <Box sx={{ flex: 5, height: 'fit-content' }}>
+                <UserCard user={log.authentication.user.id} />
+              </Box>
+            ))}
         </Stack>
       </DialogContent>
 
