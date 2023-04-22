@@ -13,6 +13,7 @@ export enum Pages {
   FORMS_REPORTS = '/forms/reports',
   TICKETS = '/tickets',
   WAREHOUSE = '/warehouse',
+  SETTINGS = '/settings',
 }
 
 export default Pages;

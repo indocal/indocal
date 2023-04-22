@@ -6,6 +6,7 @@ import {
   ConfirmationNumber as RequestICon,
   SupportAgent as TicketsIcon,
   Warehouse as WarehouseIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
 
 import {
@@ -84,6 +85,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
               href: Pages.WAREHOUSE,
             },
           ],
+        },
+      },
+      {
+        type: 'ITEM',
+        item: {
+          show: true,
+          label: 'Configuración',
+          icon: <SettingsIcon />,
+          href: Pages.SETTINGS,
         },
       },
     ],
