@@ -3,16 +3,18 @@ import { Container, Unstable_Grid2, Stack } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { FormEntryAnswers } from '@indocal/forms-generator';
-import { useFormEntry, getShortUUID, UUID } from '@indocal/services';
+import { useServiceRequest, getShortUUID, UUID } from '@indocal/services';
 
-import { FormEntryCard, FormCard, UserCard } from '@/features';
+import { ServiceRequestCard, ServiceCard, UserCard } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
-const FormEntryPage: EnhancedNextPage = () => {
+const ServiceRequestPage: EnhancedNextPage = () => {
   const router = useRouter();
 
-  const { loading, entry, error } = useFormEntry(router.query.entry_id as UUID);
+  const { loading, request, error } = useServiceRequest(
+    router.query.request_id as UUID
+  );
 
   return (
     <Page
@@ -20,9 +22,9 @@ const FormEntryPage: EnhancedNextPage = () => {
       title={
         loading
           ? 'Cargando...'
-          : entry
-          ? `Entrada: ${getShortUUID(entry.id)}`
-          : 'Entrada no encontrada'
+          : request
+          ? `Solicitud: ${getShortUUID(request.id)}`
+          : 'Solicitud no encontrada'
       }
     >
       <Container
@@ -38,7 +40,7 @@ const FormEntryPage: EnhancedNextPage = () => {
           <Loader invisible message="Cargando datos..." />
         ) : error ? (
           <ErrorInfo error={error} />
-        ) : entry ? (
+        ) : request ? (
           <Unstable_Grid2
             container
             justifyContent="center"
@@ -48,23 +50,23 @@ const FormEntryPage: EnhancedNextPage = () => {
           >
             <Unstable_Grid2 xs={12} md={8}>
               <Widget disableDefaultSizes>
-                <FormEntryAnswers entry={entry} />
+                <FormEntryAnswers answers={request.entry.answers} />
               </Widget>
             </Unstable_Grid2>
 
             <Unstable_Grid2 xs={12} md={4}>
               <Stack spacing={1}>
                 <Widget>
-                  <FormEntryCard entry={entry} />
+                  <ServiceRequestCard request={request} />
                 </Widget>
 
                 <Widget>
-                  <FormCard form={entry.form.id} />
+                  <ServiceCard service={request.service.id} />
                 </Widget>
 
-                {entry.answeredBy && (
+                {request.requestedBy && (
                   <Widget>
-                    <UserCard user={entry.answeredBy.id} />
+                    <UserCard user={request.requestedBy.id} />
                   </Widget>
                 )}
               </Stack>
@@ -78,6 +80,8 @@ const FormEntryPage: EnhancedNextPage = () => {
   );
 };
 
-FormEntryPage.getLayout = (page) => <AdminDashboard>{page}</AdminDashboard>;
+ServiceRequestPage.getLayout = (page) => (
+  <AdminDashboard>{page}</AdminDashboard>
+);
 
-export default FormEntryPage;
+export default ServiceRequestPage;

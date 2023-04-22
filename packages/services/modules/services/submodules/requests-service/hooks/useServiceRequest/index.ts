@@ -22,7 +22,7 @@ export interface ServiceRequestHookReturn {
 export function useServiceRequest(id: UUID): ServiceRequestHookReturn {
   const { isLoading, isValidating, data, error, mutate } = useSWR<
     SingleEntityResponse<ServiceRequest>
-  >(`${ApiEndpoints.SUPPLIES_REQUESTS}/${id}`);
+  >(`${ApiEndpoints.SERVICES_REQUESTS}/${id}`);
 
   const handleRefetch = useCallback(async () => {
     await mutate();
