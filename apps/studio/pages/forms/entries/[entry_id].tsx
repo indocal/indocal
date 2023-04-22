@@ -48,7 +48,7 @@ const FormEntryPage: EnhancedNextPage = () => {
           >
             <Unstable_Grid2 xs={12} md={8}>
               <Widget disableDefaultSizes>
-                <FormEntryAnswers entry={entry} />
+                <FormEntryAnswers answers={entry.answers} />
               </Widget>
             </Unstable_Grid2>
 

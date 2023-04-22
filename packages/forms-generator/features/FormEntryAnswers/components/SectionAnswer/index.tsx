@@ -42,8 +42,6 @@ export interface SectionAnswerProps {
 }
 
 export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
-  const [expand, setExpand] = useState(false);
-
   const content = useMemo(
     () => answer.content as SectionFormFieldAnswer | null,
     [answer]
@@ -76,6 +74,8 @@ export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
     }),
     []
   );
+
+  const [expand, setExpand] = useState(Boolean(content && content.length <= 3));
 
   return (
     <Paper

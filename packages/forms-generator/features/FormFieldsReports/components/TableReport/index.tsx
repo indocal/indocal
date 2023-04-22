@@ -41,8 +41,6 @@ export interface TableReportProps {
 }
 
 export const TableReport: React.FC<TableReportProps> = ({ report }) => {
-  const [expand, setExpand] = useState(false);
-
   const content = useMemo(
     () => report.content as TableFormFieldReport,
     [report]
@@ -74,6 +72,8 @@ export const TableReport: React.FC<TableReportProps> = ({ report }) => {
     }),
     []
   );
+
+  const [expand, setExpand] = useState(Boolean(content && content.length <= 3));
 
   return (
     <Paper

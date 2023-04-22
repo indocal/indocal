@@ -47,8 +47,6 @@ export interface TableAnswerProps {
 }
 
 export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
-  const [expand, setExpand] = useState(false);
-
   const config = useMemo(
     () => answer.field.config as TableFormFieldConfig | null,
     [answer]
@@ -85,6 +83,8 @@ export const TableAnswer: React.FC<TableAnswerProps> = ({ answer }) => {
     }),
     []
   );
+
+  const [expand, setExpand] = useState(Boolean(content && content.length <= 3));
 
   return (
     <Paper

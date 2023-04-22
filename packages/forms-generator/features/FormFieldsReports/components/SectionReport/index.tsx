@@ -42,8 +42,6 @@ export interface SectionReportProps {
 }
 
 export const SectionReport: React.FC<SectionReportProps> = ({ report }) => {
-  const [expand, setExpand] = useState(false);
-
   const content = useMemo(
     () => report.content as SectionFormFieldReport,
     [report]
@@ -76,6 +74,8 @@ export const SectionReport: React.FC<SectionReportProps> = ({ report }) => {
     }),
     []
   );
+
+  const [expand, setExpand] = useState(Boolean(content && content.length <= 3));
 
   return (
     <Paper

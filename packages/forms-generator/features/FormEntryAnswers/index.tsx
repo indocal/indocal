@@ -1,7 +1,7 @@
 import { useMemo, createElement } from 'react';
 import { Stack, Divider } from '@mui/material';
 
-import { FormEntry } from '@indocal/services';
+import { FormFieldAnswer } from '@indocal/services';
 
 import {
   TextAnswer,
@@ -25,13 +25,13 @@ import {
 } from './components';
 
 export interface FormEntryAnswersProps {
-  entry: FormEntry;
+  answers: FormFieldAnswer[];
 }
 
 export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
-  entry,
+  answers,
 }) => {
-  const answers = useMemo(
+  const components = useMemo(
     () => ({
       TEXT: TextAnswer,
       TEXTAREA: TextAreaAnswer,
@@ -64,8 +64,8 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
 
   return (
     <Stack spacing={1} divider={<Divider flexItem />}>
-      {entry.answers.map((answer) =>
-        createElement(answers[answer.field.type], {
+      {answers.map((answer) =>
+        createElement(components[answer.field.type], {
           key: answer.field.id,
           answer,
         })
