@@ -4,6 +4,7 @@ import {
   TextField,
   AutocompleteProps,
   TextFieldProps,
+  debounce,
 } from '@mui/material';
 import { Controller, Control, ControllerProps } from 'react-hook-form';
 
@@ -87,7 +88,7 @@ export const ControlledSuppliesAutocomplete: React.FC<
           options={supplies}
           value={multiple ? value ?? [] : value ?? null}
           onChange={(_, value) => onChange(value)}
-          onInputChange={(_, value) => setInput(value)}
+          onInputChange={debounce((e) => setInput(e.target.value), 300)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={(option) => `(${option.code}) ${option.name}`}
           renderInput={(params) => (
