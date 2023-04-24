@@ -88,7 +88,7 @@ export const ControlledSuppliesAutocomplete: React.FC<
           options={supplies}
           value={multiple ? value ?? [] : value ?? null}
           onChange={(_, value) => onChange(value)}
-          onInputChange={debounce((e) => setInput(e.target.value), 300)}
+          onInputChange={debounce((e) => setInput(e.target.value), 400)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={(option) => `(${option.code}) ${option.name}`}
           renderInput={(params) => (

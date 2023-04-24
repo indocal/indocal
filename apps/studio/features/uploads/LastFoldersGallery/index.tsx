@@ -49,7 +49,7 @@ export const LastFoldersGallery: React.FC = () => {
           freeSolo
           size="small"
           options={[]}
-          onInputChange={debounce((e) => setSearch(e.target.value), 500)}
+          onInputChange={debounce((e) => setSearch(e.target.value), 400)}
           renderInput={(params) => (
             <TextField
               {...params}
