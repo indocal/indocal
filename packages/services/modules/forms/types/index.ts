@@ -4,6 +4,8 @@ export * from './UpdateFormDto';
 export * from './CountFormsParamsDto';
 export * from './FindManyFormsParamsDto';
 
+export * from './ReorderFormFieldsDto';
+
 export * from './FormEntriesPerMonth';
 export * from './CalcFormEntriesPerMonthParamsDto';
 

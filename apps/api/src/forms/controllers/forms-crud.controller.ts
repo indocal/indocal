@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Patch,
   Delete,
   Param,
@@ -25,6 +26,7 @@ import {
   CountFormsParamsDto,
   CreateFormDto,
   UpdateFormDto,
+  ReorderFormFieldsDto,
 } from '../dto';
 
 class EnhancedForm extends FormEntity {
@@ -175,6 +177,35 @@ export class FormsCRUDController {
     const form = await this.prismaService.form.delete({
       where: { id },
       include: { fields: true, group: true },
+    });
+
+    return this.createEnhancedForm(form);
+  }
+
+  @Put(':id/reorder-fields')
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('update', 'form'),
+  })
+  async reorderFields(
+    @Param('id') id: UUID,
+    @Body() reorderFieldsDto: ReorderFormFieldsDto
+  ) {
+    const form = await this.prismaService.$transaction(async (tx) => {
+      const form = await tx.form.update({
+        where: { id },
+        data: {
+          fields: {
+            update: reorderFieldsDto.sortedFields.map(({ field, order }) => ({
+              where: { id: field },
+              data: { order },
+            })),
+          },
+        },
+        include: { fields: true, group: true },
+      });
+
+      return form;
     });
 
     return this.createEnhancedForm(form);

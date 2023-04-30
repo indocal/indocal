@@ -12,6 +12,7 @@
     "@date-io/date-fns": "2.16.0",
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
+    "@hello-pangea/dnd": "16.2.0",
     "@hookform/resolvers": "3.1.0",
     "@indocal/forms-generator": "*",
     "@indocal/services": "*",

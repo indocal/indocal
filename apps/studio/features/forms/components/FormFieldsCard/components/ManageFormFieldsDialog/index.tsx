@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -35,9 +35,19 @@ import {
   TableChart as TableIcon,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from '@hello-pangea/dnd';
+import { useSWRConfig } from 'swr';
 
 import { NoData } from '@indocal/ui';
-import { Can, Form, FormFieldType } from '@indocal/services';
+import { Can, Form, FormFieldType, ApiEndpoints } from '@indocal/services';
+
+import { indocal } from '@/lib';
 
 import { useFormFieldsCard } from '../../context';
 import { AddFormFieldDialog, EditFormFieldDialog } from '../../components';
@@ -49,6 +59,8 @@ export interface ManageFormFieldsDialogProps {
 export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
   form,
 }) => {
+  const { mutate } = useSWRConfig();
+
   const {
     isManageFormFieldsDialogOpen,
     isAddFormFieldDialogOpen,
@@ -57,6 +69,8 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
     toggleAddFormFieldDialog,
     toggleEditFormFieldDialog,
   } = useFormFieldsCard();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [field, setField] = useState<Form['fields'][number] | null>(null);
 
@@ -104,6 +118,49 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
     toggleManageFormFieldsDialog();
   }, [toggleManageFormFieldsDialog]);
 
+  const [sortedFields, setSortedFields] = useState<Form['fields']>(form.fields);
+
+  useEffect(() => setSortedFields(form.fields), [form.fields]);
+
+  const handleReorder = useCallback(
+    async (result: DropResult) => {
+      if (result.destination) {
+        const fields = [...form.fields];
+        const [removed] = fields.splice(result.source.index, 1);
+        fields.splice(result.destination.index, 0, removed);
+
+        setSortedFields(fields);
+
+        const { form: updated, error } = await indocal.forms.reorderFields(
+          form.id,
+          {
+            sortedFields: fields.map((field, index) => ({
+              field: field.id,
+              order: index + 1,
+            })),
+          }
+        );
+
+        if (error) {
+          setSortedFields(form.fields);
+
+          enqueueSnackbar(
+            error.details
+              ? error.details.reduce(
+                  (acc, current) => (acc ? `${acc} | ${current}` : current),
+                  ``
+                )
+              : error.message,
+            { variant: 'error' }
+          );
+        } else {
+          await mutate(`${ApiEndpoints.FORMS}/${form.id}`, updated);
+        }
+      }
+    },
+    [form.id, form.fields, mutate, enqueueSnackbar]
+  );
+
   return (
     <>
       {isAddFormFieldDialogOpen && <AddFormFieldDialog form={form} />}
@@ -135,24 +192,52 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
         </DialogTitle>
 
         <DialogContent dividers>
-          {form.fields.length > 0 ? (
-            <List disablePadding>
-              {form.fields.map((field) => (
-                <ListItem key={field.id} divider>
-                  <ListItemIcon>{icons[field.type]}</ListItemIcon>
+          {sortedFields.length > 0 ? (
+            <DragDropContext onDragEnd={handleReorder}>
+              <Droppable droppableId="droppable_form_fields">
+                {(provided) => (
+                  <List
+                    disablePadding
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {sortedFields.map((field, index) => (
+                      <Draggable
+                        key={field.id}
+                        draggableId={field.id}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <ListItem
+                            divider
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <ListItemIcon>{icons[field.type]}</ListItemIcon>
 
-                  <ListItemText>{field.title}</ListItemText>
+                            <ListItemText>{field.title}</ListItemText>
 
-                  <Can I="update" a="formField">
-                    <ListItemSecondaryAction>
-                      <IconButton edge="end" onClick={() => handleEdit(field)}>
-                        <SettingsIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </Can>
-                </ListItem>
-              ))}
-            </List>
+                            <Can I="update" a="formField">
+                              <ListItemSecondaryAction>
+                                <IconButton
+                                  edge="end"
+                                  onClick={() => handleEdit(field)}
+                                >
+                                  <SettingsIcon />
+                                </IconButton>
+                              </ListItemSecondaryAction>
+                            </Can>
+                          </ListItem>
+                        )}
+                      </Draggable>
+                    ))}
+
+                    {provided.placeholder}
+                  </List>
+                )}
+              </Droppable>
+            </DragDropContext>
           ) : (
             <NoData message="El formulario no contiene campos" />
           )}

@@ -52,11 +52,16 @@ export class FormsFieldsController {
     @Param('form_id') formId: UUID,
     @Body() createFieldDto: CreateFormFieldDto
   ): Promise<SingleEntityResponse<EnhancedFormField>> {
+    const count = await this.prismaService.formField.count({
+      where: { form: { id: formId } },
+    });
+
     const field = await this.prismaService.formField.create({
       data: {
         type: createFieldDto.type,
         title: createFieldDto.title,
         description: createFieldDto.description,
+        order: count + 1,
         form: { connect: { id: formId } },
       },
       include: { form: true },

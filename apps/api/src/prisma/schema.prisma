@@ -176,7 +176,7 @@ model FormField {
   title       String
   description String?
 
-  order Int @default(autoincrement())
+  order Int
 
   config Json?
 

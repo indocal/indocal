@@ -13,6 +13,7 @@ import {
   Form,
   CreateFormDto,
   UpdateFormDto,
+  ReorderFormFieldsDto,
   CountFormsParamsDto,
   FindManyFormsParamsDto,
   FormEntriesPerMonth,
@@ -50,6 +51,11 @@ export interface UpdateFormReturn {
 }
 
 export interface DeleteFormReturn {
+  form: Form | null;
+  error: ServiceError | null;
+}
+
+export interface ReorderFormFieldsReturn {
   form: Form | null;
   error: ServiceError | null;
 }
@@ -179,6 +185,29 @@ export class FormsService {
       const response = await this.config.axios.delete<
         SingleEntityResponse<Form>
       >(`${ApiEndpoints.FORMS}/${id}`);
+
+      return {
+        form: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        form: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async reorderFields(
+    id: UUID,
+    data: ReorderFormFieldsDto
+  ): Promise<ReorderFormFieldsReturn> {
+    try {
+      const response = await this.config.axios.put<
+        SingleEntityResponse<Form>,
+        AxiosResponse<SingleEntityResponse<Form>, ReorderFormFieldsDto>,
+        ReorderFormFieldsDto
+      >(`${ApiEndpoints.FORMS}/${id}/reorder-fields`, data);
 
       return {
         form: response.data,
