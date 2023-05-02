@@ -106,7 +106,7 @@ export const ControlledFilesAutocomplete: React.FC<
           options={sortedByFolder}
           value={multiple ? value ?? [] : value ?? null}
           onChange={(_, value) => onChange(value)}
-          onInputChange={debounce((e) => setInput(e.target.value), 400)}
+          onInputChange={debounce((_, value) => setInput(value), 400)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={({ caption, mime, name }) =>
             caption ? `${caption} (${mime})` : name

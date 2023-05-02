@@ -105,7 +105,7 @@ export const FormsGallery: React.FC<FormsGalleryProps> = ({ forms }) => {
               freeSolo
               size="small"
               options={[]}
-              onInputChange={debounce((e) => setSearch(e.target.value), 400)}
+              onInputChange={debounce((_, value) => setSearch(value), 400)}
               renderInput={(params) => (
                 <TextField
                   {...params}

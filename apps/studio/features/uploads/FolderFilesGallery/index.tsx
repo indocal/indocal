@@ -57,7 +57,7 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
           freeSolo
           size="small"
           options={[]}
-          onInputChange={debounce((e) => setSearch(e.target.value), 400)}
+          onInputChange={debounce((_, value) => setSearch(value), 400)}
           renderInput={(params) => (
             <TextField
               {...params}

@@ -88,7 +88,7 @@ export const ControlledUsersAutocomplete: React.FC<
           options={users}
           value={multiple ? value ?? [] : value ?? null}
           onChange={(_, value) => onChange(value)}
-          onInputChange={debounce((e) => setInput(e.target.value), 400)}
+          onInputChange={debounce((_, value) => setInput(value), 400)}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={(option) => `${option.name} (${option.username})`}
           renderInput={(params) => (
