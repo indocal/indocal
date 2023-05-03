@@ -75,7 +75,7 @@ export class ServicesRequestsController {
 
       const entry = await tx.formEntry.create({
         data: {
-          answers: createRequestDto.formAnswers,
+          answers: createRequestDto.answers,
           form: { connect: { id: service.form.id } },
           answeredBy: { connect: { id: createRequestDto.requestedBy } },
         },

@@ -191,21 +191,17 @@ export class FormsCRUDController {
     @Param('id') id: UUID,
     @Body() reorderFieldsDto: ReorderFormFieldsDto
   ) {
-    const form = await this.prismaService.$transaction(async (tx) => {
-      const form = await tx.form.update({
-        where: { id },
-        data: {
-          fields: {
-            update: reorderFieldsDto.sortedFields.map(({ field, order }) => ({
-              where: { id: field },
-              data: { order },
-            })),
-          },
+    const form = await this.prismaService.form.update({
+      where: { id },
+      data: {
+        fields: {
+          update: reorderFieldsDto.sortedFields.map(({ field, order }) => ({
+            where: { id: field },
+            data: { order },
+          })),
         },
-        include: { fields: true, group: true },
-      });
-
-      return form;
+      },
+      include: { fields: true, group: true },
     });
 
     return this.createEnhancedForm(form);
