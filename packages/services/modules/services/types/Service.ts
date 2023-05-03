@@ -4,6 +4,20 @@ import { FormConfig, FormStatus, FormVisibility } from '../../forms';
 
 import { ServiceRequestStatus } from '../submodules';
 
+type SiblingStep = Entity & {
+  title: string;
+  description: string | null;
+};
+
+type Step = Entity & {
+  title: string;
+  description: string | null;
+  prevFailureStep: SiblingStep | null;
+  prevSuccessStep: SiblingStep | null;
+  nextFailureStep: SiblingStep | null;
+  nextSuccessStep: SiblingStep | null;
+};
+
 type Form = Entity & {
   slug: string;
   title: string;
@@ -25,6 +39,7 @@ export interface Service extends Entity {
   description: string | null;
   status: ServiceStatus;
   supportedRequestStatus: ServiceRequestStatus[];
+  steps: Step[];
   form: Form;
   group: Group;
 }

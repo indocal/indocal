@@ -75,9 +75,10 @@ model User {
   roles  UserRole[]
   groups UserGroup[]
 
-  formEntryHistory      FormEntry[]
-  serviceRequestHistory ServiceRequest[]
-  supplyRequestHistory  SupplyRequest[]
+  formEntries         FormEntry[]
+  serviceProcessSteps ServiceProcessStep[]
+  serviceRequests     ServiceRequest[]
+  supplyRequests      SupplyRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -249,6 +250,7 @@ model Service {
   status                 ServiceStatus          @default(DRAFT)
   supportedRequestStatus ServiceRequestStatus[]
 
+  steps    ServiceProcessStep[]
   requests ServiceRequest[]
 
   form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
@@ -264,6 +266,30 @@ enum ServiceStatus {
   HIDDEN
 }
 
+model ServiceProcessStep {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+
+  owners User[]
+
+  prevFailureStep   ServiceProcessStep? @relation("FailureStepSequence")
+  nextFailureStep   ServiceProcessStep? @relation("FailureStepSequence", fields: [nextFailureStepId], references: [id])
+  nextFailureStepId String?             @unique
+
+  prevSuccessStep   ServiceProcessStep? @relation("SuccessStepSequence")
+  nextSuccessStep   ServiceProcessStep? @relation("SuccessStepSequence", fields: [nextSuccessStepId], references: [id])
+  nextSuccessStepId String?             @unique
+
+  requests ServiceRequest[]
+
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model ServiceRequest {
   id String @id @default(uuid())
 
@@ -274,6 +300,9 @@ model ServiceRequest {
 
   requestedBy   User   @relation(fields: [requestedById], references: [id], onDelete: Restrict)
   requestedById String
+
+  currentStep   ServiceProcessStep? @relation(fields: [currentStepId], references: [id], onDelete: Restrict)
+  currentStepId String?
 
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
   serviceId String

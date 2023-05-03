@@ -5,10 +5,13 @@ import { AuthModule } from '@/auth';
 
 import ServicesController from './services.controller';
 
-import { ServicesRequestsModule } from './submodules';
+import {
+  ServicesProcessStepsModule,
+  ServicesRequestsModule,
+} from './submodules';
 
 @Module({
-  imports: [AuthModule, ServicesRequestsModule],
+  imports: [AuthModule, ServicesProcessStepsModule, ServicesRequestsModule],
   controllers: [ServicesController],
   providers: [PrismaService],
 })

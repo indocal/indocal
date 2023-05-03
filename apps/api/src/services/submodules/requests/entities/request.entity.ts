@@ -18,6 +18,9 @@ export class ServiceRequestEntity implements Entity, ServiceRequest {
   requestedById: string;
 
   @Exclude()
+  currentStepId: string | null;
+
+  @Exclude()
   serviceId: string;
 
   createdAt: Date;

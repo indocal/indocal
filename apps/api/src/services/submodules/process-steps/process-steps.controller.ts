@@ -1,0 +1,220 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  ParseUUIDPipe,
+  UseGuards,
+} from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
+import { ServiceProcessStep, Service } from '@prisma/client';
+
+import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
+import { PoliciesGuard, CheckPolicies } from '@/auth';
+
+import { ServiceEntity } from '../../entities';
+
+import { ServiceProcessStepEntity } from './entities';
+import {
+  CreateServiceProcessStepDto,
+  UpdateServiceProcessStepDto,
+} from './dto';
+
+class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
+  prevFailureStep: ServiceProcessStepEntity | null;
+  nextFailureStep: ServiceProcessStepEntity | null;
+  prevSuccessStep: ServiceProcessStepEntity | null;
+  nextSuccessStep: ServiceProcessStepEntity | null;
+  service: ServiceEntity;
+}
+
+type CreateEnhancedServiceProcessStep = ServiceProcessStep & {
+  prevFailureStep: ServiceProcessStep | null;
+  nextFailureStep: ServiceProcessStep | null;
+  prevSuccessStep: ServiceProcessStep | null;
+  nextSuccessStep: ServiceProcessStep | null;
+  service: Service;
+};
+
+@Controller()
+@UseGuards(PoliciesGuard)
+export class ServicesProcessStepsController {
+  constructor(private prismaService: PrismaService) {}
+
+  createEnhancedServiceProcessStep({
+    prevFailureStep,
+    nextFailureStep,
+    prevSuccessStep,
+    nextSuccessStep,
+    service,
+    ...rest
+  }: CreateEnhancedServiceProcessStep): EnhancedServiceProcessStep {
+    const step = new EnhancedServiceProcessStep(rest);
+
+    step.prevFailureStep = prevFailureStep
+      ? new ServiceProcessStepEntity(prevFailureStep)
+      : null;
+
+    step.nextFailureStep = nextFailureStep
+      ? new ServiceProcessStepEntity(nextFailureStep)
+      : null;
+
+    step.prevSuccessStep = prevSuccessStep
+      ? new ServiceProcessStepEntity(prevSuccessStep)
+      : null;
+
+    step.nextSuccessStep = nextSuccessStep
+      ? new ServiceProcessStepEntity(nextSuccessStep)
+      : null;
+
+    step.service = new ServiceEntity(service);
+
+    return step;
+  }
+
+  @Post('services/:service_id/steps')
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('create', 'service'),
+  })
+  async create(
+    @Param('service_id') serviceId: UUID,
+    @Body() createStepDto: CreateServiceProcessStepDto
+  ): Promise<SingleEntityResponse<EnhancedServiceProcessStep>> {
+    const step = await this.prismaService.serviceProcessStep.create({
+      data: {
+        title: createStepDto.title,
+        description: createStepDto.description,
+        service: { connect: { id: serviceId } },
+      },
+      include: {
+        prevFailureStep: true,
+        prevSuccessStep: true,
+        nextFailureStep: true,
+        nextSuccessStep: true,
+        service: true,
+      },
+    });
+
+    return this.createEnhancedServiceProcessStep(step);
+  }
+
+  @Get('services/:service_id/steps/count')
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('count', 'service'),
+  })
+  async count(@Param('service_id') serviceId: UUID): Promise<number> {
+    return await this.prismaService.serviceProcessStep.count({
+      where: { service: { id: serviceId } },
+    });
+  }
+
+  @Get('services/:service_id/steps')
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'service'),
+  })
+  async findAll(
+    @Param('service_id') serviceId: UUID
+  ): Promise<MultipleEntitiesResponse<EnhancedServiceProcessStep>> {
+    const [steps, count] = await this.prismaService.$transaction([
+      this.prismaService.serviceProcessStep.findMany({
+        where: { service: { id: serviceId } },
+        include: {
+          prevFailureStep: true,
+          prevSuccessStep: true,
+          nextFailureStep: true,
+          nextSuccessStep: true,
+          service: true,
+        },
+      }),
+      this.prismaService.serviceProcessStep.count({
+        where: { service: { id: serviceId } },
+      }),
+    ]);
+
+    return {
+      count,
+      entities: steps.map((step) =>
+        this.createEnhancedServiceProcessStep(step)
+      ),
+    };
+  }
+
+  @Get('services/steps/:id')
+  @CheckPolicies({
+    apiToken: { ANON: true, SERVICE: true },
+    user: (ability) => ability.can('read', 'service'),
+  })
+  async findOneByUUID(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<EnhancedServiceProcessStep | null>> {
+    const step = await this.prismaService.serviceProcessStep.findUnique({
+      where: { id },
+      include: {
+        prevFailureStep: true,
+        prevSuccessStep: true,
+        nextFailureStep: true,
+        nextSuccessStep: true,
+        service: true,
+      },
+    });
+
+    return step ? this.createEnhancedServiceProcessStep(step) : null;
+  }
+
+  @Patch('services/steps/:id')
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('update', 'service'),
+  })
+  async update(
+    @Param('id', ParseUUIDPipe) id: UUID,
+    @Body() updateStepDto: UpdateServiceProcessStepDto
+  ): Promise<SingleEntityResponse<EnhancedServiceProcessStep>> {
+    const step = await this.prismaService.serviceProcessStep.update({
+      where: { id },
+      data: {
+        title: updateStepDto.title,
+        description: updateStepDto.description,
+      },
+      include: {
+        prevFailureStep: true,
+        prevSuccessStep: true,
+        nextFailureStep: true,
+        nextSuccessStep: true,
+        service: true,
+      },
+    });
+
+    return this.createEnhancedServiceProcessStep(step);
+  }
+
+  @Delete('services/steps/:id')
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('delete', 'service'),
+  })
+  async delete(
+    @Param('id', ParseUUIDPipe) id: UUID
+  ): Promise<SingleEntityResponse<EnhancedServiceProcessStep>> {
+    const step = await this.prismaService.serviceProcessStep.delete({
+      where: { id },
+      include: {
+        prevFailureStep: true,
+        prevSuccessStep: true,
+        nextFailureStep: true,
+        nextSuccessStep: true,
+        service: true,
+      },
+    });
+
+    return this.createEnhancedServiceProcessStep(step);
+  }
+}
+
+export default ServicesProcessStepsController;

@@ -5,3 +5,5 @@ export * from './GenericServicesDataGrid';
 export * from './ServiceRequestCard';
 export * from './ServiceRequestsDataGrid';
 export * from './GenericServicesRequestsDataGrid';
+
+export * from './ServiceProcessStepsStepper';

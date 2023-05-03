@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Service, Form, UserGroup } from '@prisma/client';
+import { Service, ServiceProcessStep, Form, UserGroup } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
@@ -27,13 +27,31 @@ import {
   UpdateServiceDto,
 } from './dto';
 
+import { ServiceProcessStepEntity } from './submodules/process-steps/entities';
+
+class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
+  prevFailureStep: ServiceProcessStepEntity | null;
+  prevSuccessStep: ServiceProcessStepEntity | null;
+  nextFailureStep: ServiceProcessStepEntity | null;
+  nextSuccessStep: ServiceProcessStepEntity | null;
+}
+
 class EnhancedService extends ServiceEntity {
+  steps: EnhancedServiceProcessStep[];
   form: FormEntity;
   group: UserGroupEntity;
 }
 
 type CreateEnhancedService = Service & {
   form: Form & { group: UserGroup };
+  steps: Array<
+    ServiceProcessStep & {
+      prevFailureStep: ServiceProcessStep | null;
+      prevSuccessStep: ServiceProcessStep | null;
+      nextFailureStep: ServiceProcessStep | null;
+      nextSuccessStep: ServiceProcessStep | null;
+    }
+  >;
 };
 
 @Controller('services')
@@ -42,12 +60,43 @@ export class ServicesController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedService({
+    steps,
     form: { group, ...form },
     ...rest
   }: CreateEnhancedService): EnhancedService {
     const service = new EnhancedService(rest);
     service.form = new FormEntity(form);
     service.group = new UserGroupEntity(group);
+
+    service.steps = steps.map(
+      ({
+        prevFailureStep,
+        prevSuccessStep,
+        nextFailureStep,
+        nextSuccessStep,
+        ...rest
+      }) => {
+        const step = new EnhancedServiceProcessStep(rest);
+
+        step.prevFailureStep = prevFailureStep
+          ? new ServiceProcessStepEntity(prevFailureStep)
+          : null;
+
+        step.nextFailureStep = nextFailureStep
+          ? new ServiceProcessStepEntity(nextFailureStep)
+          : null;
+
+        step.prevSuccessStep = prevSuccessStep
+          ? new ServiceProcessStepEntity(prevSuccessStep)
+          : null;
+
+        step.nextSuccessStep = nextSuccessStep
+          ? new ServiceProcessStepEntity(nextSuccessStep)
+          : null;
+
+        return step;
+      }
+    );
 
     return service;
   }
@@ -67,7 +116,17 @@ export class ServicesController {
         supportedRequestStatus: createServiceDto.supportedRequestStatus,
         form: { connect: { id: createServiceDto.form } },
       },
-      include: { form: { include: { group: true } } },
+      include: {
+        steps: {
+          include: {
+            prevFailureStep: true,
+            prevSuccessStep: true,
+            nextFailureStep: true,
+            nextSuccessStep: true,
+          },
+        },
+        form: { include: { group: true } },
+      },
     });
 
     return this.createEnhancedService(service);
@@ -101,7 +160,17 @@ export class ServicesController {
         skip: query.pagination?.skip && Number(query.pagination.skip),
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
-        include: { form: { include: { group: true } } },
+        include: {
+          steps: {
+            include: {
+              prevFailureStep: true,
+              prevSuccessStep: true,
+              nextFailureStep: true,
+              nextSuccessStep: true,
+            },
+          },
+          form: { include: { group: true } },
+        },
       }),
       this.prismaService.service.count({
         where: query.filters,
@@ -125,7 +194,17 @@ export class ServicesController {
   ): Promise<SingleEntityResponse<EnhancedService | null>> {
     const service = await this.prismaService.service.findUnique({
       where: { id },
-      include: { form: { include: { group: true } } },
+      include: {
+        steps: {
+          include: {
+            prevFailureStep: true,
+            prevSuccessStep: true,
+            nextFailureStep: true,
+            nextSuccessStep: true,
+          },
+        },
+        form: { include: { group: true } },
+      },
     });
 
     return service ? this.createEnhancedService(service) : null;
@@ -152,7 +231,17 @@ export class ServicesController {
           form: { connect: { id: updateServiceDto.form } },
         }),
       },
-      include: { form: { include: { group: true } } },
+      include: {
+        steps: {
+          include: {
+            prevFailureStep: true,
+            prevSuccessStep: true,
+            nextFailureStep: true,
+            nextSuccessStep: true,
+          },
+        },
+        form: { include: { group: true } },
+      },
     });
 
     return this.createEnhancedService(service);
@@ -168,7 +257,17 @@ export class ServicesController {
   ): Promise<SingleEntityResponse<EnhancedService>> {
     const service = await this.prismaService.service.delete({
       where: { id },
-      include: { form: { include: { group: true } } },
+      include: {
+        steps: {
+          include: {
+            prevFailureStep: true,
+            prevSuccessStep: true,
+            nextFailureStep: true,
+            nextSuccessStep: true,
+          },
+        },
+        form: { include: { group: true } },
+      },
     });
 
     return this.createEnhancedService(service);

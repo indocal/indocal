@@ -17,7 +17,10 @@ import {
   FindManyServicesParamsDto,
 } from './types';
 
-import { ServicesRequestsService } from './submodules';
+import {
+  ServicesProcessStepsService,
+  ServicesRequestsService,
+} from './submodules';
 
 export interface CreateServiceReturn {
   service: Service | null;
@@ -51,9 +54,11 @@ export interface DeleteServiceReturn {
 }
 
 export class ServicesService {
+  steps: ServicesProcessStepsService;
   requests: ServicesRequestsService;
 
   constructor(private config: Config) {
+    this.steps = new ServicesProcessStepsService(config);
     this.requests = new ServicesRequestsService(config);
   }
 

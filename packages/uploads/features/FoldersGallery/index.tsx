@@ -191,7 +191,7 @@ const FoldersGallery: React.FC<FoldersGalleryProps> = ({
 
                 <CardMedia
                   sx={{
-                    display: 'Unstable_Grid2',
+                    display: 'grid',
                     placeContent: 'center',
                     placeItems: 'center',
                     padding: (theme) => theme.spacing(1),

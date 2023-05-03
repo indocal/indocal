@@ -5,7 +5,12 @@ import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { FormEntryAnswers } from '@indocal/forms-generator';
 import { useServiceRequest, getShortUUID, UUID } from '@indocal/services';
 
-import { ServiceRequestCard, ServiceCard, UserCard } from '@/features';
+import {
+  ServiceProcessStepsStepper,
+  ServiceRequestCard,
+  ServiceCard,
+  UserCard,
+} from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -48,6 +53,12 @@ const ServiceRequestPage: EnhancedNextPage = () => {
             spacing={1}
             sx={{ height: 'fit-content' }}
           >
+            <Unstable_Grid2 xs={12}>
+              <Widget disableDefaultSizes>
+                <ServiceProcessStepsStepper service={request.service.id} />
+              </Widget>
+            </Unstable_Grid2>
+
             <Unstable_Grid2 xs={12} md={8}>
               <Widget disableDefaultSizes>
                 <FormEntryAnswers answers={request.entry.answers} />

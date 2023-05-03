@@ -5,15 +5,18 @@ import {
   Card,
   CardHeader,
   CardContent,
+  CardActions,
   List,
   ListItem,
   ListItemText,
+  Button,
   IconButton,
   LinearProgress,
 } from '@mui/material';
 import {
   Launch as ViewDetailsIcon,
   Edit as EditIcon,
+  Handyman as SettingsIcon,
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
@@ -30,7 +33,7 @@ import {
 import { Pages } from '@/config';
 
 import { ServiceCardProvider, useServiceCard } from './context';
-import { EditServiceDialog } from './components';
+import { EditServiceDialog, ManageServiceProcessDialog } from './components';
 
 export interface ServiceCardProps {
   service: UUID | Service;
@@ -41,7 +44,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service: entity }) => {
     typeof entity === 'string' ? entity : entity.id
   );
 
-  const { isEditServiceDialogOpen, toggleEditServiceDialog } = useServiceCard();
+  const {
+    isEditServiceDialogOpen,
+    toggleEditServiceDialog,
+    isManageServiceProcessDialogOpen,
+    toggleManageServiceProcessDialog,
+  } = useServiceCard();
 
   const supportedRequestStatus = useMemo(() => {
     if (!service) return;
@@ -72,6 +80,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service: entity }) => {
       ) : service ? (
         <>
           {isEditServiceDialogOpen && <EditServiceDialog service={service} />}
+
+          {isManageServiceProcessDialogOpen && (
+            <ManageServiceProcessDialog service={service} />
+          )}
 
           {validating && (
             <LinearProgress
@@ -174,6 +186,20 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service: entity }) => {
               </ListItem>
             </List>
           </CardContent>
+
+          <Can I="update" a="service">
+            <CardActions>
+              <Button
+                fullWidth
+                size="small"
+                variant="contained"
+                endIcon={<SettingsIcon />}
+                onClick={toggleManageServiceProcessDialog}
+              >
+                Administrar procesos
+              </Button>
+            </CardActions>
+          </Can>
         </>
       ) : (
         <NoData message="No se han encontrado datos del servicio" />

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useId } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -118,6 +118,8 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
     toggleManageFormFieldsDialog();
   }, [toggleManageFormFieldsDialog]);
 
+  const droppableId = useId();
+
   const [sortedFields, setSortedFields] = useState<Form['fields']>(form.fields);
 
   useEffect(() => setSortedFields(form.fields), [form.fields]);
@@ -194,7 +196,7 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
         <DialogContent dividers>
           {sortedFields.length > 0 ? (
             <DragDropContext onDragEnd={handleReorder}>
-              <Droppable droppableId="droppable_form_fields">
+              <Droppable droppableId={droppableId}>
                 {(provided) => (
                   <List
                     disablePadding
