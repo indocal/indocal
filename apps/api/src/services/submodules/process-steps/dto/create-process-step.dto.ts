@@ -15,6 +15,22 @@ export class CreateServiceProcessStepDto {
   @IsUUID('all', { each: true })
   @ArrayMinSize(1)
   owners: UUID[];
+
+  @IsUUID()
+  @IsOptional()
+  prevFailureStep?: UUID;
+
+  @IsUUID()
+  @IsOptional()
+  prevSuccessStep?: UUID;
+
+  @IsUUID()
+  @IsOptional()
+  nextFailureStep?: UUID;
+
+  @IsUUID()
+  @IsOptional()
+  nextSuccessStep?: UUID;
 }
 
 export default CreateServiceProcessStepDto;

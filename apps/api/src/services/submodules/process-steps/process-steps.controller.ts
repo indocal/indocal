@@ -96,6 +96,22 @@ export class ServicesProcessStepsController {
         description: createStepDto.description,
         owners: { connect: createStepDto.owners.map((id) => ({ id })) },
         service: { connect: { id: serviceId } },
+
+        ...(createStepDto.prevFailureStep && {
+          prevFailureStep: { connect: { id: createStepDto.prevFailureStep } },
+        }),
+
+        ...(createStepDto.nextFailureStep && {
+          nextFailureStep: { connect: { id: createStepDto.nextFailureStep } },
+        }),
+
+        ...(createStepDto.prevSuccessStep && {
+          prevSuccessStep: { connect: { id: createStepDto.prevSuccessStep } },
+        }),
+
+        ...(createStepDto.nextSuccessStep && {
+          nextSuccessStep: { connect: { id: createStepDto.nextSuccessStep } },
+        }),
       },
       include: {
         owners: true,
@@ -194,6 +210,30 @@ export class ServicesProcessStepsController {
 
         ...(updateStepDto.owners && {
           owners: { set: updateStepDto.owners.map((id) => ({ id })) },
+        }),
+
+        ...(typeof updateStepDto.prevFailureStep !== 'undefined' && {
+          prevFailureStep: updateStepDto.prevFailureStep
+            ? { connect: { id: updateStepDto.prevFailureStep } }
+            : { disconnect: true },
+        }),
+
+        ...(typeof updateStepDto.nextFailureStep !== 'undefined' && {
+          nextFailureStep: updateStepDto.nextFailureStep
+            ? { connect: { id: updateStepDto.nextFailureStep } }
+            : { disconnect: true },
+        }),
+
+        ...(typeof updateStepDto.prevSuccessStep !== 'undefined' && {
+          prevSuccessStep: updateStepDto.prevSuccessStep
+            ? { connect: { id: updateStepDto.prevSuccessStep } }
+            : { disconnect: true },
+        }),
+
+        ...(typeof updateStepDto.nextSuccessStep !== 'undefined' && {
+          nextSuccessStep: updateStepDto.nextSuccessStep
+            ? { connect: { id: updateStepDto.nextSuccessStep } }
+            : { disconnect: true },
         }),
       },
       include: {

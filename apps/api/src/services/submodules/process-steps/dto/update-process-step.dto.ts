@@ -16,6 +16,22 @@ class UpdateServiceProcessStepDtoSchema {
   @IsUUID('all', { each: true })
   @ArrayMinSize(1)
   owners: UUID[];
+
+  @IsUUID()
+  @IsOptional()
+  prevFailureStep: UUID | null;
+
+  @IsUUID()
+  @IsOptional()
+  prevSuccessStep: UUID | null;
+
+  @IsUUID()
+  @IsOptional()
+  nextFailureStep: UUID | null;
+
+  @IsUUID()
+  @IsOptional()
+  nextSuccessStep: UUID | null;
 }
 
 export class UpdateServiceProcessStepDto extends PartialType(

@@ -24,6 +24,8 @@ import { indocal } from '@/lib';
 
 import { useServiceCard } from '../../context';
 
+import { ControlledServiceProcessStepsAutocomplete } from '../ControlledServiceProcessStepsAutocomplete';
+
 type FormData = zod.infer<typeof schema>;
 
 const schema = zod.object(
@@ -53,6 +55,30 @@ const schema = zod.object(
     })
       .array()
       .min(1, 'Debe seleccionar al menos un responsable'),
+
+    prevFailureStep: entitySchema({
+      description: 'Paso anterior en caso de "Fallo"',
+      required_error: 'Debe seleccionar el paso anterior en caso de "Fallo"',
+      invalid_type_error: 'Formato no válido',
+    }).optional(),
+
+    prevSuccessStep: entitySchema({
+      description: 'Paso anterior en caso de "Éxito"',
+      required_error: 'Debe seleccionar el paso anterior en caso de "Éxito"',
+      invalid_type_error: 'Formato no válido',
+    }).optional(),
+
+    nextFailureStep: entitySchema({
+      description: 'Paso siguiente en caso de "Fallo"',
+      required_error: 'Debe seleccionar el paso siguiente en caso de "Fallo"',
+      invalid_type_error: 'Formato no válido',
+    }).optional(),
+
+    nextSuccessStep: entitySchema({
+      description: 'Paso siguiente en caso de "Éxito"',
+      required_error: 'Debe seleccionar el paso siguiente en caso de "Éxito"',
+      invalid_type_error: 'Formato no válido',
+    }).optional(),
   },
   {
     description: 'Datos del paso',
@@ -100,6 +126,22 @@ export const AddServiceProcessStepDialog: React.FC<
         title: formData.title,
         ...(formData.description && { description: formData.description }),
         owners: formData.owners.map((owner) => owner.id),
+
+        ...(formData.prevFailureStep && {
+          prevFailureStep: formData.prevFailureStep.id,
+        }),
+
+        ...(formData.prevSuccessStep && {
+          prevSuccessStep: formData.prevSuccessStep.id,
+        }),
+
+        ...(formData.nextFailureStep && {
+          nextFailureStep: formData.nextFailureStep.id,
+        }),
+
+        ...(formData.nextSuccessStep && {
+          nextSuccessStep: formData.nextSuccessStep.id,
+        }),
       });
 
       if (error) {
@@ -142,6 +184,7 @@ export const AddServiceProcessStepDialog: React.FC<
   return (
     <Dialog
       fullWidth
+      maxWidth="md"
       open={isAddServiceProcessStepDialogOpen}
       onClose={handleOnClose}
     >
@@ -189,18 +232,60 @@ export const AddServiceProcessStepDialog: React.FC<
 
             <TabPanel value={Tabs.CONFIG}>
               <Stack spacing={2} divider={<Divider flexItem />}>
-                <Stack spacing={2}>
-                  <Can I="read" an="user">
-                    <ControlledUsersAutocomplete
-                      required
-                      multiple
-                      name="owners"
-                      label="Responsables"
-                      control={control as unknown as Control}
-                      disabled={isSubmitting}
-                    />
-                  </Can>
-                </Stack>
+                <Can I="read" an="user">
+                  <ControlledUsersAutocomplete
+                    required
+                    multiple
+                    name="owners"
+                    label="Responsables"
+                    control={control as unknown as Control}
+                    disabled={isSubmitting}
+                  />
+                </Can>
+
+                <Can I="read" a="service">
+                  <Stack spacing={2}>
+                    <Stack direction="row" spacing={1}>
+                      <ControlledServiceProcessStepsAutocomplete
+                        name="prevFailureStep"
+                        label='Paso anterior en caso de "Fallo"'
+                        service={service}
+                        control={control as unknown as Control}
+                        disabled={isSubmitting}
+                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                      />
+
+                      <ControlledServiceProcessStepsAutocomplete
+                        name="prevSuccessStep"
+                        label='Paso anterior en caso de "Éxito"'
+                        service={service}
+                        control={control as unknown as Control}
+                        disabled={isSubmitting}
+                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                      />
+                    </Stack>
+
+                    <Stack direction="row" spacing={1}>
+                      <ControlledServiceProcessStepsAutocomplete
+                        name="nextFailureStep"
+                        label='Paso siguiente en caso de "Fallo"'
+                        service={service}
+                        control={control as unknown as Control}
+                        disabled={isSubmitting}
+                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                      />
+
+                      <ControlledServiceProcessStepsAutocomplete
+                        name="nextSuccessStep"
+                        label='Paso siguiente en caso de "Éxito"'
+                        service={service}
+                        control={control as unknown as Control}
+                        disabled={isSubmitting}
+                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                      />
+                    </Stack>
+                  </Stack>
+                </Can>
               </Stack>
             </TabPanel>
           </TabContext>
