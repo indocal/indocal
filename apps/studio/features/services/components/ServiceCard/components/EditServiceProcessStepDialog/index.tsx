@@ -94,6 +94,7 @@ export const EditServiceProcessStepDialog: React.FC<
     defaultValues: {
       title: step.title,
       description: step.description,
+      owners: step.owners,
     },
   });
 
@@ -109,6 +110,10 @@ export const EditServiceProcessStepDialog: React.FC<
       const { error } = await indocal.services.steps.update(step.id, {
         title: formData.title,
         description: formData.description || null,
+
+        ...(formData.owners && {
+          owners: formData.owners.map((owner) => owner.id),
+        }),
       });
 
       if (error) {

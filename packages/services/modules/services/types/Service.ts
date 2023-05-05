@@ -1,8 +1,16 @@
 import { Entity } from '../../../common';
 
+import { UserStatus } from '../../auth';
 import { FormConfig, FormStatus, FormVisibility } from '../../forms';
 
 import { ServiceRequestStatus } from '../submodules';
+
+type Owner = Entity & {
+  username: string;
+  email: string;
+  name: string;
+  status: UserStatus;
+};
 
 type SiblingStep = Entity & {
   title: string;
@@ -12,6 +20,7 @@ type SiblingStep = Entity & {
 type Step = Entity & {
   title: string;
   description: string | null;
+  owners: Owner[];
   prevFailureStep: SiblingStep | null;
   prevSuccessStep: SiblingStep | null;
   nextFailureStep: SiblingStep | null;

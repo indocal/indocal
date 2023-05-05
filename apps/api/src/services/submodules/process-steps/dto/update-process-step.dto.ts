@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsUUID, ArrayMinSize, IsOptional } from 'class-validator';
 
-import { TrimParam } from '@/common';
+import { TrimParam, UUID } from '@/common';
 
 class UpdateServiceProcessStepDtoSchema {
   @IsString()
@@ -12,6 +12,10 @@ class UpdateServiceProcessStepDtoSchema {
   @IsOptional()
   @TrimParam()
   description: string | null;
+
+  @IsUUID('all', { each: true })
+  @ArrayMinSize(1)
+  owners: UUID[];
 }
 
 export class UpdateServiceProcessStepDto extends PartialType(

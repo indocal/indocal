@@ -10,11 +10,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { ServiceProcessStep, Service } from '@prisma/client';
+import { ServiceProcessStep, Service, User } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
+import { UserEntity } from '../../../auth/submodules/users/entities';
 import { ServiceEntity } from '../../entities';
 
 import { ServiceProcessStepEntity } from './entities';
@@ -24,6 +25,7 @@ import {
 } from './dto';
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
+  owners: UserEntity[];
   prevFailureStep: ServiceProcessStepEntity | null;
   nextFailureStep: ServiceProcessStepEntity | null;
   prevSuccessStep: ServiceProcessStepEntity | null;
@@ -32,6 +34,7 @@ class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
 }
 
 type CreateEnhancedServiceProcessStep = ServiceProcessStep & {
+  owners: User[];
   prevFailureStep: ServiceProcessStep | null;
   nextFailureStep: ServiceProcessStep | null;
   prevSuccessStep: ServiceProcessStep | null;
@@ -45,6 +48,7 @@ export class ServicesProcessStepsController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedServiceProcessStep({
+    owners,
     prevFailureStep,
     nextFailureStep,
     prevSuccessStep,
@@ -53,6 +57,8 @@ export class ServicesProcessStepsController {
     ...rest
   }: CreateEnhancedServiceProcessStep): EnhancedServiceProcessStep {
     const step = new EnhancedServiceProcessStep(rest);
+
+    step.owners = owners.map((owner) => new UserEntity(owner));
 
     step.prevFailureStep = prevFailureStep
       ? new ServiceProcessStepEntity(prevFailureStep)
@@ -88,9 +94,11 @@ export class ServicesProcessStepsController {
       data: {
         title: createStepDto.title,
         description: createStepDto.description,
+        owners: { connect: createStepDto.owners.map((id) => ({ id })) },
         service: { connect: { id: serviceId } },
       },
       include: {
+        owners: true,
         prevFailureStep: true,
         prevSuccessStep: true,
         nextFailureStep: true,
@@ -125,6 +133,7 @@ export class ServicesProcessStepsController {
       this.prismaService.serviceProcessStep.findMany({
         where: { service: { id: serviceId } },
         include: {
+          owners: true,
           prevFailureStep: true,
           prevSuccessStep: true,
           nextFailureStep: true,
@@ -156,6 +165,7 @@ export class ServicesProcessStepsController {
     const step = await this.prismaService.serviceProcessStep.findUnique({
       where: { id },
       include: {
+        owners: true,
         prevFailureStep: true,
         prevSuccessStep: true,
         nextFailureStep: true,
@@ -181,8 +191,13 @@ export class ServicesProcessStepsController {
       data: {
         title: updateStepDto.title,
         description: updateStepDto.description,
+
+        ...(updateStepDto.owners && {
+          owners: { set: updateStepDto.owners.map((id) => ({ id })) },
+        }),
       },
       include: {
+        owners: true,
         prevFailureStep: true,
         prevSuccessStep: true,
         nextFailureStep: true,
@@ -205,6 +220,7 @@ export class ServicesProcessStepsController {
     const step = await this.prismaService.serviceProcessStep.delete({
       where: { id },
       include: {
+        owners: true,
         prevFailureStep: true,
         prevSuccessStep: true,
         nextFailureStep: true,

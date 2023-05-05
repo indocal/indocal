@@ -11,12 +11,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Service, ServiceProcessStep, Form, UserGroup } from '@prisma/client';
+import {
+  Service,
+  ServiceProcessStep,
+  Form,
+  UserGroup,
+  User,
+} from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
 import { UserGroupEntity } from '../auth/submodules/groups/entities';
+import { UserEntity } from '../auth/submodules/users/entities';
 import { FormEntity } from '../forms/entities';
 
 import { ServiceEntity } from './entities';
@@ -30,6 +37,7 @@ import {
 import { ServiceProcessStepEntity } from './submodules/process-steps/entities';
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
+  owners: UserEntity[];
   prevFailureStep: ServiceProcessStepEntity | null;
   prevSuccessStep: ServiceProcessStepEntity | null;
   nextFailureStep: ServiceProcessStepEntity | null;
@@ -46,6 +54,7 @@ type CreateEnhancedService = Service & {
   form: Form & { group: UserGroup };
   steps: Array<
     ServiceProcessStep & {
+      owners: User[];
       prevFailureStep: ServiceProcessStep | null;
       prevSuccessStep: ServiceProcessStep | null;
       nextFailureStep: ServiceProcessStep | null;
@@ -70,6 +79,7 @@ export class ServicesController {
 
     service.steps = steps.map(
       ({
+        owners,
         prevFailureStep,
         prevSuccessStep,
         nextFailureStep,
@@ -77,6 +87,8 @@ export class ServicesController {
         ...rest
       }) => {
         const step = new EnhancedServiceProcessStep(rest);
+
+        step.owners = owners.map((owner) => new UserEntity(owner));
 
         step.prevFailureStep = prevFailureStep
           ? new ServiceProcessStepEntity(prevFailureStep)
@@ -119,6 +131,7 @@ export class ServicesController {
       include: {
         steps: {
           include: {
+            owners: true,
             prevFailureStep: true,
             prevSuccessStep: true,
             nextFailureStep: true,
@@ -163,6 +176,7 @@ export class ServicesController {
         include: {
           steps: {
             include: {
+              owners: true,
               prevFailureStep: true,
               prevSuccessStep: true,
               nextFailureStep: true,
@@ -197,6 +211,7 @@ export class ServicesController {
       include: {
         steps: {
           include: {
+            owners: true,
             prevFailureStep: true,
             prevSuccessStep: true,
             nextFailureStep: true,
@@ -234,6 +249,7 @@ export class ServicesController {
       include: {
         steps: {
           include: {
+            owners: true,
             prevFailureStep: true,
             prevSuccessStep: true,
             nextFailureStep: true,
@@ -260,6 +276,7 @@ export class ServicesController {
       include: {
         steps: {
           include: {
+            owners: true,
             prevFailureStep: true,
             prevSuccessStep: true,
             nextFailureStep: true,

@@ -99,6 +99,7 @@ export const AddServiceProcessStepDialog: React.FC<
       const { error } = await indocal.services.steps.create(service.id, {
         title: formData.title,
         ...(formData.description && { description: formData.description }),
+        owners: formData.owners.map((owner) => owner.id),
       });
 
       if (error) {
