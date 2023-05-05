@@ -21,10 +21,10 @@ type Step = Entity & {
   title: string;
   description: string | null;
   owners: Owner[];
-  prevFailureStep: SiblingStep | null;
-  prevSuccessStep: SiblingStep | null;
-  nextFailureStep: SiblingStep | null;
-  nextSuccessStep: SiblingStep | null;
+  prevStepOnReject: SiblingStep | null;
+  prevStepOnApprove: SiblingStep | null;
+  nextStepOnReject: SiblingStep | null;
+  nextStepOnApprove: SiblingStep | null;
 };
 
 type Form = Entity & {

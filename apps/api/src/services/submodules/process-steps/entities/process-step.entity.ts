@@ -13,10 +13,10 @@ export class ServiceProcessStepEntity implements Entity, ServiceProcessStep {
   description: string | null;
 
   @Exclude()
-  nextFailureStepId: string | null;
+  nextStepOnRejectId: string | null;
 
   @Exclude()
-  nextSuccessStepId: string | null;
+  nextStepOnApproveId: string | null;
 
   @Exclude()
   serviceId: string;

@@ -26,19 +26,19 @@ import {
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
-  prevFailureStep: ServiceProcessStepEntity | null;
-  nextFailureStep: ServiceProcessStepEntity | null;
-  prevSuccessStep: ServiceProcessStepEntity | null;
-  nextSuccessStep: ServiceProcessStepEntity | null;
+  prevStepOnReject: ServiceProcessStepEntity | null;
+  nextStepOnReject: ServiceProcessStepEntity | null;
+  prevStepOnApprove: ServiceProcessStepEntity | null;
+  nextStepOnApprove: ServiceProcessStepEntity | null;
   service: ServiceEntity;
 }
 
 type CreateEnhancedServiceProcessStep = ServiceProcessStep & {
   owners: User[];
-  prevFailureStep: ServiceProcessStep | null;
-  nextFailureStep: ServiceProcessStep | null;
-  prevSuccessStep: ServiceProcessStep | null;
-  nextSuccessStep: ServiceProcessStep | null;
+  prevStepOnReject: ServiceProcessStep | null;
+  nextStepOnReject: ServiceProcessStep | null;
+  prevStepOnApprove: ServiceProcessStep | null;
+  nextStepOnApprove: ServiceProcessStep | null;
   service: Service;
 };
 
@@ -49,10 +49,10 @@ export class ServicesProcessStepsController {
 
   createEnhancedServiceProcessStep({
     owners,
-    prevFailureStep,
-    nextFailureStep,
-    prevSuccessStep,
-    nextSuccessStep,
+    prevStepOnReject,
+    nextStepOnReject,
+    prevStepOnApprove,
+    nextStepOnApprove,
     service,
     ...rest
   }: CreateEnhancedServiceProcessStep): EnhancedServiceProcessStep {
@@ -60,20 +60,20 @@ export class ServicesProcessStepsController {
 
     step.owners = owners.map((owner) => new UserEntity(owner));
 
-    step.prevFailureStep = prevFailureStep
-      ? new ServiceProcessStepEntity(prevFailureStep)
+    step.prevStepOnReject = prevStepOnReject
+      ? new ServiceProcessStepEntity(prevStepOnReject)
       : null;
 
-    step.nextFailureStep = nextFailureStep
-      ? new ServiceProcessStepEntity(nextFailureStep)
+    step.nextStepOnReject = nextStepOnReject
+      ? new ServiceProcessStepEntity(nextStepOnReject)
       : null;
 
-    step.prevSuccessStep = prevSuccessStep
-      ? new ServiceProcessStepEntity(prevSuccessStep)
+    step.prevStepOnApprove = prevStepOnApprove
+      ? new ServiceProcessStepEntity(prevStepOnApprove)
       : null;
 
-    step.nextSuccessStep = nextSuccessStep
-      ? new ServiceProcessStepEntity(nextSuccessStep)
+    step.nextStepOnApprove = nextStepOnApprove
+      ? new ServiceProcessStepEntity(nextStepOnApprove)
       : null;
 
     step.service = new ServiceEntity(service);
@@ -97,28 +97,32 @@ export class ServicesProcessStepsController {
         owners: { connect: createStepDto.owners.map((id) => ({ id })) },
         service: { connect: { id: serviceId } },
 
-        ...(createStepDto.prevFailureStep && {
-          prevFailureStep: { connect: { id: createStepDto.prevFailureStep } },
+        ...(createStepDto.prevStepOnReject && {
+          prevStepOnReject: { connect: { id: createStepDto.prevStepOnReject } },
         }),
 
-        ...(createStepDto.nextFailureStep && {
-          nextFailureStep: { connect: { id: createStepDto.nextFailureStep } },
+        ...(createStepDto.nextStepOnReject && {
+          nextStepOnReject: { connect: { id: createStepDto.nextStepOnReject } },
         }),
 
-        ...(createStepDto.prevSuccessStep && {
-          prevSuccessStep: { connect: { id: createStepDto.prevSuccessStep } },
+        ...(createStepDto.prevStepOnApprove && {
+          prevStepOnApprove: {
+            connect: { id: createStepDto.prevStepOnApprove },
+          },
         }),
 
-        ...(createStepDto.nextSuccessStep && {
-          nextSuccessStep: { connect: { id: createStepDto.nextSuccessStep } },
+        ...(createStepDto.nextStepOnApprove && {
+          nextStepOnApprove: {
+            connect: { id: createStepDto.nextStepOnApprove },
+          },
         }),
       },
       include: {
         owners: true,
-        prevFailureStep: true,
-        prevSuccessStep: true,
-        nextFailureStep: true,
-        nextSuccessStep: true,
+        prevStepOnReject: true,
+        prevStepOnApprove: true,
+        nextStepOnReject: true,
+        nextStepOnApprove: true,
         service: true,
       },
     });
@@ -150,10 +154,10 @@ export class ServicesProcessStepsController {
         where: { service: { id: serviceId } },
         include: {
           owners: true,
-          prevFailureStep: true,
-          prevSuccessStep: true,
-          nextFailureStep: true,
-          nextSuccessStep: true,
+          prevStepOnReject: true,
+          prevStepOnApprove: true,
+          nextStepOnReject: true,
+          nextStepOnApprove: true,
           service: true,
         },
       }),
@@ -182,10 +186,10 @@ export class ServicesProcessStepsController {
       where: { id },
       include: {
         owners: true,
-        prevFailureStep: true,
-        prevSuccessStep: true,
-        nextFailureStep: true,
-        nextSuccessStep: true,
+        prevStepOnReject: true,
+        prevStepOnApprove: true,
+        nextStepOnReject: true,
+        nextStepOnApprove: true,
         service: true,
       },
     });
@@ -212,36 +216,36 @@ export class ServicesProcessStepsController {
           owners: { set: updateStepDto.owners.map((id) => ({ id })) },
         }),
 
-        ...(typeof updateStepDto.prevFailureStep !== 'undefined' && {
-          prevFailureStep: updateStepDto.prevFailureStep
-            ? { connect: { id: updateStepDto.prevFailureStep } }
+        ...(typeof updateStepDto.prevStepOnReject !== 'undefined' && {
+          prevStepOnReject: updateStepDto.prevStepOnReject
+            ? { connect: { id: updateStepDto.prevStepOnReject } }
             : { disconnect: true },
         }),
 
-        ...(typeof updateStepDto.nextFailureStep !== 'undefined' && {
-          nextFailureStep: updateStepDto.nextFailureStep
-            ? { connect: { id: updateStepDto.nextFailureStep } }
+        ...(typeof updateStepDto.nextStepOnReject !== 'undefined' && {
+          nextStepOnReject: updateStepDto.nextStepOnReject
+            ? { connect: { id: updateStepDto.nextStepOnReject } }
             : { disconnect: true },
         }),
 
-        ...(typeof updateStepDto.prevSuccessStep !== 'undefined' && {
-          prevSuccessStep: updateStepDto.prevSuccessStep
-            ? { connect: { id: updateStepDto.prevSuccessStep } }
+        ...(typeof updateStepDto.prevStepOnApprove !== 'undefined' && {
+          prevStepOnApprove: updateStepDto.prevStepOnApprove
+            ? { connect: { id: updateStepDto.prevStepOnApprove } }
             : { disconnect: true },
         }),
 
-        ...(typeof updateStepDto.nextSuccessStep !== 'undefined' && {
-          nextSuccessStep: updateStepDto.nextSuccessStep
-            ? { connect: { id: updateStepDto.nextSuccessStep } }
+        ...(typeof updateStepDto.nextStepOnApprove !== 'undefined' && {
+          nextStepOnApprove: updateStepDto.nextStepOnApprove
+            ? { connect: { id: updateStepDto.nextStepOnApprove } }
             : { disconnect: true },
         }),
       },
       include: {
         owners: true,
-        prevFailureStep: true,
-        prevSuccessStep: true,
-        nextFailureStep: true,
-        nextSuccessStep: true,
+        prevStepOnReject: true,
+        prevStepOnApprove: true,
+        nextStepOnReject: true,
+        nextStepOnApprove: true,
         service: true,
       },
     });
@@ -261,10 +265,10 @@ export class ServicesProcessStepsController {
       where: { id },
       include: {
         owners: true,
-        prevFailureStep: true,
-        prevSuccessStep: true,
-        nextFailureStep: true,
-        nextSuccessStep: true,
+        prevStepOnReject: true,
+        prevStepOnApprove: true,
+        nextStepOnReject: true,
+        nextStepOnApprove: true,
         service: true,
       },
     });

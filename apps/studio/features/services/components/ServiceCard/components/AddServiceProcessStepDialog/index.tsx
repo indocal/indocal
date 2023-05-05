@@ -56,29 +56,31 @@ const schema = zod.object(
       .array()
       .min(1, 'Debe seleccionar al menos un responsable'),
 
-    prevFailureStep: entitySchema({
-      description: 'Paso anterior en caso de "Fallo"',
-      required_error: 'Debe seleccionar el paso anterior en caso de "Fallo"',
+    prevStepOnReject: entitySchema({
+      description: 'Paso anterior en caso de "Rechazo"',
+      required_error: 'Debe seleccionar el paso anterior en caso de "Rechazo"',
       invalid_type_error: 'Formato no válido',
-    }).optional(),
+    }).nullish(),
 
-    prevSuccessStep: entitySchema({
-      description: 'Paso anterior en caso de "Éxito"',
-      required_error: 'Debe seleccionar el paso anterior en caso de "Éxito"',
+    prevStepOnApprove: entitySchema({
+      description: 'Paso anterior en caso de "Aprobación"',
+      required_error:
+        'Debe seleccionar el paso anterior en caso de "Aprobación"',
       invalid_type_error: 'Formato no válido',
-    }).optional(),
+    }).nullish(),
 
-    nextFailureStep: entitySchema({
-      description: 'Paso siguiente en caso de "Fallo"',
-      required_error: 'Debe seleccionar el paso siguiente en caso de "Fallo"',
+    nextStepOnReject: entitySchema({
+      description: 'Paso siguiente en caso de "Rechazo"',
+      required_error: 'Debe seleccionar el paso siguiente en caso de "Rechazo"',
       invalid_type_error: 'Formato no válido',
-    }).optional(),
+    }).nullish(),
 
-    nextSuccessStep: entitySchema({
-      description: 'Paso siguiente en caso de "Éxito"',
-      required_error: 'Debe seleccionar el paso siguiente en caso de "Éxito"',
+    nextStepOnApprove: entitySchema({
+      description: 'Paso siguiente en caso de "Aprobación"',
+      required_error:
+        'Debe seleccionar el paso siguiente en caso de "Aprobación"',
       invalid_type_error: 'Formato no válido',
-    }).optional(),
+    }).nullish(),
   },
   {
     description: 'Datos del paso',
@@ -127,20 +129,20 @@ export const AddServiceProcessStepDialog: React.FC<
         ...(formData.description && { description: formData.description }),
         owners: formData.owners.map((owner) => owner.id),
 
-        ...(formData.prevFailureStep && {
-          prevFailureStep: formData.prevFailureStep.id,
+        ...(formData.prevStepOnReject && {
+          prevStepOnReject: formData.prevStepOnReject.id,
         }),
 
-        ...(formData.prevSuccessStep && {
-          prevSuccessStep: formData.prevSuccessStep.id,
+        ...(formData.prevStepOnApprove && {
+          prevStepOnApprove: formData.prevStepOnApprove.id,
         }),
 
-        ...(formData.nextFailureStep && {
-          nextFailureStep: formData.nextFailureStep.id,
+        ...(formData.nextStepOnReject && {
+          nextStepOnReject: formData.nextStepOnReject.id,
         }),
 
-        ...(formData.nextSuccessStep && {
-          nextSuccessStep: formData.nextSuccessStep.id,
+        ...(formData.nextStepOnApprove && {
+          nextStepOnApprove: formData.nextStepOnApprove.id,
         }),
       });
 
@@ -247,8 +249,8 @@ export const AddServiceProcessStepDialog: React.FC<
                   <Stack spacing={2}>
                     <Stack direction="row" spacing={1}>
                       <ControlledServiceProcessStepsAutocomplete
-                        name="prevFailureStep"
-                        label='Paso anterior en caso de "Fallo"'
+                        name="prevStepOnReject"
+                        label='Paso anterior en caso de "Rechazo"'
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}
@@ -256,8 +258,8 @@ export const AddServiceProcessStepDialog: React.FC<
                       />
 
                       <ControlledServiceProcessStepsAutocomplete
-                        name="prevSuccessStep"
-                        label='Paso anterior en caso de "Éxito"'
+                        name="nextStepOnReject"
+                        label='Paso siguiente en caso de "Rechazo"'
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}
@@ -267,8 +269,8 @@ export const AddServiceProcessStepDialog: React.FC<
 
                     <Stack direction="row" spacing={1}>
                       <ControlledServiceProcessStepsAutocomplete
-                        name="nextFailureStep"
-                        label='Paso siguiente en caso de "Fallo"'
+                        name="prevStepOnApprove"
+                        label='Paso anterior en caso de "Aprobación"'
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}
@@ -276,8 +278,8 @@ export const AddServiceProcessStepDialog: React.FC<
                       />
 
                       <ControlledServiceProcessStepsAutocomplete
-                        name="nextSuccessStep"
-                        label='Paso siguiente en caso de "Éxito"'
+                        name="nextStepOnApprove"
+                        label='Paso siguiente en caso de "Aprobación"'
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}

@@ -19,19 +19,19 @@ class UpdateServiceProcessStepDtoSchema {
 
   @IsUUID()
   @IsOptional()
-  prevFailureStep: UUID | null;
+  prevStepOnReject: UUID | null;
 
   @IsUUID()
   @IsOptional()
-  prevSuccessStep: UUID | null;
+  prevStepOnApprove: UUID | null;
 
   @IsUUID()
   @IsOptional()
-  nextFailureStep: UUID | null;
+  nextStepOnReject: UUID | null;
 
   @IsUUID()
   @IsOptional()
-  nextSuccessStep: UUID | null;
+  nextStepOnApprove: UUID | null;
 }
 
 export class UpdateServiceProcessStepDto extends PartialType(

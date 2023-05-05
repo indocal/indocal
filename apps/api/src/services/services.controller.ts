@@ -38,10 +38,10 @@ import { ServiceProcessStepEntity } from './submodules/process-steps/entities';
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
-  prevFailureStep: ServiceProcessStepEntity | null;
-  prevSuccessStep: ServiceProcessStepEntity | null;
-  nextFailureStep: ServiceProcessStepEntity | null;
-  nextSuccessStep: ServiceProcessStepEntity | null;
+  prevStepOnReject: ServiceProcessStepEntity | null;
+  prevStepOnApprove: ServiceProcessStepEntity | null;
+  nextStepOnReject: ServiceProcessStepEntity | null;
+  nextStepOnApprove: ServiceProcessStepEntity | null;
 }
 
 class EnhancedService extends ServiceEntity {
@@ -55,10 +55,10 @@ type CreateEnhancedService = Service & {
   steps: Array<
     ServiceProcessStep & {
       owners: User[];
-      prevFailureStep: ServiceProcessStep | null;
-      prevSuccessStep: ServiceProcessStep | null;
-      nextFailureStep: ServiceProcessStep | null;
-      nextSuccessStep: ServiceProcessStep | null;
+      prevStepOnReject: ServiceProcessStep | null;
+      prevStepOnApprove: ServiceProcessStep | null;
+      nextStepOnReject: ServiceProcessStep | null;
+      nextStepOnApprove: ServiceProcessStep | null;
     }
   >;
 };
@@ -80,30 +80,30 @@ export class ServicesController {
     service.steps = steps.map(
       ({
         owners,
-        prevFailureStep,
-        prevSuccessStep,
-        nextFailureStep,
-        nextSuccessStep,
+        prevStepOnReject,
+        prevStepOnApprove,
+        nextStepOnReject,
+        nextStepOnApprove,
         ...rest
       }) => {
         const step = new EnhancedServiceProcessStep(rest);
 
         step.owners = owners.map((owner) => new UserEntity(owner));
 
-        step.prevFailureStep = prevFailureStep
-          ? new ServiceProcessStepEntity(prevFailureStep)
+        step.prevStepOnReject = prevStepOnReject
+          ? new ServiceProcessStepEntity(prevStepOnReject)
           : null;
 
-        step.nextFailureStep = nextFailureStep
-          ? new ServiceProcessStepEntity(nextFailureStep)
+        step.nextStepOnReject = nextStepOnReject
+          ? new ServiceProcessStepEntity(nextStepOnReject)
           : null;
 
-        step.prevSuccessStep = prevSuccessStep
-          ? new ServiceProcessStepEntity(prevSuccessStep)
+        step.prevStepOnApprove = prevStepOnApprove
+          ? new ServiceProcessStepEntity(prevStepOnApprove)
           : null;
 
-        step.nextSuccessStep = nextSuccessStep
-          ? new ServiceProcessStepEntity(nextSuccessStep)
+        step.nextStepOnApprove = nextStepOnApprove
+          ? new ServiceProcessStepEntity(nextStepOnApprove)
           : null;
 
         return step;
@@ -132,10 +132,10 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevFailureStep: true,
-            prevSuccessStep: true,
-            nextFailureStep: true,
-            nextSuccessStep: true,
+            prevStepOnReject: true,
+            prevStepOnApprove: true,
+            nextStepOnReject: true,
+            nextStepOnApprove: true,
           },
         },
         form: { include: { group: true } },
@@ -177,10 +177,10 @@ export class ServicesController {
           steps: {
             include: {
               owners: true,
-              prevFailureStep: true,
-              prevSuccessStep: true,
-              nextFailureStep: true,
-              nextSuccessStep: true,
+              prevStepOnReject: true,
+              prevStepOnApprove: true,
+              nextStepOnReject: true,
+              nextStepOnApprove: true,
             },
           },
           form: { include: { group: true } },
@@ -212,10 +212,10 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevFailureStep: true,
-            prevSuccessStep: true,
-            nextFailureStep: true,
-            nextSuccessStep: true,
+            prevStepOnReject: true,
+            prevStepOnApprove: true,
+            nextStepOnReject: true,
+            nextStepOnApprove: true,
           },
         },
         form: { include: { group: true } },
@@ -250,10 +250,10 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevFailureStep: true,
-            prevSuccessStep: true,
-            nextFailureStep: true,
-            nextSuccessStep: true,
+            prevStepOnReject: true,
+            prevStepOnApprove: true,
+            nextStepOnReject: true,
+            nextStepOnApprove: true,
           },
         },
         form: { include: { group: true } },
@@ -277,10 +277,10 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevFailureStep: true,
-            prevSuccessStep: true,
-            nextFailureStep: true,
-            nextSuccessStep: true,
+            prevStepOnReject: true,
+            prevStepOnApprove: true,
+            nextStepOnReject: true,
+            nextStepOnApprove: true,
           },
         },
         form: { include: { group: true } },

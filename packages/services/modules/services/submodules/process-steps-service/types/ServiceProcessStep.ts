@@ -29,10 +29,10 @@ export interface ServiceProcessStep extends Entity {
   title: string;
   description: string | null;
   owners: Owner[];
-  prevFailureStep: SiblingStep | null;
-  nextFailureStep: SiblingStep | null;
-  prevSuccessStep: SiblingStep | null;
-  nextSuccessStep: SiblingStep | null;
+  prevStepOnReject: SiblingStep | null;
+  nextStepOnReject: SiblingStep | null;
+  prevStepOnApprove: SiblingStep | null;
+  nextStepOnApprove: SiblingStep | null;
   service: Service;
 }
 

@@ -18,19 +18,19 @@ export class CreateServiceProcessStepDto {
 
   @IsUUID()
   @IsOptional()
-  prevFailureStep?: UUID;
+  prevStepOnReject?: UUID;
 
   @IsUUID()
   @IsOptional()
-  prevSuccessStep?: UUID;
+  prevStepOnApprove?: UUID;
 
   @IsUUID()
   @IsOptional()
-  nextFailureStep?: UUID;
+  nextStepOnReject?: UUID;
 
   @IsUUID()
   @IsOptional()
-  nextSuccessStep?: UUID;
+  nextStepOnApprove?: UUID;
 }
 
 export default CreateServiceProcessStepDto;

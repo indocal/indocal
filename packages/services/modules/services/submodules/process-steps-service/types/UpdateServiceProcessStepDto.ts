@@ -4,10 +4,10 @@ export type UpdateServiceProcessStepDto = Partial<{
   title: string;
   description: string | null;
   owners: UUID[];
-  prevFailureStep: UUID | null;
-  prevSuccessStep: UUID | null;
-  nextFailureStep: UUID | null;
-  nextSuccessStep: UUID | null;
+  prevStepOnReject: UUID | null;
+  prevStepOnApprove: UUID | null;
+  nextStepOnReject: UUID | null;
+  nextStepOnApprove: UUID | null;
 }>;
 
 export default UpdateServiceProcessStepDto;

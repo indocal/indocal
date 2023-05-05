@@ -4,10 +4,10 @@ export type CreateServiceProcessStepDto = {
   title: string;
   description?: string;
   owners: UUID[];
-  prevFailureStep?: UUID;
-  prevSuccessStep?: UUID;
-  nextFailureStep?: UUID;
-  nextSuccessStep?: UUID;
+  prevStepOnReject?: UUID;
+  prevStepOnApprove?: UUID;
+  nextStepOnReject?: UUID;
+  nextStepOnApprove?: UUID;
 };
 
 export default CreateServiceProcessStepDto;
