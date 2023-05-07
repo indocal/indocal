@@ -1,10 +1,8 @@
 import {
+  Box,
   Paper,
   Stack,
   Divider,
-  Stepper,
-  Step,
-  StepLabel,
   Button,
   LinearProgress,
 } from '@mui/material';
@@ -15,6 +13,8 @@ import {
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { useService, UUID, Service } from '@indocal/services';
+
+import { ServiceProcessStepsTree } from '@/features';
 
 export interface ServiceProcessStepsStepperProps {
   service: UUID | Service;
@@ -42,16 +42,9 @@ export const ServiceProcessStepsStepper: React.FC<
           )}
 
           <Stack direction="column" gap={2} divider={<Divider flexItem />}>
-            <Stepper
-              alternativeLabel
-              sx={{ padding: (theme) => theme.spacing(2), overflow: 'auto' }}
-            >
-              {service.steps.map((step) => (
-                <Step key={step.id}>
-                  <StepLabel>{step.title}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            <Box sx={{ height: 250 }}>
+              <ServiceProcessStepsTree service={service} />
+            </Box>
 
             <Stack
               direction="row"
