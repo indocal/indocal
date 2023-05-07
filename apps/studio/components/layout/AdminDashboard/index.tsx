@@ -3,6 +3,7 @@ import { Dashboard } from '@indocal/ui';
 import { Pages } from '@/config';
 
 import {
+  AdminDashboardAppBarContent,
   AdminDashboardDrawerHeader,
   AdminDashboardDrawerFooter,
 } from './components';
@@ -15,6 +16,7 @@ export const AdminDashboard: React.FC<React.PropsWithChildren> = ({
 
   return (
     <Dashboard
+      appBarContent={<AdminDashboardAppBarContent />}
       drawerHeader={<AdminDashboardDrawerHeader />}
       drawerNavigation={navigation}
       drawerNavigationRootPaths={[Pages.ROOT]}
