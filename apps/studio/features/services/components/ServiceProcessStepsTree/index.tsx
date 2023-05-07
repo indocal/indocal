@@ -1,22 +1,27 @@
 import { useMemo, useRef } from 'react';
 import { Paper } from '@mui/material';
 import dagre from 'dagre';
-import ReactFlow, { Background, Node, Edge, Position } from 'reactflow';
+import ReactFlow, {
+  Background,
+  Node,
+  NodeTypes,
+  Edge,
+  Position,
+} from 'reactflow';
 import 'reactflow/dist/style.css';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { useService, UUID, Service } from '@indocal/services';
 
+import { CustomStepNode, CustomStepNodeData } from './components';
 import { NODE_POSITION, NODE_WIDTH, NODE_HEIGHT } from './config';
-
-type NodeData = {
-  label: string;
-  step: Service['steps'][number];
-};
 
 export interface ServiceProcessStepsTreeProps {
   service: UUID | Service;
-  onStepClick?: (event: React.MouseEvent, node: Node<NodeData>) => void;
+  onStepClick?: (
+    event: React.MouseEvent,
+    node: Node<CustomStepNodeData>
+  ) => void;
 }
 
 export const ServiceProcessStepsTree: React.FC<
@@ -30,10 +35,16 @@ export const ServiceProcessStepsTree: React.FC<
   dagreGraphRef.current.setGraph({ rankdir: 'LR' });
   dagreGraphRef.current.setDefaultEdgeLabel(() => ({}));
 
+  const nodeTypes: NodeTypes = useMemo(
+    () => ({ ['custom-step']: CustomStepNode }),
+    []
+  );
+
   const { nodes, edges } = useMemo(() => {
     const nodes = service
       ? service.steps.map<Node>((step) => ({
           id: step.id,
+          type: 'custom-step',
           position: NODE_POSITION,
           sourcePosition: Position.Right,
           targetPosition: Position.Left,
@@ -52,7 +63,6 @@ export const ServiceProcessStepsTree: React.FC<
                 type: 'step',
                 source: step.id,
                 target: step.nextStepOnApprove.id,
-                label: 'Aprobado',
                 animated: true,
                 style: { stroke: 'green' },
               });
@@ -64,7 +74,6 @@ export const ServiceProcessStepsTree: React.FC<
                 type: 'step',
                 source: step.id,
                 target: step.nextStepOnReject.id,
-                label: 'Rechazado',
                 animated: true,
                 style: { stroke: 'red' },
               });
@@ -111,7 +120,7 @@ export const ServiceProcessStepsTree: React.FC<
         position: 'relative',
         width: '100%',
         height: '100%',
-        padding: (theme) => theme.spacing(2),
+        padding: (theme) => theme.spacing(1),
       }}
     >
       {loading ? (
@@ -121,6 +130,8 @@ export const ServiceProcessStepsTree: React.FC<
       ) : service ? (
         <ReactFlow
           fitView
+          attributionPosition="top-right"
+          nodeTypes={nodeTypes}
           nodes={nodes}
           edges={edges}
           onNodeClick={onStepClick}
