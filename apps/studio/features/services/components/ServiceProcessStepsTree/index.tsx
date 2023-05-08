@@ -3,6 +3,7 @@ import { Paper } from '@mui/material';
 import dagre from 'dagre';
 import ReactFlow, {
   Background,
+  Controls,
   Node,
   NodeTypes,
   Edge,
@@ -44,6 +45,8 @@ export const ServiceProcessStepsTree: React.FC<
     const nodes = service
       ? service.steps.map<Node>((step) => ({
           id: step.id,
+          draggable: false,
+          selectable: false,
           type: 'custom-step',
           position: NODE_POSITION,
           sourcePosition: Position.Right,
@@ -137,6 +140,8 @@ export const ServiceProcessStepsTree: React.FC<
           onNodeClick={onStepClick}
         >
           <Background />
+
+          <Controls showZoom={false} showInteractive={false} />
         </ReactFlow>
       ) : (
         <NoData message="No se han encontrado datos del servicio" />

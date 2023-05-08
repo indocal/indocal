@@ -15,7 +15,9 @@ export const CustomStepNode: React.FC<NodeProps<CustomStepNodeData>> = ({
   data,
 }) => (
   <>
-    <Handle type="target" position={Position.Left} />
+    {(data.step.prevStepOnApprove || data.step.prevStepOnReject) && (
+      <Handle type="target" position={Position.Left} />
+    )}
 
     <Paper
       elevation={4}
@@ -38,7 +40,9 @@ export const CustomStepNode: React.FC<NodeProps<CustomStepNodeData>> = ({
       <Typography variant="body1">{data.label}</Typography>
     </Paper>
 
-    <Handle type="source" position={Position.Right} />
+    {(data.step.nextStepOnApprove || data.step.nextStepOnReject) && (
+      <Handle type="source" position={Position.Right} />
+    )}
   </>
 );
 

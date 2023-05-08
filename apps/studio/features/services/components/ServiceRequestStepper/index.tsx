@@ -16,13 +16,13 @@ import { useService, UUID, Service } from '@indocal/services';
 
 import { ServiceProcessStepsTree } from '@/features';
 
-export interface ServiceProcessStepsStepperProps {
+export interface ServiceRequestStepperProps {
   service: UUID | Service;
 }
 
-export const ServiceProcessStepsStepper: React.FC<
-  ServiceProcessStepsStepperProps
-> = ({ service: entity }) => {
+export const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
+  service: entity,
+}) => {
   const { loading, validating, service, error } = useService(
     typeof entity === 'string' ? entity : entity.id
   );
@@ -79,4 +79,4 @@ export const ServiceProcessStepsStepper: React.FC<
   );
 };
 
-export default ServiceProcessStepsStepper;
+export default ServiceRequestStepper;

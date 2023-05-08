@@ -6,7 +6,7 @@ import { FormEntryAnswers } from '@indocal/forms-generator';
 import { useServiceRequest, getShortUUID, UUID } from '@indocal/services';
 
 import {
-  ServiceProcessStepsStepper,
+  ServiceRequestStepper,
   ServiceRequestCard,
   ServiceCard,
   UserCard,
@@ -55,7 +55,7 @@ const ServiceRequestPage: EnhancedNextPage = () => {
           >
             <Unstable_Grid2 xs={12}>
               <Widget disableDefaultSizes>
-                <ServiceProcessStepsStepper service={request.service.id} />
+                <ServiceRequestStepper service={request.service.id} />
               </Widget>
             </Unstable_Grid2>
 

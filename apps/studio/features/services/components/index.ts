@@ -7,4 +7,4 @@ export * from './ServiceRequestsDataGrid';
 export * from './GenericServicesRequestsDataGrid';
 
 export * from './ServiceProcessStepsTree';
-export * from './ServiceProcessStepsStepper';
+export * from './ServiceRequestStepper';
