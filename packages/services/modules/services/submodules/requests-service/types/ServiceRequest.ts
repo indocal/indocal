@@ -23,6 +23,28 @@ type Service = Entity & {
   supportedRequestStatus: ServiceRequestStatus[];
 };
 
+type CurrentStep = Entity & {
+  title: string;
+  description: string | null;
+  owners: Owner[];
+  prevStepOnReject: SiblingStep | null;
+  prevStepOnApprove: SiblingStep | null;
+  nextStepOnReject: SiblingStep | null;
+  nextStepOnApprove: SiblingStep | null;
+};
+
+type Owner = Entity & {
+  username: string;
+  email: string;
+  name: string;
+  status: UserStatus;
+};
+
+type SiblingStep = Entity & {
+  title: string;
+  description: string | null;
+};
+
 export type ServiceRequestStatus =
   | 'PENDING'
   | 'PENDING_APPROVAL'
@@ -36,6 +58,7 @@ export interface ServiceRequest extends Entity {
   entry: Entry;
   requestedBy: RequestedBy;
   service: Service;
+  currentStep: CurrentStep | null;
 }
 
 export default ServiceRequest;

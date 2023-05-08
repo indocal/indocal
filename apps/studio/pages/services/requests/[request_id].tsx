@@ -55,7 +55,7 @@ const ServiceRequestPage: EnhancedNextPage = () => {
           >
             <Unstable_Grid2 xs={12}>
               <Widget disableDefaultSizes>
-                <ServiceRequestStepper service={request.service.id} />
+                <ServiceRequestStepper request={request} />
               </Widget>
             </Unstable_Grid2>
 

@@ -11,7 +11,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { ServiceRequest, FormEntry, User, Service } from '@prisma/client';
+import {
+  ServiceRequest,
+  FormEntry,
+  User,
+  Service,
+  ServiceProcessStep,
+} from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
@@ -19,6 +25,8 @@ import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { FormEntryEntity } from '../../../forms/submodules/entries/entities';
 import { UserEntity } from '../../../auth/submodules/users/entities';
 import { ServiceEntity } from '../../entities';
+
+import { ServiceProcessStepEntity } from '../process-steps/entities';
 
 import { ServiceRequestEntity } from './entities';
 import {
@@ -28,16 +36,34 @@ import {
   UpdateServiceRequestDto,
 } from './dto';
 
+class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
+  owners: UserEntity[];
+  prevStepOnReject: ServiceProcessStepEntity | null;
+  prevStepOnApprove: ServiceProcessStepEntity | null;
+  nextStepOnReject: ServiceProcessStepEntity | null;
+  nextStepOnApprove: ServiceProcessStepEntity | null;
+}
+
 class EnhancedServiceRequest extends ServiceRequestEntity {
   entry: FormEntryEntity;
   requestedBy: UserEntity;
   service: ServiceEntity;
+  currentStep: EnhancedServiceProcessStep | null;
 }
 
 type CreateEnhancedServiceRequest = ServiceRequest & {
   entry: FormEntry;
   requestedBy: User;
   service: Service;
+  currentStep:
+    | (ServiceProcessStep & {
+        owners: User[];
+        prevStepOnReject: ServiceProcessStep | null;
+        prevStepOnApprove: ServiceProcessStep | null;
+        nextStepOnReject: ServiceProcessStep | null;
+        nextStepOnApprove: ServiceProcessStep | null;
+      })
+    | null;
 };
 
 @Controller('requests')
@@ -49,12 +75,39 @@ export class ServicesRequestsController {
     entry,
     requestedBy,
     service,
+    currentStep,
     ...rest
   }: CreateEnhancedServiceRequest): EnhancedServiceRequest {
     const request = new EnhancedServiceRequest(rest);
     request.entry = new FormEntryEntity(entry);
     request.requestedBy = new UserEntity(requestedBy);
     request.service = new ServiceEntity(service);
+
+    if (currentStep) {
+      request.currentStep = new EnhancedServiceProcessStep(currentStep);
+
+      request.currentStep.owners = currentStep.owners.map(
+        (owner) => new UserEntity(owner)
+      );
+
+      request.currentStep.prevStepOnReject = currentStep.prevStepOnReject
+        ? new ServiceProcessStepEntity(currentStep.prevStepOnReject)
+        : null;
+
+      request.currentStep.nextStepOnReject = currentStep.nextStepOnReject
+        ? new ServiceProcessStepEntity(currentStep.nextStepOnReject)
+        : null;
+
+      request.currentStep.prevStepOnApprove = currentStep.prevStepOnApprove
+        ? new ServiceProcessStepEntity(currentStep.prevStepOnApprove)
+        : null;
+
+      request.currentStep.nextStepOnApprove = currentStep.nextStepOnApprove
+        ? new ServiceProcessStepEntity(currentStep.nextStepOnApprove)
+        : null;
+    } else {
+      request.currentStep = null;
+    }
 
     return request;
   }
@@ -81,13 +134,35 @@ export class ServicesRequestsController {
         },
       });
 
+      const firstStep = await tx.serviceProcessStep.findFirst({
+        where: {
+          service: { id: service.id },
+          prevStepOnApprove: null,
+          prevStepOnReject: null,
+        },
+      });
+
       const request = await tx.serviceRequest.create({
         data: {
           entry: { connect: { id: entry.id } },
           requestedBy: { connect: { id: createRequestDto.requestedBy } },
           service: { connect: { id: createRequestDto.service } },
+          ...(firstStep && { currentStep: { connect: { id: firstStep.id } } }),
         },
-        include: { entry: true, requestedBy: true, service: true },
+        include: {
+          entry: true,
+          requestedBy: true,
+          service: true,
+          currentStep: {
+            include: {
+              owners: true,
+              prevStepOnReject: true,
+              prevStepOnApprove: true,
+              nextStepOnReject: true,
+              nextStepOnApprove: true,
+            },
+          },
+        },
       });
 
       return request;
@@ -124,7 +199,20 @@ export class ServicesRequestsController {
         skip: query.pagination?.skip && Number(query.pagination.skip),
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
-        include: { entry: true, requestedBy: true, service: true },
+        include: {
+          entry: true,
+          requestedBy: true,
+          service: true,
+          currentStep: {
+            include: {
+              owners: true,
+              prevStepOnReject: true,
+              prevStepOnApprove: true,
+              nextStepOnReject: true,
+              nextStepOnApprove: true,
+            },
+          },
+        },
       }),
       this.prismaService.serviceRequest.count({
         where: query.filters,
@@ -150,7 +238,20 @@ export class ServicesRequestsController {
   ): Promise<SingleEntityResponse<EnhancedServiceRequest | null>> {
     const request = await this.prismaService.serviceRequest.findUnique({
       where: { id },
-      include: { entry: true, requestedBy: true, service: true },
+      include: {
+        entry: true,
+        requestedBy: true,
+        service: true,
+        currentStep: {
+          include: {
+            owners: true,
+            prevStepOnReject: true,
+            prevStepOnApprove: true,
+            nextStepOnReject: true,
+            nextStepOnApprove: true,
+          },
+        },
+      },
     });
 
     return request ? this.createEnhancedServiceRequest(request) : null;
@@ -168,7 +269,20 @@ export class ServicesRequestsController {
     const request = await this.prismaService.serviceRequest.update({
       where: { id },
       data: { status: updateRequestDto.status },
-      include: { entry: true, requestedBy: true, service: true },
+      include: {
+        entry: true,
+        requestedBy: true,
+        service: true,
+        currentStep: {
+          include: {
+            owners: true,
+            prevStepOnReject: true,
+            prevStepOnApprove: true,
+            nextStepOnReject: true,
+            nextStepOnApprove: true,
+          },
+        },
+      },
     });
 
     return this.createEnhancedServiceRequest(request);
@@ -184,7 +298,20 @@ export class ServicesRequestsController {
   ): Promise<SingleEntityResponse<EnhancedServiceRequest>> {
     const request = await this.prismaService.serviceRequest.delete({
       where: { id },
-      include: { entry: true, requestedBy: true, service: true },
+      include: {
+        entry: true,
+        requestedBy: true,
+        service: true,
+        currentStep: {
+          include: {
+            owners: true,
+            prevStepOnReject: true,
+            prevStepOnApprove: true,
+            nextStepOnReject: true,
+            nextStepOnApprove: true,
+          },
+        },
+      },
     });
 
     return this.createEnhancedServiceRequest(request);

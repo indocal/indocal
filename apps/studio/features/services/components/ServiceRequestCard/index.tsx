@@ -129,6 +129,15 @@ const ServiceRequestCard: React.FC<ServiceRequestCardProps> = ({
                 />
               </ListItem>
 
+              {request.currentStep && (
+                <ListItem disablePadding>
+                  <ListItemText
+                    primary="Paso actual"
+                    secondary={request.currentStep.title}
+                  />
+                </ListItem>
+              )}
+
               <ListItem disablePadding>
                 <ListItemText
                   primary="Respondido por"

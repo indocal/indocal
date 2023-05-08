@@ -1,3 +1,4 @@
+import { useState, useCallback } from 'react';
 import {
   Box,
   Paper,
@@ -12,29 +13,57 @@ import {
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
-import { useService, UUID, Service } from '@indocal/services';
+import { useServiceRequest, UUID, ServiceRequest } from '@indocal/services';
 
 import { ServiceProcessStepsTree } from '@/features';
 
+import {
+  ServiceRequestStepperProvider,
+  useServiceRequestStepper,
+} from './context';
+import { UpdateCurrentStepDialog } from './components';
+
 export interface ServiceRequestStepperProps {
-  service: UUID | Service;
+  request: UUID | ServiceRequest;
 }
 
-export const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
-  service: entity,
+const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
+  request: entity,
 }) => {
-  const { loading, validating, service, error } = useService(
+  const { loading, validating, request, error } = useServiceRequest(
     typeof entity === 'string' ? entity : entity.id
+  );
+
+  const { isUpdateCurrentStepDialogOpen, toggleUpdateCurrentStepDialog } =
+    useServiceRequestStepper();
+
+  const [nextStepType, setNextStepType] = useState<
+    'nextStepOnApprove' | 'nextStepOnReject' | null
+  >(null);
+
+  const handleUpdateCurrentStep = useCallback(
+    (type: 'nextStepOnApprove' | 'nextStepOnReject') => {
+      setNextStepType(type);
+      toggleUpdateCurrentStepDialog();
+    },
+    [toggleUpdateCurrentStepDialog]
   );
 
   return (
     <Paper sx={{ position: 'relative', padding: (theme) => theme.spacing(2) }}>
       {loading ? (
-        <Loader invisible message="Cargando datos del servicio..." />
+        <Loader invisible message="Cargando datos de la solicitud..." />
       ) : error ? (
         <ErrorInfo error={error} />
-      ) : service ? (
+      ) : request ? (
         <>
+          {isUpdateCurrentStepDialogOpen && nextStepType && (
+            <UpdateCurrentStepDialog
+              request={request}
+              nextStepType={nextStepType}
+            />
+          )}
+
           {validating && (
             <LinearProgress
               sx={{ position: 'absolute', top: 0, left: 0, width: '100%' }}
@@ -43,40 +72,61 @@ export const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
 
           <Stack direction="column" gap={2} divider={<Divider flexItem />}>
             <Box sx={{ height: 250 }}>
-              <ServiceProcessStepsTree service={service} />
+              <ServiceProcessStepsTree
+                service={request.service.id}
+                selectedStep={request.currentStep?.id}
+              />
             </Box>
 
-            <Stack
-              direction="row"
-              justifyContent={{ xs: 'center', md: 'flex-end' }}
-              alignItems="center"
-              gap={1}
-            >
-              <Button
-                variant="contained"
-                size="small"
-                color="error"
-                endIcon={<RejectIcon />}
+            {request.currentStep && (
+              <Stack
+                direction="row"
+                justifyContent={{ xs: 'center', md: 'flex-end' }}
+                alignItems="center"
+                gap={1}
               >
-                Rechazar
-              </Button>
+                {request.currentStep.nextStepOnReject && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="error"
+                    endIcon={<RejectIcon />}
+                    onClick={() => handleUpdateCurrentStep('nextStepOnReject')}
+                  >
+                    Rechazar
+                  </Button>
+                )}
 
-              <Button
-                variant="contained"
-                size="small"
-                color="success"
-                endIcon={<ApproveIcon />}
-              >
-                Aprobar
-              </Button>
-            </Stack>
+                {request.currentStep.nextStepOnApprove && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="success"
+                    endIcon={<ApproveIcon />}
+                    onClick={() => handleUpdateCurrentStep('nextStepOnApprove')}
+                  >
+                    Aprobar
+                  </Button>
+                )}
+              </Stack>
+            )}
           </Stack>
         </>
       ) : (
-        <NoData message="No se han encontrado datos del servicio" />
+        <NoData message="No se han encontrado datos de la solicitud" />
       )}
     </Paper>
   );
 };
 
-export default ServiceRequestStepper;
+const ServiceRequestStepperWrapper: React.FC<ServiceRequestStepperProps> = (
+  props
+) => (
+  <ServiceRequestStepperProvider>
+    <ServiceRequestStepper {...props} />
+  </ServiceRequestStepperProvider>
+);
+
+export { ServiceRequestStepperWrapper as ServiceRequestStepper };
+
+export default ServiceRequestStepperWrapper;

@@ -19,6 +19,7 @@ import { NODE_POSITION, NODE_WIDTH, NODE_HEIGHT } from './config';
 
 export interface ServiceProcessStepsTreeProps {
   service: UUID | Service;
+  selectedStep?: UUID | Service['steps'][number];
   onStepClick?: (
     event: React.MouseEvent,
     node: Node<CustomStepNodeData>
@@ -27,7 +28,7 @@ export interface ServiceProcessStepsTreeProps {
 
 export const ServiceProcessStepsTree: React.FC<
   ServiceProcessStepsTreeProps
-> = ({ service: entity, onStepClick }) => {
+> = ({ service: entity, selectedStep, onStepClick }) => {
   const { loading, service, error } = useService(
     typeof entity === 'string' ? entity : entity.id
   );
@@ -52,6 +53,12 @@ export const ServiceProcessStepsTree: React.FC<
           sourcePosition: Position.Right,
           targetPosition: Position.Left,
           data: { step, label: step.title },
+          ...(selectedStep && {
+            selected:
+              typeof selectedStep === 'string'
+                ? selectedStep === step.id
+                : selectedStep.id === step.id,
+          }),
         }))
       : [];
 
@@ -115,7 +122,7 @@ export const ServiceProcessStepsTree: React.FC<
     }
 
     return { nodes, edges };
-  }, [service]);
+  }, [service, selectedStep]);
 
   return (
     <Paper
