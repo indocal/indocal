@@ -15,6 +15,7 @@ export const Markdown: React.FC<MarkdownProps> = ({ children }) => (
       height: '100%',
       overflow: 'auto',
       marginY: (theme) => theme.spacing(1),
+      color: (theme) => `${theme.palette.text.secondary} !important`,
       backgroundColor: 'transparent !important',
     }}
   >
