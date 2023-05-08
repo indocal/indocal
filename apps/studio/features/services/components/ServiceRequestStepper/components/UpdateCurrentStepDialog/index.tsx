@@ -39,17 +39,19 @@ export const UpdateCurrentStepDialog: React.FC<
 
   const onSubmit = useCallback(async (formData: FormData) => {}, []);
 
+  // TODO: Implementar el formulario
   const handleOnClose = useCallback(async () => {
     if (!false) {
       toggleUpdateCurrentStepDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleUpdateCurrentStepDialog();
+      confirm({
+        title: 'Cancelar acción',
+        description: 'Estás seguro de que deseas cancelar esta acción?',
+      }).then(() => {
+        toggleEditServiceProcessStepDialog();
+        reset();
+        toggleUpdateCurrentStepDialog();
+      });
     }
   }, [toggleUpdateCurrentStepDialog]);
 

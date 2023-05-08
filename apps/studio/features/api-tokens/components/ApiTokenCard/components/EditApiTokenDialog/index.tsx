@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -77,6 +78,8 @@ export const EditApiTokenDialog: React.FC<EditApiTokenDialogProps> = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -125,20 +128,21 @@ export const EditApiTokenDialog: React.FC<EditApiTokenDialogProps> = ({
     [apiToken.id, mutate, toggleEditApiTokenDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleEditApiTokenDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleEditApiTokenDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleEditApiTokenDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleEditApiTokenDialog]);
+  }, [isDirty, reset, toggleEditApiTokenDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isEditApiTokenDialogOpen} onClose={handleOnClose}>

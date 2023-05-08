@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo, useCallback, useId } from 'react';
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
+  AppBar,
+  Toolbar,
   List,
   ListItem,
   ListItemText,
@@ -176,22 +177,23 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
         open={isManageFormFieldsDialogOpen}
         onClose={handleOnClose}
       >
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: (theme) => theme.spacing(1),
-          }}
-        >
-          <Typography fontWeight="bolder">Campos</Typography>
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar
+            sx={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: (theme) => theme.spacing(1),
+            }}
+          >
+            <Typography fontWeight="bolder">Campos</Typography>
 
-          <Can I="create" a="formField">
-            <IconButton onClick={toggleAddFormFieldDialog}>
-              <AddIcon />
-            </IconButton>
-          </Can>
-        </DialogTitle>
+            <Can I="create" a="formField">
+              <IconButton color="inherit" onClick={toggleAddFormFieldDialog}>
+                <AddIcon />
+              </IconButton>
+            </Can>
+          </Toolbar>
+        </AppBar>
 
         <DialogContent dividers>
           {sortedFields.length > 0 ? (

@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -101,6 +102,8 @@ export const AddFormFieldDialog: React.FC<AddFormFieldDialogProps> = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -144,20 +147,21 @@ export const AddFormFieldDialog: React.FC<AddFormFieldDialogProps> = ({
     [form.id, mutate, toggleAddFormFieldDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddFormFieldDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddFormFieldDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddFormFieldDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddFormFieldDialog]);
+  }, [isDirty, reset, toggleAddFormFieldDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isAddFormFieldDialogOpen} onClose={handleOnClose}>

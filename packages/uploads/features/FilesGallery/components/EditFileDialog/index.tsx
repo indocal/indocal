@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -87,6 +88,8 @@ const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -152,20 +155,21 @@ const EditFileDialog: React.FC<EditFileDialogProps> = ({ file }) => {
     ]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleEditFileDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleEditFileDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleEditFileDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleEditFileDialog]);
+  }, [isDirty, reset, toggleEditFileDialog, confirm]);
 
   return (
     <>

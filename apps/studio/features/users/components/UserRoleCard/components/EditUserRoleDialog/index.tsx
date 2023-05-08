@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -74,6 +75,8 @@ export const EditUserRoleDialog: React.FC<EditUserRoleDialogProps> = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -121,20 +124,21 @@ export const EditUserRoleDialog: React.FC<EditUserRoleDialogProps> = ({
     [role.id, mutate, toggleEditUserRoleDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleEditUserRoleDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleEditUserRoleDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleEditUserRoleDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleEditUserRoleDialog]);
+  }, [isDirty, reset, toggleEditUserRoleDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isEditUserRoleDialogOpen} onClose={handleOnClose}>

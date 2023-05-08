@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,6 +50,8 @@ export const ReplaceFileDialog: React.FC<ReplaceFileDialogProps> = ({
     useEditFileDialog();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting },
@@ -105,20 +108,21 @@ export const ReplaceFileDialog: React.FC<ReplaceFileDialogProps> = ({
     ]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleReplaceFileDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleReplaceFileDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleReplaceFileDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleReplaceFileDialog]);
+  }, [isDirty, reset, toggleReplaceFileDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isReplaceFileDialogOpen} onClose={handleOnClose}>

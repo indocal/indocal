@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Logout as SignOutIcon } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import { useDashboard } from '@indocal/ui';
 import { useAppAbility } from '@indocal/services';
@@ -21,22 +22,37 @@ export const AdminDashboardDrawerFooter: React.FC = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const handleSignOut = useCallback(() => {
-    const answer = window.confirm('¿Estás seguro de que deseas cerrar sesión?');
+    confirm({
+      title: '¿Estás seguro de que deseas cerrar sesión?',
+      description:
+        'Si cierras sesión, no podrás acceder a la aplicación hasta que vuelvas a iniciar sesión.',
 
-    if (!answer) return;
-
-    signOut()
-      .then(() => indocal.auth.signOut().then(() => ability.update([])))
-      .catch((error) =>
-        enqueueSnackbar(
-          error instanceof Error
-            ? error.message
-            : 'Ha ocurrido un error al cerrar sesión, inténtelo de nuevo. Si el error persiste, contacte al soporte',
-          { variant: 'error' }
-        )
-      );
-  }, [ability, enqueueSnackbar]);
+      confirmationText: 'Cerrar sesión',
+      confirmationButtonProps: { color: 'error' },
+      cancellationButtonProps: { color: 'primary' },
+    })
+      .then(() =>
+        signOut()
+          .then(() =>
+            indocal.auth
+              .signOut()
+              .then(() => ability.update([]))
+              .catch(() => undefined)
+          )
+          .catch((error) =>
+            enqueueSnackbar(
+              error instanceof Error
+                ? error.message
+                : 'Ha ocurrido un error al cerrar sesión, inténtelo de nuevo. Si el error persiste, contacte al soporte',
+              { variant: 'error' }
+            )
+          )
+      )
+      .catch(() => undefined);
+  }, [ability, enqueueSnackbar, confirm]);
 
   return (
     <Tooltip

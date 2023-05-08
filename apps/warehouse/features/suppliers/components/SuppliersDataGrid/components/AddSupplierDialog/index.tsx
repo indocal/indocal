@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
@@ -56,6 +57,8 @@ export const AddSupplierDialog: React.FC = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -94,20 +97,21 @@ export const AddSupplierDialog: React.FC = () => {
     [router, toggleAddSupplierDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddSupplierDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddSupplierDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddSupplierDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddSupplierDialog]);
+  }, [isDirty, reset, toggleAddSupplierDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isAddSupplierDialogOpen} onClose={handleOnClose}>

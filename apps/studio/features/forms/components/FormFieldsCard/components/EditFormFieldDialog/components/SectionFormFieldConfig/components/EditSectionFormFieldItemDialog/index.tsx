@@ -9,6 +9,7 @@ import {
   TextField,
 } from '@mui/material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
+import { useConfirm } from 'material-ui-confirm';
 import { useFormContext } from 'react-hook-form';
 
 import { SectionFormFieldItemType } from '@indocal/services';
@@ -48,6 +49,8 @@ export const EditSectionFormFieldItemDialog: React.FC<
     isEditSectionFormFieldItemDialogOpen,
     toggleEditSectionFormFieldItemDialog,
   } = useSectionFormFieldConfig();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting, errors },
@@ -93,21 +96,22 @@ export const EditSectionFormFieldItemDialog: React.FC<
   );
 
   const handleOnClose = useCallback(
-    async (reason: 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick') => {
+    (reason: 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick') => {
       if (!isDirty || reason === 'closeButtonClick') {
         toggleEditSectionFormFieldItemDialog();
       } else {
-        const answer = window.confirm(
-          '¿Estás seguro de que deseas cancelar esta acción?'
-        );
-
-        if (!answer) return;
-
-        toggleEditSectionFormFieldItemDialog();
-        reset();
+        confirm({
+          title: 'Cancelar acción',
+          description: '¿Estás seguro de que deseas cancelar esta acción?',
+        })
+          .then(() => {
+            toggleEditSectionFormFieldItemDialog();
+            reset();
+          })
+          .catch(() => undefined);
       }
     },
-    [isDirty, reset, toggleEditSectionFormFieldItemDialog]
+    [isDirty, reset, toggleEditSectionFormFieldItemDialog, confirm]
   );
 
   return (

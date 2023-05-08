@@ -17,6 +17,7 @@ import {
 } from '@mui/icons-material';
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import {
@@ -48,35 +49,38 @@ export const GenericOrdersDataGrid: React.FC<GenericOrdersDataGridProps> = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const handleDelete = useCallback(
-    async (id: UUID) => {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas eliminar esta orden?'
-      );
+    (id: UUID) => {
+      confirm({
+        title: 'Eliminar orden',
+        description: '¿Estás seguro de que deseas eliminar esta orden?',
+      })
+        .then(async () => {
+          const { error } = await indocal.warehouse.orders.delete(id);
 
-      if (!answer) return;
+          if (error) {
+            enqueueSnackbar(
+              error.details
+                ? error.details.reduce(
+                    (acc, current) => (acc ? `${acc} | ${current}` : current),
+                    ``
+                  )
+                : error.message,
+              { variant: 'error' }
+            );
+          } else {
+            if (onRefreshButtonClick) await onRefreshButtonClick();
 
-      const { error } = await indocal.warehouse.orders.delete(id);
-
-      if (error) {
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      } else {
-        if (onRefreshButtonClick) await onRefreshButtonClick();
-
-        enqueueSnackbar('Orden eliminada exitosamente', {
-          variant: 'success',
-        });
-      }
+            enqueueSnackbar('Orden eliminada exitosamente', {
+              variant: 'success',
+            });
+          }
+        })
+        .catch(() => undefined);
     },
-    [onRefreshButtonClick, enqueueSnackbar]
+    [onRefreshButtonClick, enqueueSnackbar, confirm]
   );
 
   const statusColors: Record<OrderStatus, ChipProps['color']> = useMemo(

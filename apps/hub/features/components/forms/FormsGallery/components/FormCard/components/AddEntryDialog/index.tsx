@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { Dialog, DialogContent } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import {
   FormGenerator,
@@ -24,6 +25,8 @@ export const AddEntryDialog: React.FC<AddEntryDialogProps> = ({ form }) => {
   const { isAddEntryDialogOpen, toggleAddEntryDialog } = useFormCard();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
 
@@ -71,13 +74,14 @@ export const AddEntryDialog: React.FC<AddEntryDialogProps> = ({ form }) => {
     [form, session?.user.id, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
-    const answer = window.confirm(
-      '¿Estás seguro de que deseas cancelar esta acción?'
-    );
-
-    if (answer) toggleAddEntryDialog();
-  }, [toggleAddEntryDialog]);
+  const handleOnClose = useCallback(() => {
+    confirm({
+      title: 'Cancelar acción',
+      description: '¿Estás seguro de que deseas cancelar esta acción?',
+    })
+      .then(() => toggleAddEntryDialog())
+      .catch(() => undefined);
+  }, [toggleAddEntryDialog, confirm]);
 
   return (
     <Dialog maxWidth="md" open={isAddEntryDialogOpen} onClose={handleOnClose}>

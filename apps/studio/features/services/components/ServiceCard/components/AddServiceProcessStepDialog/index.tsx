@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -105,6 +106,8 @@ export const AddServiceProcessStepDialog: React.FC<
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -168,20 +171,21 @@ export const AddServiceProcessStepDialog: React.FC<
     [service.id, mutate, toggleAddServiceProcessStepDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddServiceProcessStepDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddServiceProcessStepDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddServiceProcessStepDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddServiceProcessStepDialog]);
+  }, [isDirty, reset, toggleAddServiceProcessStepDialog, confirm]);
 
   return (
     <Dialog

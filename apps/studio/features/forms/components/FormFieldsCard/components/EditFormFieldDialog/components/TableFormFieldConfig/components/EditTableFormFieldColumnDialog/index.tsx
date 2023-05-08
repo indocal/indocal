@@ -9,6 +9,7 @@ import {
   TextField,
 } from '@mui/material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
+import { useConfirm } from 'material-ui-confirm';
 import { useFormContext } from 'react-hook-form';
 
 import { TableFormFieldColumnType } from '@indocal/services';
@@ -55,6 +56,8 @@ export const EditTableFormFieldColumnDialog: React.FC<
     reset,
   } = useFormContext<EditFormFieldDialogData>();
 
+  const confirm = useConfirm();
+
   const enum Tabs {
     INFO = 'info',
     CONFIG = 'config',
@@ -91,21 +94,22 @@ export const EditTableFormFieldColumnDialog: React.FC<
   );
 
   const handleOnClose = useCallback(
-    async (reason: 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick') => {
+    (reason: 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick') => {
       if (!isDirty || reason === 'closeButtonClick') {
         toggleEditTableFormFieldColumnDialog();
       } else {
-        const answer = window.confirm(
-          '¿Estás seguro de que deseas cancelar esta acción?'
-        );
-
-        if (!answer) return;
-
-        toggleEditTableFormFieldColumnDialog();
-        reset();
+        confirm({
+          title: 'Cancelar acción',
+          description: '¿Estás seguro de que deseas cancelar esta acción?',
+        })
+          .then(() => {
+            toggleEditTableFormFieldColumnDialog();
+            reset();
+          })
+          .catch(() => undefined);
       }
     },
-    [isDirty, reset, toggleEditTableFormFieldColumnDialog]
+    [isDirty, reset, toggleEditTableFormFieldColumnDialog, confirm]
   );
 
   return (

@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -52,6 +53,8 @@ export const ManageUserGroupsDialog: React.FC<ManageUserGroupsDialogProps> = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting },
     control,
@@ -93,20 +96,21 @@ export const ManageUserGroupsDialog: React.FC<ManageUserGroupsDialogProps> = ({
     [user.id, mutate, toggleManageUserGroupsDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleManageUserGroupsDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleManageUserGroupsDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleManageUserGroupsDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleManageUserGroupsDialog]);
+  }, [isDirty, reset, toggleManageUserGroupsDialog, confirm]);
 
   return (
     <Dialog

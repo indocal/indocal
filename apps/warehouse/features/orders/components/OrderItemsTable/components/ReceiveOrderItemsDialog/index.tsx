@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 
@@ -42,6 +43,8 @@ export const ReceiveOrderItemsDialog: React.FC<
     useOrderItemsTable();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const calcRemaining = useCallback(
     (item: Order['items'][number]) =>
@@ -101,20 +104,21 @@ export const ReceiveOrderItemsDialog: React.FC<
     ]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleReceiveOrderItemsDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleReceiveOrderItemsDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleReceiveOrderItemsDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleReceiveOrderItemsDialog]);
+  }, [isDirty, reset, toggleReceiveOrderItemsDialog, confirm]);
 
   return (
     <Dialog

@@ -9,6 +9,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 
 import { Can, File, ApiEndpoints } from '@indocal/services';
@@ -32,6 +33,8 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const url = useMemo(
     () => new URL(file.path, process.env.NEXT_PUBLIC_BACKEND_URL),
     [file]
@@ -49,44 +52,45 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
     });
   }, [url, enqueueSnackbar]);
 
-  const handleDelete = useCallback(async () => {
-    const answer = window.confirm(
-      '¿Estás seguro de que deseas eliminar este archivo?'
-    );
+  const handleDelete = useCallback(() => {
+    confirm({
+      title: 'Eliminar archivo',
+      description: '¿Estás seguro de que deseas eliminar este archivo?',
+    })
+      .then(async () => {
+        const { error } = await client.uploads.files.delete(file.id);
 
-    if (!answer) return;
+        if (error) {
+          enqueueSnackbar(
+            error.details
+              ? error.details.reduce(
+                  (acc, current) => (acc ? `${acc} | ${current}` : current),
+                  ``
+                )
+              : error.message,
+            { variant: 'error' }
+          );
+        } else {
+          const folder =
+            typeof router.query.folder_id === 'string'
+              ? router.query.folder_id
+              : null;
 
-    const { error } = await client.uploads.files.delete(file.id);
+          await mutate((key) =>
+            folder
+              ? typeof key === 'string' &&
+                key.startsWith(ApiEndpoints.FILES) &&
+                key.includes(folder)
+              : typeof key === 'string' && key.startsWith(ApiEndpoints.FILES)
+          );
 
-    if (error) {
-      enqueueSnackbar(
-        error.details
-          ? error.details.reduce(
-              (acc, current) => (acc ? `${acc} | ${current}` : current),
-              ``
-            )
-          : error.message,
-        { variant: 'error' }
-      );
-    } else {
-      const folder =
-        typeof router.query.folder_id === 'string'
-          ? router.query.folder_id
-          : null;
-
-      await mutate((key) =>
-        folder
-          ? typeof key === 'string' &&
-            key.startsWith(ApiEndpoints.FILES) &&
-            key.includes(folder)
-          : typeof key === 'string' && key.startsWith(ApiEndpoints.FILES)
-      );
-
-      enqueueSnackbar('Archivo eliminado exitosamente', {
-        variant: 'success',
-        onEntered: toggleEditFileDialog,
-      });
-    }
+          enqueueSnackbar('Archivo eliminado exitosamente', {
+            variant: 'success',
+            onEntered: toggleEditFileDialog,
+          });
+        }
+      })
+      .catch(() => undefined);
   }, [
     file.id,
     router.query.folder_id,
@@ -94,6 +98,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
     mutate,
     toggleEditFileDialog,
     enqueueSnackbar,
+    confirm,
   ]);
 
   return (

@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
+  AppBar,
+  Toolbar,
   Typography,
   IconButton,
 } from '@mui/material';
@@ -64,22 +65,26 @@ export const ManageServiceProcessDialog: React.FC<
         open={isManageServiceProcessDialogOpen}
         onClose={handleOnClose}
       >
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: (theme) => theme.spacing(1),
-          }}
-        >
-          <Typography fontWeight="bolder">Administrar procesos</Typography>
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar
+            sx={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: (theme) => theme.spacing(1),
+            }}
+          >
+            <Typography fontWeight="bolder">Administrar procesos</Typography>
 
-          <Can I="create" a="service">
-            <IconButton onClick={toggleAddServiceProcessStepDialog}>
-              <AddIcon />
-            </IconButton>
-          </Can>
-        </DialogTitle>
+            <Can I="create" a="service">
+              <IconButton
+                color="inherit"
+                onClick={toggleAddServiceProcessStepDialog}
+              >
+                <AddIcon />
+              </IconButton>
+            </Can>
+          </Toolbar>
+        </AppBar>
 
         <DialogContent dividers sx={{ padding: (theme) => theme.spacing(1) }}>
           {service.steps.length > 0 ? (

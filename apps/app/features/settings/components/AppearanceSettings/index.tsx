@@ -12,6 +12,7 @@ import {
   Button,
   IconButton,
 } from '@mui/material';
+import { useConfirm } from 'material-ui-confirm';
 
 import {
   ToggleColorModeButton,
@@ -33,16 +34,24 @@ export const AppearanceSettings: React.FC = () => {
   const { drawerPosition, resetPreferences: resetDashboardPreferences } =
     useDashboard();
 
+  const confirm = useConfirm();
+
   const handleReset = useCallback(() => {
-    const answer = window.confirm(
-      '¿Estás seguro de que deseas restablecer la apariencia por defecto?'
-    );
+    confirm({
+      title: 'Restablecer apariencia',
+      description:
+        '¿Estás seguro de que deseas restablecer la apariencia por defecto?',
 
-    if (!answer) return;
-
-    resetThemePreferences();
-    resetDashboardPreferences();
-  }, [resetThemePreferences, resetDashboardPreferences]);
+      confirmationText: 'Restablecer',
+      confirmationButtonProps: { color: 'error' },
+      cancellationButtonProps: { color: 'primary' },
+    })
+      .then(() => {
+        resetThemePreferences();
+        resetDashboardPreferences();
+      })
+      .catch(() => undefined);
+  }, [resetThemePreferences, resetDashboardPreferences, confirm]);
 
   return (
     <Card>

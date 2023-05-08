@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
@@ -90,6 +91,8 @@ export const AddServiceDialog: React.FC = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -139,20 +142,21 @@ export const AddServiceDialog: React.FC = () => {
     [router, toggleAddServiceDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddServiceDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddServiceDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: 'Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddServiceDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddServiceDialog]);
+  }, [isDirty, reset, toggleAddServiceDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isAddServiceDialogOpen} onClose={handleOnClose}>

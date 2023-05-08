@@ -21,6 +21,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 
 import { NoData } from '@indocal/ui';
@@ -54,6 +55,8 @@ const FoldersGallery: React.FC<FoldersGalleryProps> = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const [folder, setFolder] = useState<Folder | null>(null);
 
   const handleEdit = useCallback(
@@ -65,45 +68,47 @@ const FoldersGallery: React.FC<FoldersGalleryProps> = ({
   );
 
   const handleDelete = useCallback(
-    async (id: UUID) => {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas eliminar esta carpeta?'
-      );
+    (id: UUID) => {
+      confirm({
+        title: 'Eliminar carpeta',
+        description: '¿Estás seguro de que deseas eliminar esta carpeta?',
+      })
+        .then(async () => {
+          const { error } = await client.uploads.folders.delete(id);
 
-      if (!answer) return;
+          if (error) {
+            enqueueSnackbar(
+              error.details
+                ? error.details.reduce(
+                    (acc, current) => (acc ? `${acc} | ${current}` : current),
+                    ``
+                  )
+                : error.message,
+              { variant: 'error' }
+            );
+          } else {
+            const folder =
+              typeof router.query.folder_id === 'string'
+                ? router.query.folder_id
+                : null;
 
-      const { error } = await client.uploads.folders.delete(id);
+            await mutate((key) =>
+              folder
+                ? typeof key === 'string' &&
+                  key.startsWith(ApiEndpoints.FOLDERS) &&
+                  key.includes(folder)
+                : typeof key === 'string' &&
+                  key.startsWith(ApiEndpoints.FOLDERS)
+            );
 
-      if (error) {
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      } else {
-        const folder =
-          typeof router.query.folder_id === 'string'
-            ? router.query.folder_id
-            : null;
-
-        await mutate((key) =>
-          folder
-            ? typeof key === 'string' &&
-              key.startsWith(ApiEndpoints.FOLDERS) &&
-              key.includes(folder)
-            : typeof key === 'string' && key.startsWith(ApiEndpoints.FOLDERS)
-        );
-
-        enqueueSnackbar('Carpeta eliminada exitosamente', {
-          variant: 'success',
-        });
-      }
+            enqueueSnackbar('Carpeta eliminada exitosamente', {
+              variant: 'success',
+            });
+          }
+        })
+        .catch(() => undefined);
     },
-    [router.query.folder_id, client, mutate, enqueueSnackbar]
+    [router.query.folder_id, client, mutate, enqueueSnackbar, confirm]
   );
 
   return (

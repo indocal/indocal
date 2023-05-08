@@ -14,6 +14,7 @@ import {
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useFormContext } from 'react-hook-form';
 
@@ -65,6 +66,8 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
     useFormFieldsCard();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting, errors },
@@ -142,49 +145,56 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
     [form.id, field.id, mutate, toggleEditFormFieldDialog, enqueueSnackbar]
   );
 
-  const handleDelete = useCallback(async () => {
-    const answer = window.confirm(
-      '¿Estás seguro de que deseas eliminar este campo?'
-    );
+  const handleDelete = useCallback(() => {
+    confirm({
+      title: 'Eliminar campo',
+      description: '¿Estás seguro de que deseas eliminar este campo?',
+    }).then(async () => {
+      const { error } = await indocal.forms.fields.delete(field.id);
 
-    if (!answer) return;
+      if (error) {
+        enqueueSnackbar(
+          error.details
+            ? error.details.reduce(
+                (acc, current) => (acc ? `${acc} | ${current}` : current),
+                ``
+              )
+            : error.message,
+          { variant: 'error' }
+        );
+      } else {
+        await mutate(`${ApiEndpoints.FORMS}/${form.id}`);
 
-    const { error } = await indocal.forms.fields.delete(field.id);
+        enqueueSnackbar('Campo eliminado exitosamente', {
+          variant: 'success',
+          onEntered: toggleEditFormFieldDialog,
+        });
+      }
+    });
+  }, [
+    form.id,
+    field.id,
+    mutate,
+    toggleEditFormFieldDialog,
+    enqueueSnackbar,
+    confirm,
+  ]);
 
-    if (error) {
-      enqueueSnackbar(
-        error.details
-          ? error.details.reduce(
-              (acc, current) => (acc ? `${acc} | ${current}` : current),
-              ``
-            )
-          : error.message,
-        { variant: 'error' }
-      );
-    } else {
-      await mutate(`${ApiEndpoints.FORMS}/${form.id}`);
-
-      enqueueSnackbar('Campo eliminado exitosamente', {
-        variant: 'success',
-        onEntered: toggleEditFormFieldDialog,
-      });
-    }
-  }, [form.id, field.id, mutate, toggleEditFormFieldDialog, enqueueSnackbar]);
-
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleEditFormFieldDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleEditFormFieldDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleEditFormFieldDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleEditFormFieldDialog]);
+  }, [isDirty, reset, toggleEditFormFieldDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isEditFormFieldDialogOpen} onClose={handleOnClose}>

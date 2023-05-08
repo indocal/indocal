@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useFormContext } from 'react-hook-form';
 
@@ -38,6 +39,8 @@ const AddSupplyRequestDialog: React.FC<AddSupplyRequestDialogProps> = ({
     useUserSuppliesRequestsDataGrid();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting, errors },
@@ -91,20 +94,21 @@ const AddSupplyRequestDialog: React.FC<AddSupplyRequestDialogProps> = ({
     [user, mutate, toggleAddSupplyRequestDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddSupplyRequestDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddSupplyRequestDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddSupplyRequestDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddSupplyRequestDialog]);
+  }, [isDirty, reset, toggleAddSupplyRequestDialog, confirm]);
 
   return (
     <Dialog

@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useFormContext, Control } from 'react-hook-form';
 
 import {
@@ -32,6 +33,8 @@ const AddOrderDialog: React.FC = () => {
   const { isAddOrderDialogOpen, toggleAddOrderDialog } = useOrdersDataGrid();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting, errors },
@@ -84,20 +87,21 @@ const AddOrderDialog: React.FC = () => {
     [router, toggleAddOrderDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddOrderDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddOrderDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddOrderDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddOrderDialog]);
+  }, [isDirty, reset, toggleAddOrderDialog, confirm]);
 
   return (
     <Dialog

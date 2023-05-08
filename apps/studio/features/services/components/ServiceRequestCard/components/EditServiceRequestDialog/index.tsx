@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -70,6 +71,8 @@ export const EditServiceRequestDialog: React.FC<
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting },
     control,
@@ -114,20 +117,21 @@ export const EditServiceRequestDialog: React.FC<
     [request.id, mutate, toggleEditServiceRequestDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleEditServiceRequestDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleEditServiceRequestDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: 'Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleEditServiceRequestDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleEditServiceRequestDialog]);
+  }, [isDirty, reset, toggleEditServiceRequestDialog, confirm]);
 
   return (
     <Dialog

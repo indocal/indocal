@@ -17,6 +17,7 @@ import {
 } from '@mui/icons-material';
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import {
@@ -48,35 +49,38 @@ export const GenericUsersDataGrid: React.FC<GenericUsersDataGridProps> = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const handleDelete = useCallback(
-    async (id: UUID) => {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas eliminar este usuario?'
-      );
+    (id: UUID) => {
+      confirm({
+        title: 'Eliminar usuario',
+        description: '¿Estás seguro de que deseas eliminar este usuario?',
+      })
+        .then(async () => {
+          const { error } = await indocal.auth.users.delete(id);
 
-      if (!answer) return;
+          if (error) {
+            enqueueSnackbar(
+              error.details
+                ? error.details.reduce(
+                    (acc, current) => (acc ? `${acc} | ${current}` : current),
+                    ``
+                  )
+                : error.message,
+              { variant: 'error' }
+            );
+          } else {
+            if (onRefreshButtonClick) await onRefreshButtonClick();
 
-      const { error } = await indocal.auth.users.delete(id);
-
-      if (error) {
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      } else {
-        if (onRefreshButtonClick) await onRefreshButtonClick();
-
-        enqueueSnackbar('Usuario eliminado exitosamente', {
-          variant: 'success',
-        });
-      }
+            enqueueSnackbar('Usuario eliminado exitosamente', {
+              variant: 'success',
+            });
+          }
+        })
+        .catch(() => undefined);
     },
-    [onRefreshButtonClick, enqueueSnackbar]
+    [onRefreshButtonClick, enqueueSnackbar, confirm]
   );
 
   const statusColors: Record<UserStatus, ChipProps['color']> = useMemo(

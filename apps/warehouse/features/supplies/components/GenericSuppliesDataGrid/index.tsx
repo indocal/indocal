@@ -9,6 +9,7 @@ import {
 } from '@mui/icons-material';
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import {
@@ -41,35 +42,38 @@ export const GenericSuppliesDataGrid: React.FC<
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const handleDelete = useCallback(
-    async (id: UUID) => {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas eliminar este recurso?'
-      );
+    (id: UUID) => {
+      confirm({
+        title: 'Eliminar recurso',
+        description: '¿Estás seguro de que deseas eliminar este recurso?',
+      })
+        .then(async () => {
+          const { error } = await indocal.warehouse.supplies.delete(id);
 
-      if (!answer) return;
+          if (error) {
+            enqueueSnackbar(
+              error.details
+                ? error.details.reduce(
+                    (acc, current) => (acc ? `${acc} | ${current}` : current),
+                    ``
+                  )
+                : error.message,
+              { variant: 'error' }
+            );
+          } else {
+            if (onRefreshButtonClick) await onRefreshButtonClick();
 
-      const { error } = await indocal.warehouse.supplies.delete(id);
-
-      if (error) {
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      } else {
-        if (onRefreshButtonClick) await onRefreshButtonClick();
-
-        enqueueSnackbar('Recurso eliminado exitosamente', {
-          variant: 'success',
-        });
-      }
+            enqueueSnackbar('Recurso eliminado exitosamente', {
+              variant: 'success',
+            });
+          }
+        })
+        .catch(() => undefined);
     },
-    [onRefreshButtonClick, enqueueSnackbar]
+    [onRefreshButtonClick, enqueueSnackbar, confirm]
   );
 
   const columns = useMemo<GridColDef[]>(

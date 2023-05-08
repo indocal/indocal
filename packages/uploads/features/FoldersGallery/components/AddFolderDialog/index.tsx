@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -48,6 +49,8 @@ export const AddFolderDialog: React.FC = () => {
     useFoldersGallery();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting, errors },
@@ -100,20 +103,21 @@ export const AddFolderDialog: React.FC = () => {
     [router, client, mutate, toggleAddFolderDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddFolderDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddFolderDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddFolderDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddFolderDialog]);
+  }, [isDirty, reset, toggleAddFolderDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isAddFolderDialogOpen} onClose={handleOnClose}>

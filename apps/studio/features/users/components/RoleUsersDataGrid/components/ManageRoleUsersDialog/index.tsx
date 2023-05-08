@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -51,6 +52,8 @@ export const ManageRoleUsersDialog: React.FC<ManageRoleUsersDialogProps> = ({
     useRoleUsersDataGrid();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting },
@@ -101,20 +104,21 @@ export const ManageRoleUsersDialog: React.FC<ManageRoleUsersDialogProps> = ({
     [role.id, mutate, toggleManageRoleUsersDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleManageRoleUsersDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleManageRoleUsersDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleManageRoleUsersDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleManageRoleUsersDialog]);
+  }, [isDirty, reset, toggleManageRoleUsersDialog, confirm]);
 
   return (
     <Dialog

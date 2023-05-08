@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -97,6 +98,8 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -116,67 +119,70 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ user }) => {
   });
 
   const onSubmit = useCallback(
-    async (formData: FormData) => {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas guardar los cambios? Si hace esto tendrá que volver a iniciar sesión'
-      );
+    (formData: FormData) => {
+      confirm({
+        title: 'Guardar cambios',
+        description:
+          '¿Estás seguro de que deseas guardar los cambios? Si hace esto tendrá que volver a iniciar sesión',
+      })
+        .then(async () => {
+          const { user: updated, error } = await indocal.auth.users.update(
+            user.id,
+            {
+              username: formData.username,
+              email: formData.email,
+              name: formData.name,
+              status: formData.status,
 
-      if (!answer) return;
+              ...(formData.roles && {
+                roles: formData.roles.map((role) => role.id),
+              }),
 
-      const { user: updated, error } = await indocal.auth.users.update(
-        user.id,
-        {
-          username: formData.username,
-          email: formData.email,
-          name: formData.name,
-          status: formData.status,
+              ...(formData.groups && {
+                groups: formData.groups.map((group) => group.id),
+              }),
+            }
+          );
 
-          ...(formData.roles && {
-            roles: formData.roles.map((role) => role.id),
-          }),
+          if (error) {
+            enqueueSnackbar(
+              error.details
+                ? error.details.reduce(
+                    (acc, current) => (acc ? `${acc} | ${current}` : current),
+                    ``
+                  )
+                : error.message,
+              { variant: 'error' }
+            );
+          } else {
+            await mutate(`${ApiEndpoints.USERS}/${user.id}`, updated);
 
-          ...(formData.groups && {
-            groups: formData.groups.map((group) => group.id),
-          }),
-        }
-      );
-
-      if (error) {
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      } else {
-        await mutate(`${ApiEndpoints.USERS}/${user.id}`, updated);
-
-        enqueueSnackbar('Usuario editado exitosamente', {
-          variant: 'success',
-          onEntered: toggleEditUserDialog,
-        });
-      }
+            enqueueSnackbar('Usuario editado exitosamente', {
+              variant: 'success',
+              onEntered: toggleEditUserDialog,
+            });
+          }
+        })
+        .catch(() => undefined);
     },
-    [user.id, mutate, toggleEditUserDialog, enqueueSnackbar]
+    [user.id, mutate, toggleEditUserDialog, enqueueSnackbar, confirm]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleEditUserDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleEditUserDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleEditUserDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleEditUserDialog]);
+  }, [isDirty, reset, toggleEditUserDialog, confirm]);
 
   return (
     <Dialog fullWidth open={isEditUserDialogOpen} onClose={handleOnClose}>

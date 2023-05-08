@@ -14,6 +14,7 @@ import {
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -113,6 +114,8 @@ export const EditServiceProcessStepDialog: React.FC<
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const {
     formState: { isDirty, isSubmitting, errors },
     register,
@@ -194,55 +197,58 @@ export const EditServiceProcessStepDialog: React.FC<
     ]
   );
 
-  const handleDelete = useCallback(async () => {
-    const answer = window.confirm(
-      '¿Estás seguro de que deseas eliminar este paso?'
-    );
+  const handleDelete = useCallback(() => {
+    confirm({
+      title: 'Eliminar paso',
+      description: '¿Estás seguro de que deseas eliminar este paso?',
+    })
+      .then(async () => {
+        const { error } = await indocal.services.steps.delete(step.id);
 
-    if (!answer) return;
+        if (error) {
+          enqueueSnackbar(
+            error.details
+              ? error.details.reduce(
+                  (acc, current) => (acc ? `${acc} | ${current}` : current),
+                  ``
+                )
+              : error.message,
+            { variant: 'error' }
+          );
+        } else {
+          await mutate(`${ApiEndpoints.SERVICES}/${service.id}`);
 
-    const { error } = await indocal.services.steps.delete(step.id);
-
-    if (error) {
-      enqueueSnackbar(
-        error.details
-          ? error.details.reduce(
-              (acc, current) => (acc ? `${acc} | ${current}` : current),
-              ``
-            )
-          : error.message,
-        { variant: 'error' }
-      );
-    } else {
-      await mutate(`${ApiEndpoints.SERVICES}/${service.id}`);
-
-      enqueueSnackbar('Paso eliminado exitosamente', {
-        variant: 'success',
-        onEntered: toggleEditServiceProcessStepDialog,
-      });
-    }
+          enqueueSnackbar('Paso eliminado exitosamente', {
+            variant: 'success',
+            onEntered: toggleEditServiceProcessStepDialog,
+          });
+        }
+      })
+      .catch(() => undefined);
   }, [
     service.id,
     step.id,
     mutate,
     toggleEditServiceProcessStepDialog,
     enqueueSnackbar,
+    confirm,
   ]);
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleEditServiceProcessStepDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleEditServiceProcessStepDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: 'Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleEditServiceProcessStepDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleEditServiceProcessStepDialog]);
+  }, [isDirty, reset, toggleEditServiceProcessStepDialog, confirm]);
 
   return (
     <Dialog

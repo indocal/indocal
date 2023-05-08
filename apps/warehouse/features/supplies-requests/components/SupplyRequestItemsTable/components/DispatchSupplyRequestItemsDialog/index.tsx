@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
 import { useForm } from 'react-hook-form';
 
@@ -44,6 +45,8 @@ export const DispatchSupplyRequestItemsDialog: React.FC<
   } = useSupplyRequestItemsTable();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const calcRemaining = useCallback(
     (item: SupplyRequest['items'][number]) =>
@@ -103,20 +106,21 @@ export const DispatchSupplyRequestItemsDialog: React.FC<
     [request, mutate, toggleDispatchSupplyRequestItemsDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleDispatchSupplyRequestItemsDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleDispatchSupplyRequestItemsDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleDispatchSupplyRequestItemsDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleDispatchSupplyRequestItemsDialog]);
+  }, [isDirty, reset, toggleDispatchSupplyRequestItemsDialog, confirm]);
 
   return (
     <Dialog

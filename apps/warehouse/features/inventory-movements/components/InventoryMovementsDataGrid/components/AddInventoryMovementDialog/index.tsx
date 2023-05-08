@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 import { useFormContext, Control } from 'react-hook-form';
 
 import { ControlledUsersGroupsAutocomplete } from '@indocal/forms-generator';
@@ -37,6 +38,8 @@ const AddInventoryMovementDialog: React.FC = () => {
     useInventoryMovementsDataGrid();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const confirm = useConfirm();
 
   const {
     formState: { isDirty, isSubmitting, errors },
@@ -99,20 +102,21 @@ const AddInventoryMovementDialog: React.FC = () => {
     [router, type, toggleAddInventoryMovementDialog, enqueueSnackbar]
   );
 
-  const handleOnClose = useCallback(async () => {
+  const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleAddInventoryMovementDialog();
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas cancelar esta acción?'
-      );
-
-      if (!answer) return;
-
-      toggleAddInventoryMovementDialog();
-      reset();
+      confirm({
+        title: 'Cancelar acción',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
+      })
+        .then(() => {
+          toggleAddInventoryMovementDialog();
+          reset();
+        })
+        .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleAddInventoryMovementDialog]);
+  }, [isDirty, reset, toggleAddInventoryMovementDialog, confirm]);
 
   return (
     <Dialog

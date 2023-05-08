@@ -4,7 +4,7 @@ import { SnackbarProvider } from 'notistack';
 import { SWRConfig, Fetcher } from 'swr';
 
 import { ThemeProvider } from '@indocal/theme';
-import { ErrorBoundary, Loader } from '@indocal/ui';
+import { ErrorBoundary, ConfirmProvider, Loader } from '@indocal/ui';
 import { AbilityProvider } from '@indocal/services';
 
 import { indocal } from '@/lib';
@@ -31,11 +31,13 @@ const App: EnhancedNextApp = ({ Component, pageProps }) => {
           <AbilityProvider>
             <ThemeProvider>
               <SnackbarProvider>
-                {boostraping ? (
-                  <Loader fullscreen />
-                ) : (
-                  getLayout(<Component {...pageProps} />)
-                )}
+                <ConfirmProvider>
+                  {boostraping ? (
+                    <Loader fullscreen />
+                  ) : (
+                    getLayout(<Component {...pageProps} />)
+                  )}
+                </ConfirmProvider>
               </SnackbarProvider>
             </ThemeProvider>
           </AbilityProvider>

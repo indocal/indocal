@@ -17,6 +17,7 @@ import {
 } from '@mui/icons-material';
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import { EnhancedDataGrid, EnhancedDataGridProps } from '@indocal/ui';
 import {
@@ -50,35 +51,36 @@ export const GenericServicesDataGrid: React.FC<
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
+  const confirm = useConfirm();
+
   const handleDelete = useCallback(
-    async (id: UUID) => {
-      const answer = window.confirm(
-        '¿Estás seguro de que deseas eliminar este servicio?'
-      );
+     (id: UUID) => {
+      confirm({
+        title: 'Eliminar servicio',
+        description: '¿Estás seguro de que deseas eliminar este servicio?',
+      }).then(async () => {
+        const { error } = await indocal.services.delete(id);
 
-      if (!answer) return;
+        if (error) {
+          enqueueSnackbar(
+            error.details
+              ? error.details.reduce(
+                  (acc, current) => (acc ? `${acc} | ${current}` : current),
+                  ``
+                )
+              : error.message,
+            { variant: 'error' }
+          );
+        } else {
+          if (onRefreshButtonClick) await onRefreshButtonClick();
 
-      const { error } = await indocal.services.delete(id);
-
-      if (error) {
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      } else {
-        if (onRefreshButtonClick) await onRefreshButtonClick();
-
-        enqueueSnackbar('Servicio eliminado exitosamente', {
-          variant: 'success',
-        });
-      }
+          enqueueSnackbar('Servicio eliminado exitosamente', {
+            variant: 'success',
+          });
+        }
+      }).catch(() => undefined);
     },
-    [onRefreshButtonClick, enqueueSnackbar]
+    [onRefreshButtonClick, enqueueSnackbar, confirm]
   );
 
   const statusColors: Record<ServiceStatus, ChipProps['color']> = useMemo(
