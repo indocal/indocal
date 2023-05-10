@@ -78,38 +78,44 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
               />
             </Box>
 
-            {request.currentStep && (
-              <Stack
-                direction="row"
-                justifyContent={{ xs: 'center', md: 'flex-end' }}
-                alignItems="center"
-                gap={1}
-              >
-                {request.currentStep.nextStepOnReject && (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="error"
-                    endIcon={<RejectIcon />}
-                    onClick={() => handleUpdateCurrentStep('nextStepOnReject')}
-                  >
-                    Rechazar
-                  </Button>
-                )}
+            {request.currentStep &&
+              (request.currentStep.nextStepOnReject ||
+                request.currentStep.nextStepOnApprove) && (
+                <Stack
+                  direction="row"
+                  justifyContent={{ xs: 'center', md: 'flex-end' }}
+                  alignItems="center"
+                  gap={1}
+                >
+                  {request.currentStep.nextStepOnReject && (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="error"
+                      endIcon={<RejectIcon />}
+                      onClick={() =>
+                        handleUpdateCurrentStep('nextStepOnReject')
+                      }
+                    >
+                      Rechazar
+                    </Button>
+                  )}
 
-                {request.currentStep.nextStepOnApprove && (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="success"
-                    endIcon={<ApproveIcon />}
-                    onClick={() => handleUpdateCurrentStep('nextStepOnApprove')}
-                  >
-                    Aprobar
-                  </Button>
-                )}
-              </Stack>
-            )}
+                  {request.currentStep.nextStepOnApprove && (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="success"
+                      endIcon={<ApproveIcon />}
+                      onClick={() =>
+                        handleUpdateCurrentStep('nextStepOnApprove')
+                      }
+                    >
+                      Aprobar
+                    </Button>
+                  )}
+                </Stack>
+              )}
           </Stack>
         </>
       ) : (

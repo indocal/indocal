@@ -123,7 +123,7 @@ export const EditServiceRequestDialog: React.FC<
     } else {
       confirm({
         title: 'Cancelar acción',
-        description: 'Estás seguro de que deseas cancelar esta acción?',
+        description: '¿Estás seguro de que deseas cancelar esta acción?',
       })
         .then(() => {
           toggleEditServiceRequestDialog();

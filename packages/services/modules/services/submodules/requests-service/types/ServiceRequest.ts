@@ -47,6 +47,31 @@ type SiblingStep = Entity & {
   nextRequestStatus: ServiceRequestStatus;
 };
 
+type Comment = Entity & {
+  content: string;
+  isInternal: boolean;
+  attachments: Attachment[];
+  author: Author;
+};
+
+type Attachment = Entity & {
+  path: string;
+  mime: string;
+  extension: string;
+  size: number;
+  dimensions: number[];
+  name: string;
+  caption: string | null;
+  alt: string | null;
+};
+
+type Author = Entity & {
+  username: string;
+  email: string;
+  name: string;
+  status: UserStatus;
+};
+
 export type ServiceRequestStatus =
   | 'PENDING'
   | 'PENDING_APPROVAL'
@@ -61,6 +86,7 @@ export interface ServiceRequest extends Entity {
   requestedBy: RequestedBy;
   service: Service;
   currentStep: CurrentStep | null;
+  comments: Comment[];
 }
 
 export default ServiceRequest;

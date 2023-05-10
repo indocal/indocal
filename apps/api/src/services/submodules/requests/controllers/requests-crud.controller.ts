@@ -17,24 +17,28 @@ import {
   User,
   Service,
   ServiceProcessStep,
+  ServiceRequestComment,
+  File,
 } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { FormEntryEntity } from '../../../forms/submodules/entries/entities';
-import { UserEntity } from '../../../auth/submodules/users/entities';
-import { ServiceEntity } from '../../entities';
+import { FormEntryEntity } from '../../../../forms/submodules/entries/entities';
+import { UserEntity } from '../../../../auth/submodules/users/entities';
+import { FileEntity } from '../../../../uploads/submodules/files/entities';
+import { ServiceEntity } from '../../../entities';
 
-import { ServiceProcessStepEntity } from '../process-steps/entities';
+import { ServiceProcessStepEntity } from '../../process-steps/entities';
+import { ServiceRequestCommentEntity } from '../../comments/entities';
 
-import { ServiceRequestEntity } from './entities';
+import { ServiceRequestEntity } from './../entities';
 import {
   FindManyServicesRequestsParamsDto,
   CountServicesRequestsParamsDto,
   CreateServiceRequestDto,
   UpdateServiceRequestDto,
-} from './dto';
+} from './../dto';
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
@@ -44,11 +48,17 @@ class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   nextStepOnApprove: ServiceProcessStepEntity | null;
 }
 
+class EnhancedServiceRequestComment extends ServiceRequestCommentEntity {
+  attachments: FileEntity[];
+  author: UserEntity;
+}
+
 class EnhancedServiceRequest extends ServiceRequestEntity {
   entry: FormEntryEntity;
   requestedBy: UserEntity;
   service: ServiceEntity;
   currentStep: EnhancedServiceProcessStep | null;
+  comments: EnhancedServiceRequestComment[];
 }
 
 type CreateEnhancedServiceRequest = ServiceRequest & {
@@ -64,11 +74,17 @@ type CreateEnhancedServiceRequest = ServiceRequest & {
         nextStepOnApprove: ServiceProcessStep | null;
       })
     | null;
+  comments: Array<
+    ServiceRequestComment & {
+      attachments: File[];
+      author: User;
+    }
+  >;
 };
 
 @Controller('requests')
 @UseGuards(PoliciesGuard)
-export class ServicesRequestsController {
+export class ServicesRequestsCRUDController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedServiceRequest({
@@ -108,6 +124,18 @@ export class ServicesRequestsController {
     } else {
       request.currentStep = null;
     }
+
+    request.comments = rest.comments.map(({ attachments, author, ...rest }) => {
+      const comment = new EnhancedServiceRequestComment(rest);
+
+      comment.attachments = attachments.map(
+        (attachment) => new FileEntity(attachment)
+      );
+
+      comment.author = new UserEntity(author);
+
+      return comment;
+    });
 
     return request;
   }
@@ -162,6 +190,12 @@ export class ServicesRequestsController {
               nextStepOnApprove: true,
             },
           },
+          comments: {
+            include: {
+              attachments: true,
+              author: true,
+            },
+          },
         },
       });
 
@@ -212,6 +246,12 @@ export class ServicesRequestsController {
               nextStepOnApprove: true,
             },
           },
+          comments: {
+            include: {
+              attachments: true,
+              author: true,
+            },
+          },
         },
       }),
       this.prismaService.serviceRequest.count({
@@ -251,6 +291,12 @@ export class ServicesRequestsController {
             nextStepOnApprove: true,
           },
         },
+        comments: {
+          include: {
+            attachments: true,
+            author: true,
+          },
+        },
       },
     });
 
@@ -282,6 +328,12 @@ export class ServicesRequestsController {
             nextStepOnApprove: true,
           },
         },
+        comments: {
+          include: {
+            attachments: true,
+            author: true,
+          },
+        },
       },
     });
 
@@ -311,6 +363,12 @@ export class ServicesRequestsController {
             nextStepOnApprove: true,
           },
         },
+        comments: {
+          include: {
+            attachments: true,
+            author: true,
+          },
+        },
       },
     });
 
@@ -318,4 +376,4 @@ export class ServicesRequestsController {
   }
 }
 
-export default ServicesRequestsController;
+export default ServicesRequestsCRUDController;

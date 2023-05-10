@@ -6,10 +6,11 @@ import { FormEntryAnswers } from '@indocal/forms-generator';
 import { useServiceRequest, getShortUUID, UUID } from '@indocal/services';
 
 import {
-  ServiceRequestStepper,
   ServiceRequestCard,
   ServiceCard,
   UserCard,
+  ServiceRequestStepper,
+  ServiceRequestComments,
 } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -53,33 +54,39 @@ const ServiceRequestPage: EnhancedNextPage = () => {
             spacing={1}
             sx={{ height: 'fit-content' }}
           >
-            <Unstable_Grid2 xs={12}>
-              <Widget disableDefaultSizes>
-                <ServiceRequestStepper request={request} />
+            <Unstable_Grid2 xs={12} md={4}>
+              <Widget>
+                <ServiceRequestCard request={request} />
               </Widget>
             </Unstable_Grid2>
 
-            <Unstable_Grid2 xs={12} md={8}>
+            <Unstable_Grid2 xs={12} md={4}>
+              <Widget>
+                <ServiceCard service={request.service.id} />
+              </Widget>
+            </Unstable_Grid2>
+
+            <Unstable_Grid2 xs={12} md={4}>
+              <Widget>
+                <UserCard user={request.requestedBy.id} />
+              </Widget>
+            </Unstable_Grid2>
+
+            <Unstable_Grid2 xs={12} md={6}>
               <Widget disableDefaultSizes>
                 <FormEntryAnswers answers={request.entry.answers} />
               </Widget>
             </Unstable_Grid2>
 
-            <Unstable_Grid2 xs={12} md={4}>
+            <Unstable_Grid2 xs={12} md={6}>
               <Stack spacing={1}>
-                <Widget>
-                  <ServiceRequestCard request={request} />
+                <Widget disableDefaultSizes>
+                  <ServiceRequestStepper request={request} />
                 </Widget>
 
-                <Widget>
-                  <ServiceCard service={request.service.id} />
+                <Widget disableDefaultSizes>
+                  <ServiceRequestComments request={request} />
                 </Widget>
-
-                {request.requestedBy && (
-                  <Widget>
-                    <UserCard user={request.requestedBy.id} />
-                  </Widget>
-                )}
               </Stack>
             </Unstable_Grid2>
           </Unstable_Grid2>

@@ -15,7 +15,10 @@ import {
   UpdateServiceRequestDto,
   CountServicesRequestsParamsDto,
   FindManyServicesRequestsParamsDto,
+  ApproveOrRejectCurrentStepDto,
 } from './types';
+
+import { ServicesRequestsCommentsService } from '../comments-service';
 
 export interface CreateServiceRequestReturn {
   request: ServiceRequest | null;
@@ -48,8 +51,16 @@ export interface DeleteServiceRequestReturn {
   error: ServiceError | null;
 }
 
+export interface ApproveOrRejectCurrentStepReturn {
+  error: ServiceError | null;
+}
+
 export class ServicesRequestsService {
-  constructor(private config: Config) {}
+  comments: ServicesRequestsCommentsService;
+
+  constructor(private config: Config) {
+    this.comments = new ServicesRequestsCommentsService(config);
+  }
 
   async create(
     data: CreateServiceRequestDto
@@ -171,6 +182,30 @@ export class ServicesRequestsService {
     } catch (error) {
       return {
         request: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async approveOrRejectCurrentStep(
+    data: ApproveOrRejectCurrentStepDto
+  ): Promise<ApproveOrRejectCurrentStepReturn> {
+    try {
+      await this.config.axios.patch<
+        void,
+        AxiosResponse<void, ApproveOrRejectCurrentStepDto>,
+        ApproveOrRejectCurrentStepDto
+      >(
+        `${ApiEndpoints.SERVICES_REQUESTS}/actions/approve-or-reject-current-step`,
+        data,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+
+      return {
+        error: null,
+      };
+    } catch (error) {
+      return {
         error: createServiceError(error),
       };
     }

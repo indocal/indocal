@@ -3,3 +3,5 @@ export * from './CreateServiceRequestDto';
 export * from './UpdateServiceRequestDto';
 export * from './CountServicesRequestsParamsDto';
 export * from './FindManyServicesRequestsParamsDto';
+
+export * from './ApproveOrRejectCurrentStepDto';
