@@ -1,4 +1,11 @@
-import { IsString, IsUUID, ArrayMinSize, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  IsEnum,
+  ArrayMinSize,
+  IsOptional,
+} from 'class-validator';
+import { ServiceRequestStatus } from '@prisma/client';
 
 import { TrimParam, UUID } from '@/common';
 
@@ -11,6 +18,9 @@ export class CreateServiceProcessStepDto {
   @IsOptional()
   @TrimParam()
   description?: string;
+
+  @IsEnum(ServiceRequestStatus)
+  nextRequestStatus: ServiceRequestStatus;
 
   @IsUUID('all', { each: true })
   @ArrayMinSize(1)

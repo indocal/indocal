@@ -94,6 +94,7 @@ export class ServicesProcessStepsController {
       data: {
         title: createStepDto.title,
         description: createStepDto.description,
+        nextRequestStatus: createStepDto.nextRequestStatus,
         owners: { connect: createStepDto.owners.map((id) => ({ id })) },
         service: { connect: { id: serviceId } },
 
@@ -211,6 +212,7 @@ export class ServicesProcessStepsController {
       data: {
         title: updateStepDto.title,
         description: updateStepDto.description,
+        nextRequestStatus: updateStepDto.nextRequestStatus,
 
         ...(updateStepDto.owners && {
           owners: { set: updateStepDto.owners.map((id) => ({ id })) },

@@ -18,14 +18,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
 import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
-import { Can, Service, ApiEndpoints } from '@indocal/services';
+import {
+  Can,
+  Service,
+  ServiceRequestStatus,
+  ApiEndpoints,
+} from '@indocal/services';
 import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
 import { useServiceCard } from '../../context';
 
-import { ControlledServiceProcessStepsAutocomplete } from '../ControlledServiceProcessStepsAutocomplete';
+import ControlledServiceRequestStatusSelect from '../ControlledServiceRequestStatusSelect';
+import ControlledServiceProcessStepsAutocomplete from '../ControlledServiceProcessStepsAutocomplete';
 
 type FormData = zod.infer<typeof schema>;
 
@@ -48,6 +54,25 @@ const schema = zod.object(
       })
       .trim()
       .optional(),
+
+    nextRequestStatus: zod.enum<
+      ServiceRequestStatus,
+      [ServiceRequestStatus, ...ServiceRequestStatus[]]
+    >(
+      [
+        'PENDING',
+        'PENDING_APPROVAL',
+        'PENDING_PAYMENT',
+        'IN_PROGRESS',
+        'COMPLETED',
+        'CANCELED',
+      ],
+      {
+        description: 'Siguiente estado de solicitud',
+        required_error: 'Debe seleccionar el siguiente estado de solicitud',
+        invalid_type_error: 'Formato no válido',
+      }
+    ),
 
     owners: entitySchema({
       description: 'Responsables del paso',
@@ -116,6 +141,9 @@ export const AddServiceProcessStepDialog: React.FC<
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      nextRequestStatus: 'IN_PROGRESS',
+    },
   });
 
   const enum Tabs {
@@ -130,6 +158,8 @@ export const AddServiceProcessStepDialog: React.FC<
       const { error } = await indocal.services.steps.create(service.id, {
         title: formData.title,
         ...(formData.description && { description: formData.description }),
+        nextRequestStatus: formData.nextRequestStatus,
+
         owners: formData.owners.map((owner) => owner.id),
 
         ...(formData.prevStepOnReject && {
@@ -238,16 +268,29 @@ export const AddServiceProcessStepDialog: React.FC<
 
             <TabPanel value={Tabs.CONFIG}>
               <Stack spacing={2} divider={<Divider flexItem />}>
-                <Can I="read" an="user">
-                  <ControlledUsersAutocomplete
+                <Stack direction="row" spacing={1}>
+                  <ControlledServiceRequestStatusSelect
                     required
-                    multiple
-                    name="owners"
-                    label="Responsables"
+                    name="nextRequestStatus"
+                    label="Siguiente estado de solicitud"
+                    service={service}
                     control={control as unknown as Control}
                     disabled={isSubmitting}
+                    formControlProps={{ fullWidth: true }}
                   />
-                </Can>
+
+                  <Can I="read" an="user">
+                    <ControlledUsersAutocomplete
+                      required
+                      multiple
+                      name="owners"
+                      label="Responsables"
+                      control={control as unknown as Control}
+                      disabled={isSubmitting}
+                      autocompleteProps={{ fullWidth: true }}
+                    />
+                  </Can>
+                </Stack>
 
                 <Can I="read" a="service">
                   <Stack spacing={2}>

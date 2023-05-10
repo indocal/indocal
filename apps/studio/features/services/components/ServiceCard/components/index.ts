@@ -4,4 +4,5 @@ export * from './ManageServiceProcessDialog';
 export * from './AddServiceProcessStepDialog';
 export * from './EditServiceProcessStepDialog';
 
+export * from './ControlledServiceRequestStatusSelect';
 export * from './ControlledServiceProcessStepsAutocomplete';

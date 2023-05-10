@@ -16,6 +16,7 @@ type Owner = Entity & {
 type SiblingStep = Entity & {
   title: string;
   description: string | null;
+  nextRequestStatus: ServiceRequestStatus;
 };
 
 type Service = Entity & {
@@ -28,6 +29,7 @@ type Service = Entity & {
 export interface ServiceProcessStep extends Entity {
   title: string;
   description: string | null;
+  nextRequestStatus: ServiceRequestStatus;
   owners: Owner[];
   prevStepOnReject: SiblingStep | null;
   nextStepOnReject: SiblingStep | null;

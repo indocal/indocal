@@ -271,6 +271,8 @@ model ServiceProcessStep {
   title       String
   description String?
 
+  nextRequestStatus ServiceRequestStatus
+
   owners User[]
 
   prevStepOnReject   ServiceProcessStep? @relation("RejectFlow")

@@ -15,11 +15,13 @@ type Owner = Entity & {
 type SiblingStep = Entity & {
   title: string;
   description: string | null;
+  nextRequestStatus: ServiceRequestStatus;
 };
 
 type Step = Entity & {
   title: string;
   description: string | null;
+  nextRequestStatus: ServiceRequestStatus;
   owners: Owner[];
   prevStepOnReject: SiblingStep | null;
   prevStepOnApprove: SiblingStep | null;
