@@ -1,6 +1,25 @@
-import { IsUUID, IsEnum, IsString, IsOptional } from 'class-validator';
+import {
+  IsUUID,
+  IsEnum,
+  IsBooleanString,
+  IsString,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 import { UUID } from '@/common';
+
+class Comment {
+  @IsBooleanString()
+  isInternal: string;
+
+  @IsString()
+  content: string;
+
+  @IsUUID()
+  author: UUID;
+}
 
 export class ApproveOrRejectCurrentStepDto {
   @IsUUID()
@@ -9,12 +28,10 @@ export class ApproveOrRejectCurrentStepDto {
   @IsEnum(['APPROVE', 'REJECT'])
   action: 'APPROVE' | 'REJECT';
 
-  @IsUUID()
-  author: UUID;
-
-  @IsString()
   @IsOptional()
-  comment?: string;
+  @ValidateNested()
+  @Type(() => Comment)
+  comment?: Comment;
 }
 
 export default ApproveOrRejectCurrentStepDto;

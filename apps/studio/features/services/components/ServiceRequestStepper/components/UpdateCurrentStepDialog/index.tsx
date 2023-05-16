@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import {
   Stack,
+  Unstable_Grid2,
   Divider,
   Dialog,
   DialogTitle,
@@ -34,12 +35,12 @@ import { useServiceRequestStepper } from '../../context';
 
 export interface UpdateCurrentStepDialogProps {
   request: ServiceRequest;
-  nextStepType: 'nextStepOnApprove' | 'nextStepOnReject';
+  action: 'APPROVE' | 'REJECT';
 }
 
 export const UpdateCurrentStepDialog: React.FC<
   UpdateCurrentStepDialogProps
-> = ({ request, nextStepType }) => {
+> = ({ request, action }) => {
   type FormData = zod.infer<typeof schema>;
 
   const schema = zod.object(
@@ -59,6 +60,7 @@ export const UpdateCurrentStepDialog: React.FC<
                 required_error: 'Debe ingresar el comentario',
                 invalid_type_error: 'Formato no válido',
               })
+              .min(1, 'Debe ingresar el comentario')
               .trim(),
 
             attachments: zod
@@ -73,7 +75,7 @@ export const UpdateCurrentStepDialog: React.FC<
             invalid_type_error: 'Formato no válido',
           }
         )
-        .partial(),
+        .nullable(),
     },
     {
       description: 'Aceptar o rechazar paso actual',
@@ -107,24 +109,26 @@ export const UpdateCurrentStepDialog: React.FC<
     async (formData: FormData) => {
       confirm({
         title:
-          nextStepType === 'nextStepOnApprove'
-            ? 'Aprobar paso actual'
-            : 'Rechazar paso actual',
+          action === 'APPROVE' ? 'Aprobar paso actual' : 'Rechazar paso actual',
 
         description:
-          nextStepType === 'nextStepOnApprove'
-            ? 'Estás seguro de que deseas aprobar este paso?'
-            : 'Estás seguro de que deseas rechazar este paso?',
+          action === 'APPROVE'
+            ? '¿Estás seguro de que deseas aprobar este paso?'
+            : '¿Estás seguro de que deseas rechazar este paso?',
       })
         .then(async () => {
           const { error } =
             await indocal.services.requests.approveOrRejectCurrentStep({
               request: request.id,
-              action:
-                nextStepType === 'nextStepOnApprove' ? 'APPROVE' : 'REJECT',
-              author: session?.user.id as UUID,
-              comment: formData.comment.content,
-              attachments: formData.comment.attachments,
+              action: action,
+              ...(formData.comment && {
+                comment: {
+                  isInternal: formData.comment.isInternal,
+                  content: formData.comment.content,
+                  attachments: formData.comment.attachments,
+                  author: session?.user.id as UUID,
+                },
+              }),
             });
 
           if (error) {
@@ -141,7 +145,7 @@ export const UpdateCurrentStepDialog: React.FC<
             await mutate(`${ApiEndpoints.SERVICES_REQUESTS}/${request.id}`);
 
             enqueueSnackbar(
-              nextStepType === 'nextStepOnApprove'
+              action === 'APPROVE'
                 ? 'Paso aprobado exitosamente'
                 : 'Paso rechazado exitosamente',
               {
@@ -154,7 +158,7 @@ export const UpdateCurrentStepDialog: React.FC<
         .catch(() => undefined);
     },
     [
-      nextStepType,
+      action,
       request.id,
       session?.user.id,
       mutate,
@@ -187,13 +191,11 @@ export const UpdateCurrentStepDialog: React.FC<
       onClose={handleOnClose}
     >
       <DialogTitle>
-        {nextStepType === 'nextStepOnApprove'
-          ? 'Aprobar paso actual'
-          : 'Rechazar paso actual'}
+        {action === 'APPROVE' ? 'Aprobar paso actual' : 'Rechazar paso actual'}
       </DialogTitle>
 
       <DialogContent dividers>
-        <Stack spacing={2} divider={<Divider flexItem />}>
+        <Unstable_Grid2 container spacing={2}>
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -206,7 +208,7 @@ export const UpdateCurrentStepDialog: React.FC<
 
             <Chip
               label={
-                nextStepType === 'nextStepOnApprove'
+                action === 'APPROVE'
                   ? request.currentStep?.nextStepOnApprove?.title
                   : request.currentStep?.nextStepOnReject?.title
               }
@@ -243,7 +245,6 @@ export const UpdateCurrentStepDialog: React.FC<
             <Stack
               component="fieldset"
               spacing={2}
-              divider={<Divider flexItem />}
               sx={{
                 borderRadius: (theme) => theme.spacing(0.5),
                 borderColor: (theme) => theme.palette.divider,
@@ -284,18 +285,18 @@ export const UpdateCurrentStepDialog: React.FC<
               </Stack>
             </Stack>
           </Stack>
-        </Stack>
+        </Unstable_Grid2>
       </DialogContent>
 
       <DialogActions>
         <LoadingButton
           type="submit"
           variant="contained"
-          color={nextStepType === 'nextStepOnApprove' ? 'success' : 'error'}
+          color={action === 'APPROVE' ? 'success' : 'error'}
           loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         >
-          {nextStepType === 'nextStepOnApprove' ? 'Aprobar' : 'Rechazar'}
+          {action === 'APPROVE' ? 'Aprobar' : 'Rechazar'}
         </LoadingButton>
       </DialogActions>
     </Dialog>

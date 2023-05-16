@@ -62,10 +62,11 @@ export class ServicesRequestsActionsController {
           ...(approveOrRejectCurrentStepDto.comment && {
             comments: {
               create: {
-                content: approveOrRejectCurrentStepDto.comment,
+                isInternal: !!approveOrRejectCurrentStepDto.comment.isInternal,
+                content: approveOrRejectCurrentStepDto.comment.content,
                 author: {
                   connect: {
-                    id: approveOrRejectCurrentStepDto.author,
+                    id: approveOrRejectCurrentStepDto.comment.author,
                   },
                 },
 

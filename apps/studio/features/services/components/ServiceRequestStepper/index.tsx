@@ -37,13 +37,11 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
   const { isUpdateCurrentStepDialogOpen, toggleUpdateCurrentStepDialog } =
     useServiceRequestStepper();
 
-  const [nextStepType, setNextStepType] = useState<
-    'nextStepOnApprove' | 'nextStepOnReject' | null
-  >(null);
+  const [action, setAction] = useState<'APPROVE' | 'REJECT' | null>(null);
 
   const handleUpdateCurrentStep = useCallback(
-    (type: 'nextStepOnApprove' | 'nextStepOnReject') => {
-      setNextStepType(type);
+    (type: 'APPROVE' | 'REJECT') => {
+      setAction(type);
       toggleUpdateCurrentStepDialog();
     },
     [toggleUpdateCurrentStepDialog]
@@ -57,11 +55,8 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
         <ErrorInfo error={error} />
       ) : request ? (
         <>
-          {isUpdateCurrentStepDialogOpen && nextStepType && (
-            <UpdateCurrentStepDialog
-              request={request}
-              nextStepType={nextStepType}
-            />
+          {isUpdateCurrentStepDialogOpen && action && (
+            <UpdateCurrentStepDialog request={request} action={action} />
           )}
 
           {validating && (
@@ -93,9 +88,7 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
                       size="small"
                       color="error"
                       endIcon={<RejectIcon />}
-                      onClick={() =>
-                        handleUpdateCurrentStep('nextStepOnReject')
-                      }
+                      onClick={() => handleUpdateCurrentStep('REJECT')}
                     >
                       Rechazar
                     </Button>
@@ -107,9 +100,7 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
                       size="small"
                       color="success"
                       endIcon={<ApproveIcon />}
-                      onClick={() =>
-                        handleUpdateCurrentStep('nextStepOnApprove')
-                      }
+                      onClick={() => handleUpdateCurrentStep('APPROVE')}
                     >
                       Aprobar
                     </Button>
