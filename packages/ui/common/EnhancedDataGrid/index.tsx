@@ -4,7 +4,7 @@ import {
   GridToolbarQuickFilterProps,
 } from '@mui/x-data-grid';
 
-import { ErrorInfo } from '@indocal/ui';
+import ErrorInfo from '../ErrorInfo';
 
 import {
   EnhancedDataGridLoadingOverlay,
