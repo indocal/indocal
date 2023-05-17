@@ -86,7 +86,7 @@ export const LastFoldersGallery: React.FC = () => {
       </Stack>
 
       {loading ? (
-        <Paper sx={{ padding: (theme) => theme.spacing(2) }}>
+        <Paper sx={{ padding: (theme) => theme.spacing(4) }}>
           <Loader invisible />
         </Paper>
       ) : error ? (

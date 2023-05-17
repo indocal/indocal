@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import {
   Stack,
-  Unstable_Grid2,
   Divider,
   Dialog,
   DialogTitle,
@@ -48,11 +47,21 @@ export const UpdateCurrentStepDialog: React.FC<
       comment: zod
         .object(
           {
-            isInternal: zod.boolean({
-              description: '¿Comentario interno?',
-              required_error: 'Debe indicar si el comentario es interno o no',
-              invalid_type_error: 'Formato no válido',
-            }),
+            include: zod
+              .boolean({
+                description: '¿Incluir comentario?',
+                required_error: 'Debe indicar si desea incluir un comentario',
+                invalid_type_error: 'Formato no válido',
+              })
+              .nullish(),
+
+            isInternal: zod
+              .boolean({
+                description: '¿Comentario interno?',
+                required_error: 'Debe indicar si el comentario es interno o no',
+                invalid_type_error: 'Formato no válido',
+              })
+              .nullish(),
 
             content: zod
               .string({
@@ -60,14 +69,15 @@ export const UpdateCurrentStepDialog: React.FC<
                 required_error: 'Debe ingresar el comentario',
                 invalid_type_error: 'Formato no válido',
               })
-              .min(1, 'Debe ingresar el comentario')
-              .trim(),
+              .trim()
+              .nullish(),
 
             attachments: zod
               .instanceof(File, {
                 message: 'Debe seleccionar los archivos a cargar',
               })
-              .array(),
+              .array()
+              .nullish(),
           },
           {
             description: 'Comentario',
@@ -75,7 +85,10 @@ export const UpdateCurrentStepDialog: React.FC<
             invalid_type_error: 'Formato no válido',
           }
         )
-        .nullable(),
+        .refine((data) => !data.include || (data.include && data.content), {
+          message: 'Debe ingresar el comentario',
+          path: ['content'],
+        }),
     },
     {
       description: 'Aceptar o rechazar paso actual',
@@ -97,6 +110,7 @@ export const UpdateCurrentStepDialog: React.FC<
 
   const {
     formState: { isDirty, isSubmitting, errors },
+    watch,
     register,
     control,
     handleSubmit,
@@ -104,6 +118,8 @@ export const UpdateCurrentStepDialog: React.FC<
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
+  const includeComment = watch('comment.include');
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
@@ -121,14 +137,15 @@ export const UpdateCurrentStepDialog: React.FC<
             await indocal.services.requests.approveOrRejectCurrentStep({
               request: request.id,
               action: action,
-              ...(formData.comment && {
-                comment: {
-                  isInternal: formData.comment.isInternal,
-                  content: formData.comment.content,
-                  attachments: formData.comment.attachments,
-                  author: session?.user.id as UUID,
-                },
-              }),
+              ...(formData.comment.include &&
+                formData.comment.content && {
+                  comment: {
+                    isInternal: Boolean(formData.comment.isInternal),
+                    content: formData.comment.content,
+                    attachments: formData.comment.attachments ?? [],
+                    author: session?.user.id as UUID,
+                  },
+                }),
             });
 
           if (error) {
@@ -195,25 +212,30 @@ export const UpdateCurrentStepDialog: React.FC<
       </DialogTitle>
 
       <DialogContent dividers>
-        <Unstable_Grid2 container spacing={2}>
+        <Stack component="form" spacing={1} divider={<Divider flexItem />}>
           <Stack
             direction="row"
             justifyContent="space-between"
             alignItems="center"
             spacing={2}
+            sx={{ padding: (theme) => theme.spacing(0.5), overflowX: 'auto' }}
           >
             <Chip label={request.currentStep?.title} sx={{ flex: 1 }} />
 
-            <NextStepIcon />
+            {request.currentStep && (
+              <>
+                <NextStepIcon />
 
-            <Chip
-              label={
-                action === 'APPROVE'
-                  ? request.currentStep?.nextStepOnApprove?.title
-                  : request.currentStep?.nextStepOnReject?.title
-              }
-              sx={{ flex: 1 }}
-            />
+                <Chip
+                  label={
+                    action === 'APPROVE'
+                      ? request.currentStep.nextStepOnApprove?.title
+                      : request.currentStep.nextStepOnReject?.title
+                  }
+                  sx={{ flex: 1 }}
+                />
+              </>
+            )}
           </Stack>
 
           <Stack
@@ -221,6 +243,7 @@ export const UpdateCurrentStepDialog: React.FC<
             justifyContent="space-between"
             alignItems="center"
             spacing={2}
+            sx={{ padding: (theme) => theme.spacing(0.5), overflowX: 'auto' }}
           >
             <Chip
               label={translateServiceRequestStatus(request.status)}
@@ -241,51 +264,59 @@ export const UpdateCurrentStepDialog: React.FC<
             )}
           </Stack>
 
-          <Stack component="form">
-            <Stack
-              component="fieldset"
-              spacing={2}
-              sx={{
-                borderRadius: (theme) => theme.spacing(0.5),
-                borderColor: (theme) => theme.palette.divider,
-              }}
-            >
-              <Typography component="legend" variant="subtitle2">
-                Comentarios y evidencias (opcional)
-              </Typography>
+          <Stack
+            component="fieldset"
+            spacing={1}
+            sx={{
+              borderRadius: (theme) => theme.spacing(0.5),
+              borderColor: (theme) => theme.palette.divider,
+            }}
+          >
+            <Typography component="legend" variant="subtitle2">
+              Comentarios y evidencias (opcional)
+            </Typography>
+
+            <Stack direction="row" justifyContent="space-between" spacing={1}>
+              <ControlledCheckbox
+                name="comment.include"
+                label="¿Incluir comentario?"
+                control={control as unknown as Control}
+                formControlProps={{ disabled: isSubmitting }}
+              />
 
               <ControlledCheckbox
                 name="comment.isInternal"
                 label="¿Comentario interno?"
                 control={control as unknown as Control}
                 formControlProps={{
-                  disabled: isSubmitting,
-                  sx: { marginLeft: 'auto' },
+                  disabled: isSubmitting || !includeComment,
                 }}
               />
+            </Stack>
 
-              <Stack spacing={2}>
-                <TextField
-                  multiline
-                  autoComplete="off"
-                  label="Comentario"
-                  disabled={isSubmitting}
-                  inputProps={register('comment.content')}
-                  error={Boolean(errors.comment?.content)}
-                  helperText={errors.comment?.content?.message}
-                />
+            <Stack spacing={2}>
+              <TextField
+                multiline
+                autoComplete="off"
+                label="Comentario"
+                required={Boolean(includeComment)}
+                disabled={isSubmitting || !includeComment}
+                inputProps={register('comment.content')}
+                error={Boolean(errors.comment?.content)}
+                helperText={errors.comment?.content?.message}
+              />
 
-                <ControlledFilesDropzone
-                  multiple
-                  name="comment.attachments"
-                  description="Evidencias (archivos)"
-                  control={control as unknown as Control}
-                  disabled={isSubmitting}
-                />
-              </Stack>
+              <ControlledFilesDropzone
+                multiple
+                name="comment.attachments"
+                description="Evidencias (archivos)"
+                control={control as unknown as Control}
+                required={Boolean(includeComment)}
+                disabled={isSubmitting || !includeComment}
+              />
             </Stack>
           </Stack>
-        </Unstable_Grid2>
+        </Stack>
       </DialogContent>
 
       <DialogActions>
