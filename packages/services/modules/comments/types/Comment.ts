@@ -1,8 +1,6 @@
-import { Entity } from '../../../../../common';
+import { Entity } from '../../../common';
 
-import { UserStatus } from '../../../../auth/submodules/users-service';
-
-import { ServiceRequestStatus } from '../../requests-service';
+import { UserStatus } from '../../auth/submodules/users-service';
 
 type Attachment = Entity & {
   path: string;
@@ -22,16 +20,11 @@ type Author = Entity & {
   status: UserStatus;
 };
 
-type Request = Entity & {
-  status: ServiceRequestStatus;
-};
-
-export interface ServiceRequestComment extends Entity {
+export interface Comment extends Entity {
   content: string;
   isInternal: boolean;
   attachments: Attachment[];
   author: Author;
-  request: Request;
 }
 
-export default ServiceRequestComment;
+export default Comment;

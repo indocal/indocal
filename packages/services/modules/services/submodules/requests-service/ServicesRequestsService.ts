@@ -18,8 +18,6 @@ import {
   ApproveOrRejectCurrentStepDto,
 } from './types';
 
-import { ServicesRequestsCommentsService } from '../comments-service';
-
 export interface CreateServiceRequestReturn {
   request: ServiceRequest | null;
   error: ServiceError | null;
@@ -56,11 +54,7 @@ export interface ApproveOrRejectCurrentStepReturn {
 }
 
 export class ServicesRequestsService {
-  comments: ServicesRequestsCommentsService;
-
-  constructor(private config: Config) {
-    this.comments = new ServicesRequestsCommentsService(config);
-  }
+  constructor(private config: Config) {}
 
   async create(
     data: CreateServiceRequestDto

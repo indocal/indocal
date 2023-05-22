@@ -8,7 +8,7 @@ import path from 'path';
 import { AuthModule } from '@/auth';
 import { rootFolder } from '@/uploads';
 
-import ServicesRequestsCommentsController from './comments.controller';
+import CommentsController from './comments.controller';
 
 @Module({
   imports: [
@@ -34,9 +34,9 @@ import ServicesRequestsCommentsController from './comments.controller';
       }),
     }),
   ],
-  controllers: [ServicesRequestsCommentsController],
+  controllers: [CommentsController],
   providers: [PrismaService],
 })
-export class ServicesRequestsCommentsModule {}
+export class CommentsModule {}
 
-export default ServicesRequestsCommentsModule;
+export default CommentsModule;

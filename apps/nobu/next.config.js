@@ -7,7 +7,6 @@ module.exports = {
     '@indocal/services',
     '@indocal/theme',
     '@indocal/ui',
-    '@indocal/uploads',
     '@indocal/utils',
   ],
 };

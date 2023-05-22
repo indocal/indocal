@@ -1,10 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
 }
 
 ///////////////////////////
@@ -75,11 +75,12 @@ model User {
   roles  UserRole[]
   groups UserGroup[]
 
+  comments Comment[]
+
   formEntries FormEntry[]
 
-  serviceProcessSteps     ServiceProcessStep[]
-  serviceRequests         ServiceRequest[]
-  serviceRequestsComments ServiceRequestComment[]
+  serviceProcessSteps ServiceProcessStep[]
+  serviceRequests     ServiceRequest[]
 
   supplyRequests SupplyRequest[]
 
@@ -311,7 +312,7 @@ model ServiceRequest {
   currentStep   ServiceProcessStep? @relation(fields: [currentStepId], references: [id], onDelete: Restrict)
   currentStepId String?
 
-  comments ServiceRequestComment[]
+  comments Comment[]
 
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
   serviceId String
@@ -327,23 +328,6 @@ enum ServiceRequestStatus {
   IN_PROGRESS
   COMPLETED
   CANCELED
-}
-
-model ServiceRequestComment {
-  id         String  @id @default(uuid())
-  content    String
-  isInternal Boolean @default(false)
-
-  attachments File[]
-
-  author   User   @relation(fields: [authorId], references: [id], onDelete: Restrict)
-  authorId String
-
-  request   ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  requestId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 ////////////////////////
@@ -364,7 +348,7 @@ model File {
   caption String?
   alt     String?
 
-  comment   ServiceRequestComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String?
 
   folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
@@ -390,6 +374,27 @@ model Folder {
   updatedAt DateTime @updatedAt
 
   @@unique([name, folderId])
+}
+
+/////////////////////////
+// Comments Management //
+/////////////////////////
+
+model Comment {
+  id         String  @id @default(uuid())
+  content    String
+  isInternal Boolean @default(false)
+
+  attachments File[]
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  authorId String
+
+  request   ServiceRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  requestId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 /////////////////////

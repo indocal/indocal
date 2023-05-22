@@ -90,15 +90,13 @@ export const AddCommentDialog: React.FC<AddCommentDialogProps> = ({
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { error } = await indocal.services.requests.comments.create(
-        request.id,
-        {
-          isInternal: formData.isInternal,
-          content: formData.content,
-          attachments: formData.attachments,
-          author: session?.user.id as UUID,
-        }
-      );
+      const { error } = await indocal.comments.create({
+        isInternal: formData.isInternal,
+        content: formData.content,
+        attachments: formData.attachments,
+        author: session?.user.id as UUID,
+        attach: { model: 'request', entity: request.id },
+      });
 
       if (error) {
         enqueueSnackbar(

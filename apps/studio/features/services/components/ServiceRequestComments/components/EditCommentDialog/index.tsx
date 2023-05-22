@@ -112,14 +112,11 @@ export const EditCommentDialog: React.FC<EditCommentDialogProps> = ({
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { error } = await indocal.services.requests.comments.update(
-        comment.id,
-        {
-          isInternal: formData.isInternal,
-          content: formData.content,
-          ...(formData.attachments && { attachments: formData.attachments }),
-        }
-      );
+      const { error } = await indocal.comments.update(comment.id, {
+        isInternal: formData.isInternal,
+        content: formData.content,
+        ...(formData.attachments && { attachments: formData.attachments }),
+      });
 
       if (error) {
         enqueueSnackbar(

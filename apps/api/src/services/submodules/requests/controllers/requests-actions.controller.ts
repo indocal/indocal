@@ -70,44 +70,45 @@ export class ServicesRequestsActionsController {
                   },
                 },
 
-                ...(attachments.length && {
-                  attachments: {
-                    createMany: {
-                      skipDuplicates: true,
-                      data: attachments.map((attachment) => {
-                        const location = path.join(
-                          rootFolder,
-                          attachment.filename
-                        );
+                ...(attachments &&
+                  attachments.length > 0 && {
+                    attachments: {
+                      createMany: {
+                        skipDuplicates: true,
+                        data: attachments.map((attachment) => {
+                          const location = path.join(
+                            rootFolder,
+                            attachment.filename
+                          );
 
-                        const [mime] = attachment.mimetype.split('/');
+                          const [mime] = attachment.mimetype.split('/');
 
-                        let width, height;
+                          let width, height;
 
-                        if (mime === 'image') {
-                          const result = imageSize(location);
+                          if (mime === 'image') {
+                            const result = imageSize(location);
 
-                          if (result) {
-                            width = result.width;
-                            height = result.height;
+                            if (result) {
+                              width = result.width;
+                              height = result.height;
+                            }
                           }
-                        }
 
-                        return {
-                          path: attachment.path,
-                          mime: attachment.mimetype,
-                          extension: path.extname(attachment.filename),
-                          size: attachment.size,
-                          name: Buffer.from(
-                            attachment.originalname,
-                            'latin1'
-                          ).toString('utf8'),
-                          dimensions: width && height ? [width, height] : [],
-                        };
-                      }),
+                          return {
+                            path: attachment.path,
+                            mime: attachment.mimetype,
+                            extension: path.extname(attachment.filename),
+                            size: attachment.size,
+                            name: Buffer.from(
+                              attachment.originalname,
+                              'latin1'
+                            ).toString('utf8'),
+                            dimensions: width && height ? [width, height] : [],
+                          };
+                        }),
+                      },
                     },
-                  },
-                }),
+                  }),
               },
             },
           }),

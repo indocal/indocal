@@ -3,7 +3,7 @@ import { IsBooleanString, IsString } from 'class-validator';
 
 import { TrimParam } from '@/common';
 
-class UpdateServiceRequestCommentDtoSchema {
+class UpdateCommentDtoSchema {
   @IsBooleanString()
   isInternal: string;
 
@@ -12,8 +12,6 @@ class UpdateServiceRequestCommentDtoSchema {
   content: string;
 }
 
-export class UpdateServiceRequestCommentDto extends PartialType(
-  UpdateServiceRequestCommentDtoSchema
-) {}
+export class UpdateCommentDto extends PartialType(UpdateCommentDtoSchema) {}
 
-export default UpdateServiceRequestCommentDto;
+export default UpdateCommentDto;

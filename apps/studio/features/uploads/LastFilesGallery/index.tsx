@@ -10,8 +10,7 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
-import { Loader, ErrorInfo } from '@indocal/ui';
-import { FilesGallery } from '@indocal/uploads';
+import { Loader, ErrorInfo , FilesGallery} from '@indocal/ui';
 import { useFiles } from '@indocal/services';
 
 import { indocal } from '@/lib';

@@ -101,7 +101,7 @@ const ServiceRequestComments: React.FC<ServiceRequestCommentsProps> = ({
         description: '¿Estás seguro de que deseas eliminar este comentario?',
       })
         .then(async () => {
-          const { error } = await indocal.services.requests.comments.delete(id);
+          const { error } = await indocal.comments.delete(id);
 
           if (error) {
             enqueueSnackbar(

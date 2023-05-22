@@ -17,7 +17,7 @@ import {
   User,
   Service,
   ServiceProcessStep,
-  ServiceRequestComment,
+  Comment,
   File,
 } from '@prisma/client';
 
@@ -27,10 +27,10 @@ import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { FormEntryEntity } from '../../../../forms/submodules/entries/entities';
 import { UserEntity } from '../../../../auth/submodules/users/entities';
 import { FileEntity } from '../../../../uploads/submodules/files/entities';
+import { CommentEntity } from '../../../../comments/entities';
 import { ServiceEntity } from '../../../entities';
 
 import { ServiceProcessStepEntity } from '../../process-steps/entities';
-import { ServiceRequestCommentEntity } from '../../comments/entities';
 
 import { ServiceRequestEntity } from './../entities';
 import {
@@ -48,7 +48,7 @@ class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   nextStepOnApprove: ServiceProcessStepEntity | null;
 }
 
-class EnhancedServiceRequestComment extends ServiceRequestCommentEntity {
+class EnhancedComment extends CommentEntity {
   attachments: FileEntity[];
   author: UserEntity;
 }
@@ -58,7 +58,7 @@ class EnhancedServiceRequest extends ServiceRequestEntity {
   requestedBy: UserEntity;
   service: ServiceEntity;
   currentStep: EnhancedServiceProcessStep | null;
-  comments: EnhancedServiceRequestComment[];
+  comments: EnhancedComment[];
 }
 
 type CreateEnhancedServiceRequest = ServiceRequest & {
@@ -75,7 +75,7 @@ type CreateEnhancedServiceRequest = ServiceRequest & {
       })
     | null;
   comments: Array<
-    ServiceRequestComment & {
+    Comment & {
       attachments: File[];
       author: User;
     }
@@ -126,7 +126,7 @@ export class ServicesRequestsCRUDController {
     }
 
     request.comments = rest.comments.map(({ attachments, author, ...rest }) => {
-      const comment = new EnhancedServiceRequestComment(rest);
+      const comment = new EnhancedComment(rest);
 
       comment.attachments = attachments.map(
         (attachment) => new FileEntity(attachment)

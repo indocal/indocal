@@ -17,6 +17,7 @@ import { AuthModule } from '@/auth';
 import { FormsModule } from '@/forms';
 import { ServicesModule } from '@/services';
 import { UploadsModule } from '@/uploads';
+import { CommentsModule } from '@/comments';
 import { WarehouseModule } from '@/warehouse';
 
 @Module({
@@ -26,6 +27,7 @@ import { WarehouseModule } from '@/warehouse';
     FormsModule,
     ServicesModule,
     UploadsModule,
+    CommentsModule,
     WarehouseModule,
     PrismaModule.forRoot(),
     ScheduleModule.forRoot(),

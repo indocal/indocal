@@ -80,6 +80,10 @@ async function main() {
       actions: ['count', 'read', 'create', 'update', 'delete'],
     },
     {
+      scope: 'comment',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
       scope: 'supply',
       actions: ['count', 'read', 'create', 'update', 'delete', 'get-prices'],
     },

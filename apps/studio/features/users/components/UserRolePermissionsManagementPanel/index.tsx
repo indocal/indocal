@@ -539,6 +539,51 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
         ],
       },
       {
+        label: 'Comentarios',
+        subPanels: [
+          {
+            scope: 'comment',
+            permissions: [
+              {
+                label: 'Contar',
+                action: 'count',
+                checked:
+                  Boolean(permissions?.comment) &&
+                  Boolean(permissions?.comment['count']),
+              },
+              {
+                label: 'Leer',
+                action: 'read',
+                checked:
+                  Boolean(permissions?.comment) &&
+                  Boolean(permissions?.comment['read']),
+              },
+              {
+                label: 'Crear',
+                action: 'create',
+                checked:
+                  Boolean(permissions?.comment) &&
+                  Boolean(permissions?.comment['create']),
+              },
+              {
+                label: 'Modificar',
+                action: 'update',
+                checked:
+                  Boolean(permissions?.comment) &&
+                  Boolean(permissions?.comment['update']),
+              },
+              {
+                label: 'Borrar',
+                action: 'delete',
+                checked:
+                  Boolean(permissions?.comment) &&
+                  Boolean(permissions?.comment['delete']),
+              },
+            ],
+          },
+        ],
+      },
+      {
         label: 'Almacén & Suministro',
         subPanels: [
           {

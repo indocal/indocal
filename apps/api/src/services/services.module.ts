@@ -8,16 +8,10 @@ import ServicesController from './services.controller';
 import {
   ServicesProcessStepsModule,
   ServicesRequestsModule,
-  ServicesRequestsCommentsModule,
 } from './submodules';
 
 @Module({
-  imports: [
-    AuthModule,
-    ServicesProcessStepsModule,
-    ServicesRequestsModule,
-    ServicesRequestsCommentsModule,
-  ],
+  imports: [AuthModule, ServicesProcessStepsModule, ServicesRequestsModule],
   controllers: [ServicesController],
   providers: [PrismaService],
 })

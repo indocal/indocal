@@ -1,12 +1,10 @@
 import { Exclude } from 'class-transformer';
-import { ServiceRequestComment } from '@prisma/client';
+import { Comment } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export class ServiceRequestCommentEntity
-  implements Entity, ServiceRequestComment
-{
-  constructor(comment: ServiceRequestComment) {
+export class CommentEntity implements Entity, Comment {
+  constructor(comment: Comment) {
     Object.assign(this, comment);
   }
 
@@ -24,4 +22,4 @@ export class ServiceRequestCommentEntity
   updatedAt: Date;
 }
 
-export default ServiceRequestCommentEntity;
+export default CommentEntity;
