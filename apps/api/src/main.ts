@@ -5,10 +5,9 @@ import { PrismaService } from 'nestjs-prisma';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.enableCors();
   app.useStaticAssets('public', { prefix: '/public' });
   app.setGlobalPrefix('api');
 

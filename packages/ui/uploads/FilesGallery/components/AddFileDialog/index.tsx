@@ -26,7 +26,7 @@ export const AddFileDialog: React.FC = () => {
   const schema = zod.object(
     {
       files: zod
-        .instanceof(File)
+        .instanceof(File, { message: 'Debe seleccionar los archivos a cargar' })
         .array()
         .min(1, 'Debe seleccionar al menos un archivo'),
     },

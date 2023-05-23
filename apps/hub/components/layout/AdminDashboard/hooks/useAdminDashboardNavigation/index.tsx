@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import {
-  Dashboard as OverviewIcon,
   ShoppingCart as ServicesIcon,
   Feed as FormsIcon,
   ConfirmationNumber as RequestICon,
@@ -39,15 +38,7 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
 
   const navigation = useMemo<Navigation[]>(
     () => [
-      {
-        type: 'ITEM',
-        item: {
-          show: true,
-          label: 'Resumen',
-          icon: <OverviewIcon />,
-          href: Pages.ROOT,
-        },
-      },
+
       {
         type: 'ITEM',
         item: {

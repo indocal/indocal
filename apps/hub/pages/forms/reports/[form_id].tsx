@@ -3,14 +3,14 @@ import { getToken } from 'next-auth/jwt';
 import { Container, Unstable_Grid2, Typography } from '@mui/material';
 
 import { Page, Widget } from '@indocal/ui';
+import {
+  FormEntriesPerMonthChart,
+  FormFieldsReportsPerCycle,
+} from '@indocal/forms-generator';
 import { UUID, Form } from '@indocal/services';
 
 import { indocal } from '@/lib';
-import {
-  FormCard,
-  FormEntriesPerMonthChart,
-  FormFieldsReportsPerCycle,
-} from '@/features';
+import { FormCard } from '@/features';
 import { AdminDashboard } from '@/components';
 import { Pages } from '@/config';
 import { EnhancedNextPage } from '@/types';
@@ -80,7 +80,7 @@ const FormReportsPage: EnhancedNextPage<FormReportsPageProps> = ({ form }) => (
 
         <Unstable_Grid2 xs={12}>
           <Widget disableDefaultSizes>
-            <FormFieldsReportsPerCycle form={form} />
+            <FormFieldsReportsPerCycle form={form} client={indocal} />
           </Widget>
         </Unstable_Grid2>
       </Unstable_Grid2>

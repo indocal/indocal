@@ -12,16 +12,16 @@ export class ServiceRequestEntity implements Entity, ServiceRequest {
   status: ServiceRequestStatus;
 
   @Exclude()
-  entryId: string;
+  entryId: UUID;
 
   @Exclude()
-  requestedById: string;
+  requestedById: UUID;
 
   @Exclude()
-  currentStepId: string | null;
+  currentStepId: UUID | null;
 
   @Exclude()
-  serviceId: string;
+  serviceId: UUID;
 
   createdAt: Date;
   updatedAt: Date;

@@ -141,6 +141,8 @@ export type SectionFormFieldItemReport = {
     | TimeFormFieldReport
     | DateFormFieldReport
     | DateTimeFormFieldReport
+    | RatingFormFieldReport
+    | NetPromoterScoreFormFieldReport
     | FilesFormFieldReport
     | UsersFormFieldReport;
 };
@@ -162,6 +164,7 @@ export type TableFormFieldColumnReport = {
     | TimeFormFieldReport
     | DateFormFieldReport
     | DateTimeFormFieldReport
+    | RatingFormFieldReport
     | FilesFormFieldReport
     | UsersFormFieldReport;
 };

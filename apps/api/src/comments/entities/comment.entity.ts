@@ -13,10 +13,10 @@ export class CommentEntity implements Entity, Comment {
   isInternal: boolean;
 
   @Exclude()
-  authorId: string;
+  authorId: UUID;
 
   @Exclude()
-  requestId: string;
+  requestId: UUID;
 
   createdAt: Date;
   updatedAt: Date;

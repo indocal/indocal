@@ -1,47 +1,35 @@
 import {
   Controller,
   Get,
+  Res,
   Param,
   Query,
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { Response } from 'express';
+import { unlinkSync } from 'fs';
+import { createObjectCsvWriter } from 'csv-writer';
+import { tmpNameSync } from 'tmp';
 import { startOfYear, endOfYear } from 'date-fns';
 
 import { UUID } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
 import {
-  calcTextFormFieldReport,
-  calcTextAreaFormFieldReport,
-  calcNumberFormFieldReport,
-  calcDniFormFieldReport,
-  calcPhoneFormFieldReport,
-  calcEmailFormFieldReport,
-  calcCheckboxFormFieldReport,
-  calcSelectFormFieldReport,
-  calcRadioFormFieldReport,
-  calcTimeFormFieldReport,
-  calcDateFormFieldReport,
-  calcDateTimeFormFieldReport,
-  calcRatingFormFieldReport,
-  calcNetPromoterScoreFormFieldReport,
-  calcUsersFormFieldReport,
-  calcFilesFormFieldReport,
-  calcSectionFormFieldReport,
-  calcTableFormFieldReport,
+  calcFormEntriesPerMonth,
+  calcFormFieldsReports,
+  serializeFormEntries,
 } from '../utils';
 import {
   CalcFormEntriesPerMonthParamsDto,
   CalcFormFieldsReportsParamsDto,
+  ExportFormEntriesParamsDto,
 } from '../dto';
 import { FormEntriesPerMonth, FormFieldReport } from '../types';
 
-import {
-  FormEntryEntity,
-  FormFieldAnswer,
-} from '../submodules/entries/entities';
+import { FormEntryEntity } from '../submodules/entries/entities';
 
 @Controller()
 @UseGuards(PoliciesGuard)
@@ -70,27 +58,11 @@ export class FormsStatsController {
           lte: end,
         },
       },
-      select: { createdAt: true },
     });
 
-    const entriesPerMonth: FormEntriesPerMonth[] = [];
+    const entries = records.map((record) => new FormEntryEntity(record));
 
-    for (let i = 0; i < 12; i++) {
-      const year = startOfYear(new Date());
-
-      year.setMonth(i);
-
-      const month = year.getMonth();
-
-      const entries = records.filter(
-        (record) => record.createdAt.getMonth() === month
-      );
-
-      entriesPerMonth.push({
-        month: year.toLocaleString('es-do', { month: 'short' }),
-        count: entries.length,
-      });
-    }
+    const entriesPerMonth = calcFormEntriesPerMonth(entries);
 
     return entriesPerMonth;
   }
@@ -121,46 +93,54 @@ export class FormsStatsController {
 
     const entries = records.map((record) => new FormEntryEntity(record));
 
-    const map: Map<UUID, FormFieldReport> = new Map();
+    const reports = calcFormFieldsReports(entries);
 
-    const helpers: Record<
-      FormFieldAnswer['field']['type'],
-      (answer: FormFieldAnswer, map: Map<string, FormFieldReport>) => void
-    > = {
-      TEXT: calcTextFormFieldReport,
-      TEXTAREA: calcTextAreaFormFieldReport,
-      NUMBER: calcNumberFormFieldReport,
+    return reports;
+  }
 
-      DNI: calcDniFormFieldReport,
-      PHONE: calcPhoneFormFieldReport,
-      EMAIL: calcEmailFormFieldReport,
+  @CheckPolicies({
+    apiToken: { ANON: false, SERVICE: true },
+    user: (ability) => ability.can('generate-reports', 'form'),
+  })
+  @Get('forms/:id/entries/export')
+  async exportFormEntries(
+    @Res() res: Response,
+    @Param('id', ParseUUIDPipe) id: UUID,
+    @Query() query: ExportFormEntriesParamsDto
+  ): Promise<void> {
+    const year = new Date(query.year);
 
-      CHECKBOX: calcCheckboxFormFieldReport,
-      SELECT: calcSelectFormFieldReport,
-      RADIO: calcRadioFormFieldReport,
+    const start = startOfYear(year);
+    const end = endOfYear(year);
 
-      TIME: calcTimeFormFieldReport,
-      DATE: calcDateFormFieldReport,
-      DATETIME: calcDateTimeFormFieldReport,
-
-      RATING: calcRatingFormFieldReport,
-      NET_PROMOTER_SCORE: calcNetPromoterScoreFormFieldReport,
-
-      FILES: calcFilesFormFieldReport,
-
-      USERS: calcUsersFormFieldReport,
-
-      SECTION: calcSectionFormFieldReport,
-      TABLE: calcTableFormFieldReport,
-    };
-
-    entries.forEach((entry) => {
-      entry.answers.forEach((answer) => {
-        helpers[answer.field.type](answer, map);
-      });
+    const records = await this.prismaService.formEntry.findMany({
+      where: {
+        form: { id },
+        createdAt: {
+          gte: start,
+          lte: end,
+        },
+      },
     });
 
-    return Array.from(map.values());
+    const entries = records.map((record) => new FormEntryEntity(record));
+
+    const { columns, rows } = await serializeFormEntries(
+      entries,
+      this.prismaService
+    );
+
+    const tmp = tmpNameSync({ postfix: '.csv' });
+
+    const csvWriter = createObjectCsvWriter({
+      encoding: 'latin1',
+      path: tmp,
+      header: columns,
+    });
+
+    await csvWriter.writeRecords(rows);
+
+    res.download(tmp, () => tmp && unlinkSync(tmp));
   }
 }
 

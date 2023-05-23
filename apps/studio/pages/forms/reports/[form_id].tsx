@@ -2,13 +2,14 @@ import { useRouter } from 'next/router';
 import { Container, Unstable_Grid2, Typography } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
-import { useForm, UUID } from '@indocal/services';
-
 import {
-  FormCard,
   FormEntriesPerMonthChart,
   FormFieldsReportsPerCycle,
-} from '@/features';
+} from '@indocal/forms-generator';
+import { useForm, UUID } from '@indocal/services';
+
+import { indocal } from '@/lib';
+import { FormCard } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -90,7 +91,7 @@ const FormReportsPage: EnhancedNextPage = () => {
 
             <Unstable_Grid2 xs={12}>
               <Widget disableDefaultSizes>
-                <FormFieldsReportsPerCycle form={form} />
+                <FormFieldsReportsPerCycle form={form} client={indocal} />
               </Widget>
             </Unstable_Grid2>
           </Unstable_Grid2>

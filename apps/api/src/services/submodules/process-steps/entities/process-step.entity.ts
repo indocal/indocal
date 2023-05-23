@@ -14,13 +14,13 @@ export class ServiceProcessStepEntity implements Entity, ServiceProcessStep {
   nextRequestStatus: ServiceRequestStatus;
 
   @Exclude()
-  nextStepOnRejectId: string | null;
+  nextStepOnRejectId: UUID | null;
 
   @Exclude()
-  nextStepOnApproveId: string | null;
+  nextStepOnApproveId: UUID | null;
 
   @Exclude()
-  serviceId: string;
+  serviceId: UUID;
 
   createdAt: Date;
   updatedAt: Date;

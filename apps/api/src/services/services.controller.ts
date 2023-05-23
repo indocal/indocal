@@ -14,17 +14,20 @@ import { PrismaService } from 'nestjs-prisma';
 import {
   Service,
   ServiceProcessStep,
+  ServiceCertificateTemplate,
   Form,
   UserGroup,
   User,
+  File,
 } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
+import { FormEntity } from '../forms/entities';
 import { UserGroupEntity } from '../auth/submodules/groups/entities';
 import { UserEntity } from '../auth/submodules/users/entities';
-import { FormEntity } from '../forms/entities';
+import { FileEntity } from '../uploads/submodules/files/entities';
 
 import { ServiceEntity } from './entities';
 import {
@@ -35,6 +38,7 @@ import {
 } from './dto';
 
 import { ServiceProcessStepEntity } from './submodules/process-steps/entities';
+import { ServiceCertificateTemplateEntity } from './submodules/certificates-templates/entities';
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
@@ -44,10 +48,18 @@ class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   nextStepOnApprove: ServiceProcessStepEntity | null;
 }
 
+class EnhancedServiceCertificateTemplate
+  extends ServiceCertificateTemplateEntity
+  implements ServiceCertificateTemplate
+{
+  background: FileEntity | null;
+}
+
 class EnhancedService extends ServiceEntity {
-  steps: EnhancedServiceProcessStep[];
   form: FormEntity;
   group: UserGroupEntity;
+  steps: EnhancedServiceProcessStep[];
+  template: EnhancedServiceCertificateTemplate | null;
 }
 
 type CreateEnhancedService = Service & {
@@ -61,6 +73,7 @@ type CreateEnhancedService = Service & {
       nextStepOnApprove: ServiceProcessStep | null;
     }
   >;
+  template: (ServiceCertificateTemplate & { background: File | null }) | null;
 };
 
 @Controller('services')
@@ -69,8 +82,9 @@ export class ServicesController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedService({
-    steps,
     form: { group, ...form },
+    steps,
+    template,
     ...rest
   }: CreateEnhancedService): EnhancedService {
     const service = new EnhancedService(rest);
@@ -110,6 +124,16 @@ export class ServicesController {
       }
     );
 
+    if (template) {
+      service.template = new EnhancedServiceCertificateTemplate(template);
+
+      service.template.background = template.background
+        ? new FileEntity(template.background)
+        : null;
+    } else {
+      service.template = null;
+    }
+
     return service;
   }
 
@@ -129,6 +153,7 @@ export class ServicesController {
         form: { connect: { id: createServiceDto.form } },
       },
       include: {
+        form: { include: { group: true } },
         steps: {
           include: {
             owners: true,
@@ -138,7 +163,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        form: { include: { group: true } },
+        template: { include: { background: true } },
       },
     });
 
@@ -174,6 +199,7 @@ export class ServicesController {
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
         include: {
+          form: { include: { group: true } },
           steps: {
             include: {
               owners: true,
@@ -183,7 +209,7 @@ export class ServicesController {
               nextStepOnApprove: true,
             },
           },
-          form: { include: { group: true } },
+          template: { include: { background: true } },
         },
       }),
       this.prismaService.service.count({
@@ -209,6 +235,7 @@ export class ServicesController {
     const service = await this.prismaService.service.findUnique({
       where: { id },
       include: {
+        form: { include: { group: true } },
         steps: {
           include: {
             owners: true,
@@ -218,7 +245,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        form: { include: { group: true } },
+        template: { include: { background: true } },
       },
     });
 
@@ -247,6 +274,7 @@ export class ServicesController {
         }),
       },
       include: {
+        form: { include: { group: true } },
         steps: {
           include: {
             owners: true,
@@ -256,7 +284,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        form: { include: { group: true } },
+        template: { include: { background: true } },
       },
     });
 
@@ -274,6 +302,7 @@ export class ServicesController {
     const service = await this.prismaService.service.delete({
       where: { id },
       include: {
+        form: { include: { group: true } },
         steps: {
           include: {
             owners: true,
@@ -283,7 +312,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        form: { include: { group: true } },
+        template: { include: { background: true } },
       },
     });
 

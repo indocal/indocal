@@ -17,6 +17,7 @@ import {
   Launch as ViewDetailsIcon,
   Edit as EditIcon,
   Handyman as SettingsIcon,
+  CardMembership as CertificateIcon,
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
@@ -33,7 +34,11 @@ import {
 import { Pages } from '@/config';
 
 import { ServiceCardProvider, useServiceCard } from './context';
-import { EditServiceDialog, ManageServiceProcessDialog } from './components';
+import {
+  EditServiceDialog,
+  ManageServiceProcessDialog,
+  DesignCertificateTemplateDialog,
+} from './components';
 
 export interface ServiceCardProps {
   service: UUID | Service;
@@ -49,12 +54,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service: entity }) => {
     toggleEditServiceDialog,
     isManageServiceProcessDialogOpen,
     toggleManageServiceProcessDialog,
+    isDesignCertificateTemplateDialogOpen,
+    toggleDesignCertificateTemplateDialog,
   } = useServiceCard();
 
   const supportedRequestStatus = useMemo(() => {
     if (!service) return;
 
-    const formatter = new Intl.ListFormat('es');
+    const formatter = new Intl.ListFormat('es-do');
 
     return formatter.format(
       service.supportedRequestStatus.map((status) =>
@@ -83,6 +90,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service: entity }) => {
 
           {isManageServiceProcessDialogOpen && (
             <ManageServiceProcessDialog service={service} />
+          )}
+
+          {isDesignCertificateTemplateDialogOpen && (
+            <DesignCertificateTemplateDialog service={service} />
           )}
 
           {validating && (
@@ -189,15 +200,30 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service: entity }) => {
 
           <Can I="update" a="service">
             <CardActions>
-              <Button
-                fullWidth
-                size="small"
-                variant="contained"
-                endIcon={<SettingsIcon />}
-                onClick={toggleManageServiceProcessDialog}
-              >
-                Administrar procesos
-              </Button>
+              <Stack spacing={1} sx={{ width: '100%' }}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  size="small"
+                  endIcon={<SettingsIcon />}
+                  onClick={toggleManageServiceProcessDialog}
+                  sx={{ flex: 1 }}
+                >
+                  Administrar procesos
+                </Button>
+
+                <Button
+                  fullWidth
+                  variant="contained"
+                  size="small"
+                  color="warning"
+                  endIcon={<CertificateIcon />}
+                  onClick={toggleDesignCertificateTemplateDialog}
+                  sx={{ flex: 1 }}
+                >
+                  Diseñar certificado
+                </Button>
+              </Stack>
             </CardActions>
           </Can>
         </>

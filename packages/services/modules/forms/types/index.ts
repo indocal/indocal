@@ -11,3 +11,5 @@ export * from './CalcFormEntriesPerMonthParamsDto';
 
 export * from './FormFieldReport';
 export * from './CalcFormFieldsReportsParamsDto';
+
+export * from './ExportFormEntriesParamsDto';

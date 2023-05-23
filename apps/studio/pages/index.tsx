@@ -1,8 +1,7 @@
-import { Container, Unstable_Grid2 } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 
 import { Page } from '@indocal/ui';
 
-import { OverviewStatsGrid } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -11,23 +10,21 @@ const DashboardPage: EnhancedNextPage = () => (
     <Container
       fixed
       sx={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gridTemplateRows: '1fr',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: (theme) => theme.spacing(0.25),
         paddingY: (theme) => theme.spacing(2),
       }}
     >
-      <Unstable_Grid2
-        container
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-        sx={{ height: 'fit-content' }}
-      >
-        <Unstable_Grid2 xs={12}>
-          <OverviewStatsGrid />
-        </Unstable_Grid2>
-      </Unstable_Grid2>
+      <Typography variant="h4" align="center" fontWeight="bolder">
+        Bienvenido a tu dashboard 💻
+      </Typography>
+
+      <Typography variant="body1" align="center" color="text.secondary">
+        Para comenzar, selecciona una opción del menú lateral.
+      </Typography>
     </Container>
   </Page>
 );

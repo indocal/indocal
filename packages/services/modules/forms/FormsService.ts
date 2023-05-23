@@ -20,6 +20,7 @@ import {
   FormFieldReport,
   CalcFormEntriesPerMonthParamsDto,
   CalcFormFieldsReportsParamsDto,
+  ExportFormEntriesParamsDto,
 } from './types';
 
 import { FormsFieldsService, FormsEntriesService } from './submodules';
@@ -67,6 +68,11 @@ export interface CalcFormEntriesPerMonthReturn {
 
 export interface CalcFormFieldsReportsReturn {
   reports: FormFieldReport[];
+  error: ServiceError | null;
+}
+
+export interface ExportFormEntriesReturn {
+  blob: Blob | null;
   error: ServiceError | null;
 }
 
@@ -222,12 +228,12 @@ export class FormsService {
   }
 
   async calcFormEntriesPerMonth(
-    id: UUID,
-    params?: CalcFormEntriesPerMonthParamsDto
+    form: UUID,
+    params: CalcFormEntriesPerMonthParamsDto
   ): Promise<CalcFormEntriesPerMonthReturn> {
     try {
       const response = await this.config.axios.get<FormEntriesPerMonth[]>(
-        `${ApiEndpoints.FORMS}/${id}/stats/entries-per-month`,
+        `${ApiEndpoints.FORMS}/${form}/stats/entries-per-month`,
         { params }
       );
 
@@ -244,12 +250,12 @@ export class FormsService {
   }
 
   async calcFormFieldsReports(
-    id: UUID,
-    params?: CalcFormFieldsReportsParamsDto
+    form: UUID,
+    params: CalcFormFieldsReportsParamsDto
   ): Promise<CalcFormFieldsReportsReturn> {
     try {
       const response = await this.config.axios.get<FormFieldReport[]>(
-        `${ApiEndpoints.FORMS}/${id}/stats/fields-reports`,
+        `${ApiEndpoints.FORMS}/${form}/stats/fields-reports`,
         { params }
       );
 
@@ -260,6 +266,28 @@ export class FormsService {
     } catch (error) {
       return {
         reports: [],
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async exportFormEntries(
+    form: UUID,
+    params: ExportFormEntriesParamsDto
+  ): Promise<ExportFormEntriesReturn> {
+    try {
+      const response = await this.config.axios.get(
+        `${ApiEndpoints.FORMS}/${form}/entries/export`,
+        { params, responseType: 'blob' }
+      );
+
+      return {
+        blob: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        blob: null,
         error: createServiceError(error),
       };
     }

@@ -19,6 +19,7 @@ import {
 
 import {
   ServicesProcessStepsService,
+  ServicesCertificatesTemplatesService,
   ServicesRequestsService,
 } from './submodules';
 
@@ -55,10 +56,12 @@ export interface DeleteServiceReturn {
 
 export class ServicesService {
   steps: ServicesProcessStepsService;
+  templates: ServicesCertificatesTemplatesService;
   requests: ServicesRequestsService;
 
   constructor(private config: Config) {
     this.steps = new ServicesProcessStepsService(config);
+    this.templates = new ServicesCertificatesTemplatesService(config);
     this.requests = new ServicesRequestsService(config);
   }
 

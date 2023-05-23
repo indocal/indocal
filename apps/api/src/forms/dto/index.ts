@@ -7,3 +7,4 @@ export * from './reorder-form-fields.dto';
 
 export * from './calc-entries-per-month-params.dto';
 export * from './calc-form-fields-reports-params.dto';
+export * from './export-entries-params.dto';

@@ -3,7 +3,25 @@ import { Entity } from '../../../common';
 import { UserStatus } from '../../auth';
 import { FormConfig, FormStatus, FormVisibility } from '../../forms';
 
-import { ServiceRequestStatus } from '../submodules';
+import { ServiceRequestStatus, Design, Placeholder } from '../submodules';
+
+type Form = Entity & {
+  slug: string;
+  title: string;
+  description: string | null;
+  config: FormConfig | null;
+  status: FormStatus;
+  visibility: FormVisibility;
+};
+
+type Group = Entity & {
+  name: string;
+  description: string | null;
+};
+
+///////////
+// Steps //
+///////////
 
 type Owner = Entity & {
   username: string;
@@ -29,18 +47,27 @@ type Step = Entity & {
   nextStepOnApprove: SiblingStep | null;
 };
 
-type Form = Entity & {
-  slug: string;
-  title: string;
-  description: string | null;
-  config: FormConfig | null;
-  status: FormStatus;
-  visibility: FormVisibility;
+//////////////
+// Template //
+//////////////
+
+type Background = Entity & {
+  path: string;
+  mime: string;
+  extension: string;
+  size: number;
+  dimensions: number[];
+  name: string;
+  caption: string | null;
+  alt: string | null;
 };
 
-type Group = Entity & {
-  name: string;
-  description: string | null;
+type Template = Entity & {
+  background: Background | null;
+  design: Design;
+  content: string | null;
+  styles: string | null;
+  placeholders: Placeholder[];
 };
 
 export type ServiceStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';
@@ -50,9 +77,10 @@ export interface Service extends Entity {
   description: string | null;
   status: ServiceStatus;
   supportedRequestStatus: ServiceRequestStatus[];
-  steps: Step[];
   form: Form;
   group: Group;
+  steps: Step[];
+  template: Template | null;
 }
 
 export default Service;

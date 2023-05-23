@@ -257,6 +257,8 @@ model Service {
   steps    ServiceProcessStep[]
   requests ServiceRequest[]
 
+  template ServiceCertificateTemplate?
+
   form   Form   @relation(fields: [formId], references: [id], onDelete: Restrict)
   formId String
 
@@ -314,6 +316,8 @@ model ServiceRequest {
 
   comments Comment[]
 
+  certificate ServiceCertificate?
+
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
   serviceId String
 
@@ -328,6 +332,37 @@ enum ServiceRequestStatus {
   IN_PROGRESS
   COMPLETED
   CANCELED
+}
+
+model ServiceCertificateTemplate {
+  id           String  @id @default(uuid())
+  design       Json
+  content      String?
+  styles       String?
+  placeholders Json[]  @default([])
+
+  background File?
+
+  certificates ServiceCertificate[]
+
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId String  @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ServiceCertificate {
+  id String @id @default(uuid())
+
+  request   ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Restrict)
+  requestId String         @unique
+
+  template   ServiceCertificateTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  templateId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 ////////////////////////
@@ -349,7 +384,10 @@ model File {
   alt     String?
 
   comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId String?
+  commentId String?  @unique
+
+  template   ServiceCertificateTemplate? @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String?                     @unique
 
   folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId String?

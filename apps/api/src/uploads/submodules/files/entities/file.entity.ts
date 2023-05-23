@@ -25,6 +25,9 @@ export class FileEntity implements Entity, File {
   commentId: UUID | null;
 
   @Exclude()
+  templateId: UUID | null;
+
+  @Exclude()
   folderId: UUID | null;
 
   createdAt: Date;

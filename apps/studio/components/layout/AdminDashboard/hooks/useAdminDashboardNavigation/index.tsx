@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import {
-  Dashboard as OverviewIcon,
   ShoppingCart as ServicesIcon,
   Feed as FormsIcon,
   SnippetFolder as UploadsIcon,
@@ -43,22 +42,6 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
 
   const navigation = useMemo<Navigation[]>(
     () => [
-      {
-        type: 'ITEM',
-        item: {
-          show:
-            ability.can('count', 'form') ||
-            (ability.can('count', 'file') && ability.can('count', 'folder')) ||
-            ability.can('count', 'user') ||
-            ability.can('count', 'userRole') ||
-            ability.can('count', 'userGroup') ||
-            ability.can('count', 'log'),
-
-          label: 'Resumen',
-          icon: <OverviewIcon />,
-          href: Pages.ROOT,
-        },
-      },
       {
         type: 'ITEM',
         item: {

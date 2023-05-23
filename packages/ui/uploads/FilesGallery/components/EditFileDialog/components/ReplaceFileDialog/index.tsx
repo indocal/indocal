@@ -32,7 +32,12 @@ export const ReplaceFileDialog: React.FC<ReplaceFileDialogProps> = ({
   type FormData = zod.infer<typeof schema>;
 
   const schema = zod.object(
-    { file: zod.instanceof(File).array() },
+    {
+      file: zod
+        .instanceof(File, { message: 'Debe seleccionar el archivo a cargar' })
+        .array()
+        .max(1, 'Solo se permite cargar un archivo'),
+    },
     {
       description: 'Archivo a cargar',
       required_error: 'Debe seleccionar el archivo a cargar',

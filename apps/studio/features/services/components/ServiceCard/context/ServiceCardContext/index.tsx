@@ -9,6 +9,7 @@ const initialContextState: ServiceCardContextState = {
   isManageServiceProcessDialogOpen: false,
   isAddServiceProcessStepDialogOpen: false,
   isEditServiceProcessStepDialogOpen: false,
+  isDesignCertificateTemplateDialogOpen: false,
 };
 
 interface ServiceCardContextState {
@@ -16,13 +17,15 @@ interface ServiceCardContextState {
   isManageServiceProcessDialogOpen: boolean;
   isAddServiceProcessStepDialogOpen: boolean;
   isEditServiceProcessStepDialogOpen: boolean;
+  isDesignCertificateTemplateDialogOpen: boolean;
 }
 
 type ServiceCardContextStateAction =
   | { type: 'TOGGLE_EDIT_SERVICE_DIALOG' }
   | { type: 'TOGGLE_MANAGE_SERVICE_PROCESS_DIALOG' }
   | { type: 'TOGGLE_ADD_SERVICE_PROCESS_STEP_DIALOG' }
-  | { type: 'TOGGLE_EDIT_SERVICE_PROCESS_STEP_DIALOG' };
+  | { type: 'TOGGLE_EDIT_SERVICE_PROCESS_STEP_DIALOG' }
+  | { type: 'TOGGLE_DESIGN_CERTIFICATE_TEMPLATE_DIALOG' };
 
 function reducer(
   state: ServiceCardContextState,
@@ -56,6 +59,13 @@ function reducer(
           !state.isEditServiceProcessStepDialogOpen,
       };
 
+    case 'TOGGLE_DESIGN_CERTIFICATE_TEMPLATE_DIALOG':
+      return {
+        ...state,
+        isDesignCertificateTemplateDialogOpen:
+          !state.isDesignCertificateTemplateDialogOpen,
+      };
+
     default:
       throw new Error('Action Not Allowed');
   }
@@ -80,6 +90,10 @@ export const initialContextValue: ServiceCardContextValue = {
   isEditServiceProcessStepDialogOpen:
     initialContextState.isEditServiceProcessStepDialogOpen,
   toggleEditServiceProcessStepDialog: () => undefined,
+
+  isDesignCertificateTemplateDialogOpen:
+    initialContextState.isDesignCertificateTemplateDialogOpen,
+  toggleDesignCertificateTemplateDialog: () => undefined,
 };
 
 export interface ServiceCardContextValue {
@@ -94,6 +108,9 @@ export interface ServiceCardContextValue {
 
   isEditServiceProcessStepDialogOpen: boolean;
   toggleEditServiceProcessStepDialog: () => void;
+
+  isDesignCertificateTemplateDialogOpen: boolean;
+  toggleDesignCertificateTemplateDialog: () => void;
 }
 
 const ServiceCardContext =
@@ -124,6 +141,11 @@ export const ServiceCardProvider: React.FC<React.PropsWithChildren> = ({
     []
   );
 
+  const handleToggleDesignCertificateTemplateDialog = useCallback(
+    () => dispatch({ type: 'TOGGLE_DESIGN_CERTIFICATE_TEMPLATE_DIALOG' }),
+    []
+  );
+
   return (
     <ServiceCardContext.Provider
       value={{
@@ -144,6 +166,11 @@ export const ServiceCardProvider: React.FC<React.PropsWithChildren> = ({
           state.isEditServiceProcessStepDialogOpen,
         toggleEditServiceProcessStepDialog:
           handleToggleEditServiceProcessStepDialog,
+
+        isDesignCertificateTemplateDialogOpen:
+          state.isDesignCertificateTemplateDialogOpen,
+        toggleDesignCertificateTemplateDialog:
+          handleToggleDesignCertificateTemplateDialog,
       }}
     >
       {children}
