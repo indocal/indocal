@@ -90,7 +90,7 @@ export const PhoneItemReport: React.FC<PhoneItemReportProps> = ({ report }) => {
         divider={<Divider flexItem />}
       >
         <Stack flex={{ md: 1 }}>
-          <Chart type="pie" height={200} series={series} options={options} />
+          <Chart type="pie" height={250} series={series} options={options} />
         </Stack>
 
         <Stack
