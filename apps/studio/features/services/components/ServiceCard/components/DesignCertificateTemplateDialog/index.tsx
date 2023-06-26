@@ -9,11 +9,16 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import { Save as SaveIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
+import { useSWRConfig } from 'swr';
 import { useFormContext } from 'react-hook-form';
 
-import { Service } from '@indocal/services';
+import { Service, ApiEndpoints } from '@indocal/services';
+
+import { indocal } from '@/lib';
 
 import { useServiceCard } from '../../context';
 
@@ -21,12 +26,7 @@ import {
   DesignCertificateTemplateDialogProvider,
   DesignCertificateTemplateDialogData,
 } from './context';
-import {
-  CertificateTemplatePreview,
-  VariablesConfig,
-  DesignConfig,
-  ContentConfig,
-} from './components';
+import { CertificatePreview, DesignConfig } from './components';
 
 export interface DesignCertificateTemplateDialogProps {
   service: Service;
@@ -35,25 +35,57 @@ export interface DesignCertificateTemplateDialogProps {
 const DesignCertificateTemplateDialog: React.FC<
   DesignCertificateTemplateDialogProps
 > = ({ service }) => {
+  const { mutate } = useSWRConfig();
+
   const {
     isDesignCertificateTemplateDialogOpen,
     toggleDesignCertificateTemplateDialog,
   } = useServiceCard();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const confirm = useConfirm();
 
   const {
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
+    getValues,
     reset,
   } = useFormContext<DesignCertificateTemplateDialogData>();
+
+  const handleSave = useCallback(async () => {
+    const values = getValues();
+
+    const { error } = await indocal.services.templates.upsert(service.id, {
+      layout: values.layout,
+      content: values.content,
+      styles: values.styles,
+      placeholders: values.placeholders,
+    });
+
+    if (error) {
+      enqueueSnackbar(
+        error.details
+          ? error.details.reduce(
+              (acc, current) => (acc ? `${acc} | ${current}` : current),
+              ``
+            )
+          : error.message,
+        { variant: 'error' }
+      );
+    } else {
+      await mutate(`${ApiEndpoints.SERVICES}/${service.id}`);
+
+      enqueueSnackbar('Plantilla editada exitosamente', { variant: 'success' });
+    }
+  }, [service.id, getValues, mutate, enqueueSnackbar]);
 
   const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleDesignCertificateTemplateDialog();
     } else {
       confirm({
-        title: 'Cancelar acción',
-        description: '¿Estás seguro de que deseas cancelar esta acción?',
+        title: 'Terminar edición',
+        description: '¿Estás seguro? Los cambios no guardados se perderan.',
       })
         .then(() => {
           toggleDesignCertificateTemplateDialog();
@@ -78,6 +110,17 @@ const DesignCertificateTemplateDialog: React.FC<
           }}
         >
           <Typography fontWeight="bolder">Diseñar certificado</Typography>
+
+          <LoadingButton
+            variant="contained"
+            size="small"
+            loading={isSubmitting}
+            disabled={!isDirty}
+            endIcon={<SaveIcon />}
+            onClick={handleSave}
+          >
+            Guardar cambios
+          </LoadingButton>
         </Toolbar>
       </AppBar>
 
@@ -89,32 +132,28 @@ const DesignCertificateTemplateDialog: React.FC<
             <Divider
               flexItem
               orientation="vertical"
-              sx={{
-                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-              }}
+              sx={{ borderBottom: (th) => `1px solid ${th.palette.divider}` }}
             />
           }
           sx={{ height: '100%' }}
         >
           <Stack
             sx={{
-              flex: { md: 2 },
+              flex: { xs: 1, md: 4 },
               paddingX: (theme) => theme.spacing(0.5),
             }}
           >
-            <CertificateTemplatePreview service={service} />
+            <CertificatePreview service={service} />
           </Stack>
 
           <Stack
             sx={{
-              flex: { md: 1 },
+              flex: { xs: 1, md: 3 },
               paddingX: (theme) => theme.spacing(0.5),
-              overflow: 'auto',
+              overflow: { md: 'auto' },
             }}
           >
-            <VariablesConfig />
-            <DesignConfig />
-            <ContentConfig />
+            <DesignConfig service={service} />
           </Stack>
         </Stack>
       </DialogContent>
@@ -135,9 +174,9 @@ const DesignCertificateTemplateDialog: React.FC<
 
 const DesignCertificateTemplateDialogWrapper: React.FC<
   DesignCertificateTemplateDialogProps
-> = (props) => (
-  <DesignCertificateTemplateDialogProvider>
-    <DesignCertificateTemplateDialog {...props} />
+> = ({ service }) => (
+  <DesignCertificateTemplateDialogProvider service={service}>
+    <DesignCertificateTemplateDialog service={service} />
   </DesignCertificateTemplateDialogProvider>
 );
 

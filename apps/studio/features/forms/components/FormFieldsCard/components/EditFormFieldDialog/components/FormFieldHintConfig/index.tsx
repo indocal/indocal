@@ -2,14 +2,15 @@ import { useState } from 'react';
 import {
   Stack,
   Divider,
-  TextField,
   ToggleButtonGroup,
   ToggleButton,
+  Typography,
 } from '@mui/material';
 import { Code as CodeIcon, Preview as PreviewIcon } from '@mui/icons-material';
-import { useFormContext, Control } from 'react-hook-form';
+import { Editor } from '@monaco-editor/react';
+import { useFormContext, Controller, Control } from 'react-hook-form';
 
-import { NoData, Markdown, ControlledCheckbox } from '@indocal/ui';
+import { Loader, NoData, Markdown, ControlledCheckbox } from '@indocal/ui';
 
 import { EditFormFieldDialogData } from '../../context';
 
@@ -17,8 +18,7 @@ import { ControlledHintPositionSelect } from './components';
 
 export const FormFieldHintConfig: React.FC = () => {
   const {
-    formState: { isSubmitting, errors },
-    register,
+    formState: { isSubmitting },
     control,
     watch,
   } = useFormContext<EditFormFieldDialogData>();
@@ -75,16 +75,42 @@ export const FormFieldHintConfig: React.FC = () => {
           </ToggleButtonGroup>
 
           {view === 'CODE' ? (
-            <TextField
-              fullWidth
-              multiline
-              size="small"
-              autoComplete="off"
-              label="Leyenda"
-              disabled={isSubmitting}
-              inputProps={register('config.hint.content')}
-              error={Boolean(errors.config?.hint?.content)}
-              helperText={errors.config?.hint?.content?.message}
+            <Controller
+              name="config.hint.content"
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <Stack
+                  spacing={1}
+                  sx={{
+                    width: '100%',
+                    ...(error && {
+                      padding: (theme) => theme.spacing(1.5),
+                      borderRadius: (theme) => theme.spacing(0.5),
+                      border: (theme) =>
+                        `1px solid ${theme.palette.error.main}`,
+                    }),
+                  }}
+                >
+                  <Editor
+                    language="markdown"
+                    theme="vs-dark"
+                    height={275}
+                    loading={<Loader invisible message="Cargando editor..." />}
+                    options={{ minimap: { enabled: false } }}
+                    value={value || ''}
+                    onChange={onChange}
+                  />
+
+                  {error && (
+                    <Typography variant="caption" color="error">
+                      {error.message}
+                    </Typography>
+                  )}
+                </Stack>
+              )}
             />
           ) : content ? (
             <Markdown>{content}</Markdown>

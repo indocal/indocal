@@ -9,24 +9,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { ServiceCertificateTemplate, Service, File } from '@prisma/client';
+import { ServiceCertificateTemplate, Service } from '@prisma/client';
 
 import { UUID, SingleEntityResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { FileEntity } from '../../../uploads/submodules/files/entities';
 import { ServiceEntity } from '../../entities';
 
 import { ServiceCertificateTemplateEntity } from './entities';
 import { UpsertServiceCertificateTemplateDto } from './dto';
 
 class EnhancedServiceCertificateTemplate extends ServiceCertificateTemplateEntity {
-  background: FileEntity | null;
   service: ServiceEntity;
 }
 
 type CreateEnhancedServiceCertificateTemplate = ServiceCertificateTemplate & {
-  background: File | null;
   service: Service;
 };
 
@@ -36,13 +33,10 @@ export class ServicesCertificatesTemplatesController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedServiceCertificateTemplate({
-    background,
     service,
     ...rest
   }: CreateEnhancedServiceCertificateTemplate): EnhancedServiceCertificateTemplate {
     const template = new EnhancedServiceCertificateTemplate(rest);
-
-    template.background = background ? new FileEntity(background) : null;
 
     template.service = new ServiceEntity(service);
 
@@ -60,7 +54,7 @@ export class ServicesCertificatesTemplatesController {
     const template =
       await this.prismaService.serviceCertificateTemplate.findUnique({
         where: { id },
-        include: { background: true, service: true },
+        include: { service: true },
       });
 
     return template
@@ -82,18 +76,18 @@ export class ServicesCertificatesTemplatesController {
         where: { serviceId },
         create: {
           serviceId,
-          design: upsertTemplateDto.design,
+          layout: upsertTemplateDto.layout,
           content: upsertTemplateDto.content,
           styles: upsertTemplateDto.styles,
           placeholders: upsertTemplateDto.placeholders,
         },
         update: {
-          design: upsertTemplateDto.design,
+          layout: upsertTemplateDto.layout,
           content: upsertTemplateDto.content,
           styles: upsertTemplateDto.styles,
           placeholders: upsertTemplateDto.placeholders,
         },
-        include: { background: true, service: true },
+        include: { service: true },
       }
     );
 
@@ -111,7 +105,7 @@ export class ServicesCertificatesTemplatesController {
     const template = await this.prismaService.serviceCertificateTemplate.delete(
       {
         where: { id },
-        include: { background: true, service: true },
+        include: { service: true },
       }
     );
 

@@ -128,8 +128,8 @@ export const ControlledFilesDropzone: React.FC<
                   )}
 
                   <FormHelperText
-                    sx={{ textAlign: 'center' }}
                     {...formHelperTextProps}
+                    sx={{ textAlign: 'center', ...formHelperTextProps?.sx }}
                   >
                     {isDragAccept
                       ? 'Soltar archivos'

@@ -336,12 +336,10 @@ enum ServiceRequestStatus {
 
 model ServiceCertificateTemplate {
   id           String  @id @default(uuid())
-  design       Json
+  layout       Json
   content      String?
   styles       String?
   placeholders Json[]  @default([])
-
-  background File?
 
   certificates ServiceCertificate[]
 
@@ -385,9 +383,6 @@ model File {
 
   comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String?  @unique
-
-  template   ServiceCertificateTemplate? @relation(fields: [templateId], references: [id], onDelete: Cascade)
-  templateId String?                     @unique
 
   folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId String?

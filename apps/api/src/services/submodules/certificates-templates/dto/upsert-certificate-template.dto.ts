@@ -1,35 +1,19 @@
-import {
-  IsBooleanString,
-  IsString,
-  IsNumber,
-  IsEnum,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
+import { IsString, IsEnum, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-import { Design, QR, Placeholder } from '../entities';
-import { PageSizes } from '../types';
+import {
+  CertificateTemplateLayout,
+  CertificateTemplateLayoutOrientation,
+  CertificateTemplatePlaceholder,
+} from '../entities';
 
 ////////////
 // Design //
 ////////////
 
-class QRSchema {
-  @IsBooleanString()
-  include: string;
-
-  @IsNumber()
-  size: number;
-}
-
-class DesignSchema {
-  @IsEnum(PageSizes)
-  size: PageSizes;
-
-  @ValidateNested()
-  @Type(() => QRSchema)
-  qr: QR;
+class LayoutSchema {
+  @IsEnum(CertificateTemplateLayoutOrientation)
+  orientation: CertificateTemplateLayoutOrientation;
 }
 
 /////////////////
@@ -47,8 +31,8 @@ class PlaceholderSchema {
 
 export class UpsertServiceCertificateTemplateDto {
   @ValidateNested()
-  @Type(() => DesignSchema)
-  design: Design;
+  @Type(() => LayoutSchema)
+  layout: CertificateTemplateLayout;
 
   @IsString()
   @IsOptional()
@@ -60,7 +44,7 @@ export class UpsertServiceCertificateTemplateDto {
 
   @ValidateNested({ each: true })
   @Type(() => PlaceholderSchema)
-  placeholders: Placeholder[];
+  placeholders: CertificateTemplatePlaceholder[];
 }
 
 export default UpsertServiceCertificateTemplateDto;

@@ -1,6 +1,2 @@
-export * from './CertificateTemplatePreview';
-
-export * from './VariablesConfig';
+export * from './CertificatePreview';
 export * from './DesignConfig';
-export * from './ContentConfig';
-export * from './StylesConfig';

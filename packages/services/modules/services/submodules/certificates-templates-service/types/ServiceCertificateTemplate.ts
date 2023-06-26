@@ -3,42 +3,24 @@ import { Entity } from '../../../../../common';
 import { ServiceStatus } from '../../../types';
 import { ServiceRequestStatus } from '../../requests-service';
 
-import PageSizes from './PageSizes';
-
 ////////////
-// Design //
+// Layout //
 ////////////
 
-export type QR = {
-  include: boolean;
-  size: number;
-};
+export enum CertificateTemplateLayoutOrientation {
+  PORTRAIT = 'portrait',
+  LANDSCAPE = 'landscape',
+}
 
-export type Design = {
-  size: PageSizes;
-  qr: QR;
-};
-
-////////////////
-// Background //
-////////////////
-
-type Background = Entity & {
-  path: string;
-  mime: string;
-  extension: string;
-  size: number;
-  dimensions: number[];
-  name: string;
-  caption: string | null;
-  alt: string | null;
+export type CertificateTemplateLayout = {
+  orientation: CertificateTemplateLayoutOrientation;
 };
 
 /////////////////
 // Placeholder //
 /////////////////
 
-export type Placeholder = {
+export type CertificateTemplatePlaceholder = {
   name: string;
 };
 
@@ -54,11 +36,10 @@ type Service = Entity & {
 };
 
 export interface ServiceCertificateTemplate extends Entity {
-  background: Background | null;
-  design: Design;
+  layout: CertificateTemplateLayout | null;
   content: string | null;
   styles: string | null;
-  placeholders: Placeholder[];
+  placeholders: CertificateTemplatePlaceholder[];
   service: Service;
 }
 

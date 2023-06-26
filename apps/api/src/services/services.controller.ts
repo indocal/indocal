@@ -18,7 +18,6 @@ import {
   Form,
   UserGroup,
   User,
-  File,
 } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
@@ -27,7 +26,6 @@ import { PoliciesGuard, CheckPolicies } from '@/auth';
 import { FormEntity } from '../forms/entities';
 import { UserGroupEntity } from '../auth/submodules/groups/entities';
 import { UserEntity } from '../auth/submodules/users/entities';
-import { FileEntity } from '../uploads/submodules/files/entities';
 
 import { ServiceEntity } from './entities';
 import {
@@ -48,18 +46,11 @@ class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   nextStepOnApprove: ServiceProcessStepEntity | null;
 }
 
-class EnhancedServiceCertificateTemplate
-  extends ServiceCertificateTemplateEntity
-  implements ServiceCertificateTemplate
-{
-  background: FileEntity | null;
-}
-
 class EnhancedService extends ServiceEntity {
   form: FormEntity;
   group: UserGroupEntity;
   steps: EnhancedServiceProcessStep[];
-  template: EnhancedServiceCertificateTemplate | null;
+  template: ServiceCertificateTemplateEntity | null;
 }
 
 type CreateEnhancedService = Service & {
@@ -73,7 +64,7 @@ type CreateEnhancedService = Service & {
       nextStepOnApprove: ServiceProcessStep | null;
     }
   >;
-  template: (ServiceCertificateTemplate & { background: File | null }) | null;
+  template: ServiceCertificateTemplate | null;
 };
 
 @Controller('services')
@@ -124,15 +115,9 @@ export class ServicesController {
       }
     );
 
-    if (template) {
-      service.template = new EnhancedServiceCertificateTemplate(template);
-
-      service.template.background = template.background
-        ? new FileEntity(template.background)
-        : null;
-    } else {
-      service.template = null;
-    }
+    service.template = template
+      ? new ServiceCertificateTemplateEntity(template)
+      : null;
 
     return service;
   }
@@ -163,7 +148,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: { include: { background: true } },
+        template: true,
       },
     });
 
@@ -209,7 +194,7 @@ export class ServicesController {
               nextStepOnApprove: true,
             },
           },
-          template: { include: { background: true } },
+          template: true,
         },
       }),
       this.prismaService.service.count({
@@ -245,7 +230,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: { include: { background: true } },
+        template: true,
       },
     });
 
@@ -284,7 +269,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: { include: { background: true } },
+        template: true,
       },
     });
 
@@ -312,7 +297,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: { include: { background: true } },
+        template: true,
       },
     });
 

@@ -3,7 +3,11 @@ import { Entity } from '../../../common';
 import { UserStatus } from '../../auth';
 import { FormConfig, FormStatus, FormVisibility } from '../../forms';
 
-import { ServiceRequestStatus, Design, Placeholder } from '../submodules';
+import {
+  ServiceRequestStatus,
+  CertificateTemplateLayout,
+  CertificateTemplatePlaceholder,
+} from '../submodules';
 
 type Form = Entity & {
   slug: string;
@@ -51,23 +55,11 @@ type Step = Entity & {
 // Template //
 //////////////
 
-type Background = Entity & {
-  path: string;
-  mime: string;
-  extension: string;
-  size: number;
-  dimensions: number[];
-  name: string;
-  caption: string | null;
-  alt: string | null;
-};
-
 type Template = Entity & {
-  background: Background | null;
-  design: Design;
+  layout: CertificateTemplateLayout | null;
   content: string | null;
   styles: string | null;
-  placeholders: Placeholder[];
+  placeholders: CertificateTemplatePlaceholder[];
 };
 
 export type ServiceStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';

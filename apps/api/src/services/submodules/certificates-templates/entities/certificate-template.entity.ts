@@ -3,27 +3,24 @@ import { ServiceCertificateTemplate } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-import { PageSizes } from '../types';
-
 ////////////
-// Design //
+// Layout //
 ////////////
 
-export type QR = {
-  include: boolean;
-  size: number;
-};
+export enum CertificateTemplateLayoutOrientation {
+  PORTRAIT = 'portrait',
+  LANDSCAPE = 'landscape',
+}
 
-export type Design = {
-  size: PageSizes;
-  qr: QR;
+export type CertificateTemplateLayout = {
+  orientation: CertificateTemplateLayoutOrientation;
 };
 
 /////////////////
 // Placeholder //
 /////////////////
 
-export type Placeholder = {
+export type CertificateTemplatePlaceholder = {
   name: string;
 };
 
@@ -35,10 +32,10 @@ export class ServiceCertificateTemplateEntity
   }
 
   id: UUID;
-  design: Design;
+  layout: CertificateTemplateLayout | null;
   content: string | null;
   styles: string | null;
-  placeholders: Placeholder[];
+  placeholders: CertificateTemplatePlaceholder[];
 
   @Exclude()
   serviceId: UUID;

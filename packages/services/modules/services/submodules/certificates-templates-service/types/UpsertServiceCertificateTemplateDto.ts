@@ -1,10 +1,13 @@
-import { Design, Placeholder } from './ServiceCertificateTemplate';
+import {
+  CertificateTemplateLayout,
+  CertificateTemplatePlaceholder,
+} from './ServiceCertificateTemplate';
 
 export type UpsertServiceCertificateTemplateDto = {
-  design: Design;
+  layout: CertificateTemplateLayout;
   content?: string | null;
   styles?: string | null;
-  placeholders: Placeholder[];
+  placeholders: CertificateTemplatePlaceholder[];
 };
 
 export default UpsertServiceCertificateTemplateDto;
