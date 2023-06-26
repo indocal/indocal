@@ -1,6 +1,4 @@
 import {
-  Stack,
-  Divider,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -10,34 +8,38 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useFormContext } from 'react-hook-form';
 
-import { DesignCertificateTemplateDialogData } from '../../context';
+import { DesignCertificateTemplateDialogData } from '../../../../context';
+import { useDebounce } from '../../../../hooks';
 
 export const ContentConfig: React.FC = () => {
   const {
     formState: { isSubmitting, errors },
-    register,
+    setValue,
   } = useFormContext<DesignCertificateTemplateDialogData>();
 
+  const [value, onChange] = useDebounce({
+    initialValue: '',
+    debounced: (value) => setValue('content', value),
+  });
+
   return (
-    <Accordion defaultExpanded>
+    <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Contenido</Typography>
       </AccordionSummary>
 
       <AccordionDetails>
-        <Stack spacing={2} divider={<Divider flexItem />}>
-          <TextField
-            fullWidth
-            multiline
-            size="small"
-            autoComplete="off"
-            label="Contenido"
-            disabled={isSubmitting}
-            inputProps={register('content')}
-            error={Boolean(errors.content)}
-            helperText={errors.content?.message}
-          />
-        </Stack>
+        <TextField
+          multiline
+          fullWidth
+          autoComplete="off"
+          placeholder="Contenido (HTML & CSS)"
+          disabled={isSubmitting}
+          value={value}
+          onChange={onChange}
+          error={Boolean(errors.content)}
+          helperText={errors.content?.message}
+        />
       </AccordionDetails>
     </Accordion>
   );

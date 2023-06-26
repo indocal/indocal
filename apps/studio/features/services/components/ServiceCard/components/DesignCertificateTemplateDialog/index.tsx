@@ -21,12 +21,7 @@ import {
   DesignCertificateTemplateDialogProvider,
   DesignCertificateTemplateDialogData,
 } from './context';
-import {
-  CertificateTemplatePreview,
-  VariablesConfig,
-  DesignConfig,
-  ContentConfig,
-} from './components';
+import { CertificatePreview, DesignConfig } from './components';
 
 export interface DesignCertificateTemplateDialogProps {
   service: Service;
@@ -89,32 +84,28 @@ const DesignCertificateTemplateDialog: React.FC<
             <Divider
               flexItem
               orientation="vertical"
-              sx={{
-                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-              }}
+              sx={{ borderBottom: (th) => `1px solid ${th.palette.divider}` }}
             />
           }
           sx={{ height: '100%' }}
         >
           <Stack
             sx={{
-              flex: { md: 2 },
+              flex: { xs: 1, md: 2 },
               paddingX: (theme) => theme.spacing(0.5),
             }}
           >
-            <CertificateTemplatePreview service={service} />
+            <CertificatePreview service={service} />
           </Stack>
 
           <Stack
             sx={{
-              flex: { md: 1 },
+              flex: { xs: 1, md: 1 },
               paddingX: (theme) => theme.spacing(0.5),
-              overflow: 'auto',
+              overflow: { md: 'auto' },
             }}
           >
-            <VariablesConfig />
-            <DesignConfig />
-            <ContentConfig />
+            <DesignConfig service={service} />
           </Stack>
         </Stack>
       </DialogContent>

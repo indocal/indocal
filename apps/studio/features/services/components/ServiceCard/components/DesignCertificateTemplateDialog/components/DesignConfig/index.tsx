@@ -1,29 +1,23 @@
+import { Service } from '@indocal/services';
+
 import {
-  Stack,
-  Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-} from '@mui/material';
-import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+  LayoutConfig,
+  ContentConfig,
+  StylesConfig,
+  PlaceholdersConfig,
+} from './components';
 
-import { LayoutConfig, BackgroundConfig, QRConfig } from './components';
+export interface DesignConfigProps {
+  service: Service;
+}
 
-export const DesignConfig: React.FC = () => (
-  <Accordion defaultExpanded>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography>Diseño</Typography>
-    </AccordionSummary>
-
-    <AccordionDetails>
-      <Stack spacing={2} divider={<Divider flexItem />}>
-        <LayoutConfig />
-        <BackgroundConfig />
-        <QRConfig />
-      </Stack>
-    </AccordionDetails>
-  </Accordion>
+export const DesignConfig: React.FC<DesignConfigProps> = () => (
+  <>
+    <LayoutConfig />
+    <ContentConfig />
+    <StylesConfig />
+    <PlaceholdersConfig />
+  </>
 );
 
 export default DesignConfig;

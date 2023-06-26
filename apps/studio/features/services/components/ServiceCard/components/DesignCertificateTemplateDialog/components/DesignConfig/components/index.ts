@@ -1,3 +1,4 @@
 export * from './LayoutConfig';
-export * from './BackgroundConfig';
-export * from './QRConfig';
+export * from './ContentConfig';
+export * from './StylesConfig';
+export * from './PlaceholdersConfig';

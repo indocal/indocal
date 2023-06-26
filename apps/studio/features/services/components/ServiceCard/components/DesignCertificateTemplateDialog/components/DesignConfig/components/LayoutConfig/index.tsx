@@ -1,16 +1,19 @@
 import {
   Stack,
-  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   FormControlLabel,
   Radio,
   Typography,
 } from '@mui/material';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useFormContext, Control } from 'react-hook-form';
 
 import { ControlledRadioGroup } from '@indocal/ui';
 
 import { DesignCertificateTemplateDialogData } from '../../../../context';
-import { STANDARD_PAGE_SIZES } from '../../../../config';
+import { CertificateTemplateLayoutOrientation } from '../../../../types';
 
 export const LayoutConfig: React.FC = () => {
   const {
@@ -19,66 +22,45 @@ export const LayoutConfig: React.FC = () => {
   } = useFormContext<DesignCertificateTemplateDialogData>();
 
   return (
-    <Stack
-      component="fieldset"
-      sx={{
-        margin: 0,
-        paddingX: (theme) => theme.spacing(2),
-        borderRadius: (theme) => theme.spacing(0.5),
-        borderColor: (theme) => theme.palette.divider,
-      }}
-    >
-      <Typography
-        component="legend"
-        variant="subtitle2"
-        sx={{ paddingX: (theme) => theme.spacing(1) }}
-      >
-        Disposición
-      </Typography>
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography>Diseño</Typography>
+      </AccordionSummary>
 
-      <Stack
-        spacing={2}
-        divider={<Divider flexItem />}
-        sx={{ padding: (theme) => theme.spacing(1, 0.25) }}
-      >
-        <ControlledRadioGroup
-          name="layout.orientation"
-          label="Orientación"
-          control={control as unknown as Control}
-          formControlProps={{ disabled: isSubmitting }}
-          radioGroupProps={{ row: true }}
-        >
-          <FormControlLabel
-            value="portrait"
-            label="Vertical"
-            control={<Radio />}
-          />
-
-          <FormControlLabel
-            value="landscape"
-            label="Horizontal"
-            control={<Radio />}
-          />
-        </ControlledRadioGroup>
-
-        <ControlledRadioGroup
-          name="layout.size"
-          label="Tamaño de página"
-          control={control as unknown as Control}
-          formControlProps={{ disabled: isSubmitting }}
-          radioGroupProps={{ row: true }}
-        >
-          {STANDARD_PAGE_SIZES.map((pageSize) => (
+      <AccordionDetails>
+        <Stack>
+          <ControlledRadioGroup
+            name="layout.orientation"
+            label="Orientación"
+            control={control as unknown as Control}
+            formControlProps={{
+              required: true,
+              disabled: isSubmitting,
+            }}
+            formHelperTextProps={{
+              sx: {
+                marginX: 0,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              },
+            }}
+            radioGroupProps={{ row: true }}
+          >
             <FormControlLabel
-              key={pageSize}
-              value={pageSize}
-              label={pageSize}
+              value={CertificateTemplateLayoutOrientation.PORTRAIT}
+              label="Vertical"
               control={<Radio />}
             />
-          ))}
-        </ControlledRadioGroup>
-      </Stack>
-    </Stack>
+
+            <FormControlLabel
+              value={CertificateTemplateLayoutOrientation.LANDSCAPE}
+              label="Horizontal"
+              control={<Radio />}
+            />
+          </ControlledRadioGroup>
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 

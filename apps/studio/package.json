@@ -37,6 +37,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.43.9",
+    "react-pdf": "7.1.2",
     "react-pdf-html": "1.1.18",
     "reactflow": "11.7.0",
     "sharp": "0.32.0",
