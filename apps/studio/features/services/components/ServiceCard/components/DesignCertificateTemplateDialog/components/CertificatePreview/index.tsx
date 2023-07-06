@@ -2,7 +2,6 @@ import { PDFViewer, Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { Html } from 'react-pdf-html';
 import { useFormContext } from 'react-hook-form';
 
-<<<<<<< HEAD
 import {
   Service,
   CertificateTemplateLayoutOrientation,
@@ -10,12 +9,6 @@ import {
 
 import { DesignCertificateTemplateDialogData } from '../../context';
 import { highlightPlaceholders } from '../../utils';
-=======
-import { Service } from '@indocal/services';
-
-import { DesignCertificateTemplateDialogData } from '../../context';
-import { CertificateTemplateLayoutOrientation } from '../../types';
->>>>>>> e6eb26b2a75b4c5828ca9ad8a68db06e044ce9bf
 
 const styles = StyleSheet.create({
   viewer: {
@@ -46,11 +39,8 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   const HTML = watch('content') || '';
   const CSS = watch('styles') || '';
 
-<<<<<<< HEAD
   const placeholders = watch('placeholders') || [];
 
-=======
->>>>>>> e6eb26b2a75b4c5828ca9ad8a68db06e044ce9bf
   return (
     <PDFViewer showToolbar style={styles.viewer}>
       <Document title={`Certificado: ${service.title}`}>
@@ -63,11 +53,7 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
                     ${CSS}
                   </style>
 
-<<<<<<< HEAD
                   ${highlightPlaceholders(HTML, placeholders)}
-=======
-                  ${HTML}
->>>>>>> e6eb26b2a75b4c5828ca9ad8a68db06e044ce9bf
                 </body>
               </html>
             `}

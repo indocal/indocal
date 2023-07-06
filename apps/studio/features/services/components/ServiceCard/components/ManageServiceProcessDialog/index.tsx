@@ -93,7 +93,7 @@ export const ManageServiceProcessDialog: React.FC<
               onStepClick={(_, node) => handleEdit(node.data.step)}
             />
           ) : (
-            <NoData message="Pasos aun sin definir" />
+            <NoData message="Pasos aún sin definir" />
           )}
         </DialogContent>
 

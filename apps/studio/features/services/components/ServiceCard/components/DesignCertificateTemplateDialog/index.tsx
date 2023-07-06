@@ -80,6 +80,8 @@ const DesignCertificateTemplateDialog: React.FC<
   }, [service.id, getValues, mutate, enqueueSnackbar]);
 
   const handleOnClose = useCallback(() => {
+    if (isSubmitting) return;
+
     if (!isDirty) {
       toggleDesignCertificateTemplateDialog();
     } else {
@@ -93,7 +95,13 @@ const DesignCertificateTemplateDialog: React.FC<
         })
         .catch(() => undefined);
     }
-  }, [isDirty, reset, toggleDesignCertificateTemplateDialog, confirm]);
+  }, [
+    isDirty,
+    isSubmitting,
+    reset,
+    toggleDesignCertificateTemplateDialog,
+    confirm,
+  ]);
 
   return (
     <Dialog
@@ -163,6 +171,7 @@ const DesignCertificateTemplateDialog: React.FC<
           type="submit"
           variant="contained"
           color="primary"
+          disabled={isSubmitting}
           onClick={handleOnClose}
         >
           Finalizar
