@@ -118,11 +118,11 @@ async function main() {
           description: 'Rol libre de restricciones con fines de desarrollo',
           config: {
             access: {
-              studio: 'ADMIN',
-              hub: 'ADMIN',
-              app: 'ADMIN',
-              nobu: 'ADMIN',
-              warehouse: 'ADMIN',
+              studio: 'ALLOWED',
+              hub: 'ALLOWED',
+              app: 'ALLOWED',
+              nobu: 'ALLOWED',
+              warehouse: 'ALLOWED',
             },
           },
           permissions: {

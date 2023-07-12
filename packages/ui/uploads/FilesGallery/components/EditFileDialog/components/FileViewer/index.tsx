@@ -35,6 +35,8 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
 
   const confirm = useConfirm();
 
+  const [mime] = file.mime.split('/');
+
   const url = useMemo(
     () => new URL(file.path, process.env.NEXT_PUBLIC_BACKEND_URL),
     [file]
@@ -159,11 +161,11 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
         </Can>
       </Stack>
 
-      {file.mime.split('/')[0] !== 'audio' &&
-        file.mime.split('/')[0] !== 'image' &&
-        file.mime.split('/')[0] !== 'video' && <FileIcon fontSize="large" />}
+      {mime !== 'audio' && mime !== 'image' && mime !== 'video' && (
+        <FileIcon fontSize="large" />
+      )}
 
-      {file.mime.split('/')[0] === 'audio' && (
+      {mime === 'audio' && (
         <Box
           component="audio"
           controls
@@ -175,7 +177,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
         />
       )}
 
-      {file.mime.split('/')[0] === 'image' && (
+      {mime === 'image' && (
         <Box
           component="img"
           alt={file.alt || file.name}
@@ -184,7 +186,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file }) => {
         />
       )}
 
-      {file.mime.split('/')[0] === 'video' && (
+      {mime === 'video' && (
         <Box
           component="video"
           controls

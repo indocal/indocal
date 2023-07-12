@@ -48,19 +48,19 @@ export default UpdateUserRoleDto;
 ////////////////////////////
 
 class UserRoleConfigAccessSchema {
-  @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
+  @IsEnum({ FORBIDDEN: 'FORBIDDEN', ALLOWED: 'ALLOWED' })
   studio: UserRoleAccessType;
 
-  @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
+  @IsEnum({ FORBIDDEN: 'FORBIDDEN', ALLOWED: 'ALLOWED' })
   hub: UserRoleAccessType;
 
-  @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
+  @IsEnum({ FORBIDDEN: 'FORBIDDEN', ALLOWED: 'ALLOWED' })
   app: UserRoleAccessType;
 
-  @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
+  @IsEnum({ FORBIDDEN: 'FORBIDDEN', ALLOWED: 'ALLOWED' })
   nobu: UserRoleAccessType;
 
-  @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
+  @IsEnum({ FORBIDDEN: 'FORBIDDEN', ALLOWED: 'ALLOWED' })
   warehouse: UserRoleAccessType;
 }
 

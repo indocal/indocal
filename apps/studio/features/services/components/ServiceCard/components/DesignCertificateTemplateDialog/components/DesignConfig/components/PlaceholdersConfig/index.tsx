@@ -1,10 +1,15 @@
+import { useState, useMemo, useCallback } from 'react';
 import {
   Stack,
   Divider,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  TextField,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListItemSecondaryAction,
   Typography,
   Button,
   IconButton,
@@ -12,104 +17,129 @@ import {
 import {
   ExpandMore as ExpandMoreIcon,
   AddCircle as AddIcon,
-  ArrowDropUp as ArrowUpIcon,
-  ArrowDropDown as ArrowDownIcon,
-  RemoveCircle as RemoveIcon,
+  Edit as EditIcon,
+  ShortText as TextIcon,
+  Draw as SignatureIcon,
+  TableChart as TableIcon,
 } from '@mui/icons-material';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { NoData } from '@indocal/ui';
+import {
+  Service,
+  ServiceCertificateTemplatePlaceholderType,
+} from '@indocal/services';
 
 import { DesignCertificateTemplateDialogData } from '../../../../context';
 
-export const PlaceholdersConfig: React.FC = () => {
+import { PlaceholdersConfigProvider, usePlaceholdersConfig } from './context';
+import { AddPlaceholderDialog, EditPlaceholderDialog } from './components';
+
+export interface PlaceholdersConfigProps {
+  service: Service;
+}
+
+const PlaceholdersConfig: React.FC<PlaceholdersConfigProps> = ({ service }) => {
   const {
-    formState: { isSubmitting, errors },
-    register,
+    formState: { isSubmitting },
   } = useFormContext<DesignCertificateTemplateDialogData>();
 
   const {
-    fields: placeholders,
-    append,
-    swap,
-    remove,
-  } = useFieldArray<DesignCertificateTemplateDialogData>({
-    name: 'placeholders',
-  });
+    isAddPlaceholderDialogOpen,
+    isEditPlaceholderDialogOpen,
+    toggleAddPlaceholderDialog,
+    toggleEditPlaceholderDialog,
+  } = usePlaceholdersConfig();
+
+  const [placeholder, setPlaceholder] = useState<
+    NonNullable<Service['template']>['placeholders'][number] | null
+  >(null);
+
+  const icons = useMemo<
+    Record<ServiceCertificateTemplatePlaceholderType, React.ReactElement>
+  >(
+    () => ({
+      TEXT: <TextIcon />,
+      TABLE: <TableIcon />,
+      SIGNATURE: <SignatureIcon />,
+    }),
+    []
+  );
+
+  const handleEdit = useCallback(
+    (placeholder: NonNullable<Service['template']>['placeholders'][number]) => {
+      setPlaceholder(placeholder);
+      toggleEditPlaceholderDialog();
+    },
+    [toggleEditPlaceholderDialog]
+  );
 
   return (
-    <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Placeholders</Typography>
-      </AccordionSummary>
+    <>
+      {isAddPlaceholderDialogOpen && <AddPlaceholderDialog />}
 
-      <AccordionDetails>
-        <Stack spacing={1.5} divider={<Divider flexItem />}>
-          <Button
-            variant="contained"
-            size="small"
-            disabled={isSubmitting}
-            endIcon={<AddIcon />}
-            onClick={() => append({ name: '' })}
-          >
-            Nuevo placeholder
-          </Button>
+      {isEditPlaceholderDialogOpen && placeholder && (
+        <EditPlaceholderDialog placeholder={placeholder} />
+      )}
 
-          {placeholders.length > 0 ? (
-            placeholders.map((placeholder, index) => (
-              <Stack key={`${placeholder.name}.${index}`} spacing={1.5}>
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={0.25}
-                  sx={{ border: (th) => `1px dashed ${th.palette.divider}` }}
-                >
-                  <IconButton
-                    size="small"
-                    disabled={isSubmitting || index === 0}
-                    onClick={() => swap(index, index - 1)}
-                  >
-                    <ArrowUpIcon fontSize="small" />
-                  </IconButton>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Placeholders</Typography>
+        </AccordionSummary>
 
-                  <IconButton
-                    size="small"
-                    disabled={isSubmitting || placeholders.length - 1 === index}
-                    onClick={() => swap(index, index + 1)}
-                  >
-                    <ArrowDownIcon fontSize="small" />
-                  </IconButton>
+        <AccordionDetails>
+          <Stack spacing={1.5} divider={<Divider flexItem />}>
+            <Button
+              variant="contained"
+              size="small"
+              disabled={isSubmitting}
+              endIcon={<AddIcon />}
+              onClick={toggleAddPlaceholderDialog}
+            >
+              Nuevo placeholder
+            </Button>
 
-                  <IconButton
-                    size="small"
-                    color="error"
-                    disabled={isSubmitting}
-                    onClick={() => remove(index)}
-                  >
-                    <RemoveIcon fontSize="small" />
-                  </IconButton>
-                </Stack>
+            {service.template && service.template.placeholders.length ? (
+              <List>
+                {service.template.placeholders.map((placeholder) => (
+                  <ListItem key={placeholder.name} divider>
+                    <ListItemIcon>{icons[placeholder.type]}</ListItemIcon>
 
-                <TextField
-                  fullWidth
-                  autoComplete="off"
-                  size="small"
-                  label={`Placeholder ${index + 1}`}
-                  disabled={isSubmitting}
-                  inputProps={register(`placeholders.${index}.name`)}
-                  error={Boolean(errors.placeholders?.[index]?.name)}
-                  helperText={errors.placeholders?.[index]?.name?.message}
-                />
-              </Stack>
-            ))
-          ) : (
-            <NoData message="Placeholders aún sin definir" />
-          )}
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+                    <ListItemText
+                      primary={placeholder.title}
+                      secondary={placeholder.name}
+                    />
+
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        size="small"
+                        disabled={isSubmitting}
+                        onClick={() => handleEdit(placeholder)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <NoData message="Placeholders aún sin definir" />
+            )}
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+    </>
   );
 };
 
-export default PlaceholdersConfig;
+const PlaceholdersConfigWrapper: React.FC<PlaceholdersConfigProps> = ({
+  service,
+}) => (
+  <PlaceholdersConfigProvider service={service}>
+    <PlaceholdersConfig service={service} />
+  </PlaceholdersConfigProvider>
+);
+
+export { PlaceholdersConfigWrapper as PlaceholdersConfig };
+
+export default PlaceholdersConfigWrapper;

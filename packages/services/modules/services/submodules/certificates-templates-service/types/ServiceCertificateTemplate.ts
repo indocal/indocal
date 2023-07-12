@@ -7,21 +7,44 @@ import { ServiceRequestStatus } from '../../requests-service';
 // Layout //
 ////////////
 
-export enum CertificateTemplateLayoutOrientation {
+export enum ServiceCertificateTemplateLayoutOrientation {
   PORTRAIT = 'portrait',
   LANDSCAPE = 'landscape',
 }
 
-export type CertificateTemplateLayout = {
-  orientation: CertificateTemplateLayoutOrientation;
+export type ServiceCertificateTemplateLayout = {
+  orientation: ServiceCertificateTemplateLayoutOrientation;
 };
 
 /////////////////
 // Placeholder //
 /////////////////
 
-export type CertificateTemplatePlaceholder = {
+export enum ServiceCertificateTemplatePlaceholderType {
+  TEXT = 'TEXT',
+  TABLE = 'TABLE',
+  SIGNATURE = 'SIGNATURE',
+}
+
+export type ServiceCertificateTemplatePlaceholder = {
+  type: ServiceCertificateTemplatePlaceholderType;
   name: string;
+  title: string;
+};
+
+////////////
+// Assets //
+////////////
+
+type Asset = Entity & {
+  path: string;
+  mime: string;
+  extension: string;
+  size: number;
+  dimensions: number[];
+  name: string;
+  caption: string | null;
+  alt: string | null;
 };
 
 /////////////
@@ -36,10 +59,11 @@ type Service = Entity & {
 };
 
 export interface ServiceCertificateTemplate extends Entity {
-  layout: CertificateTemplateLayout | null;
+  layout: ServiceCertificateTemplateLayout | null;
   content: string | null;
   styles: string | null;
-  placeholders: CertificateTemplatePlaceholder[];
+  placeholders: ServiceCertificateTemplatePlaceholder[];
+  assets: Asset[];
   service: Service;
 }
 

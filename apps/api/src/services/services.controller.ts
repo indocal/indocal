@@ -15,6 +15,7 @@ import {
   Service,
   ServiceProcessStep,
   ServiceCertificateTemplate,
+  File,
   Form,
   UserGroup,
   User,
@@ -23,6 +24,7 @@ import {
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
+import { FileEntity } from '../uploads/submodules/files/entities';
 import { FormEntity } from '../forms/entities';
 import { UserGroupEntity } from '../auth/submodules/groups/entities';
 import { UserEntity } from '../auth/submodules/users/entities';
@@ -46,11 +48,15 @@ class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   nextStepOnApprove: ServiceProcessStepEntity | null;
 }
 
+class EnhancedServiceCertificateTemplate extends ServiceCertificateTemplateEntity {
+  assets: FileEntity[];
+}
+
 class EnhancedService extends ServiceEntity {
   form: FormEntity;
   group: UserGroupEntity;
   steps: EnhancedServiceProcessStep[];
-  template: ServiceCertificateTemplateEntity | null;
+  template: EnhancedServiceCertificateTemplate | null;
 }
 
 type CreateEnhancedService = Service & {
@@ -64,7 +70,7 @@ type CreateEnhancedService = Service & {
       nextStepOnApprove: ServiceProcessStep | null;
     }
   >;
-  template: ServiceCertificateTemplate | null;
+  template: (ServiceCertificateTemplate & { assets: File[] }) | null;
 };
 
 @Controller('services')
@@ -115,9 +121,15 @@ export class ServicesController {
       }
     );
 
-    service.template = template
-      ? new ServiceCertificateTemplateEntity(template)
-      : null;
+    if (template) {
+      const { assets, ...rest } = template;
+
+      service.template = new EnhancedServiceCertificateTemplate(rest);
+
+      service.template.assets = assets.map((asset) => new FileEntity(asset));
+    } else {
+      service.template = null;
+    }
 
     return service;
   }
@@ -148,7 +160,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: true,
+        template: { include: { assets: true } },
       },
     });
 
@@ -194,7 +206,7 @@ export class ServicesController {
               nextStepOnApprove: true,
             },
           },
-          template: true,
+          template: { include: { assets: true } },
         },
       }),
       this.prismaService.service.count({
@@ -230,7 +242,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: true,
+        template: { include: { assets: true } },
       },
     });
 
@@ -269,7 +281,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: true,
+        template: { include: { assets: true } },
       },
     });
 
@@ -297,7 +309,7 @@ export class ServicesController {
             nextStepOnApprove: true,
           },
         },
-        template: true,
+        template: { include: { assets: true } },
       },
     });
 

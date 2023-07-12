@@ -27,9 +27,11 @@ export async function serializeFilesItemAnswer(
 
     if (error) throw error;
 
+    const [file] = files;
+
     return {
       item: answer.item,
-      content: files.length > 0 ? files[0].id : null,
+      content: file ? file.id : null,
     };
   }
 

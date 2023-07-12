@@ -38,6 +38,8 @@ export const MultipleFiles: React.FC<MultipleFilesProps> = ({
   ) : files.length > 0 ? (
     <Stack direction="row" spacing={1}>
       {files.map((file) => {
+        const [mime] = file.mime.split('/');
+
         const url = new URL(file.path, process.env.NEXT_PUBLIC_BACKEND_URL);
 
         return (
@@ -48,7 +50,7 @@ export const MultipleFiles: React.FC<MultipleFilesProps> = ({
             variant="outlined"
             href={url.toString()}
             target="_blank"
-            startIcon={icons[file.mime.split('/')[0]] ?? <FileIcon />}
+            startIcon={icons[mime] ?? <FileIcon />}
             sx={{ width: 'fit-content' }}
           >
             {file.name}

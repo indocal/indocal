@@ -68,6 +68,8 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
 
         {files.length > 0 ? (
           files.map((file) => {
+            const [mime] = file.mime.split('/');
+
             const url = new URL(file.path, process.env.NEXT_PUBLIC_BACKEND_URL);
 
             return (
@@ -89,13 +91,13 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
                           transparent 50%) 50% center / 20px 20px`,
                       }}
                     >
-                      {file.mime.split('/')[0] !== 'audio' &&
-                        file.mime.split('/')[0] !== 'image' &&
-                        file.mime.split('/')[0] !== 'video' && (
+                      {mime !== 'audio' &&
+                        mime !== 'image' &&
+                        mime !== 'video' && (
                           <CardMedia component={FileIcon} fontSize="large" />
                         )}
 
-                      {file.mime.split('/')[0] === 'audio' && (
+                      {mime === 'audio' && (
                         <CardMedia
                           component="audio"
                           controls
@@ -107,7 +109,7 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
                         />
                       )}
 
-                      {file.mime.split('/')[0] === 'image' && (
+                      {mime === 'image' && (
                         <CardMedia
                           component="img"
                           image={url.href}
@@ -116,7 +118,7 @@ const FilesGallery: React.FC<FilesGalleryProps> = ({ title, files }) => {
                         />
                       )}
 
-                      {file.mime.split('/')[0] === 'video' && (
+                      {mime === 'video' && (
                         <CardMedia
                           component="video"
                           src={url.href}

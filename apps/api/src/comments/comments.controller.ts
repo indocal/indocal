@@ -71,56 +71,67 @@ export class CommentsController {
     @Body() createCommentDto: CreateCommentDto,
     @UploadedFiles() attachments: Array<Express.Multer.File>
   ): Promise<SingleEntityResponse<EnhancedComment>> {
-    const comment = await this.prismaService.comment.create({
-      data: {
-        content: createCommentDto.content,
-        isInternal: !!createCommentDto.isInternal,
-        author: { connect: { id: createCommentDto.author } },
-        [createCommentDto.attach.model]: {
-          connect: { id: createCommentDto.attach.entity },
+    const comment = await this.prismaService.$transaction(async (tx) => {
+      const comment = await tx.comment.create({
+        data: {
+          content: createCommentDto.content,
+          isInternal: !!createCommentDto.isInternal,
+          author: { connect: { id: createCommentDto.author } },
+          [createCommentDto.attach.model]: {
+            connect: { id: createCommentDto.attach.entity },
+          },
         },
+        include: {
+          attachments: true,
+          author: true,
+        },
+      });
 
-        ...(attachments &&
-          attachments.length > 0 && {
-            attachments: {
-              createMany: {
-                skipDuplicates: true,
-                data: attachments.map((attachment) => {
-                  const location = path.join(rootFolder, attachment.filename);
+      for await (const attachment of attachments) {
+        const location = path.join(rootFolder, attachment.filename);
 
-                  const [mime] = attachment.mimetype.split('/');
+        const [mime] = attachment.mimetype.split('/');
 
-                  let width, height;
+        let width, height;
 
-                  if (mime === 'image') {
-                    const result = imageSize(location);
+        if (mime === 'image') {
+          const result = imageSize(location);
 
-                    if (result) {
-                      width = result.width;
-                      height = result.height;
-                    }
-                  }
+          if (result) {
+            width = result.width;
+            height = result.height;
+          }
+        }
 
-                  return {
-                    path: attachment.path,
-                    mime: attachment.mimetype,
-                    extension: path.extname(attachment.filename),
-                    size: attachment.size,
-                    name: Buffer.from(
-                      attachment.originalname,
-                      'latin1'
-                    ).toString('utf8'),
-                    dimensions: width && height ? [width, height] : [],
-                  };
-                }),
-              },
-            },
-          }),
-      },
-      include: {
-        attachments: true,
-        author: true,
-      },
+        const filename = Buffer.from(
+          attachment.originalname,
+          'latin1'
+        ).toString('utf8');
+
+        await tx.file.deleteMany({ where: { comment: { id: comment.id } } });
+
+        await tx.file.create({
+          data: {
+            path: attachment.path,
+            mime: attachment.mimetype,
+            extension: path.extname(attachment.filename),
+            size: attachment.size,
+            name: filename,
+            dimensions: width && height ? [width, height] : [],
+            comment: { connect: { id: comment.id } },
+          },
+        });
+      }
+
+      const updated = await tx.comment.findUniqueOrThrow({
+        where: { id: comment.id },
+        include: {
+          attachments: true,
+          author: true,
+        },
+      });
+
+      return updated;
     });
 
     return this.createEnhancedComment(comment);
@@ -202,63 +213,63 @@ export class CommentsController {
     @UploadedFiles() attachments: Array<Express.Multer.File>
   ): Promise<SingleEntityResponse<EnhancedComment>> {
     const comment = await this.prismaService.$transaction(async (tx) => {
-      const comment = await tx.comment.findUniqueOrThrow({
-        where: { id },
-        include: {
-          attachments: true,
-          author: true,
-        },
-      });
-
-      return await tx.comment.update({
+      const comment = await tx.comment.update({
         where: { id },
         data: {
           content: updateCommentDto.content,
           isInternal: !!updateCommentDto.isInternal,
-
-          ...(attachments &&
-            attachments.length > 0 && {
-              attachments: {
-                deleteMany: comment.attachments.map(({ id }) => ({ id })),
-                createMany: {
-                  skipDuplicates: true,
-                  data: attachments.map((attachment) => {
-                    const location = path.join(rootFolder, attachment.filename);
-
-                    const [mime] = attachment.mimetype.split('/');
-
-                    let width, height;
-
-                    if (mime === 'image') {
-                      const result = imageSize(location);
-
-                      if (result) {
-                        width = result.width;
-                        height = result.height;
-                      }
-                    }
-
-                    return {
-                      path: attachment.path,
-                      mime: attachment.mimetype,
-                      extension: path.extname(attachment.filename),
-                      size: attachment.size,
-                      name: Buffer.from(
-                        attachment.originalname,
-                        'latin1'
-                      ).toString('utf8'),
-                      dimensions: width && height ? [width, height] : [],
-                    };
-                  }),
-                },
-              },
-            }),
         },
         include: {
           attachments: true,
           author: true,
         },
       });
+
+      for await (const attachment of attachments) {
+        const location = path.join(rootFolder, attachment.filename);
+
+        const [mime] = attachment.mimetype.split('/');
+
+        let width, height;
+
+        if (mime === 'image') {
+          const result = imageSize(location);
+
+          if (result) {
+            width = result.width;
+            height = result.height;
+          }
+        }
+
+        const filename = Buffer.from(
+          attachment.originalname,
+          'latin1'
+        ).toString('utf8');
+
+        await tx.file.deleteMany({ where: { comment: { id: comment.id } } });
+
+        await tx.file.create({
+          data: {
+            path: attachment.path,
+            mime: attachment.mimetype,
+            extension: path.extname(attachment.filename),
+            size: attachment.size,
+            name: filename,
+            dimensions: width && height ? [width, height] : [],
+            comment: { connect: { id: comment.id } },
+          },
+        });
+      }
+
+      const updated = await tx.comment.findUniqueOrThrow({
+        where: { id: comment.id },
+        include: {
+          attachments: true,
+          author: true,
+        },
+      });
+
+      return updated;
     });
 
     return this.createEnhancedComment(comment);

@@ -5,8 +5,8 @@ import { FormConfig, FormStatus, FormVisibility } from '../../forms';
 
 import {
   ServiceRequestStatus,
-  CertificateTemplateLayout,
-  CertificateTemplatePlaceholder,
+  ServiceCertificateTemplateLayout,
+  ServiceCertificateTemplatePlaceholder,
 } from '../submodules';
 
 type Form = Entity & {
@@ -55,11 +55,23 @@ type Step = Entity & {
 // Template //
 //////////////
 
+type Asset = Entity & {
+  path: string;
+  mime: string;
+  extension: string;
+  size: number;
+  dimensions: number[];
+  name: string;
+  caption: string | null;
+  alt: string | null;
+};
+
 type Template = Entity & {
-  layout: CertificateTemplateLayout | null;
+  layout: ServiceCertificateTemplateLayout | null;
   content: string | null;
   styles: string | null;
-  placeholders: CertificateTemplatePlaceholder[];
+  placeholders: ServiceCertificateTemplatePlaceholder[];
+  assets: Asset[];
 };
 
 export type ServiceStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';

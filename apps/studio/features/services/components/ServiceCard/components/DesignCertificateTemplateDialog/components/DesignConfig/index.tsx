@@ -4,6 +4,7 @@ import {
   LayoutConfig,
   ContentConfig,
   StylesConfig,
+  AssetsConfig,
   PlaceholdersConfig,
 } from './components';
 
@@ -11,12 +12,13 @@ export interface DesignConfigProps {
   service: Service;
 }
 
-export const DesignConfig: React.FC<DesignConfigProps> = () => (
+export const DesignConfig: React.FC<DesignConfigProps> = ({ service }) => (
   <>
     <LayoutConfig />
     <ContentConfig />
     <StylesConfig />
-    <PlaceholdersConfig />
+    <AssetsConfig service={service} />
+    <PlaceholdersConfig service={service} />
   </>
 );
 

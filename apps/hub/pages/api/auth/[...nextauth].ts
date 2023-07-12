@@ -36,7 +36,7 @@ const handler: NextApiHandler = async (req, res) =>
             const user: User | null = await response.json();
 
             const hasPermissions = user?.roles.some(
-              (role) => role.config?.access?.hub !== 'NONE'
+              (role) => role.config?.access?.hub === 'ALLOWED'
             );
 
             if (!hasPermissions) throw new Error('Acceso restringido');

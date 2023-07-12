@@ -1,8 +1,8 @@
-import { CertificateTemplatePlaceholder } from '@indocal/services';
+import { ServiceCertificateTemplatePlaceholder } from '@indocal/services';
 
 export function highlightPlaceholders(
   html: string,
-  placeholders: CertificateTemplatePlaceholder[]
+  placeholders: ServiceCertificateTemplatePlaceholder[]
 ): string {
   const regex = /{{(.*?)}}/g;
 
@@ -10,16 +10,20 @@ export function highlightPlaceholders(
 
   if (!matches) return html;
 
-  const replaced = html.replace(regex, (_, placeholder) => {
-    const key = placeholder.trim();
+  const replaced = html.replace(regex, (_, match) => {
+    const key = match.trim();
 
-    const isValid = placeholders.some(
+    const placeholder = placeholders.find(
       (placeholder) => placeholder.name === key
     );
 
-    return isValid
-      ? `<span style="font-family: Courier-BoldOblique; background-color: rgba(0, 255, 0, 0.7)">${placeholder}</span>`
-      : `<span style="font-family: Courier-BoldOblique; background-color: rgba(255, 0, 0, 0.7)">${placeholder}</span>`;
+    return placeholder
+      ? `<span
+          style="font-family: Courier-BoldOblique;
+          background-color: rgba(0, 255, 0, 0.7)">${placeholder.title}</span>`
+      : `<span
+          style="font-family: Courier-BoldOblique;
+          background-color: rgba(255, 0, 0, 0.7)">${key}</span>`;
   });
 
   return replaced;

@@ -11,7 +11,7 @@ import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useFormContext, Control } from 'react-hook-form';
 
 import { ControlledRadioGroup } from '@indocal/ui';
-import { CertificateTemplateLayoutOrientation } from '@indocal/services';
+import { ServiceCertificateTemplateLayoutOrientation } from '@indocal/services';
 
 import { DesignCertificateTemplateDialogData } from '../../../../context';
 
@@ -47,13 +47,13 @@ export const LayoutConfig: React.FC = () => {
             radioGroupProps={{ row: true }}
           >
             <FormControlLabel
-              value={CertificateTemplateLayoutOrientation.PORTRAIT}
+              value={ServiceCertificateTemplateLayoutOrientation.PORTRAIT}
               label="Vertical"
               control={<Radio />}
             />
 
             <FormControlLabel
-              value={CertificateTemplateLayoutOrientation.LANDSCAPE}
+              value={ServiceCertificateTemplateLayoutOrientation.LANDSCAPE}
               label="Horizontal"
               control={<Radio />}
             />

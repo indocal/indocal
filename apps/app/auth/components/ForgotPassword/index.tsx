@@ -71,8 +71,10 @@ export const ForgotPassword: React.FC = () => {
       alignItems="center"
       spacing={2.5}
       sx={{
+        width: 325,
+        aspectRatio: '5 / 6',
         margin: 'auto',
-        padding: (theme) => theme.spacing(4),
+        padding: (theme) => theme.spacing(2, 3),
         borderRadius: (theme) => theme.shape.borderRadius,
       }}
     >
@@ -100,7 +102,7 @@ export const ForgotPassword: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
         sx={{
           width: '100%',
-          padding: (theme) => theme.spacing(1, 6),
+          padding: (theme) => theme.spacing(0.5, 1),
           borderTop: (theme) => `1px solid ${theme.palette.divider}`,
         }}
       >

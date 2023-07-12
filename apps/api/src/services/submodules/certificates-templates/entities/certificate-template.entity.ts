@@ -7,21 +7,29 @@ import { Entity, UUID } from '@/common';
 // Layout //
 ////////////
 
-export enum CertificateTemplateLayoutOrientation {
+export enum ServiceCertificateTemplateLayoutOrientation {
   PORTRAIT = 'portrait',
   LANDSCAPE = 'landscape',
 }
 
-export type CertificateTemplateLayout = {
-  orientation: CertificateTemplateLayoutOrientation;
+export type ServiceCertificateTemplateLayout = {
+  orientation: ServiceCertificateTemplateLayoutOrientation;
 };
 
 /////////////////
 // Placeholder //
 /////////////////
 
-export type CertificateTemplatePlaceholder = {
+export enum ServiceCertificateTemplatePlaceholderType {
+  TEXT = 'TEXT',
+  TABLE = 'TABLE',
+  SIGNATURE = 'SIGNATURE',
+}
+
+export type ServiceCertificateTemplatePlaceholder = {
+  type: ServiceCertificateTemplatePlaceholderType;
   name: string;
+  title: string;
 };
 
 export class ServiceCertificateTemplateEntity
@@ -32,10 +40,10 @@ export class ServiceCertificateTemplateEntity
   }
 
   id: UUID;
-  layout: CertificateTemplateLayout | null;
+  layout: ServiceCertificateTemplateLayout | null;
   content: string | null;
   styles: string | null;
-  placeholders: CertificateTemplatePlaceholder[];
+  placeholders: ServiceCertificateTemplatePlaceholder[];
 
   @Exclude()
   serviceId: UUID;

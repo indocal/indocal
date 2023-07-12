@@ -6,24 +6,37 @@ import {
   Param,
   Body,
   ParseUUIDPipe,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { PrismaService } from 'nestjs-prisma';
-import { ServiceCertificateTemplate, Service } from '@prisma/client';
+import { ServiceCertificateTemplate, Service, File } from '@prisma/client';
+import imageSize from 'image-size';
+import path from 'path';
 
 import { UUID, SingleEntityResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
+import { rootFolder } from '@/uploads';
+
+import { FileEntity } from '../../../uploads/submodules/files/entities';
 
 import { ServiceEntity } from '../../entities';
 
-import { ServiceCertificateTemplateEntity } from './entities';
+import {
+  ServiceCertificateTemplateEntity,
+  ServiceCertificateTemplateLayoutOrientation,
+} from './entities';
 import { UpsertServiceCertificateTemplateDto } from './dto';
 
 class EnhancedServiceCertificateTemplate extends ServiceCertificateTemplateEntity {
+  assets: FileEntity[];
   service: ServiceEntity;
 }
 
 type CreateEnhancedServiceCertificateTemplate = ServiceCertificateTemplate & {
+  assets: File[];
   service: Service;
 };
 
@@ -33,10 +46,13 @@ export class ServicesCertificatesTemplatesController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedServiceCertificateTemplate({
+    assets,
     service,
     ...rest
   }: CreateEnhancedServiceCertificateTemplate): EnhancedServiceCertificateTemplate {
     const template = new EnhancedServiceCertificateTemplate(rest);
+
+    template.assets = assets.map((asset) => new FileEntity(asset));
 
     template.service = new ServiceEntity(service);
 
@@ -54,7 +70,7 @@ export class ServicesCertificatesTemplatesController {
     const template =
       await this.prismaService.serviceCertificateTemplate.findUnique({
         where: { id },
-        include: { service: true },
+        include: { service: true, assets: true },
       });
 
     return template
@@ -67,16 +83,23 @@ export class ServicesCertificatesTemplatesController {
     apiToken: { ANON: false, SERVICE: true },
     user: (ability) => ability.can('create', 'service'),
   })
+  @UseInterceptors(AnyFilesInterceptor())
   async upsert(
     @Param('service_id') serviceId: UUID,
-    @Body() upsertTemplateDto: UpsertServiceCertificateTemplateDto
+    @Body() upsertTemplateDto: UpsertServiceCertificateTemplateDto,
+    @UploadedFiles() assets: Array<Express.Multer.File>
   ): Promise<SingleEntityResponse<EnhancedServiceCertificateTemplate>> {
-    const template = await this.prismaService.serviceCertificateTemplate.upsert(
-      {
+    const template = await this.prismaService.$transaction(async (tx) => {
+      const template = await tx.serviceCertificateTemplate.upsert({
         where: { serviceId },
         create: {
           serviceId,
-          layout: upsertTemplateDto.layout,
+          layout: {
+            orientation:
+              upsertTemplateDto.layout ||
+              ServiceCertificateTemplateLayoutOrientation.PORTRAIT,
+          },
+
           content: upsertTemplateDto.content,
           styles: upsertTemplateDto.styles,
           placeholders: upsertTemplateDto.placeholders,
@@ -87,9 +110,45 @@ export class ServicesCertificatesTemplatesController {
           styles: upsertTemplateDto.styles,
           placeholders: upsertTemplateDto.placeholders,
         },
-        include: { service: true },
+        include: { service: true, assets: true },
+      });
+
+      for await (const asset of assets) {
+        const location = path.join(rootFolder, asset.filename);
+
+        const [mime] = asset.mimetype.split('/');
+
+        let width, height;
+
+        if (mime === 'image') {
+          const result = imageSize(location);
+
+          if (result) {
+            width = result.width;
+            height = result.height;
+          }
+        }
+
+        await tx.file.create({
+          data: {
+            path: asset.path,
+            mime: asset.mimetype,
+            extension: path.extname(asset.filename),
+            size: asset.size,
+            name: Buffer.from(asset.originalname, 'latin1').toString('utf8'),
+            dimensions: width && height ? [width, height] : [],
+            templates: { connect: { id: template.id } },
+          },
+        });
       }
-    );
+
+      const updated = await tx.serviceCertificateTemplate.findUniqueOrThrow({
+        where: { id: template.id },
+        include: { service: true, assets: true },
+      });
+
+      return updated;
+    });
 
     return this.createEnhancedServiceCertificateTemplate(template);
   }
@@ -105,7 +164,7 @@ export class ServicesCertificatesTemplatesController {
     const template = await this.prismaService.serviceCertificateTemplate.delete(
       {
         where: { id },
-        include: { service: true },
+        include: { service: true, assets: true },
       }
     );
 

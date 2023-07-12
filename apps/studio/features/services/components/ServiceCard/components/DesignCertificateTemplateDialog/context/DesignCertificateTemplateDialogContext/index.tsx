@@ -4,16 +4,15 @@ import { z as zod } from 'zod';
 
 import {
   Service,
-  CertificateTemplateLayout,
-  CertificateTemplateLayoutOrientation,
-  CertificateTemplatePlaceholder,
+  ServiceCertificateTemplateLayout,
+  ServiceCertificateTemplateLayoutOrientation,
 } from '@indocal/services';
 
 export type DesignCertificateTemplateDialogData = {
-  layout: CertificateTemplateLayout;
+  layout: ServiceCertificateTemplateLayout;
   content: string;
   styles: string;
-  placeholders: CertificateTemplatePlaceholder[];
+  assets: File[];
 };
 
 export interface DesignCertificateTemplateDialogProviderProps {
@@ -23,70 +22,59 @@ export interface DesignCertificateTemplateDialogProviderProps {
 export const DesignCertificateTemplateDialogProvider: React.FC<
   React.PropsWithChildren<DesignCertificateTemplateDialogProviderProps>
 > = ({ service, children }) => {
-  const schema = zod.object(
-    {
-      layout: zod.object(
-        {
-          orientation: zod.enum(
-            [
-              CertificateTemplateLayoutOrientation.PORTRAIT,
-              CertificateTemplateLayoutOrientation.LANDSCAPE,
-            ],
-            {
-              description: 'Orientación del certificado',
-              required_error: 'Debe ingresar la orientación del certificado',
-              invalid_type_error: 'Formato no válido',
-            }
-          ),
-        },
-        {
-          description: 'Diseño del certificado',
-          required_error: 'Debe ingresar el diseño del certificado',
-          invalid_type_error: 'Formato no válido',
-        }
-      ),
-
-      content: zod
-        .string({
-          description: 'Contenido del certificado',
-          required_error: 'Debe ingresar el contenido del certificado',
-          invalid_type_error: 'Formato no válido',
-        })
-        .min(1, 'Debe ingresar el contenido del certificado'),
-
-      styles: zod
-        .string({
-          description: 'Estilos del certificado',
-          required_error: 'Debe ingresar los estilos del certificado',
-          invalid_type_error: 'Formato no válido',
-        })
-        .min(1, 'Debe ingresar los estilos del certificado'),
-
-      placeholders: zod
-        .object(
+  const schema = zod
+    .object(
+      {
+        layout: zod.object(
           {
-            name: zod
-              .string({
-                description: 'Nombre del placeholder',
-                required_error: 'Debe ingresar el nombre del placeholder',
+            orientation: zod.enum(
+              [
+                ServiceCertificateTemplateLayoutOrientation.PORTRAIT,
+                ServiceCertificateTemplateLayoutOrientation.LANDSCAPE,
+              ],
+              {
+                description: 'Orientación del certificado',
+                required_error: 'Debe ingresar la orientación del certificado',
                 invalid_type_error: 'Formato no válido',
-              })
-              .min(1, 'Debe ingresar el nombre del placeholder'),
+              }
+            ),
           },
           {
-            description: 'Placeholders del certificado',
-            required_error: 'Debe ingresar los placeholders del certificado',
+            description: 'Diseño del certificado',
+            required_error: 'Debe ingresar el diseño del certificado',
             invalid_type_error: 'Formato no válido',
           }
-        )
-        .array(),
-    },
-    {
-      description: 'Datos del certificado',
-      required_error: 'Debe ingresar los datos del certificado',
-      invalid_type_error: 'Formato no válido',
-    }
-  );
+        ),
+
+        content: zod
+          .string({
+            description: 'Contenido del certificado',
+            required_error: 'Debe ingresar el contenido del certificado',
+            invalid_type_error: 'Formato no válido',
+          })
+          .min(1, 'Debe ingresar el contenido del certificado'),
+
+        styles: zod
+          .string({
+            description: 'Estilos del certificado',
+            required_error: 'Debe ingresar los estilos del certificado',
+            invalid_type_error: 'Formato no válido',
+          })
+          .min(1, 'Debe ingresar los estilos del certificado'),
+
+        assets: zod
+          .instanceof(File, {
+            message: 'Debe seleccionar los recursos a cargar',
+          })
+          .array(),
+      },
+      {
+        description: 'Datos del certificado',
+        required_error: 'Debe ingresar los datos del certificado',
+        invalid_type_error: 'Formato no válido',
+      }
+    )
+    .partial();
 
   const methods = useForm<DesignCertificateTemplateDialogData>({
     resolver: zodResolver(schema),
@@ -94,11 +82,10 @@ export const DesignCertificateTemplateDialogProvider: React.FC<
       layout: {
         orientation:
           service.template?.layout?.orientation ||
-          CertificateTemplateLayoutOrientation.PORTRAIT,
+          ServiceCertificateTemplateLayoutOrientation.PORTRAIT,
       },
       content: service.template?.content || '',
       styles: service.template?.styles || '',
-      placeholders: service.template?.placeholders || [],
     },
   });
 

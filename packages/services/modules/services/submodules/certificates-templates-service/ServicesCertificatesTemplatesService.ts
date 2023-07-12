@@ -69,7 +69,9 @@ export class ServicesCertificatesTemplatesService {
           UpsertServiceCertificateTemplateDto
         >,
         UpsertServiceCertificateTemplateDto
-      >(`${ApiEndpoints.SERVICES}/${this.getUUID(service)}/templates`, data);
+      >(`${ApiEndpoints.SERVICES}/${this.getUUID(service)}/templates`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
       return {
         template: response.data,

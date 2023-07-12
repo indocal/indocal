@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import { signIn } from 'next-auth/react';
 import {
   Box,
@@ -9,6 +10,7 @@ import {
   TextField,
   Avatar,
   Typography,
+  Link as MuiLink,
 } from '@mui/material';
 import { LockOutlined as LockOutlinedIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
@@ -184,6 +186,19 @@ export const SignIn: React.FC = () => {
               error={Boolean(errors.password)}
               helperText={errors.password?.message}
             />
+
+            <MuiLink
+              component={NextLink}
+              href={Pages.FORGOT_PASSWORD}
+              variant="body2"
+              sx={{
+                marginTop: (theme) => theme.spacing(1),
+                marginBottom: (theme) => theme.spacing(2),
+                textAlign: 'right',
+              }}
+            >
+              ¿Olvidó su contraseña?
+            </MuiLink>
 
             <LoadingButton
               type="submit"

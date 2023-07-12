@@ -2,7 +2,7 @@ import { UserRole } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export type UserRoleAccessType = 'NONE' | 'STANDARD' | 'ADMIN';
+export type UserRoleAccessType = 'FORBIDDEN' | 'ALLOWED';
 
 export type UserRoleConfig = Partial<{
   access: {

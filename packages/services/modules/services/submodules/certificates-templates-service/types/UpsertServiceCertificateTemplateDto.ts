@@ -1,13 +1,14 @@
 import {
-  CertificateTemplateLayout,
-  CertificateTemplatePlaceholder,
+  ServiceCertificateTemplateLayout,
+  ServiceCertificateTemplatePlaceholder,
 } from './ServiceCertificateTemplate';
 
-export type UpsertServiceCertificateTemplateDto = {
-  layout: CertificateTemplateLayout;
-  content?: string | null;
-  styles?: string | null;
-  placeholders: CertificateTemplatePlaceholder[];
-};
+export type UpsertServiceCertificateTemplateDto = Partial<{
+  layout: ServiceCertificateTemplateLayout;
+  content: string;
+  styles: string;
+  placeholders: ServiceCertificateTemplatePlaceholder[];
+  assets: File[];
+}>;
 
 export default UpsertServiceCertificateTemplateDto;

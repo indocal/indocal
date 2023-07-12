@@ -4,11 +4,11 @@ import { useFormContext } from 'react-hook-form';
 
 import {
   Service,
-  CertificateTemplateLayoutOrientation,
+  ServiceCertificateTemplateLayoutOrientation,
 } from '@indocal/services';
 
 import { DesignCertificateTemplateDialogData } from '../../context';
-import { highlightPlaceholders } from '../../utils';
+import { getAssetsSources, highlightPlaceholders } from '../../utils';
 
 const styles = StyleSheet.create({
   viewer: {
@@ -34,12 +34,13 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
 
   const orientation =
     watch('layout.orientation') ||
-    CertificateTemplateLayoutOrientation.PORTRAIT;
+    ServiceCertificateTemplateLayoutOrientation.PORTRAIT;
 
   const HTML = watch('content') || '';
   const CSS = watch('styles') || '';
 
-  const placeholders = watch('placeholders') || [];
+  const placeholders = service.template?.placeholders || [];
+  const assets = service.template?.assets || [];
 
   return (
     <PDFViewer showToolbar style={styles.viewer}>
@@ -53,7 +54,10 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
                     ${CSS}
                   </style>
 
-                  ${highlightPlaceholders(HTML, placeholders)}
+                  ${getAssetsSources(
+                    highlightPlaceholders(HTML, placeholders),
+                    assets
+                  )}
                 </body>
               </html>
             `}

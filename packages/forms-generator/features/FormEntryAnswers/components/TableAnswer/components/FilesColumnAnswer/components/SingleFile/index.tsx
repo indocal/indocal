@@ -27,6 +27,8 @@ export const SingleFile: React.FC<SingleFileProps> = ({ file: uuid }) => {
     []
   );
 
+  const [mime] = file ? file.mime.split('/') : [];
+
   const url = useMemo(
     () => new URL(file ? file.path : uuid, process.env.NEXT_PUBLIC_BACKEND_URL),
     [uuid, file]
@@ -43,7 +45,7 @@ export const SingleFile: React.FC<SingleFileProps> = ({ file: uuid }) => {
       variant="outlined"
       href={url.toString()}
       target="_blank"
-      startIcon={icons[file.mime.split('/')[0]] ?? <FileIcon />}
+      startIcon={icons[mime] ?? <FileIcon />}
       sx={{ width: 'fit-content' }}
     >
       {file.name}

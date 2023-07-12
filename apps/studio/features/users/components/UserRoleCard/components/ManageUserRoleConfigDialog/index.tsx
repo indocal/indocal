@@ -13,9 +13,8 @@ import {
   ToggleButton,
 } from '@mui/material';
 import {
-  Block as NoneAccessIcon,
-  Person as StandardAccessIcon,
-  AdminPanelSettings as AdminAccessIcon,
+  Block as ForbiddenAccessIcon,
+  AdminPanelSettings as AllowedAccessIcon,
   Dashboard as StudioAppIcon,
   Hub as HubIcon,
   Apps as AppIcon,
@@ -50,27 +49,27 @@ const schema = zod.object(
         studio: zod.enum<
           UserRoleAccessType,
           [UserRoleAccessType, ...UserRoleAccessType[]]
-        >(['NONE', 'STANDARD', 'ADMIN']),
+        >(['FORBIDDEN', 'ALLOWED']),
 
         hub: zod.enum<
           UserRoleAccessType,
           [UserRoleAccessType, ...UserRoleAccessType[]]
-        >(['NONE', 'STANDARD', 'ADMIN']),
+        >(['FORBIDDEN', 'ALLOWED']),
 
         app: zod.enum<
           UserRoleAccessType,
           [UserRoleAccessType, ...UserRoleAccessType[]]
-        >(['NONE', 'STANDARD', 'ADMIN']),
+        >(['FORBIDDEN', 'ALLOWED']),
 
         nobu: zod.enum<
           UserRoleAccessType,
           [UserRoleAccessType, ...UserRoleAccessType[]]
-        >(['NONE', 'STANDARD', 'ADMIN']),
+        >(['FORBIDDEN', 'ALLOWED']),
 
         warehouse: zod.enum<
           UserRoleAccessType,
           [UserRoleAccessType, ...UserRoleAccessType[]]
-        >(['NONE', 'STANDARD', 'ADMIN']),
+        >(['FORBIDDEN', 'ALLOWED']),
       },
       {
         description: 'Accesos del rol',
@@ -111,11 +110,11 @@ export const ManageUserRoleConfigDialog: React.FC<
     resolver: zodResolver(schema),
     defaultValues: {
       access: {
-        studio: role.config?.access?.studio || 'NONE',
-        hub: role.config?.access?.hub || 'NONE',
-        app: role.config?.access?.app || 'NONE',
-        nobu: role.config?.access?.nobu || 'NONE',
-        warehouse: role.config?.access?.warehouse || 'NONE',
+        studio: role.config?.access?.studio || 'FORBIDDEN',
+        hub: role.config?.access?.hub || 'FORBIDDEN',
+        app: role.config?.access?.app || 'FORBIDDEN',
+        nobu: role.config?.access?.nobu || 'FORBIDDEN',
+        warehouse: role.config?.access?.warehouse || 'FORBIDDEN',
       },
     },
   });
@@ -241,16 +240,12 @@ export const ManageUserRoleConfigDialog: React.FC<
                         onChange={(_, value) => onChange(value)}
                         sx={{ marginLeft: 'auto' }}
                       >
-                        <ToggleButton value={'NONE' as UserRoleAccessType}>
-                          <NoneAccessIcon />
+                        <ToggleButton value={'FORBIDDEN' as UserRoleAccessType}>
+                          <ForbiddenAccessIcon />
                         </ToggleButton>
 
-                        <ToggleButton value={'STANDARD' as UserRoleAccessType}>
-                          <StandardAccessIcon />
-                        </ToggleButton>
-
-                        <ToggleButton value={'ADMIN' as UserRoleAccessType}>
-                          <AdminAccessIcon />
+                        <ToggleButton value={'ALLOWED' as UserRoleAccessType}>
+                          <AllowedAccessIcon />
                         </ToggleButton>
                       </ToggleButtonGroup>
                     )}

@@ -158,7 +158,7 @@ const DesignCertificateTemplateDialog: React.FC<
             sx={{
               flex: { xs: 1, md: 3 },
               paddingX: (theme) => theme.spacing(0.5),
-              overflow: { md: 'auto' },
+              overflow: 'auto',
             }}
           >
             <DesignConfig service={service} />

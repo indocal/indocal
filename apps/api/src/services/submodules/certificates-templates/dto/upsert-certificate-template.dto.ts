@@ -1,10 +1,12 @@
-import { IsString, IsEnum, IsOptional, ValidateNested } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { IsString, IsEnum, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 import {
-  CertificateTemplateLayout,
-  CertificateTemplateLayoutOrientation,
-  CertificateTemplatePlaceholder,
+  ServiceCertificateTemplateLayout,
+  ServiceCertificateTemplateLayoutOrientation,
+  ServiceCertificateTemplatePlaceholder,
+  ServiceCertificateTemplatePlaceholderType,
 } from '../entities';
 
 ////////////
@@ -12,8 +14,8 @@ import {
 ////////////
 
 class LayoutSchema {
-  @IsEnum(CertificateTemplateLayoutOrientation)
-  orientation: CertificateTemplateLayoutOrientation;
+  @IsEnum(ServiceCertificateTemplateLayoutOrientation)
+  orientation: ServiceCertificateTemplateLayoutOrientation;
 }
 
 /////////////////
@@ -21,30 +23,38 @@ class LayoutSchema {
 /////////////////
 
 class PlaceholderSchema {
+  @IsEnum(ServiceCertificateTemplatePlaceholderType)
+  type: ServiceCertificateTemplatePlaceholderType;
+
   @IsString()
   name: string;
+
+  @IsString()
+  title: string;
 }
 
 /////////
 // DTO //
 /////////
 
-export class UpsertServiceCertificateTemplateDto {
+class UpsertServiceCertificateTemplateDtoSchema {
   @ValidateNested()
   @Type(() => LayoutSchema)
-  layout: CertificateTemplateLayout;
+  layout: ServiceCertificateTemplateLayout;
 
   @IsString()
-  @IsOptional()
-  content?: string | null;
+  content: string;
 
   @IsString()
-  @IsOptional()
-  styles?: string | null;
+  styles: string;
 
   @ValidateNested({ each: true })
   @Type(() => PlaceholderSchema)
-  placeholders: CertificateTemplatePlaceholder[];
+  placeholders: ServiceCertificateTemplatePlaceholder[];
 }
+
+export class UpsertServiceCertificateTemplateDto extends PartialType(
+  UpsertServiceCertificateTemplateDtoSchema
+) {}
 
 export default UpsertServiceCertificateTemplateDto;

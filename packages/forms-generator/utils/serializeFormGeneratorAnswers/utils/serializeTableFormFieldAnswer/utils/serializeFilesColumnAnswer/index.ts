@@ -27,9 +27,11 @@ export async function serializeFilesColumnAnswer(
 
     if (error) throw error;
 
+    const [file] = files;
+
     return {
       column: answer.column,
-      content: files.length > 0 ? files[0].id : null,
+      content: file ? file.id : null,
     };
   }
 

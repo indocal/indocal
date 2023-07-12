@@ -212,6 +212,8 @@ export const EditCommentDialog: React.FC<EditCommentDialogProps> = ({
                 </Typography>
 
                 {comment.attachments.map((attachment) => {
+                  const [mime] = attachment.mime.split('/');
+
                   const url = new URL(
                     attachment.path,
                     process.env.NEXT_PUBLIC_BACKEND_URL
@@ -225,9 +227,7 @@ export const EditCommentDialog: React.FC<EditCommentDialogProps> = ({
                         variant="outlined"
                         href={url.toString()}
                         target="_blank"
-                        startIcon={
-                          icons[attachment.mime.split('/')[0]] ?? <FileIcon />
-                        }
+                        startIcon={icons[mime] ?? <FileIcon />}
                         sx={{ width: 'fit-content' }}
                       >
                         {attachment.name}
