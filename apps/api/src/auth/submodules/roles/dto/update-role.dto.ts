@@ -61,9 +61,6 @@ class UserRoleConfigAccessSchema {
   nobu: UserRoleAccessType;
 
   @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
-  trainings: UserRoleAccessType;
-
-  @IsEnum({ NONE: 'NONE', STANDARD: 'STANDARD', ADMIN: 'ADMIN' })
   warehouse: UserRoleAccessType;
 }
 

@@ -20,7 +20,6 @@ import {
   Hub as HubIcon,
   Apps as AppIcon,
   SupportAgent as NobuAppIcon,
-  CardMembership as TrainingsAppIcon,
   Warehouse as WarehouseAppIcon,
 } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
@@ -64,11 +63,6 @@ const schema = zod.object(
         >(['NONE', 'STANDARD', 'ADMIN']),
 
         nobu: zod.enum<
-          UserRoleAccessType,
-          [UserRoleAccessType, ...UserRoleAccessType[]]
-        >(['NONE', 'STANDARD', 'ADMIN']),
-
-        trainings: zod.enum<
           UserRoleAccessType,
           [UserRoleAccessType, ...UserRoleAccessType[]]
         >(['NONE', 'STANDARD', 'ADMIN']),
@@ -121,7 +115,6 @@ export const ManageUserRoleConfigDialog: React.FC<
         hub: role.config?.access?.hub || 'NONE',
         app: role.config?.access?.app || 'NONE',
         nobu: role.config?.access?.nobu || 'NONE',
-        trainings: role.config?.access?.trainings || 'NONE',
         warehouse: role.config?.access?.warehouse || 'NONE',
       },
     },
@@ -148,11 +141,6 @@ export const ManageUserRoleConfigDialog: React.FC<
         name: 'nobu',
         label: 'Nobu',
         icon: <NobuAppIcon />,
-      },
-      {
-        name: 'trainings',
-        label: 'Capacitaciones',
-        icon: <TrainingsAppIcon />,
       },
       {
         name: 'warehouse',

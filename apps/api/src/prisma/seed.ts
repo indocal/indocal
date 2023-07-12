@@ -122,7 +122,6 @@ async function main() {
               hub: 'ADMIN',
               app: 'ADMIN',
               nobu: 'ADMIN',
-              trainings: 'ADMIN',
               warehouse: 'ADMIN',
             },
           },

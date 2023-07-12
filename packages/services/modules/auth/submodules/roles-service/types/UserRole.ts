@@ -21,7 +21,6 @@ export type UserRoleConfig = Partial<{
     hub: UserRoleAccessType;
     app: UserRoleAccessType;
     nobu: UserRoleAccessType;
-    trainings: UserRoleAccessType;
     warehouse: UserRoleAccessType;
   };
 }>;
