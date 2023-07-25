@@ -281,13 +281,13 @@ model ServiceProcessStep {
 
   owners User[]
 
-  prevStepOnReject   ServiceProcessStep? @relation("RejectFlow")
-  nextStepOnReject   ServiceProcessStep? @relation("RejectFlow", fields: [nextStepOnRejectId], references: [id])
-  nextStepOnRejectId String?             @unique
+  prevStepsOnReject  ServiceProcessStep[] @relation("RejectFlow")
+  nextStepOnReject   ServiceProcessStep?  @relation("RejectFlow", fields: [nextStepOnRejectId], references: [id])
+  nextStepOnRejectId String?
 
-  prevStepOnApprove   ServiceProcessStep? @relation("ApproveFlow")
-  nextStepOnApprove   ServiceProcessStep? @relation("ApproveFlow", fields: [nextStepOnApproveId], references: [id])
-  nextStepOnApproveId String?             @unique
+  prevStepsOnApprove  ServiceProcessStep[] @relation("ApproveFlow")
+  nextStepOnApprove   ServiceProcessStep?  @relation("ApproveFlow", fields: [nextStepOnApproveId], references: [id])
+  nextStepOnApproveId String?
 
   requests ServiceRequest[]
 
@@ -384,7 +384,7 @@ model File {
   alt     String?
 
   comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId String?  @unique
+  commentId String?
 
   templates ServiceCertificateTemplate[]
 

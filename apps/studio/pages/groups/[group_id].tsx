@@ -8,6 +8,7 @@ import {
   UserGroupCard,
   GroupUsersDataGrid,
   GroupFormsDataGrid,
+  GroupServicesDataGrid,
 } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -61,9 +62,15 @@ const UserGroupPage: EnhancedNextPage = () => {
               </Widget>
             </Unstable_Grid2>
 
-            <Unstable_Grid2 xs={12}>
+            <Unstable_Grid2 xs={6}>
               <Widget>
                 <GroupFormsDataGrid group={group} />
+              </Widget>
+            </Unstable_Grid2>
+
+            <Unstable_Grid2 xs={6}>
+              <Widget>
+                <GroupServicesDataGrid group={group} />
               </Widget>
             </Unstable_Grid2>
           </Unstable_Grid2>

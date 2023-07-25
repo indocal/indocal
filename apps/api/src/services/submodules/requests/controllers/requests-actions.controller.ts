@@ -53,65 +53,65 @@ export class ServicesRequestsActionsController {
 
       if (!nextStep) throw new InvalidCurrentStepException();
 
+      if (approveOrRejectCurrentStepDto.comment) {
+        const isInternal =
+          approveOrRejectCurrentStepDto.comment.isInternal === 'true'
+            ? true
+            : false;
+
+        const comment = await tx.comment.create({
+          data: {
+            isInternal,
+            content: approveOrRejectCurrentStepDto.comment.content,
+            author: {
+              connect: {
+                id: approveOrRejectCurrentStepDto.comment.author,
+              },
+            },
+            request: { connect: { id: request.id } },
+          },
+        });
+
+        for await (const attachment of attachments) {
+          const location = path.join(rootFolder, attachment.filename);
+
+          const [mime] = attachment.mimetype.split('/');
+
+          let width, height;
+
+          if (mime === 'image') {
+            const result = imageSize(location);
+
+            if (result) {
+              width = result.width;
+              height = result.height;
+            }
+          }
+
+          const filename = Buffer.from(
+            attachment.originalname,
+            'latin1'
+          ).toString('utf8');
+
+          await tx.file.create({
+            data: {
+              path: attachment.path,
+              mime: attachment.mimetype,
+              extension: path.extname(attachment.filename),
+              size: attachment.size,
+              name: filename,
+              dimensions: width && height ? [width, height] : [],
+              comment: { connect: { id: comment.id } },
+            },
+          });
+        }
+      }
+
       await tx.serviceRequest.update({
         where: { id: request.id },
         data: {
           status: nextStep.nextRequestStatus,
           currentStep: { connect: { id: nextStep.id } },
-
-          ...(approveOrRejectCurrentStepDto.comment && {
-            comments: {
-              create: {
-                isInternal: !!approveOrRejectCurrentStepDto.comment.isInternal,
-                content: approveOrRejectCurrentStepDto.comment.content,
-                author: {
-                  connect: {
-                    id: approveOrRejectCurrentStepDto.comment.author,
-                  },
-                },
-
-                ...(attachments &&
-                  attachments.length > 0 && {
-                    attachments: {
-                      createMany: {
-                        skipDuplicates: true,
-                        data: attachments.map((attachment) => {
-                          const location = path.join(
-                            rootFolder,
-                            attachment.filename
-                          );
-
-                          const [mime] = attachment.mimetype.split('/');
-
-                          let width, height;
-
-                          if (mime === 'image') {
-                            const result = imageSize(location);
-
-                            if (result) {
-                              width = result.width;
-                              height = result.height;
-                            }
-                          }
-
-                          return {
-                            path: attachment.path,
-                            mime: attachment.mimetype,
-                            extension: path.extname(attachment.filename),
-                            size: attachment.size,
-                            name: Buffer.from(
-                              attachment.originalname,
-                              'latin1'
-                            ).toString('utf8'),
-                            dimensions: width && height ? [width, height] : [],
-                          };
-                        }),
-                      },
-                    },
-                  }),
-              },
-            },
-          }),
         },
       });
     });

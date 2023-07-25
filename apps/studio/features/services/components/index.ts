@@ -1,5 +1,6 @@
 export * from './ServiceCard';
 export * from './ServicesDataGrid';
+export * from './GroupServicesDataGrid';
 export * from './GenericServicesDataGrid';
 
 export * from './ServiceRequestCard';

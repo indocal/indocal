@@ -31,9 +31,9 @@ export interface ServiceProcessStep extends Entity {
   description: string | null;
   nextRequestStatus: ServiceRequestStatus;
   owners: Owner[];
-  prevStepOnReject: SiblingStep | null;
+  prevStepsOnReject: SiblingStep[];
   nextStepOnReject: SiblingStep | null;
-  prevStepOnApprove: SiblingStep | null;
+  prevStepsOnApprove: SiblingStep[];
   nextStepOnApprove: SiblingStep | null;
   service: Service;
 }

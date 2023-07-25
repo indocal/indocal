@@ -15,11 +15,11 @@ import {
   Button,
   IconButton,
   Link,
+  Chip,
   LinearProgress,
 } from '@mui/material';
 import {
   AddCircle as AddIcon,
-  ExpandMore as ExpandIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   FilePresent as FileIcon,
@@ -187,16 +187,28 @@ const ServiceRequestComments: React.FC<ServiceRequestCommentsProps> = ({
             {request.comments.length > 0 ? (
               request.comments.map((comment) => (
                 <Accordion key={comment.id}>
-                  <AccordionSummary expandIcon={<ExpandIcon />}>
-                    <Typography
-                      component="pre"
-                      sx={{
-                        whiteSpace: 'pre-wrap',
-                        wordBreak: 'break-word',
-                      }}
+                  <AccordionSummary>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      spacing={1}
+                      sx={{ width: '100%' }}
                     >
-                      {comment.content}
-                    </Typography>
+                      <Typography
+                        component="pre"
+                        sx={{
+                          whiteSpace: 'pre-wrap',
+                          wordBreak: 'break-word',
+                        }}
+                      >
+                        {comment.content}
+                      </Typography>
+
+                      {comment.isInternal && (
+                        <Chip size="small" label="Interno" />
+                      )}
+                    </Stack>
                   </AccordionSummary>
 
                   <AccordionDetails>
@@ -210,6 +222,8 @@ const ServiceRequestComments: React.FC<ServiceRequestCommentsProps> = ({
                       {comment.attachments.length > 0 && (
                         <Unstable_Grid2 container spacing={1}>
                           {comment.attachments.map((attachment) => {
+                            const [mime] = attachment.mime.split('/');
+
                             const url = new URL(
                               attachment.path,
                               process.env.NEXT_PUBLIC_BACKEND_URL
@@ -223,11 +237,7 @@ const ServiceRequestComments: React.FC<ServiceRequestCommentsProps> = ({
                                   variant="outlined"
                                   href={url.toString()}
                                   target="_blank"
-                                  startIcon={
-                                    icons[attachment.mime.split('/')[0]] ?? (
-                                      <FileIcon />
-                                    )
-                                  }
+                                  startIcon={icons[mime] ?? <FileIcon />}
                                   sx={{ width: 'fit-content' }}
                                 >
                                   {attachment.name}

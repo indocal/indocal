@@ -26,18 +26,18 @@ import {
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
-  prevStepOnReject: ServiceProcessStepEntity | null;
+  prevStepsOnReject: ServiceProcessStepEntity[];
+  prevStepsOnApprove: ServiceProcessStepEntity[];
   nextStepOnReject: ServiceProcessStepEntity | null;
-  prevStepOnApprove: ServiceProcessStepEntity | null;
   nextStepOnApprove: ServiceProcessStepEntity | null;
   service: ServiceEntity;
 }
 
 type CreateEnhancedServiceProcessStep = ServiceProcessStep & {
   owners: User[];
-  prevStepOnReject: ServiceProcessStep | null;
+  prevStepsOnReject: ServiceProcessStep[];
+  prevStepsOnApprove: ServiceProcessStep[];
   nextStepOnReject: ServiceProcessStep | null;
-  prevStepOnApprove: ServiceProcessStep | null;
   nextStepOnApprove: ServiceProcessStep | null;
   service: Service;
 };
@@ -49,9 +49,9 @@ export class ServicesProcessStepsController {
 
   createEnhancedServiceProcessStep({
     owners,
-    prevStepOnReject,
+    prevStepsOnReject,
     nextStepOnReject,
-    prevStepOnApprove,
+    prevStepsOnApprove,
     nextStepOnApprove,
     service,
     ...rest
@@ -60,17 +60,17 @@ export class ServicesProcessStepsController {
 
     step.owners = owners.map((owner) => new UserEntity(owner));
 
-    step.prevStepOnReject = prevStepOnReject
-      ? new ServiceProcessStepEntity(prevStepOnReject)
-      : null;
+    step.prevStepsOnReject = prevStepsOnReject.map(
+      (step) => new ServiceProcessStepEntity(step)
+    );
 
     step.nextStepOnReject = nextStepOnReject
       ? new ServiceProcessStepEntity(nextStepOnReject)
       : null;
 
-    step.prevStepOnApprove = prevStepOnApprove
-      ? new ServiceProcessStepEntity(prevStepOnApprove)
-      : null;
+    step.prevStepsOnApprove = prevStepsOnApprove.map(
+      (step) => new ServiceProcessStepEntity(step)
+    );
 
     step.nextStepOnApprove = nextStepOnApprove
       ? new ServiceProcessStepEntity(nextStepOnApprove)
@@ -98,18 +98,24 @@ export class ServicesProcessStepsController {
         owners: { connect: createStepDto.owners.map((id) => ({ id })) },
         service: { connect: { id: serviceId } },
 
-        ...(createStepDto.prevStepOnReject && {
-          prevStepOnReject: { connect: { id: createStepDto.prevStepOnReject } },
+        ...(createStepDto.prevStepsOnReject && {
+          prevStepsOnReject: {
+            connect: createStepDto.prevStepsOnReject.map((step) => ({
+              id: step,
+            })),
+          },
+        }),
+
+        ...(createStepDto.prevStepsOnApprove && {
+          prevStepsOnApprove: {
+            connect: createStepDto.prevStepsOnApprove.map((step) => ({
+              id: step,
+            })),
+          },
         }),
 
         ...(createStepDto.nextStepOnReject && {
           nextStepOnReject: { connect: { id: createStepDto.nextStepOnReject } },
-        }),
-
-        ...(createStepDto.prevStepOnApprove && {
-          prevStepOnApprove: {
-            connect: { id: createStepDto.prevStepOnApprove },
-          },
         }),
 
         ...(createStepDto.nextStepOnApprove && {
@@ -120,8 +126,8 @@ export class ServicesProcessStepsController {
       },
       include: {
         owners: true,
-        prevStepOnReject: true,
-        prevStepOnApprove: true,
+        prevStepsOnReject: true,
+        prevStepsOnApprove: true,
         nextStepOnReject: true,
         nextStepOnApprove: true,
         service: true,
@@ -155,8 +161,8 @@ export class ServicesProcessStepsController {
         where: { service: { id: serviceId } },
         include: {
           owners: true,
-          prevStepOnReject: true,
-          prevStepOnApprove: true,
+          prevStepsOnReject: true,
+          prevStepsOnApprove: true,
           nextStepOnReject: true,
           nextStepOnApprove: true,
           service: true,
@@ -187,8 +193,8 @@ export class ServicesProcessStepsController {
       where: { id },
       include: {
         owners: true,
-        prevStepOnReject: true,
-        prevStepOnApprove: true,
+        prevStepsOnReject: true,
+        prevStepsOnApprove: true,
         nextStepOnReject: true,
         nextStepOnApprove: true,
         service: true,
@@ -218,10 +224,10 @@ export class ServicesProcessStepsController {
           owners: { set: updateStepDto.owners.map((id) => ({ id })) },
         }),
 
-        ...(typeof updateStepDto.prevStepOnReject !== 'undefined' && {
-          prevStepOnReject: updateStepDto.prevStepOnReject
-            ? { connect: { id: updateStepDto.prevStepOnReject } }
-            : { disconnect: true },
+        ...(updateStepDto.prevStepsOnReject && {
+          prevStepsOnReject: {
+            set: updateStepDto.prevStepsOnReject.map((step) => ({ id: step })),
+          },
         }),
 
         ...(typeof updateStepDto.nextStepOnReject !== 'undefined' && {
@@ -230,10 +236,10 @@ export class ServicesProcessStepsController {
             : { disconnect: true },
         }),
 
-        ...(typeof updateStepDto.prevStepOnApprove !== 'undefined' && {
-          prevStepOnApprove: updateStepDto.prevStepOnApprove
-            ? { connect: { id: updateStepDto.prevStepOnApprove } }
-            : { disconnect: true },
+        ...(updateStepDto.prevStepsOnApprove && {
+          prevStepsOnApprove: {
+            set: updateStepDto.prevStepsOnApprove.map((step) => ({ id: step })),
+          },
         }),
 
         ...(typeof updateStepDto.nextStepOnApprove !== 'undefined' && {
@@ -244,8 +250,8 @@ export class ServicesProcessStepsController {
       },
       include: {
         owners: true,
-        prevStepOnReject: true,
-        prevStepOnApprove: true,
+        prevStepsOnReject: true,
+        prevStepsOnApprove: true,
         nextStepOnReject: true,
         nextStepOnApprove: true,
         service: true,
@@ -267,8 +273,8 @@ export class ServicesProcessStepsController {
       where: { id },
       include: {
         owners: true,
-        prevStepOnReject: true,
-        prevStepOnApprove: true,
+        prevStepsOnReject: true,
+        prevStepsOnApprove: true,
         nextStepOnReject: true,
         nextStepOnApprove: true,
         service: true,

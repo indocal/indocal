@@ -42,8 +42,8 @@ import { ServiceCertificateTemplateEntity } from './submodules/certificates-temp
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
-  prevStepOnReject: ServiceProcessStepEntity | null;
-  prevStepOnApprove: ServiceProcessStepEntity | null;
+  prevStepsOnReject: ServiceProcessStepEntity[];
+  prevStepsOnApprove: ServiceProcessStepEntity[];
   nextStepOnReject: ServiceProcessStepEntity | null;
   nextStepOnApprove: ServiceProcessStepEntity | null;
 }
@@ -64,8 +64,8 @@ type CreateEnhancedService = Service & {
   steps: Array<
     ServiceProcessStep & {
       owners: User[];
-      prevStepOnReject: ServiceProcessStep | null;
-      prevStepOnApprove: ServiceProcessStep | null;
+      prevStepsOnReject: ServiceProcessStep[];
+      prevStepsOnApprove: ServiceProcessStep[];
       nextStepOnReject: ServiceProcessStep | null;
       nextStepOnApprove: ServiceProcessStep | null;
     }
@@ -91,8 +91,8 @@ export class ServicesController {
     service.steps = steps.map(
       ({
         owners,
-        prevStepOnReject,
-        prevStepOnApprove,
+        prevStepsOnReject,
+        prevStepsOnApprove,
         nextStepOnReject,
         nextStepOnApprove,
         ...rest
@@ -101,17 +101,17 @@ export class ServicesController {
 
         step.owners = owners.map((owner) => new UserEntity(owner));
 
-        step.prevStepOnReject = prevStepOnReject
-          ? new ServiceProcessStepEntity(prevStepOnReject)
-          : null;
+        step.prevStepsOnReject = prevStepsOnReject.map(
+          (step) => new ServiceProcessStepEntity(step)
+        );
 
         step.nextStepOnReject = nextStepOnReject
           ? new ServiceProcessStepEntity(nextStepOnReject)
           : null;
 
-        step.prevStepOnApprove = prevStepOnApprove
-          ? new ServiceProcessStepEntity(prevStepOnApprove)
-          : null;
+        step.prevStepsOnApprove = prevStepsOnApprove.map(
+          (step) => new ServiceProcessStepEntity(step)
+        );
 
         step.nextStepOnApprove = nextStepOnApprove
           ? new ServiceProcessStepEntity(nextStepOnApprove)
@@ -154,8 +154,8 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevStepOnReject: true,
-            prevStepOnApprove: true,
+            prevStepsOnReject: true,
+            prevStepsOnApprove: true,
             nextStepOnReject: true,
             nextStepOnApprove: true,
           },
@@ -200,8 +200,8 @@ export class ServicesController {
           steps: {
             include: {
               owners: true,
-              prevStepOnReject: true,
-              prevStepOnApprove: true,
+              prevStepsOnReject: true,
+              prevStepsOnApprove: true,
               nextStepOnReject: true,
               nextStepOnApprove: true,
             },
@@ -236,8 +236,8 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevStepOnReject: true,
-            prevStepOnApprove: true,
+            prevStepsOnReject: true,
+            prevStepsOnApprove: true,
             nextStepOnReject: true,
             nextStepOnApprove: true,
           },
@@ -275,8 +275,8 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevStepOnReject: true,
-            prevStepOnApprove: true,
+            prevStepsOnReject: true,
+            prevStepsOnApprove: true,
             nextStepOnReject: true,
             nextStepOnApprove: true,
           },
@@ -303,8 +303,8 @@ export class ServicesController {
         steps: {
           include: {
             owners: true,
-            prevStepOnReject: true,
-            prevStepOnApprove: true,
+            prevStepsOnReject: true,
+            prevStepsOnApprove: true,
             nextStepOnReject: true,
             nextStepOnApprove: true,
           },

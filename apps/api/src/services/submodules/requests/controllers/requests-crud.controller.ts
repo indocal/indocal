@@ -42,8 +42,8 @@ import {
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
-  prevStepOnReject: ServiceProcessStepEntity | null;
-  prevStepOnApprove: ServiceProcessStepEntity | null;
+  prevStepsOnReject: ServiceProcessStepEntity[];
+  prevStepsOnApprove: ServiceProcessStepEntity[];
   nextStepOnReject: ServiceProcessStepEntity | null;
   nextStepOnApprove: ServiceProcessStepEntity | null;
 }
@@ -68,8 +68,8 @@ type CreateEnhancedServiceRequest = ServiceRequest & {
   currentStep:
     | (ServiceProcessStep & {
         owners: User[];
-        prevStepOnReject: ServiceProcessStep | null;
-        prevStepOnApprove: ServiceProcessStep | null;
+        prevStepsOnReject: ServiceProcessStep[];
+        prevStepsOnApprove: ServiceProcessStep[];
         nextStepOnReject: ServiceProcessStep | null;
         nextStepOnApprove: ServiceProcessStep | null;
       })
@@ -106,17 +106,18 @@ export class ServicesRequestsCRUDController {
         (owner) => new UserEntity(owner)
       );
 
-      request.currentStep.prevStepOnReject = currentStep.prevStepOnReject
-        ? new ServiceProcessStepEntity(currentStep.prevStepOnReject)
-        : null;
+      request.currentStep.prevStepsOnReject = currentStep.prevStepsOnReject.map(
+        (step) => new ServiceProcessStepEntity(step)
+      );
 
       request.currentStep.nextStepOnReject = currentStep.nextStepOnReject
         ? new ServiceProcessStepEntity(currentStep.nextStepOnReject)
         : null;
 
-      request.currentStep.prevStepOnApprove = currentStep.prevStepOnApprove
-        ? new ServiceProcessStepEntity(currentStep.prevStepOnApprove)
-        : null;
+      request.currentStep.prevStepsOnApprove =
+        currentStep.prevStepsOnApprove.map(
+          (step) => new ServiceProcessStepEntity(step)
+        );
 
       request.currentStep.nextStepOnApprove = currentStep.nextStepOnApprove
         ? new ServiceProcessStepEntity(currentStep.nextStepOnApprove)
@@ -162,12 +163,9 @@ export class ServicesRequestsCRUDController {
         },
       });
 
+      // TODO: refactor
       const firstStep = await tx.serviceProcessStep.findFirst({
-        where: {
-          service: { id: service.id },
-          prevStepOnApprove: null,
-          prevStepOnReject: null,
-        },
+        where: { service: { id: service.id } },
       });
 
       const request = await tx.serviceRequest.create({
@@ -184,8 +182,8 @@ export class ServicesRequestsCRUDController {
           currentStep: {
             include: {
               owners: true,
-              prevStepOnReject: true,
-              prevStepOnApprove: true,
+              prevStepsOnReject: true,
+              prevStepsOnApprove: true,
               nextStepOnReject: true,
               nextStepOnApprove: true,
             },
@@ -240,8 +238,8 @@ export class ServicesRequestsCRUDController {
           currentStep: {
             include: {
               owners: true,
-              prevStepOnReject: true,
-              prevStepOnApprove: true,
+              prevStepsOnReject: true,
+              prevStepsOnApprove: true,
               nextStepOnReject: true,
               nextStepOnApprove: true,
             },
@@ -285,8 +283,8 @@ export class ServicesRequestsCRUDController {
         currentStep: {
           include: {
             owners: true,
-            prevStepOnReject: true,
-            prevStepOnApprove: true,
+            prevStepsOnReject: true,
+            prevStepsOnApprove: true,
             nextStepOnReject: true,
             nextStepOnApprove: true,
           },
@@ -322,8 +320,8 @@ export class ServicesRequestsCRUDController {
         currentStep: {
           include: {
             owners: true,
-            prevStepOnReject: true,
-            prevStepOnApprove: true,
+            prevStepsOnReject: true,
+            prevStepsOnApprove: true,
             nextStepOnReject: true,
             nextStepOnApprove: true,
           },
@@ -357,8 +355,8 @@ export class ServicesRequestsCRUDController {
         currentStep: {
           include: {
             owners: true,
-            prevStepOnReject: true,
-            prevStepOnApprove: true,
+            prevStepsOnReject: true,
+            prevStepsOnApprove: true,
             nextStepOnReject: true,
             nextStepOnApprove: true,
           },

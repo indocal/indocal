@@ -67,10 +67,12 @@ export class FilesController {
     @Query() query: UploadFilesParamsDto
   ): Promise<MultipleEntitiesResponse<EnhancedFile>> {
     const files = await this.prismaService.$transaction(async (tx) => {
-      const promises = uploads.map((file) => {
-        const location = path.join(rootFolder, file.filename);
+      const files: Array<File & { folder: Folder | null }> = [];
 
-        const [mime] = file.mimetype.split('/');
+      for await (const upload of uploads) {
+        const location = path.join(rootFolder, upload.filename);
+
+        const [mime] = upload.mimetype.split('/');
 
         let width, height;
 
@@ -83,23 +85,23 @@ export class FilesController {
           }
         }
 
-        return tx.file.create({
+        const file = await tx.file.create({
           data: {
-            path: file.path,
-            mime: file.mimetype,
-            extension: path.extname(file.filename),
-            size: file.size,
-            name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
+            path: upload.path,
+            mime: upload.mimetype,
+            extension: path.extname(upload.filename),
+            size: upload.size,
+            name: Buffer.from(upload.originalname, 'latin1').toString('utf8'),
             dimensions: width && height ? [width, height] : [],
-            ...(query.folder && {
-              folder: { connect: { id: query.folder } },
-            }),
+            ...(query.folder && { folder: { connect: { id: query.folder } } }),
           },
           include: { folder: true },
         });
-      });
 
-      return await Promise.all(promises);
+        files.push(file);
+      }
+
+      return files;
     });
 
     return {
@@ -201,7 +203,7 @@ export class FilesController {
         }
       }
 
-      return await tx.file.update({
+      const updated = await tx.file.update({
         where: { id },
         data: {
           path: upload.path,
@@ -213,6 +215,8 @@ export class FilesController {
         },
         include: { folder: true },
       });
+
+      return updated;
     });
 
     return this.createEnhancedFile(file);

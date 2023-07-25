@@ -72,10 +72,12 @@ export class CommentsController {
     @UploadedFiles() attachments: Array<Express.Multer.File>
   ): Promise<SingleEntityResponse<EnhancedComment>> {
     const comment = await this.prismaService.$transaction(async (tx) => {
+      const isInternal = createCommentDto.isInternal === 'true' ? true : false;
+
       const comment = await tx.comment.create({
         data: {
+          isInternal,
           content: createCommentDto.content,
-          isInternal: !!createCommentDto.isInternal,
           author: { connect: { id: createCommentDto.author } },
           [createCommentDto.attach.model]: {
             connect: { id: createCommentDto.attach.entity },
@@ -108,8 +110,6 @@ export class CommentsController {
           'latin1'
         ).toString('utf8');
 
-        await tx.file.deleteMany({ where: { comment: { id: comment.id } } });
-
         await tx.file.create({
           data: {
             path: attachment.path,
@@ -125,10 +125,7 @@ export class CommentsController {
 
       const updated = await tx.comment.findUniqueOrThrow({
         where: { id: comment.id },
-        include: {
-          attachments: true,
-          author: true,
-        },
+        include: { attachments: true, author: true },
       });
 
       return updated;
@@ -213,17 +210,21 @@ export class CommentsController {
     @UploadedFiles() attachments: Array<Express.Multer.File>
   ): Promise<SingleEntityResponse<EnhancedComment>> {
     const comment = await this.prismaService.$transaction(async (tx) => {
+      const isInternal = updateCommentDto.isInternal === 'true' ? true : false;
+
       const comment = await tx.comment.update({
         where: { id },
         data: {
+          isInternal,
           content: updateCommentDto.content,
-          isInternal: !!updateCommentDto.isInternal,
         },
         include: {
           attachments: true,
           author: true,
         },
       });
+
+      await tx.file.deleteMany({ where: { comment: { id: comment.id } } });
 
       for await (const attachment of attachments) {
         const location = path.join(rootFolder, attachment.filename);
@@ -246,8 +247,6 @@ export class CommentsController {
           'latin1'
         ).toString('utf8');
 
-        await tx.file.deleteMany({ where: { comment: { id: comment.id } } });
-
         await tx.file.create({
           data: {
             path: attachment.path,
@@ -263,10 +262,7 @@ export class CommentsController {
 
       const updated = await tx.comment.findUniqueOrThrow({
         where: { id: comment.id },
-        include: {
-          attachments: true,
-          author: true,
-        },
+        include: { attachments: true, author: true },
       });
 
       return updated;

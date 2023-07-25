@@ -264,15 +264,8 @@ export const UpdateCurrentStepDialog: React.FC<
             )}
           </Stack>
 
-          <Stack
-            component="fieldset"
-            spacing={1}
-            sx={{
-              borderRadius: (theme) => theme.spacing(0.5),
-              borderColor: (theme) => theme.palette.divider,
-            }}
-          >
-            <Typography component="legend" variant="subtitle2">
+          <Stack spacing={1} sx={{ padding: (theme) => theme.spacing(1) }}>
+            <Typography variant="subtitle2" align="center">
               Comentarios y evidencias (opcional)
             </Typography>
 

@@ -27,13 +27,13 @@ class UpdateServiceProcessStepDtoSchema {
   @ArrayMinSize(1)
   owners: UUID[];
 
-  @IsUUID()
+  @IsUUID('all', { each: true })
   @IsOptional()
-  prevStepOnReject: UUID | null;
+  prevStepsOnReject: UUID[];
 
-  @IsUUID()
+  @IsUUID('all', { each: true })
   @IsOptional()
-  prevStepOnApprove: UUID | null;
+  prevStepsOnApprove: UUID[];
 
   @IsUUID()
   @IsOptional()

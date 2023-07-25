@@ -82,18 +82,22 @@ const schema = zod.object(
       .array()
       .min(1, 'Debe seleccionar al menos un responsable'),
 
-    prevStepOnReject: entitySchema({
+    prevStepsOnReject: entitySchema({
       description: 'Paso anterior en caso de "Rechazo"',
       required_error: 'Debe seleccionar el paso anterior en caso de "Rechazo"',
       invalid_type_error: 'Formato no válido',
-    }).nullish(),
+    })
+      .array()
+      .optional(),
 
-    prevStepOnApprove: entitySchema({
+    prevStepsOnApprove: entitySchema({
       description: 'Paso anterior en caso de "Aprobación"',
       required_error:
         'Debe seleccionar el paso anterior en caso de "Aprobación"',
       invalid_type_error: 'Formato no válido',
-    }).nullish(),
+    })
+      .array()
+      .optional(),
 
     nextStepOnReject: entitySchema({
       description: 'Paso siguiente en caso de "Rechazo"',
@@ -162,12 +166,14 @@ export const AddServiceProcessStepDialog: React.FC<
 
         owners: formData.owners.map((owner) => owner.id),
 
-        ...(formData.prevStepOnReject && {
-          prevStepOnReject: formData.prevStepOnReject.id,
+        ...(formData.prevStepsOnReject && {
+          prevStepsOnReject: formData.prevStepsOnReject.map((step) => step.id),
         }),
 
-        ...(formData.prevStepOnApprove && {
-          prevStepOnApprove: formData.prevStepOnApprove.id,
+        ...(formData.prevStepsOnApprove && {
+          prevStepsOnApprove: formData.prevStepsOnApprove.map(
+            (step) => step.id
+          ),
         }),
 
         ...(formData.nextStepOnReject && {
@@ -296,7 +302,8 @@ export const AddServiceProcessStepDialog: React.FC<
                   <Stack spacing={2}>
                     <Stack direction="row" spacing={1}>
                       <ControlledServiceProcessStepsAutocomplete
-                        name="prevStepOnReject"
+                        multiple
+                        name="prevStepsOnReject"
                         label='Paso anterior en caso de "Rechazo"'
                         service={service}
                         control={control as unknown as Control}
@@ -316,7 +323,8 @@ export const AddServiceProcessStepDialog: React.FC<
 
                     <Stack direction="row" spacing={1}>
                       <ControlledServiceProcessStepsAutocomplete
-                        name="prevStepOnApprove"
+                        multiple
+                        name="prevStepsOnApprove"
                         label='Paso anterior en caso de "Aprobación"'
                         service={service}
                         control={control as unknown as Control}

@@ -86,19 +86,23 @@ const schema = zod
         .array()
         .min(1, 'Debe seleccionar al menos un responsable'),
 
-      prevStepOnReject: entitySchema({
+      prevStepsOnReject: entitySchema({
         description: 'Paso anterior en caso de "Rechazo"',
         required_error:
           'Debe seleccionar el paso anterior en caso de "Rechazo"',
         invalid_type_error: 'Formato no válido',
-      }).nullable(),
+      })
+        .array()
+        .optional(),
 
-      prevStepOnApprove: entitySchema({
+      prevStepsOnApprove: entitySchema({
         description: 'Paso anterior en caso de "Aprobación"',
         required_error:
           'Debe seleccionar el paso anterior en caso de "Aprobación"',
         invalid_type_error: 'Formato no válido',
-      }).nullable(),
+      })
+        .array()
+        .optional(),
 
       nextStepOnReject: entitySchema({
         description: 'Paso siguiente en caso de "Rechazo"',
@@ -154,8 +158,8 @@ export const EditServiceProcessStepDialog: React.FC<
       description: step.description,
       nextRequestStatus: step.nextRequestStatus,
       owners: step.owners,
-      prevStepOnReject: step.prevStepOnReject,
-      prevStepOnApprove: step.prevStepOnApprove,
+      prevStepsOnReject: step.prevStepsOnReject,
+      prevStepsOnApprove: step.prevStepsOnApprove,
       nextStepOnReject: step.nextStepOnReject,
       nextStepOnApprove: step.nextStepOnApprove,
     },
@@ -179,13 +183,15 @@ export const EditServiceProcessStepDialog: React.FC<
           owners: formData.owners.map((owner) => owner.id),
         }),
 
-        prevStepOnReject: formData.prevStepOnReject
-          ? formData.prevStepOnReject.id
-          : null,
+        ...(formData.prevStepsOnReject && {
+          prevStepsOnReject: formData.prevStepsOnReject.map((step) => step.id),
+        }),
 
-        prevStepOnApprove: formData.prevStepOnApprove
-          ? formData.prevStepOnApprove.id
-          : null,
+        ...(formData.prevStepsOnApprove && {
+          prevStepsOnApprove: formData.prevStepsOnApprove.map(
+            (step) => step.id
+          ),
+        }),
 
         nextStepOnReject: formData.nextStepOnReject
           ? formData.nextStepOnReject.id
@@ -369,7 +375,8 @@ export const EditServiceProcessStepDialog: React.FC<
                   <Stack spacing={2}>
                     <Stack direction="row" spacing={1}>
                       <ControlledServiceProcessStepsAutocomplete
-                        name="prevStepOnReject"
+                        multiple
+                        name="prevStepsOnReject"
                         label='Paso anterior en caso de "Rechazo"'
                         service={service}
                         control={control as unknown as Control}
@@ -389,7 +396,8 @@ export const EditServiceProcessStepDialog: React.FC<
 
                     <Stack direction="row" spacing={1}>
                       <ControlledServiceProcessStepsAutocomplete
-                        name="prevStepOnApprove"
+                        multiple
+                        name="prevStepsOnApprove"
                         label='Paso anterior en caso de "Aprobación"'
                         service={service}
                         control={control as unknown as Control}

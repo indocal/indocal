@@ -7,8 +7,8 @@ export type CreateServiceProcessStepDto = {
   description?: string;
   nextRequestStatus: ServiceRequestStatus;
   owners: UUID[];
-  prevStepOnReject?: UUID;
-  prevStepOnApprove?: UUID;
+  prevStepsOnReject?: UUID[];
+  prevStepsOnApprove?: UUID[];
   nextStepOnReject?: UUID;
   nextStepOnApprove?: UUID;
 };

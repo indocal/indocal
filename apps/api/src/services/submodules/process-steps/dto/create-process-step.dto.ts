@@ -26,13 +26,13 @@ export class CreateServiceProcessStepDto {
   @ArrayMinSize(1)
   owners: UUID[];
 
-  @IsUUID()
+  @IsUUID('all', { each: true })
   @IsOptional()
-  prevStepOnReject?: UUID;
+  prevStepsOnReject?: UUID[];
 
-  @IsUUID()
+  @IsUUID('all', { each: true })
   @IsOptional()
-  prevStepOnApprove?: UUID;
+  prevStepsOnApprove?: UUID[];
 
   @IsUUID()
   @IsOptional()

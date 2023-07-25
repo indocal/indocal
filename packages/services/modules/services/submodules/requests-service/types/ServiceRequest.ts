@@ -28,8 +28,8 @@ type CurrentStep = Entity & {
   description: string | null;
   nextRequestStatus: ServiceRequestStatus;
   owners: Owner[];
-  prevStepOnReject: SiblingStep | null;
-  prevStepOnApprove: SiblingStep | null;
+  prevStepsOnReject: SiblingStep[];
+  prevStepsOnApprove: SiblingStep[];
   nextStepOnReject: SiblingStep | null;
   nextStepOnApprove: SiblingStep | null;
 };

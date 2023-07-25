@@ -13,41 +13,43 @@ export type CustomStepNodeData = {
 export const CustomStepNode: React.FC<NodeProps<CustomStepNodeData>> = ({
   selected,
   data,
-}) => (
-  <>
-    <Handle
-      type="target"
-      position={Position.Left}
-      hidden={!data.step.prevStepOnApprove && !data.step.prevStepOnReject}
-    />
+}) => {
+  const hidden =
+    data.step.prevStepsOnApprove.length <= 0 &&
+    data.step.prevStepsOnReject.length <= 0;
 
-    <Paper
-      elevation={4}
-      sx={{
-        width: NODE_WIDTH,
-        padding: (theme) => theme.spacing(1),
-        textAlign: 'center',
-        wordWrap: 'break-word',
-        wordBreak: 'break-word',
+  return (
+    <>
+      <Handle type="target" position={Position.Left} hidden={hidden} />
 
-        color: (theme) =>
-          selected
-            ? theme.palette.info.contrastText
-            : theme.palette.text.primary,
+      <Paper
+        elevation={4}
+        sx={{
+          width: NODE_WIDTH,
+          padding: (theme) => theme.spacing(1),
+          textAlign: 'center',
+          wordWrap: 'break-word',
+          wordBreak: 'break-word',
 
-        backgroundColor: (theme) =>
-          selected ? theme.palette.info.main : theme.palette.background.paper,
-      }}
-    >
-      <Typography variant="body1">{data.label}</Typography>
-    </Paper>
+          color: (theme) =>
+            selected
+              ? theme.palette.info.contrastText
+              : theme.palette.text.primary,
 
-    <Handle
-      type="source"
-      position={Position.Right}
-      hidden={!data.step.nextStepOnApprove && !data.step.nextStepOnReject}
-    />
-  </>
-);
+          backgroundColor: (theme) =>
+            selected ? theme.palette.info.main : theme.palette.background.paper,
+        }}
+      >
+        <Typography variant="body1">{data.label}</Typography>
+      </Paper>
+
+      <Handle
+        type="source"
+        position={Position.Right}
+        hidden={!data.step.nextStepOnApprove && !data.step.nextStepOnReject}
+      />
+    </>
+  );
+};
 
 export default CustomStepNode;

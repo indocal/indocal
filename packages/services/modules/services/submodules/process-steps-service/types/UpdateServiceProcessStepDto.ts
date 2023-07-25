@@ -7,8 +7,8 @@ export type UpdateServiceProcessStepDto = Partial<{
   description: string | null;
   nextRequestStatus: ServiceRequestStatus;
   owners: UUID[];
-  prevStepOnReject: UUID | null;
-  prevStepOnApprove: UUID | null;
+  prevStepsOnReject: UUID[];
+  prevStepsOnApprove: UUID[];
   nextStepOnReject: UUID | null;
   nextStepOnApprove: UUID | null;
 }>;
