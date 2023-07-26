@@ -10,6 +10,7 @@ import {
 import {
   ThumbUp as ApproveIcon,
   ThumbDown as RejectIcon,
+  CardMembership as CertificateIcon,
 } from '@mui/icons-material';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
@@ -21,7 +22,10 @@ import {
   ServiceRequestStepperProvider,
   useServiceRequestStepper,
 } from './context';
-import { UpdateCurrentStepDialog } from './components';
+import {
+  UpdateCurrentStepDialog,
+  ManageCertificatesDialog,
+} from './components';
 
 export interface ServiceRequestStepperProps {
   request: UUID | ServiceRequest;
@@ -34,8 +38,12 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
     typeof entity === 'string' ? entity : entity.id
   );
 
-  const { isUpdateCurrentStepDialogOpen, toggleUpdateCurrentStepDialog } =
-    useServiceRequestStepper();
+  const {
+    isUpdateCurrentStepDialogOpen,
+    isManageCertificatesDialogOpen,
+    toggleUpdateCurrentStepDialog,
+    toggleManageCertificatesDialog,
+  } = useServiceRequestStepper();
 
   const [action, setAction] = useState<'APPROVE' | 'REJECT' | null>(null);
 
@@ -48,7 +56,13 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
   );
 
   return (
-    <Paper sx={{ position: 'relative', padding: (theme) => theme.spacing(2) }}>
+    <Paper
+      sx={{
+        position: 'relative',
+        height: '100%',
+        padding: (theme) => theme.spacing(2),
+      }}
+    >
       {loading ? (
         <Loader invisible message="Cargando datos de la solicitud..." />
       ) : error ? (
@@ -59,54 +73,73 @@ const ServiceRequestStepper: React.FC<ServiceRequestStepperProps> = ({
             <UpdateCurrentStepDialog request={request} action={action} />
           )}
 
+          {isManageCertificatesDialogOpen && (
+            <ManageCertificatesDialog request={request} />
+          )}
+
           {validating && (
             <LinearProgress
               sx={{ position: 'absolute', top: 0, left: 0, width: '100%' }}
             />
           )}
 
-          <Stack direction="column" gap={2} divider={<Divider flexItem />}>
-            <Box sx={{ height: 250 }}>
+          <Stack
+            direction="column"
+            spacing={2}
+            divider={<Divider flexItem />}
+            sx={{ height: '100%' }}
+          >
+            <Box sx={{ minHeight: 250, height: '100%' }}>
               <ServiceProcessStepsTree
                 service={request.service.id}
                 selectedStep={request.currentStep?.id}
               />
             </Box>
 
-            {request.currentStep &&
-              (request.currentStep.nextStepOnReject ||
-                request.currentStep.nextStepOnApprove) && (
-                <Stack
-                  direction="row"
-                  justifyContent={{ xs: 'center', md: 'flex-end' }}
-                  alignItems="center"
-                  gap={1}
-                >
-                  {request.currentStep.nextStepOnReject && (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      color="error"
-                      endIcon={<RejectIcon />}
-                      onClick={() => handleUpdateCurrentStep('REJECT')}
-                    >
-                      Rechazar
-                    </Button>
-                  )}
+            {request.currentStep && (
+              <Stack
+                direction="row"
+                justifyContent={{ xs: 'center', md: 'flex-end' }}
+                alignItems="center"
+                gap={1}
+              >
+                {request.currentStep.nextStepOnReject && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="error"
+                    endIcon={<RejectIcon />}
+                    onClick={() => handleUpdateCurrentStep('REJECT')}
+                  >
+                    Rechazar
+                  </Button>
+                )}
 
-                  {request.currentStep.nextStepOnApprove && (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      color="success"
-                      endIcon={<ApproveIcon />}
-                      onClick={() => handleUpdateCurrentStep('APPROVE')}
-                    >
-                      Aprobar
-                    </Button>
-                  )}
-                </Stack>
-              )}
+                {request.currentStep.nextStepOnApprove && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="success"
+                    endIcon={<ApproveIcon />}
+                    onClick={() => handleUpdateCurrentStep('APPROVE')}
+                  >
+                    Aprobar
+                  </Button>
+                )}
+
+                {request.currentStep.type === 'END' && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="primary"
+                    endIcon={<CertificateIcon />}
+                    onClick={toggleManageCertificatesDialog}
+                  >
+                    Administrar certificados
+                  </Button>
+                )}
+              </Stack>
+            )}
           </Stack>
         </>
       ) : (

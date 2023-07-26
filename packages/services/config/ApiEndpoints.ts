@@ -19,6 +19,8 @@ export enum ApiEndpoints {
   SERVICES_COUNT = '/services/count',
   SERVICES_REQUESTS = '/requests',
   SERVICES_REQUESTS_COUNT = '/requests/count',
+  SERVICES_CERTIFICATES = '/certificates',
+  SERVICES_CERTIFICATES_COUNT = '/certificates/count',
 
   FORMS = '/forms',
   FORMS_COUNT = '/forms/count',

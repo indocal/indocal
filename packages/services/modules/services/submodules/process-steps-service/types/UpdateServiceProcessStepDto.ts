@@ -2,7 +2,10 @@ import { UUID } from '../../../../../common';
 
 import { ServiceRequestStatus } from '../../requests-service';
 
+import { ServiceProcessStepType } from './ServiceProcessStep';
+
 export type UpdateServiceProcessStepDto = Partial<{
+  type: ServiceProcessStepType;
   title: string;
   description: string | null;
   nextRequestStatus: ServiceRequestStatus;

@@ -4,6 +4,7 @@ import { UserStatus } from '../../auth';
 import { FormConfig, FormStatus, FormVisibility } from '../../forms';
 
 import {
+  ServiceProcessStepType,
   ServiceRequestStatus,
   ServiceCertificateTemplateLayout,
   ServiceCertificateTemplatePlaceholder,
@@ -37,12 +38,14 @@ type Owner = Entity & {
 type SiblingStep = Entity & {
   title: string;
   description: string | null;
+  type: ServiceProcessStepType;
   nextRequestStatus: ServiceRequestStatus;
 };
 
 type Step = Entity & {
   title: string;
   description: string | null;
+  type: ServiceProcessStepType;
   nextRequestStatus: ServiceRequestStatus;
   owners: Owner[];
   prevStepsOnReject: SiblingStep[];

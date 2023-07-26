@@ -17,6 +17,7 @@ import {
   User,
   Service,
   ServiceProcessStep,
+  ServiceCertificate,
   Comment,
   File,
 } from '@prisma/client';
@@ -31,6 +32,7 @@ import { CommentEntity } from '../../../../comments/entities';
 import { ServiceEntity } from '../../../entities';
 
 import { ServiceProcessStepEntity } from '../../process-steps/entities';
+import { ServiceCertificateEntity } from '../../certificates/entities';
 
 import { ServiceRequestEntity } from './../entities';
 import {
@@ -58,6 +60,7 @@ class EnhancedServiceRequest extends ServiceRequestEntity {
   requestedBy: UserEntity;
   service: ServiceEntity;
   currentStep: EnhancedServiceProcessStep | null;
+  certificates: ServiceCertificateEntity[];
   comments: EnhancedComment[];
 }
 
@@ -74,6 +77,9 @@ type CreateEnhancedServiceRequest = ServiceRequest & {
         nextStepOnApprove: ServiceProcessStep | null;
       })
     | null;
+
+  certificates: ServiceCertificate[];
+
   comments: Array<
     Comment & {
       attachments: File[];
@@ -92,6 +98,7 @@ export class ServicesRequestsCRUDController {
     requestedBy,
     service,
     currentStep,
+    certificates,
     ...rest
   }: CreateEnhancedServiceRequest): EnhancedServiceRequest {
     const request = new EnhancedServiceRequest(rest);
@@ -138,6 +145,10 @@ export class ServicesRequestsCRUDController {
       return comment;
     });
 
+    request.certificates = certificates.map(
+      (certificate) => new ServiceCertificateEntity(certificate)
+    );
+
     return request;
   }
 
@@ -163,9 +174,8 @@ export class ServicesRequestsCRUDController {
         },
       });
 
-      // TODO: refactor
       const firstStep = await tx.serviceProcessStep.findFirst({
-        where: { service: { id: service.id } },
+        where: { service: { id: service.id }, type: 'START' },
       });
 
       const request = await tx.serviceRequest.create({
@@ -173,7 +183,10 @@ export class ServicesRequestsCRUDController {
           entry: { connect: { id: entry.id } },
           requestedBy: { connect: { id: createRequestDto.requestedBy } },
           service: { connect: { id: createRequestDto.service } },
-          ...(firstStep && { currentStep: { connect: { id: firstStep.id } } }),
+          ...(firstStep && {
+            status: firstStep.nextRequestStatus,
+            currentStep: { connect: { id: firstStep.id } },
+          }),
         },
         include: {
           entry: true,
@@ -188,6 +201,7 @@ export class ServicesRequestsCRUDController {
               nextStepOnApprove: true,
             },
           },
+          certificates: true,
           comments: {
             include: {
               attachments: true,
@@ -244,6 +258,7 @@ export class ServicesRequestsCRUDController {
               nextStepOnApprove: true,
             },
           },
+          certificates: true,
           comments: {
             include: {
               attachments: true,
@@ -289,6 +304,7 @@ export class ServicesRequestsCRUDController {
             nextStepOnApprove: true,
           },
         },
+        certificates: true,
         comments: {
           include: {
             attachments: true,
@@ -326,6 +342,7 @@ export class ServicesRequestsCRUDController {
             nextStepOnApprove: true,
           },
         },
+        certificates: true,
         comments: {
           include: {
             attachments: true,
@@ -361,6 +378,7 @@ export class ServicesRequestsCRUDController {
             nextStepOnApprove: true,
           },
         },
+        certificates: true,
         comments: {
           include: {
             attachments: true,

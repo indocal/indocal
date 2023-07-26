@@ -319,6 +319,46 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
               },
             ],
           },
+          {
+            scope: 'serviceCertificate',
+            permissions: [
+              {
+                label: 'Contar',
+                action: 'count',
+                checked:
+                  Boolean(permissions?.serviceCertificate) &&
+                  Boolean(permissions?.serviceCertificate['count']),
+              },
+              {
+                label: 'Leer',
+                action: 'read',
+                checked:
+                  Boolean(permissions?.serviceCertificate) &&
+                  Boolean(permissions?.serviceCertificate['read']),
+              },
+              {
+                label: 'Crear',
+                action: 'create',
+                checked:
+                  Boolean(permissions?.serviceCertificate) &&
+                  Boolean(permissions?.serviceCertificate['create']),
+              },
+              {
+                label: 'Modificar',
+                action: 'update',
+                checked:
+                  Boolean(permissions?.serviceCertificate) &&
+                  Boolean(permissions?.serviceCertificate['update']),
+              },
+              {
+                label: 'Borrar',
+                action: 'delete',
+                checked:
+                  Boolean(permissions?.serviceCertificate) &&
+                  Boolean(permissions?.serviceCertificate['delete']),
+              },
+            ],
+          },
         ],
       },
       {

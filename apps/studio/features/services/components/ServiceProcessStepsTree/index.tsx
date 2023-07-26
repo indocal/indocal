@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { Paper } from '@mui/material';
 import dagre from 'dagre';
 import ReactFlow, {
@@ -33,16 +33,16 @@ export const ServiceProcessStepsTree: React.FC<
     typeof entity === 'string' ? entity : entity.id
   );
 
-  const dagreGraphRef = useRef(new dagre.graphlib.Graph());
-  dagreGraphRef.current.setGraph({ rankdir: 'LR' });
-  dagreGraphRef.current.setDefaultEdgeLabel(() => ({}));
-
   const nodeTypes: NodeTypes = useMemo(
     () => ({ ['custom-step']: CustomStepNode }),
     []
   );
 
   const { nodes, edges } = useMemo(() => {
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setGraph({ rankdir: 'LR' });
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+
     const nodes = service
       ? service.steps.map<Node>((step) => ({
           id: step.id,
@@ -94,35 +94,33 @@ export const ServiceProcessStepsTree: React.FC<
           .flat()
       : [];
 
-    if (dagreGraphRef.current) {
-      nodes.forEach((node) => {
-        dagreGraphRef.current.setNode(node.id, {
-          width: NODE_WIDTH,
-          height: NODE_HEIGHT,
-        });
+    nodes.forEach((node) => {
+      dagreGraph.setNode(node.id, {
+        width: NODE_WIDTH,
+        height: NODE_HEIGHT,
       });
+    });
 
-      edges.forEach((edge) => {
-        dagreGraphRef.current.setEdge(edge.source, edge.target);
-      });
+    edges.forEach((edge) => {
+      dagreGraph.setEdge(edge.source, edge.target);
+    });
 
-      dagre.layout(dagreGraphRef.current);
+    dagre.layout(dagreGraph);
 
-      nodes.forEach((node) => {
-        const nodeWithPosition = dagreGraphRef.current.node(node.id);
+    nodes.forEach((node) => {
+      const nodeWithPosition = dagreGraph.node(node.id);
 
-        node.targetPosition = Position.Left;
-        node.sourcePosition = Position.Right;
+      node.targetPosition = Position.Left;
+      node.sourcePosition = Position.Right;
 
-        node.position = {
-          x: nodeWithPosition.x - NODE_WIDTH / 2,
-          y: nodeWithPosition.y - NODE_HEIGHT / 2,
-        };
-      });
-    }
+      node.position = {
+        x: nodeWithPosition.x - NODE_WIDTH / 2,
+        y: nodeWithPosition.y - NODE_HEIGHT / 2,
+      };
+    });
 
     return { nodes, edges };
-  }, [service, selectedStep]);
+  }, [selectedStep, service]);
 
   return (
     <Paper

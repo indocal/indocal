@@ -5,11 +5,14 @@ import {
   ArrayMinSize,
   IsOptional,
 } from 'class-validator';
-import { ServiceRequestStatus } from '@prisma/client';
+import { ServiceProcessStepType, ServiceRequestStatus } from '@prisma/client';
 
 import { TrimParam, UUID } from '@/common';
 
 export class CreateServiceProcessStepDto {
+  @IsEnum(ServiceProcessStepType)
+  type: ServiceProcessStepType;
+
   @IsString()
   @TrimParam()
   title: string;

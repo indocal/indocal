@@ -277,6 +277,8 @@ model ServiceProcessStep {
   title       String
   description String?
 
+  type ServiceProcessStepType @default(DUMMY)
+
   nextRequestStatus ServiceRequestStatus
 
   owners User[]
@@ -298,6 +300,12 @@ model ServiceProcessStep {
   updatedAt DateTime @updatedAt
 
   @@unique([title, serviceId])
+}
+
+enum ServiceProcessStepType {
+  START
+  DUMMY
+  END
 }
 
 model ServiceRequest {
@@ -354,6 +362,8 @@ model ServiceCertificateTemplate {
 
 model ServiceCertificate {
   id String @id @default(uuid())
+
+  data Json
 
   request   ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Restrict)
   requestId String

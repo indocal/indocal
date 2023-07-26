@@ -13,6 +13,7 @@ export * from './ControlledFormsAutocomplete';
 
 export * from './ControlledServiceStatusSelect';
 export * from './ControlledServiceRequestStatusSelect';
+export * from './ControlledServiceProcessStepTypeSelect';
 
 export * from './ControlledSupplyUnitSelect';
 export * from './ControlledInventoryMovementTypeSelect';

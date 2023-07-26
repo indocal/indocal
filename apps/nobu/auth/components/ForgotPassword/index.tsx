@@ -71,7 +71,7 @@ export const ForgotPassword: React.FC = () => {
       alignItems="center"
       spacing={2.5}
       sx={{
-        width: 325,
+        width: 300,
         aspectRatio: '5 / 6',
         margin: 'auto',
         padding: (theme) => theme.spacing(2, 3),

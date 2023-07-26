@@ -28,7 +28,7 @@ export const CheckboxItem: React.FC<CheckboxItemProps> = ({ field, item }) => {
   return (
     <Box
       sx={{
-        padding: (theme) => theme.spacing(0.5, 1.5, 0.125),
+        padding: (theme) => theme.spacing(0.5, 1.5),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) =>
           errors[field.id] && (errors[field.id] as FieldErrors)[item.id]

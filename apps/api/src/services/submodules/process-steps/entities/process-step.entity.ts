@@ -1,5 +1,9 @@
 import { Exclude } from 'class-transformer';
-import { ServiceProcessStep, ServiceRequestStatus } from '@prisma/client';
+import {
+  ServiceProcessStep,
+  ServiceProcessStepType,
+  ServiceRequestStatus,
+} from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
@@ -11,6 +15,7 @@ export class ServiceProcessStepEntity implements Entity, ServiceProcessStep {
   id: UUID;
   title: string;
   description: string | null;
+  type: ServiceProcessStepType;
   nextRequestStatus: ServiceRequestStatus;
 
   @Exclude()

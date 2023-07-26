@@ -59,7 +59,6 @@ const DesignCertificateTemplateDialog: React.FC<
       layout: values.layout,
       content: values.content,
       styles: values.styles,
-      placeholders: values.placeholders,
     });
 
     if (error) {

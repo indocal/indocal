@@ -183,7 +183,13 @@ const ServiceRequestComments: React.FC<ServiceRequestCommentsProps> = ({
             </Toolbar>
           </AppBar>
 
-          <Box sx={{ padding: (theme) => theme.spacing(1) }}>
+          <Box
+            sx={{
+              height: '100%',
+              padding: (theme) => theme.spacing(1),
+              overflow: 'auto',
+            }}
+          >
             {request.comments.length > 0 ? (
               request.comments.map((comment) => (
                 <Accordion key={comment.id}>

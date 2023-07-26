@@ -5,6 +5,13 @@ import { UserStatus } from '../../../../auth';
 
 import { ServiceStatus } from '../../../types';
 
+import { ServiceProcessStepType } from '../../process-steps-service';
+import { ServiceCertificateData } from '../../certificates-service';
+
+///////////
+// Forms //
+///////////
+
 type Entry = Entity & {
   answers: FormFieldAnswer[];
 };
@@ -16,6 +23,10 @@ type RequestedBy = Entity & {
   status: UserStatus;
 };
 
+/////////////
+// Service //
+/////////////
+
 type Service = Entity & {
   title: string;
   description: string | null;
@@ -23,9 +34,14 @@ type Service = Entity & {
   supportedRequestStatus: ServiceRequestStatus[];
 };
 
+///////////
+// Steps //
+///////////
+
 type CurrentStep = Entity & {
   title: string;
   description: string | null;
+  type: ServiceProcessStepType;
   nextRequestStatus: ServiceRequestStatus;
   owners: Owner[];
   prevStepsOnReject: SiblingStep[];
@@ -44,8 +60,21 @@ type Owner = Entity & {
 type SiblingStep = Entity & {
   title: string;
   description: string | null;
+  type: ServiceProcessStepType;
   nextRequestStatus: ServiceRequestStatus;
 };
+
+//////////////////
+// Certificates //
+//////////////////
+
+type Certificate = Entity & {
+  data: ServiceCertificateData;
+};
+
+//////////////
+// Comments //
+//////////////
 
 type Comment = Entity & {
   content: string;
@@ -86,6 +115,7 @@ export interface ServiceRequest extends Entity {
   requestedBy: RequestedBy;
   service: Service;
   currentStep: CurrentStep | null;
+  certificates: Certificate[];
   comments: Comment[];
 }
 

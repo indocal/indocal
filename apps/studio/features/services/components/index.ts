@@ -10,3 +10,5 @@ export * from './GenericServicesRequestsDataGrid';
 export * from './ServiceProcessStepsTree';
 export * from './ServiceRequestStepper';
 export * from './ServiceRequestComments';
+
+export * from './ServiceCertificatePDF';

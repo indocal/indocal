@@ -250,13 +250,27 @@ export const UpdateCurrentStepDialog: React.FC<
               sx={{ flex: 1 }}
             />
 
-            {request.currentStep && (
+            {action === 'APPROVE' &&
+              request?.currentStep?.nextStepOnApprove && (
+                <>
+                  <NextStepIcon />
+
+                  <Chip
+                    label={translateServiceRequestStatus(
+                      request.currentStep.nextStepOnApprove.nextRequestStatus
+                    )}
+                    sx={{ flex: 1 }}
+                  />
+                </>
+              )}
+
+            {action === 'REJECT' && request?.currentStep?.nextStepOnReject && (
               <>
                 <NextStepIcon />
 
                 <Chip
                   label={translateServiceRequestStatus(
-                    request.currentStep.nextRequestStatus
+                    request.currentStep.nextStepOnReject.nextRequestStatus
                   )}
                   sx={{ flex: 1 }}
                 />

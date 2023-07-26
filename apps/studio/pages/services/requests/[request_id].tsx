@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Container, Unstable_Grid2, Stack } from '@mui/material';
+import { Container, Unstable_Grid2, Typography } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
 import { FormEntryAnswers } from '@indocal/forms-generator';
@@ -72,22 +72,49 @@ const ServiceRequestPage: EnhancedNextPage = () => {
               </Widget>
             </Unstable_Grid2>
 
-            <Unstable_Grid2 xs={12} md={6}>
-              <Widget disableDefaultSizes>
-                <FormEntryAnswers answers={request.entry.answers} />
+            <Unstable_Grid2 xs={12} md={7}>
+              <Widget sx={{ height: 350 }}>
+                <ServiceRequestStepper request={request} />
               </Widget>
             </Unstable_Grid2>
 
-            <Unstable_Grid2 xs={12} md={6}>
-              <Stack spacing={1}>
-                <Widget disableDefaultSizes>
-                  <ServiceRequestStepper request={request} />
-                </Widget>
+            <Unstable_Grid2 xs={12} md={5}>
+              <Widget sx={{ height: 350 }}>
+                <ServiceRequestComments request={request} />
+              </Widget>
+            </Unstable_Grid2>
 
-                <Widget disableDefaultSizes>
-                  <ServiceRequestComments request={request} />
-                </Widget>
-              </Stack>
+            <Unstable_Grid2 xs={12}>
+              <Typography
+                variant="h6"
+                sx={{
+                  display: 'flex',
+                  margin: (theme) => theme.spacing(4),
+                  alignItems: 'center',
+                  '::before': {
+                    content: '""',
+                    flexGrow: 1,
+                    marginRight: (theme) => theme.spacing(2),
+                    borderBottom: (theme) =>
+                      `1px solid ${theme.palette.divider}`,
+                  },
+                  '::after': {
+                    content: '""',
+                    flexGrow: 1,
+                    marginLeft: (theme) => theme.spacing(2),
+                    borderBottom: (theme) =>
+                      `1px solid ${theme.palette.divider}`,
+                  },
+                }}
+              >
+                Datos capturados en el formulario
+              </Typography>
+            </Unstable_Grid2>
+
+            <Unstable_Grid2 xs={12}>
+              <Widget disableDefaultSizes>
+                <FormEntryAnswers answers={request.entry.answers} />
+              </Widget>
             </Unstable_Grid2>
           </Unstable_Grid2>
         ) : (

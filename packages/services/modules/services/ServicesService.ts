@@ -21,6 +21,7 @@ import {
   ServicesProcessStepsService,
   ServicesCertificatesTemplatesService,
   ServicesRequestsService,
+  ServicesCertificatesService,
 } from './submodules';
 
 export interface CreateServiceReturn {
@@ -58,11 +59,13 @@ export class ServicesService {
   steps: ServicesProcessStepsService;
   templates: ServicesCertificatesTemplatesService;
   requests: ServicesRequestsService;
+  certificates: ServicesCertificatesService;
 
   constructor(private config: Config) {
     this.steps = new ServicesProcessStepsService(config);
     this.templates = new ServicesCertificatesTemplatesService(config);
     this.requests = new ServicesRequestsService(config);
+    this.certificates = new ServicesCertificatesService(config);
   }
 
   async create(data: CreateServiceDto): Promise<CreateServiceReturn> {

@@ -17,10 +17,14 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { ControlledUsersAutocomplete } from '@indocal/forms-generator';
+import {
+  ControlledServiceProcessStepTypeSelect,
+  ControlledUsersAutocomplete,
+} from '@indocal/forms-generator';
 import {
   Can,
   Service,
+  ServiceProcessStepType,
   ServiceRequestStatus,
   ApiEndpoints,
 } from '@indocal/services';
@@ -55,6 +59,15 @@ const schema = zod.object(
       .trim()
       .optional(),
 
+    type: zod.enum<
+      ServiceProcessStepType,
+      [ServiceProcessStepType, ...ServiceProcessStepType[]]
+    >(['START', 'DUMMY', 'END'], {
+      description: 'Tipo de paso',
+      required_error: 'Debe seleccionar el tipo de paso',
+      invalid_type_error: 'Formato no válido',
+    }),
+
     nextRequestStatus: zod.enum<
       ServiceRequestStatus,
       [ServiceRequestStatus, ...ServiceRequestStatus[]]
@@ -83,17 +96,18 @@ const schema = zod.object(
       .min(1, 'Debe seleccionar al menos un responsable'),
 
     prevStepsOnReject: entitySchema({
-      description: 'Paso anterior en caso de "Rechazo"',
-      required_error: 'Debe seleccionar el paso anterior en caso de "Rechazo"',
+      description: 'Pasos anteriores en caso de "Rechazo"',
+      required_error:
+        'Debe seleccionar el Pasos anteriores en caso de "Rechazo"',
       invalid_type_error: 'Formato no válido',
     })
       .array()
       .optional(),
 
     prevStepsOnApprove: entitySchema({
-      description: 'Paso anterior en caso de "Aprobación"',
+      description: 'Pasos anteriores en caso de "Aprobación"',
       required_error:
-        'Debe seleccionar el paso anterior en caso de "Aprobación"',
+        'Debe seleccionar el Pasos anteriores en caso de "Aprobación"',
       invalid_type_error: 'Formato no válido',
     })
       .array()
@@ -146,6 +160,7 @@ export const AddServiceProcessStepDialog: React.FC<
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      type: 'DUMMY',
       nextRequestStatus: 'IN_PROGRESS',
     },
   });
@@ -162,6 +177,8 @@ export const AddServiceProcessStepDialog: React.FC<
       const { error } = await indocal.services.steps.create(service.id, {
         title: formData.title,
         ...(formData.description && { description: formData.description }),
+
+        type: formData.type,
         nextRequestStatus: formData.nextRequestStatus,
 
         owners: formData.owners.map((owner) => owner.id),
@@ -249,6 +266,15 @@ export const AddServiceProcessStepDialog: React.FC<
             <TabPanel value={Tabs.INFO}>
               <Stack spacing={2} divider={<Divider flexItem />}>
                 <Stack spacing={2}>
+                  <ControlledServiceProcessStepTypeSelect
+                    required
+                    name="type"
+                    label="Tipo"
+                    control={control as unknown as Control}
+                    disabled={isSubmitting}
+                    formControlProps={{ fullWidth: true }}
+                  />
+
                   <TextField
                     required
                     autoComplete="off"
@@ -304,11 +330,11 @@ export const AddServiceProcessStepDialog: React.FC<
                       <ControlledServiceProcessStepsAutocomplete
                         multiple
                         name="prevStepsOnReject"
-                        label='Paso anterior en caso de "Rechazo"'
+                        label='Pasos anteriores en caso de "Rechazo"'
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}
-                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                        autocompleteProps={{ fullWidth: true }}
                       />
 
                       <ControlledServiceProcessStepsAutocomplete
@@ -317,7 +343,7 @@ export const AddServiceProcessStepDialog: React.FC<
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}
-                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                        autocompleteProps={{ fullWidth: true }}
                       />
                     </Stack>
 
@@ -325,11 +351,11 @@ export const AddServiceProcessStepDialog: React.FC<
                       <ControlledServiceProcessStepsAutocomplete
                         multiple
                         name="prevStepsOnApprove"
-                        label='Paso anterior en caso de "Aprobación"'
+                        label='Pasos anteriores en caso de "Aprobación"'
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}
-                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                        autocompleteProps={{ fullWidth: true }}
                       />
 
                       <ControlledServiceProcessStepsAutocomplete
@@ -338,7 +364,7 @@ export const AddServiceProcessStepDialog: React.FC<
                         service={service}
                         control={control as unknown as Control}
                         disabled={isSubmitting}
-                        autocompleteProps={{ fullWidth: true, size: 'small' }}
+                        autocompleteProps={{ fullWidth: true }}
                       />
                     </Stack>
                   </Stack>

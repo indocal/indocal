@@ -7,6 +7,7 @@ export enum Pages {
   ROOT = '/',
   SERVICES = '/services',
   SERVICES_REQUESTS = '/services/requests',
+  SERVICES_CERTIFICATES_PREVIEW = '/services/certificates/preview',
   FORMS = '/forms',
   FORMS_PREVIEW = '/forms/preview',
   FORMS_ENTRIES = '/forms/entries',

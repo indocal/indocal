@@ -25,7 +25,7 @@ export const CheckboxFormField: React.FC<CheckboxFormFieldProps> = ({
   return (
     <Box
       sx={{
-        padding: (theme) => theme.spacing(0.75, 1.5, 0.25),
+        padding: (theme) => theme.spacing(0.75, 1.5),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) =>
           errors[field.id]
