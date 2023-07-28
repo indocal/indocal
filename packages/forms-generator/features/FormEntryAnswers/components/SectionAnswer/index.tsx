@@ -33,6 +33,7 @@ import {
   DateTimeItemAnswer,
   RatingItemAnswer,
   NetPromoterScoreItemAnswer,
+  SignatureItemAnswer,
   FilesItemAnswer,
   UsersItemAnswer,
 } from './components';
@@ -67,6 +68,8 @@ export const SectionAnswer: React.FC<SectionAnswerProps> = ({ answer }) => {
 
       RATING: RatingItemAnswer,
       NET_PROMOTER_SCORE: NetPromoterScoreItemAnswer,
+
+      SIGNATURE: SignatureItemAnswer,
 
       FILES: FilesItemAnswer,
 

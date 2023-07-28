@@ -26,6 +26,7 @@ export type FormFieldAnswer = {
     | DateTimeFormFieldAnswer
     | RatingFormFieldAnswer
     | NetPromoterScoreFormFieldAnswer
+    | SignatureFormFieldAnswer
     | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | SectionFormFieldAnswer
@@ -89,6 +90,8 @@ export type RatingFormFieldAnswer = number;
 
 export type NetPromoterScoreFormFieldAnswer = number;
 
+export type SignatureFormFieldAnswer = string;
+
 export type FilesFormFieldAnswer = UUID | UUID[];
 
 export type UsersFormFieldAnswer = UUID | UUID[];
@@ -112,6 +115,7 @@ export type SectionFormFieldItemAnswer = {
     | DateTimeFormFieldAnswer
     | RatingFormFieldAnswer
     | NetPromoterScoreFormFieldAnswer
+    | SignatureFormFieldAnswer
     | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | null;
@@ -137,6 +141,7 @@ export type TableFormFieldColumnAnswer = {
     | DateFormFieldAnswer
     | DateTimeFormFieldAnswer
     | RatingFormFieldAnswer
+    | NetPromoterScoreFormFieldAnswer
     | FilesFormFieldAnswer
     | UsersFormFieldAnswer
     | null;

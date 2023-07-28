@@ -30,6 +30,7 @@ import {
   EventNote as DateTimeIcon,
   Star as RatingIcon,
   SentimentSatisfied as NetPromoterScoreIcon,
+  Draw as SignatureIcon,
   FilePresent as FilesIcon,
   Group as UsersIcon,
   BackupTable as SectionIcon,
@@ -95,6 +96,8 @@ export const ManageFormFieldsDialog: React.FC<ManageFormFieldsDialogProps> = ({
 
       RATING: <RatingIcon />,
       NET_PROMOTER_SCORE: <NetPromoterScoreIcon />,
+
+      SIGNATURE: <SignatureIcon />,
 
       FILES: <FilesIcon />,
 

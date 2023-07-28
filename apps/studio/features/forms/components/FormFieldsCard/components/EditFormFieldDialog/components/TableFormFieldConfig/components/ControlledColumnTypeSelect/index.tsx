@@ -61,6 +61,8 @@ export const ControlledColumnTypeSelect: React.FC<
 
       'RATING',
 
+      'SIGNATURE',
+
       'FILES',
 
       'USERS',

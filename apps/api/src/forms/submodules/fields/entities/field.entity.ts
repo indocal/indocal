@@ -18,6 +18,7 @@ export type FormFieldConfig = Partial<
   | DateTimeFormFieldConfig
   | RatingFormFieldConfig
   | NetPromoterScoreFormFieldConfig
+  | SignatureFormFieldConfig
   | FilesFormFieldConfig
   | UsersFormFieldConfig
   | SectionFormFieldConfig
@@ -113,6 +114,8 @@ export type RatingFormFieldConfig = CommonFormFieldConfig & {
 
 export type NetPromoterScoreFormFieldConfig = CommonFormFieldConfig;
 
+export type SignatureFormFieldConfig = CommonFormFieldConfig;
+
 export type FilesFormFieldConfig = CommonFormFieldConfig & {
   accept: string[];
   multiple: boolean;
@@ -151,6 +154,7 @@ export type SectionFormFieldItemType =
   | 'DATETIME'
   | 'RATING'
   | 'NET_PROMOTER_SCORE'
+  | 'SIGNATURE'
   | 'FILES'
   | 'USERS';
 
@@ -169,6 +173,7 @@ export type SectionFormFieldItemConfig = Partial<
   | DateTimeFormFieldConfig
   | RatingFormFieldConfig
   | NetPromoterScoreFormFieldConfig
+  | SignatureFormFieldConfig
   | FilesFormFieldConfig
   | UsersFormFieldConfig
 >;
@@ -200,6 +205,7 @@ export type TableFormFieldColumnType =
   | 'DATE'
   | 'DATETIME'
   | 'RATING'
+  | 'SIGNATURE'
   | 'FILES'
   | 'USERS';
 
@@ -217,6 +223,7 @@ export type TableFormFieldColumnConfig = Partial<
   | DateFormFieldConfig
   | DateTimeFormFieldConfig
   | RatingFormFieldConfig
+  | SignatureFormFieldConfig
   | FilesFormFieldConfig
   | UsersFormFieldConfig
 >;

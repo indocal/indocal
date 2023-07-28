@@ -14,9 +14,10 @@ import radioFormFieldConfigSchema from './radioFormFieldConfigSchema';
 import timeFormFieldConfigSchema from './timeFormFieldConfigSchema';
 import dateFormFieldConfigSchema from './dateFormFieldConfigSchema';
 import dateTimeFormFieldConfigSchema from './dateTimeFormFieldConfigSchema';
-import filesFormFieldConfigSchema from './filesFormFieldConfigSchema';
 import ratingFormFieldConfigSchema from './ratingFormFieldConfigSchema';
 import netPromoterScoreFormFieldConfigSchema from './netPromoterScoreFormFieldConfigSchema';
+import signatureFormFieldConfigSchema from './signatureFormFieldConfigSchema';
+import filesFormFieldConfigSchema from './filesFormFieldConfigSchema';
 import usersFormFieldConfigSchema from './usersFormFieldConfigSchema';
 
 const commonItemConfigSchema = zod.object({
@@ -68,6 +69,7 @@ const itemConfigSchema = zod.object({
   ...dateTimeFormFieldConfigSchema.shape,
   ...ratingFormFieldConfigSchema.shape,
   ...netPromoterScoreFormFieldConfigSchema.shape,
+  ...signatureFormFieldConfigSchema.shape,
   ...filesFormFieldConfigSchema.shape,
   ...usersFormFieldConfigSchema.shape,
 });
@@ -102,6 +104,8 @@ const itemSchema = zod.object({
 
         'RATING',
         'NET_PROMOTER_SCORE',
+
+        'SIGNATURE',
 
         'FILES',
 

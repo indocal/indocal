@@ -3,7 +3,11 @@ import { Html } from 'react-pdf-html';
 
 import { getShortUUID, ServiceCertificate } from '@indocal/services';
 
-import { getAssetsSources, replacePlaceholders } from './utils';
+import {
+  getAssetsSources,
+  replaceInternals,
+  replacePlaceholders,
+} from './utils';
 
 const styles = StyleSheet.create({
   viewer: {
@@ -24,36 +28,44 @@ export interface ServiceCertificatePDFProps {
 
 export const ServiceCertificatePDF: React.FC<ServiceCertificatePDFProps> = ({
   certificate,
-}) => (
-  <PDFViewer showToolbar style={styles.viewer}>
-    <Document title={`Certificado: ${getShortUUID(certificate.id)}`}>
-      <Page
-        size="A4"
-        orientation={certificate.template.layout.orientation}
-        style={styles.page}
-      >
-        <Html resetStyles>
-          {`
+}) => {
+  const content = certificate.template.content || '';
+  const assets = certificate.template.assets || [];
+
+  const hydratedContent = replaceInternals(
+    getAssetsSources(content, assets),
+    certificate
+  );
+
+  return (
+    <PDFViewer showToolbar style={styles.viewer}>
+      <Document title={`Certificado: ${getShortUUID(certificate.id)}`}>
+        <Page
+          size="A4"
+          orientation={certificate.template.layout.orientation}
+          style={styles.page}
+        >
+          <Html resetStyles>
+            {`
               <html>
                 <body>
                   <style>
                     ${certificate.template.styles}
                   </style>
 
-                  ${getAssetsSources(
-                    replacePlaceholders(
-                      certificate.template.content || '',
-                      certificate.data
-                    ),
-                    certificate.template.assets
-                  )}
+                  ${replacePlaceholders({
+                    html: hydratedContent,
+                    data: certificate.data,
+                    placeholders: certificate.template.placeholders,
+                  })}
                 </body>
               </html>
             `}
-        </Html>
-      </Page>
-    </Document>
-  </PDFViewer>
-);
+          </Html>
+        </Page>
+      </Document>
+    </PDFViewer>
+  );
+};
 
 export default ServiceCertificatePDF;

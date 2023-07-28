@@ -17,6 +17,8 @@ export * from './serializeDateTimeItemAnswer';
 export * from './serializeRatingItemAnswer';
 export * from './serializeNetPromoterScoreItemAnswer';
 
+export * from './serializeSignatureItemAnswer';
+
 export * from './serializeFilesItemAnswer';
 
 export * from './serializeUsersItemAnswer';

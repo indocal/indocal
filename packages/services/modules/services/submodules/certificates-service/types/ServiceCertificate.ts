@@ -30,7 +30,9 @@ type Request = Entity & {
   status: ServiceStatus;
 };
 
-export type ServiceCertificateData = Record<string, string>;
+export type ServiceCertificateData =
+  | Record<string, string>
+  | Record<string, Array<Record<string, string>>>;
 
 export interface ServiceCertificate extends Entity {
   data: ServiceCertificateData;

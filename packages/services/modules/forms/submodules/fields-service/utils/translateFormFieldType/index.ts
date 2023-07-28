@@ -21,6 +21,8 @@ export function translateFormFieldType(type: FormFieldType): string {
     RATING: 'Puntuación',
     NET_PROMOTER_SCORE: 'Net Promoter Score',
 
+    SIGNATURE: 'Firma',
+
     FILES: 'Archivos',
 
     USERS: 'Usuarios (INDOCAL)',

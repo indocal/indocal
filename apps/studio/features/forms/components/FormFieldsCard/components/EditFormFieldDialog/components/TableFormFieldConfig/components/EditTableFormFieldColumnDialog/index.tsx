@@ -31,8 +31,9 @@ import {
   TimeColumnConfig,
   DateColumnConfig,
   DateTimeColumnConfig,
-  FilesColumnConfig,
   RatingColumnConfig,
+  SignatureColumnConfig,
+  FilesColumnConfig,
   UsersColumnConfig,
   WebhookColumnConfig,
 } from './components';
@@ -85,6 +86,8 @@ export const EditTableFormFieldColumnDialog: React.FC<
       DATETIME: <DateTimeColumnConfig column={column} />,
 
       RATING: <RatingColumnConfig column={column} />,
+
+      SIGNATURE: <SignatureColumnConfig column={column} />,
 
       FILES: <FilesColumnConfig column={column} />,
 

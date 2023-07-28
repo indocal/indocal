@@ -27,6 +27,7 @@ import {
   DateTimeFormField,
   RatingFormField,
   NetPromoterScoreFormField,
+  SignatureFormField,
   FilesFormField,
   UsersFormField,
   SectionFormField,
@@ -47,6 +48,7 @@ import {
   parseDateTimeFormFieldAnswer,
   parseRatingFormFieldAnswer,
   parseNetPromoterScoreFormFieldAnswer,
+  parseSignatureFormFieldAnswer,
   parseFilesFormFieldAnswer,
   parseUsersFormFieldAnswer,
   parseSectionFormFieldAnswer,
@@ -69,6 +71,7 @@ export type FormGeneratorFormData = Record<
   | Parameters<typeof parseDateTimeFormFieldAnswer>[number]['content']
   | Parameters<typeof parseRatingFormFieldAnswer>[number]['content']
   | Parameters<typeof parseNetPromoterScoreFormFieldAnswer>[number]['content']
+  | Parameters<typeof parseSignatureFormFieldAnswer>[number]['content']
   | Parameters<typeof parseFilesFormFieldAnswer>[number]['content']
   | Parameters<typeof parseUsersFormFieldAnswer>[number]['content']
   | Parameters<typeof parseSectionFormFieldAnswer>[number]['content']
@@ -90,6 +93,7 @@ export type FormGeneratorAnswers = Array<
   | ReturnType<typeof parseDateTimeFormFieldAnswer>
   | ReturnType<typeof parseRatingFormFieldAnswer>
   | ReturnType<typeof parseNetPromoterScoreFormFieldAnswer>
+  | ReturnType<typeof parseSignatureFormFieldAnswer>
   | ReturnType<typeof parseFilesFormFieldAnswer>
   | ReturnType<typeof parseUsersFormFieldAnswer>
   | ReturnType<typeof parseSectionFormFieldAnswer>
@@ -136,6 +140,8 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
       RATING: RatingFormField,
       NET_PROMOTER_SCORE: NetPromoterScoreFormField,
 
+      SIGNATURE: SignatureFormField,
+
       FILES: FilesFormField,
 
       USERS: UsersFormField,
@@ -166,6 +172,8 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
 
       RATING: parseRatingFormFieldAnswer,
       NET_PROMOTER_SCORE: parseNetPromoterScoreFormFieldAnswer,
+
+      SIGNATURE: parseSignatureFormFieldAnswer,
 
       FILES: parseFilesFormFieldAnswer,
 

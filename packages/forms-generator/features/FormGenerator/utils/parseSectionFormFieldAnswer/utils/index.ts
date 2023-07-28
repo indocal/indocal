@@ -17,6 +17,8 @@ export * from './parseDateTimeItemAnswer';
 export * from './parseRatingItemAnswer';
 export * from './parseNetPromoterScoreItemAnswer';
 
+export * from './parseSignatureItemAnswer';
+
 export * from './parseFilesItemAnswer';
 
 export * from './parseUsersItemAnswer';

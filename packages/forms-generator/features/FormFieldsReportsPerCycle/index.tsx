@@ -21,6 +21,7 @@ import {
   DateTimeReport,
   RatingReport,
   NetPromoterScoreReport,
+  SignatureReport,
   FilesReport,
   UsersReport,
   SectionReport,
@@ -76,6 +77,8 @@ export const FormFieldsReportsPerCycle: React.FC<
 
       RATING: RatingReport,
       NET_PROMOTER_SCORE: NetPromoterScoreReport,
+
+      SIGNATURE: SignatureReport,
 
       FILES: FilesReport,
 

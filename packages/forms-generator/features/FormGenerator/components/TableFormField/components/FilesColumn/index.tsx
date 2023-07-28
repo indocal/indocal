@@ -38,6 +38,7 @@ export const FilesColumn: React.FC<FilesColumnProps> = ({
       control={control}
       disabled={isSubmitting}
       dropzoneProps={{
+        maxSize: 5 * 1024 * 1024,
         maxFiles: config?.maxFiles,
         accept: {
           ...(config?.accept?.includes('image') && {

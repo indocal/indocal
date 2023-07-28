@@ -23,6 +23,7 @@ export type FormFieldReport = {
     | DateTimeFormFieldReport
     | RatingFormFieldReport
     | NetPromoterScoreFormFieldReport
+    | SignatureFormFieldReport
     | FilesFormFieldReport
     | UsersFormFieldReport
     | SectionFormFieldReport
@@ -110,6 +111,12 @@ export type NetPromoterScoreFormFieldReport = {
   neutral: number;
   negative: number;
   na: number;
+};
+
+export type SignatureFormFieldReport = {
+  count: number;
+  na: number;
+  lastAnswers: string[];
 };
 
 export type FilesFormFieldReport = {

@@ -1,4 +1,14 @@
-import { ServiceCertificateTemplatePlaceholder } from '@indocal/services';
+import {
+  ServiceCertificateTemplatePlaceholder,
+  ServiceCertificateTemplatePlaceholderType,
+} from '@indocal/services';
+
+import {
+  highlightTextPlaceholder,
+  highlightSignaturePlaceholder,
+  highlightSectionPlaceholder,
+  highlightTablePlaceholder,
+} from './utils';
 
 export function highlightPlaceholders(
   html: string,
@@ -11,16 +21,30 @@ export function highlightPlaceholders(
   if (!matches) return html;
 
   const replaced = html.replace(regex, (_, match) => {
-    const key = match.trim();
+    const skeletons = {
+      [ServiceCertificateTemplatePlaceholderType.TEXT]:
+        highlightTextPlaceholder,
 
-    const placeholder = placeholders.find(
-      (placeholder) => placeholder.name === key
-    );
+      [ServiceCertificateTemplatePlaceholderType.SIGNATURE]:
+        highlightSignaturePlaceholder,
+
+      [ServiceCertificateTemplatePlaceholderType.SECTION]:
+        highlightSectionPlaceholder,
+
+      [ServiceCertificateTemplatePlaceholderType.TABLE]:
+        highlightTablePlaceholder,
+    };
+
+    const key: string = match.trim();
+
+    const placeholder = placeholders.find((placeholder) => {
+      if (key.includes('__')) return key.startsWith(placeholder.name);
+
+      return placeholder.name === key;
+    });
 
     return placeholder
-      ? `<span
-          style="font-family: Courier-BoldOblique;
-          background-color: rgba(0, 255, 0, 0.7)">${placeholder.title}</span>`
+      ? skeletons[placeholder.type](placeholder, key)
       : `<span
           style="font-family: Courier-BoldOblique;
           background-color: rgba(255, 0, 0, 0.7)">${key}</span>`;

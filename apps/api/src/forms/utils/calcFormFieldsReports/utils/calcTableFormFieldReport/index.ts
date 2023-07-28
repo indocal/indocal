@@ -22,9 +22,10 @@ import {
   calcTimeColumnReport,
   calcDateColumnReport,
   calcDateTimeColumnReport,
-  calcUsersColumnReport,
   calcRatingColumnReport,
+  calcSignatureColumnReport,
   calcFilesColumnReport,
+  calcUsersColumnReport,
 } from './utils';
 
 export function calcTableFormFieldReport(
@@ -55,6 +56,8 @@ export function calcTableFormFieldReport(
     DATETIME: calcDateTimeColumnReport,
 
     RATING: calcRatingColumnReport,
+
+    SIGNATURE: calcSignatureColumnReport,
 
     FILES: calcUsersColumnReport,
 

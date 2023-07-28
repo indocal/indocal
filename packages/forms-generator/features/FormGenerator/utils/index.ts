@@ -17,6 +17,8 @@ export * from './parseDateTimeFormFieldAnswer';
 export * from './parseRatingFormFieldAnswer';
 export * from './parseNetPromoterScoreFormFieldAnswer';
 
+export * from './parseSignatureFormFieldAnswer';
+
 export * from './parseFilesFormFieldAnswer';
 
 export * from './parseUsersFormFieldAnswer';

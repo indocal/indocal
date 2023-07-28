@@ -22,6 +22,7 @@ import {
   calcDateTimeFormFieldReport,
   calcRatingFormFieldReport,
   calcNetPromoterScoreFormFieldReport,
+  calcSignatureFormFieldReport,
   calcUsersFormFieldReport,
   calcFilesFormFieldReport,
   calcSectionFormFieldReport,
@@ -53,6 +54,8 @@ export function calcFormFieldsReports(records: FormEntryEntity[]) {
 
     RATING: calcRatingFormFieldReport,
     NET_PROMOTER_SCORE: calcNetPromoterScoreFormFieldReport,
+
+    SIGNATURE: calcSignatureFormFieldReport,
 
     FILES: calcFilesFormFieldReport,
 

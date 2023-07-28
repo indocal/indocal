@@ -22,14 +22,55 @@ export type ServiceCertificateTemplateLayout = {
 
 export enum ServiceCertificateTemplatePlaceholderType {
   TEXT = 'TEXT',
-  TABLE = 'TABLE',
   SIGNATURE = 'SIGNATURE',
+  SECTION = 'SECTION',
+  TABLE = 'TABLE',
 }
+
+export type ServiceCertificateTemplatePlaceholderConfig = Partial<
+  | ServiceCertificateTemplateSectionPlaceholderConfig
+  | ServiceCertificateTemplateTablePlaceholderConfig
+>;
 
 export type ServiceCertificateTemplatePlaceholder = {
   type: ServiceCertificateTemplatePlaceholderType;
   name: string;
   title: string;
+  config?: ServiceCertificateTemplatePlaceholderConfig;
+};
+
+////////////////////////////////
+// Placeholder Config By Type //
+////////////////////////////////
+
+export enum ServiceCertificateTemplateSectionPlaceholderItemType {
+  TEXT = 'TEXT',
+  SIGNATURE = 'SIGNATURE',
+}
+
+export type ServiceCertificateTemplateSectionPlaceholderItem = {
+  type: ServiceCertificateTemplateSectionPlaceholderItemType;
+  name: string;
+  title: string;
+};
+
+export type ServiceCertificateTemplateSectionPlaceholderConfig = {
+  items: ServiceCertificateTemplateSectionPlaceholderItem[];
+};
+
+export enum ServiceCertificateTemplateTablePlaceholderColumnType {
+  TEXT = 'TEXT',
+  SIGNATURE = 'SIGNATURE',
+}
+
+export type ServiceCertificateTemplateTablePlaceholderColumn = {
+  type: ServiceCertificateTemplateTablePlaceholderColumnType;
+  name: string;
+  heading: string;
+};
+
+export type ServiceCertificateTemplateTablePlaceholderConfig = {
+  columns: ServiceCertificateTemplateTablePlaceholderColumn[];
 };
 
 ////////////

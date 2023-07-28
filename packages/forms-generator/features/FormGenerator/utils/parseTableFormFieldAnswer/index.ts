@@ -20,6 +20,7 @@ import {
   parseDateColumnAnswer,
   parseDateTimeColumnAnswer,
   parseRatingColumnAnswer,
+  parseSignatureColumnAnswer,
   parseFilesColumnAnswer,
   parseUsersColumnAnswer,
 } from './utils';
@@ -40,6 +41,7 @@ export type TableFormFieldFormData = Array<
     | Parameters<typeof parseDateColumnAnswer>[number]['content']
     | Parameters<typeof parseDateTimeColumnAnswer>[number]['content']
     | Parameters<typeof parseRatingColumnAnswer>[number]['content']
+    | Parameters<typeof parseSignatureColumnAnswer>[number]['content']
     | Parameters<typeof parseFilesColumnAnswer>[number]['content']
     | Parameters<typeof parseUsersColumnAnswer>[number]['content']
   >
@@ -69,6 +71,8 @@ export function parseTableFormFieldAnswer(
     DATETIME: parseDateTimeColumnAnswer,
 
     RATING: parseRatingColumnAnswer,
+
+    SIGNATURE: parseSignatureColumnAnswer,
 
     FILES: parseFilesColumnAnswer,
 

@@ -20,6 +20,7 @@ import {
   Edit as EditIcon,
   ShortText as TextIcon,
   Draw as SignatureIcon,
+  BackupTable as SectionIcon,
   TableChart as TableIcon,
 } from '@mui/icons-material';
 import { useFormContext } from 'react-hook-form';
@@ -60,8 +61,9 @@ const PlaceholdersConfig: React.FC<PlaceholdersConfigProps> = ({ service }) => {
   >(
     () => ({
       TEXT: <TextIcon />,
-      TABLE: <TableIcon />,
       SIGNATURE: <SignatureIcon />,
+      SECTION: <SectionIcon />,
+      TABLE: <TableIcon />,
     }),
     []
   );

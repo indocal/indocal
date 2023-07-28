@@ -14,16 +14,19 @@ import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { ControlledServiceRequestStatusSelect } from '@indocal/forms-generator';
 import {
   ServiceRequest,
   ServiceRequestStatus,
   ApiEndpoints,
 } from '@indocal/services';
+import { entitySchema } from '@indocal/utils';
 
 import { indocal } from '@/lib';
 
 import { useServiceRequestCard } from '../../context';
+
+import ControlledServiceRequestStatusSelect from '../ControlledServiceRequestStatusSelect';
+import ControlledServiceProcessStepsAutocomplete from '../ControlledServiceProcessStepsAutocomplete';
 
 type FormData = zod.infer<typeof schema>;
 
@@ -48,6 +51,12 @@ const schema = zod
           invalid_type_error: 'Formato no válido',
         }
       ),
+
+      currentStep: entitySchema({
+        description: 'Paso actual de la solicitud',
+        required_error: 'Debe seleccionar el paso actual de la solicitud',
+        invalid_type_error: 'Formato no válido',
+      }),
     },
     {
       description: 'Datos de la solicitud',
@@ -82,6 +91,7 @@ export const EditServiceRequestDialog: React.FC<
     resolver: zodResolver(schema),
     defaultValues: {
       status: request.status,
+      ...(request.currentStep && { currentStep: request.currentStep }),
     },
   });
 
@@ -90,6 +100,7 @@ export const EditServiceRequestDialog: React.FC<
       const { request: updated, error } =
         await indocal.services.requests.update(request.id, {
           status: formData.status,
+          ...(formData.currentStep && { currentStep: formData.currentStep.id }),
         });
 
       if (error) {
@@ -144,9 +155,19 @@ export const EditServiceRequestDialog: React.FC<
       <DialogContent dividers>
         <Stack component="form" autoComplete="off" spacing={2}>
           <ControlledServiceRequestStatusSelect
+            request={request}
             required
             name="status"
             label="Estado"
+            control={control as unknown as Control}
+            disabled={isSubmitting}
+          />
+
+          <ControlledServiceProcessStepsAutocomplete
+            service={request.service.id}
+            required
+            name="currentStep"
+            label="Paso actual"
             control={control as unknown as Control}
             disabled={isSubmitting}
           />

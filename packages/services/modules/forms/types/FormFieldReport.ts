@@ -23,6 +23,7 @@ export type FormFieldReport = {
     | DateTimeFormFieldReport
     | RatingFormFieldReport
     | NetPromoterScoreFormFieldReport
+    | SignatureFormFieldReport
     | FilesFormFieldReport
     | UsersFormFieldReport
     | SectionFormFieldReport
@@ -112,6 +113,12 @@ export type NetPromoterScoreFormFieldReport = {
   na: number;
 };
 
+export type SignatureFormFieldReport = {
+  count: number;
+  na: number;
+  lastAnswers: string[];
+};
+
 export type FilesFormFieldReport = {
   count: number;
   na: number;
@@ -141,6 +148,9 @@ export type SectionFormFieldItemReport = {
     | TimeFormFieldReport
     | DateFormFieldReport
     | DateTimeFormFieldReport
+    | RatingFormFieldReport
+    | NetPromoterScoreFormFieldReport
+    | SignatureFormFieldReport
     | FilesFormFieldReport
     | UsersFormFieldReport;
 };
@@ -162,6 +172,8 @@ export type TableFormFieldColumnReport = {
     | TimeFormFieldReport
     | DateFormFieldReport
     | DateTimeFormFieldReport
+    | RatingFormFieldReport
+    | SignatureFormFieldReport
     | FilesFormFieldReport
     | UsersFormFieldReport;
 };

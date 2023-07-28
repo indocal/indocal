@@ -1,5 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsEnum, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsObject,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 import {
@@ -7,6 +13,7 @@ import {
   ServiceCertificateTemplateLayoutOrientation,
   ServiceCertificateTemplatePlaceholder,
   ServiceCertificateTemplatePlaceholderType,
+  ServiceCertificateTemplatePlaceholderConfig,
 } from '../entities';
 
 ////////////
@@ -31,6 +38,10 @@ class PlaceholderSchema {
 
   @IsString()
   title: string;
+
+  @IsObject() // TODO: Validate this object
+  @IsOptional()
+  config?: ServiceCertificateTemplatePlaceholderConfig;
 }
 
 /////////

@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import NextLink from 'next/link';
 import {
   Paper,
@@ -19,6 +19,7 @@ import {
 import {
   AddCircle as AddIcon,
   Preview as ViewIcon,
+  Edit as EditIcon,
   RemoveCircle as DeleteIcon,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -31,6 +32,7 @@ import {
   getShortUUID,
   UUID,
   ServiceRequest,
+  ServiceCertificateData,
   ApiEndpoints,
 } from '@indocal/services';
 
@@ -68,6 +70,21 @@ export const ManageCertificatesDialog: React.FC<
     [request.certificates]
   );
 
+  const [defaultValues, setDefaultValues] = useState<ServiceCertificateData>();
+
+  const handleAdd = useCallback(() => {
+    setDefaultValues({});
+    toggleGenerateCertificateDialog();
+  }, [toggleGenerateCertificateDialog]);
+
+  const handleEdit = useCallback(
+    (data: ServiceCertificateData) => {
+      setDefaultValues(data);
+      toggleGenerateCertificateDialog();
+    },
+    [toggleGenerateCertificateDialog]
+  );
+
   const handleDelete = useCallback(
     (id: UUID) => {
       confirm({
@@ -103,12 +120,15 @@ export const ManageCertificatesDialog: React.FC<
   return (
     <>
       {isGenerateCertificateDialogOpen && (
-        <GenerateCertificateDialog request={request} />
+        <GenerateCertificateDialog
+          request={request}
+          defaultValues={defaultValues}
+        />
       )}
 
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="lg"
         open={isManageCertificatesDialogOpen}
         onClose={toggleManageCertificatesDialog}
       >
@@ -122,7 +142,7 @@ export const ManageCertificatesDialog: React.FC<
         >
           <Typography fontWeight="bolder">Administrar certificados</Typography>
 
-          <IconButton onClick={toggleGenerateCertificateDialog}>
+          <IconButton onClick={handleAdd}>
             <AddIcon />
           </IconButton>
         </DialogTitle>
@@ -155,6 +175,15 @@ export const ManageCertificatesDialog: React.FC<
                         sx={{ display: 'flex' }}
                       >
                         <ViewIcon />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Editar certificado">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleEdit(certificate.data)}
+                      >
+                        <EditIcon />
                       </IconButton>
                     </Tooltip>
 

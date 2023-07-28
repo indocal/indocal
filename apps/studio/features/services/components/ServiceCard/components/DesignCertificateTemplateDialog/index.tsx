@@ -59,6 +59,7 @@ const DesignCertificateTemplateDialog: React.FC<
       layout: values.layout,
       content: values.content,
       styles: values.styles,
+      placeholders: service.template?.placeholders || [],
     });
 
     if (error) {
@@ -76,7 +77,7 @@ const DesignCertificateTemplateDialog: React.FC<
 
       enqueueSnackbar('Plantilla editada exitosamente', { variant: 'success' });
     }
-  }, [service.id, getValues, mutate, enqueueSnackbar]);
+  }, [service, getValues, mutate, enqueueSnackbar]);
 
   const handleOnClose = useCallback(() => {
     if (isSubmitting) return;

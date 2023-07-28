@@ -17,6 +17,8 @@ export * from './DateTimeFormField';
 export * from './RatingFormField';
 export * from './NetPromoterScoreFormField';
 
+export * from './SignatureFormField';
+
 export * from './FilesFormField';
 
 export * from './UsersFormField';

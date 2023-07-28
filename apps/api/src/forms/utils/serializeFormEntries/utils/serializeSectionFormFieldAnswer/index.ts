@@ -25,6 +25,7 @@ import {
   serializeDateTimeItemAnswer,
   serializeRatingItemAnswer,
   serializeNetPromoterScoreItemAnswer,
+  serializeSignatureItemAnswer,
   serializeUsersItemAnswer,
   serializeFilesItemAnswer,
 } from './utils';
@@ -59,6 +60,8 @@ export async function serializeSectionFormFieldAnswer(
 
     RATING: serializeRatingItemAnswer,
     NET_PROMOTER_SCORE: serializeNetPromoterScoreItemAnswer,
+
+    SIGNATURE: serializeSignatureItemAnswer,
 
     FILES: serializeFilesItemAnswer,
 

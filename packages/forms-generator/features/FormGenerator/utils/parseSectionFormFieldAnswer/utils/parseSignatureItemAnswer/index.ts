@@ -1,0 +1,12 @@
+import { SectionFormFieldItemAnswer } from '../../types';
+
+export function parseSignatureItemAnswer(
+  answer: SectionFormFieldItemAnswer<string | null>
+): SectionFormFieldItemAnswer<string | null> {
+  return {
+    item: answer.item,
+    content: answer.content ? answer.content.trim() || null : null,
+  };
+}
+
+export default parseSignatureItemAnswer;

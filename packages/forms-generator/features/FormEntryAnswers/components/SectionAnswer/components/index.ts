@@ -17,6 +17,8 @@ export * from './DateTimeItemAnswer';
 export * from './RatingItemAnswer';
 export * from './NetPromoterScoreItemAnswer';
 
+export * from './SignatureItemAnswer';
+
 export * from './FilesItemAnswer';
 
 export * from './UsersItemAnswer';

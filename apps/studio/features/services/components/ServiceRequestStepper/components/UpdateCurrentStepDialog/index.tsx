@@ -320,6 +320,7 @@ export const UpdateCurrentStepDialog: React.FC<
                 control={control as unknown as Control}
                 required={Boolean(includeComment)}
                 disabled={isSubmitting || !includeComment}
+                dropzoneProps={{ maxSize: 5 * 1024 * 1024 }}
               />
             </Stack>
           </Stack>

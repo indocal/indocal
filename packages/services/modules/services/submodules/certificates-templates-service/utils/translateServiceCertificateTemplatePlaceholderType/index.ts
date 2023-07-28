@@ -7,9 +7,10 @@ export function translateServiceCertificateTemplatePlaceholderType(
     ServiceCertificateTemplatePlaceholderType,
     string
   > = {
-    TEXT: 'TEXT',
-    TABLE: 'TABLE',
-    SIGNATURE: 'SIGNATURE',
+    TEXT: 'Texto',
+    SIGNATURE: 'Firma',
+    SECTION: 'Sección',
+    TABLE: 'Tabla',
   };
 
   return translations[type] ?? type;

@@ -33,6 +33,7 @@ import {
   DateTimeItemConfig,
   RatingItemConfig,
   NetPromoterScoreItemConfig,
+  SignatureItemConfig,
   FilesItemConfig,
   UsersItemConfig,
   WebhookItemConfig,
@@ -87,6 +88,8 @@ export const EditSectionFormFieldItemDialog: React.FC<
 
       RATING: <RatingItemConfig item={item} />,
       NET_PROMOTER_SCORE: <NetPromoterScoreItemConfig item={item} />,
+
+      SIGNATURE: <SignatureItemConfig item={item} />,
 
       FILES: <FilesItemConfig item={item} />,
 

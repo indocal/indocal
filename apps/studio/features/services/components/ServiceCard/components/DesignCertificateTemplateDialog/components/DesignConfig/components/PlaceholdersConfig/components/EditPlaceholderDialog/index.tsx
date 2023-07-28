@@ -1,11 +1,9 @@
-import { useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import {
-  Stack,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Typography,
   IconButton,
 } from '@mui/material';
@@ -14,48 +12,34 @@ import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z as zod } from 'zod';
+import { useFormContext } from 'react-hook-form';
 
-import { Service, ApiEndpoints } from '@indocal/services';
+import {
+  Service,
+  ServiceCertificateTemplatePlaceholderType,
+  ApiEndpoints,
+} from '@indocal/services';
 
 import { indocal } from '@/lib';
 
 import { usePlaceholdersConfig } from '../../context';
 
-type FormData = zod.infer<typeof schema>;
-
-const schema = zod.object(
-  {
-    name: zod
-      .string({
-        description: 'Nombre del placeholder',
-        required_error: 'Debe ingresar el nombre del placeholder',
-        invalid_type_error: 'Formato no válido',
-      })
-      .min(1, 'Debe ingresar el nombre del placeholder'),
-
-    title: zod
-      .string({
-        description: 'Título del placeholder',
-        required_error: 'Debe ingresar el título del placeholder',
-        invalid_type_error: 'Formato no válido',
-      })
-      .min(1, 'Debe ingresar el título del placeholder'),
-  },
-  {
-    description: 'Placeholders del certificado',
-    required_error: 'Debe ingresar los placeholders del certificado',
-    invalid_type_error: 'Formato no válido',
-  }
-);
+import {
+  EditPlaceholderDialogProvider,
+  EditPlaceholderDialogData,
+} from './context';
+import {
+  TextPlaceholderConfig,
+  SignaturePlaceholderConfig,
+  SectionPlaceholderConfig,
+  TablePlaceholderConfig,
+} from './components';
 
 export interface EditPlaceholderDialogProps {
   placeholder: NonNullable<Service['template']>['placeholders'][number];
 }
 
-export const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
+const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
   placeholder,
 }) => {
   const { mutate } = useSWRConfig();
@@ -68,30 +52,44 @@ export const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
   const confirm = useConfirm();
 
   const {
-    formState: { isDirty, isSubmitting, errors },
-    register,
-    handleSubmit,
+    formState: { isDirty, isSubmitting },
     reset,
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: placeholder.name,
-      title: placeholder.title,
-    },
-  });
+    handleSubmit,
+  } = useFormContext<EditPlaceholderDialogData>();
+
+  const options = useMemo<
+    Record<ServiceCertificateTemplatePlaceholderType, React.ReactElement>
+  >(
+    () => ({
+      TEXT: <TextPlaceholderConfig />,
+      SIGNATURE: <SignaturePlaceholderConfig />,
+      SECTION: <SectionPlaceholderConfig />,
+      TABLE: <TablePlaceholderConfig />,
+    }),
+    []
+  );
 
   const onSubmit = useCallback(
-    async (formData: FormData) => {
+    async (formData: EditPlaceholderDialogData) => {
       if (!service.template) return;
 
+      const placeholders = structuredClone(service.template.placeholders);
+
+      const index = service.template.placeholders.findIndex(
+        (current) => current.name === placeholder.name
+      );
+
+      const data = {
+        type: placeholder.type,
+        name: formData.name,
+        title: formData.title,
+        ...(formData.config && { config: formData.config }),
+      };
+
+      placeholders.splice(index, 1, data);
+
       const { error } = await indocal.services.templates.upsert(service.id, {
-        placeholders: service.template.placeholders
-          .filter((current) => current.name !== placeholder.name)
-          .concat({
-            type: placeholder.type,
-            name: formData.name,
-            title: formData.title,
-          }),
+        placeholders,
       });
 
       if (error) {
@@ -123,10 +121,16 @@ export const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
     }).then(async () => {
       if (!service.template) return;
 
+      const placeholders = structuredClone(service.template.placeholders);
+
+      const index = service.template.placeholders.findIndex(
+        (current) => current.name === placeholder.name
+      );
+
+      placeholders.splice(index, 1);
+
       const { error } = await indocal.services.templates.upsert(service.id, {
-        placeholders: service.template.placeholders.filter(
-          (current) => current.name !== placeholder.name
-        ),
+        placeholders,
       });
 
       if (error) {
@@ -194,28 +198,8 @@ export const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
         </IconButton>
       </DialogTitle>
 
-      <DialogContent dividers>
-        <Stack component="form" autoComplete="off" spacing={2}>
-          <TextField
-            required
-            autoComplete="off"
-            label="Nombre"
-            disabled={isSubmitting}
-            inputProps={register('name')}
-            error={Boolean(errors.name)}
-            helperText={errors.name?.message}
-          />
-
-          <TextField
-            required
-            autoComplete="off"
-            label="Título"
-            disabled={isSubmitting}
-            inputProps={register('title')}
-            error={Boolean(errors.title)}
-            helperText={errors.title?.message}
-          />
-        </Stack>
+      <DialogContent dividers sx={{ padding: 0 }}>
+        <form>{options[placeholder.type]}</form>
       </DialogContent>
 
       <DialogActions>
@@ -234,4 +218,14 @@ export const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
   );
 };
 
-export default EditPlaceholderDialog;
+const EditPlaceholderDialogWrapper: React.FC<EditPlaceholderDialogProps> = ({
+  placeholder,
+}) => (
+  <EditPlaceholderDialogProvider placeholder={placeholder}>
+    <EditPlaceholderDialog placeholder={placeholder} />
+  </EditPlaceholderDialogProvider>
+);
+
+export { EditPlaceholderDialogWrapper as EditPlaceholderDialog };
+
+export default EditPlaceholderDialogWrapper;

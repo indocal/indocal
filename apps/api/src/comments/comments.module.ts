@@ -15,6 +15,7 @@ import CommentsController from './comments.controller';
     AuthModule,
     MulterModule.register({
       dest: 'public/uploads',
+      limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
       storage: diskStorage({
         destination: (_, __, callback) => {
           if (!fs.existsSync(rootFolder)) {

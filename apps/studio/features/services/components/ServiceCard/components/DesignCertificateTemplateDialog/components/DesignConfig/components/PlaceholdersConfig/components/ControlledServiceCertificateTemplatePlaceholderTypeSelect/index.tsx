@@ -44,8 +44,9 @@ export const ControlledServiceCertificateTemplatePlaceholderTypeSelect: React.FC
   const types = useMemo<ServiceCertificateTemplatePlaceholderType[]>(
     () => [
       ServiceCertificateTemplatePlaceholderType.TEXT,
-      ServiceCertificateTemplatePlaceholderType.TABLE,
       ServiceCertificateTemplatePlaceholderType.SIGNATURE,
+      ServiceCertificateTemplatePlaceholderType.SECTION,
+      ServiceCertificateTemplatePlaceholderType.TABLE,
     ],
     []
   );

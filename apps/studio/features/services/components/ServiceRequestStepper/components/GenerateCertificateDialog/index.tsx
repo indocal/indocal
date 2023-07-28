@@ -1,32 +1,45 @@
-import { useCallback } from 'react';
+import { useMemo, useCallback, createElement } from 'react';
 import {
   Stack,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
+  Typography,
+  Button,
 } from '@mui/material';
+import { UploadFile as UploadFileIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
-import { useForm } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { useService, ServiceRequest, ApiEndpoints } from '@indocal/services';
+
+import { ServiceCertificateData } from '@indocal/services';
 
 import { indocal } from '@/lib';
 
 import { useServiceRequestStepper } from '../../context';
 
+import { GenerateCertificateDialogProvider } from './context';
+import {
+  TextPlaceholderField,
+  SignaturePlaceholderField,
+  SectionPlaceholderField,
+  TablePlaceholderField,
+} from './components';
+
 export interface GenerateCertificateDialogProps {
   request: ServiceRequest;
+  defaultValues?: ServiceCertificateData;
 }
 
-export const GenerateCertificateDialog: React.FC<
-  GenerateCertificateDialogProps
-> = ({ request }) => {
+const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
+  request,
+}) => {
   const { mutate } = useSWRConfig();
 
   const { loading, service, error } = useService(request.service.id);
@@ -39,11 +52,21 @@ export const GenerateCertificateDialog: React.FC<
   const confirm = useConfirm();
 
   const {
-    formState: { isDirty, isSubmitting, errors },
-    register,
+    formState: { isDirty, isSubmitting },
+    setValue,
     handleSubmit,
     reset,
-  } = useForm();
+  } = useFormContext();
+
+  const fields = useMemo(
+    () => ({
+      TEXT: TextPlaceholderField,
+      SIGNATURE: SignaturePlaceholderField,
+      SECTION: SectionPlaceholderField,
+      TABLE: TablePlaceholderField,
+    }),
+    []
+  );
 
   const onSubmit = useCallback(
     async (formData: Record<string, string>) => {
@@ -83,6 +106,44 @@ export const GenerateCertificateDialog: React.FC<
     ]
   );
 
+  const handleImportData = useCallback(() => {
+    try {
+      const input = document.createElement('input');
+
+      input.type = 'file';
+      input.accept = '.json';
+
+      input.addEventListener('change', (e) => {
+        const event = e as unknown as React.ChangeEvent<HTMLInputElement>;
+
+        const file = event.target.files && event.target.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+          if (!event.target?.result) return;
+
+          Object.entries(JSON.parse(event.target.result as string)).forEach(
+            ([key, value]) => {
+              setValue(key, value, {
+                shouldDirty: true,
+                shouldTouch: true,
+              });
+            }
+          );
+        };
+
+        reader.readAsText(file);
+      });
+
+      input.click();
+    } catch {
+      enqueueSnackbar('Error al importar datos', { variant: 'error' });
+    }
+  }, [setValue, enqueueSnackbar]);
+
   const handleOnClose = useCallback(() => {
     if (!isDirty) {
       toggleGenerateCertificateDialog();
@@ -102,10 +163,29 @@ export const GenerateCertificateDialog: React.FC<
   return (
     <Dialog
       fullWidth
+      maxWidth="md"
       open={isGenerateCertificateDialogOpen}
       onClose={handleOnClose}
     >
-      <DialogTitle>Generar certificado</DialogTitle>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: (theme) => theme.spacing(1),
+        }}
+      >
+        <Typography fontWeight="bolder">Generar certificado</Typography>
+
+        <Button
+          variant="contained"
+          endIcon={<UploadFileIcon />}
+          disabled={!service?.template?.placeholders?.length || isSubmitting}
+          onClick={handleImportData}
+        >
+          Importar datos
+        </Button>
+      </DialogTitle>
 
       <DialogContent dividers>
         {loading ? (
@@ -114,20 +194,12 @@ export const GenerateCertificateDialog: React.FC<
           <ErrorInfo error={error} />
         ) : service?.template && service.template.placeholders.length > 0 ? (
           <Stack component="form" autoComplete="off" spacing={2}>
-            {service.template.placeholders.map((placeholder) => (
-              <TextField
-                key={placeholder.name}
-                required
-                autoComplete="off"
-                label={placeholder.title}
-                disabled={isSubmitting}
-                inputProps={register(placeholder.name, {
-                  required: 'Debe completar este campo',
-                })}
-                error={Boolean(errors[placeholder.name])}
-                helperText={errors[placeholder.name]?.message as string}
-              />
-            ))}
+            {service.template.placeholders.map((placeholder, index) =>
+              createElement(fields[placeholder.type], {
+                key: `${index}-${placeholder.name}`,
+                placeholder,
+              })
+            )}
           </Stack>
         ) : (
           <NoData message="Placeholders aún sin definir" />
@@ -150,4 +222,17 @@ export const GenerateCertificateDialog: React.FC<
   );
 };
 
-export default GenerateCertificateDialog;
+const GenerateCertificateDialogWrapper: React.FC<
+  GenerateCertificateDialogProps
+> = ({ request, defaultValues }) => (
+  <GenerateCertificateDialogProvider defaultValues={defaultValues}>
+    <GenerateCertificateDialog
+      request={request}
+      defaultValues={defaultValues}
+    />
+  </GenerateCertificateDialogProvider>
+);
+
+export { GenerateCertificateDialogWrapper as GenerateCertificateDialog };
+
+export default GenerateCertificateDialogWrapper;

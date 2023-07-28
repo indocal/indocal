@@ -16,6 +16,7 @@ import {
   serializeDateTimeFormFieldAnswer,
   serializeRatingFormFieldAnswer,
   serializeNetPromoterScoreFormFieldAnswer,
+  serializeSignatureFormFieldAnswer,
   serializeFilesFormFieldAnswer,
   serializeUsersFormFieldAnswer,
   serializeSectionFormFieldAnswer,
@@ -45,6 +46,8 @@ export async function serializeFormGeneratorAnswers(
 
     RATING: serializeRatingFormFieldAnswer,
     NET_PROMOTER_SCORE: serializeNetPromoterScoreFormFieldAnswer,
+
+    SIGNATURE: serializeSignatureFormFieldAnswer,
 
     FILES: serializeFilesFormFieldAnswer,
 

@@ -57,6 +57,7 @@ export const FilesFormField: React.FC<FilesFormFieldProps> = ({ field }) => {
         control={control}
         disabled={isSubmitting}
         dropzoneProps={{
+          maxSize: 5 * 1024 * 1024,
           maxFiles: config?.maxFiles,
           accept: {
             ...(config?.accept?.includes('image') && {

@@ -18,6 +18,7 @@ import {
   DateTimeAnswer,
   RatingAnswer,
   NetPromoterScoreAnswer,
+  SignatureAnswer,
   FilesAnswer,
   UsersAnswer,
   SectionAnswer,
@@ -51,6 +52,8 @@ export const FormEntryAnswers: React.FC<FormEntryAnswersProps> = ({
 
       RATING: RatingAnswer,
       NET_PROMOTER_SCORE: NetPromoterScoreAnswer,
+
+      SIGNATURE: SignatureAnswer,
 
       FILES: FilesAnswer,
 

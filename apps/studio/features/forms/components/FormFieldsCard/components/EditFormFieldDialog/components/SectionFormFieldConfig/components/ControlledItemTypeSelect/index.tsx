@@ -62,6 +62,8 @@ export const ControlledItemTypeSelect: React.FC<
       'RATING',
       'NET_PROMOTER_SCORE',
 
+      'SIGNATURE',
+
       'FILES',
 
       'USERS',

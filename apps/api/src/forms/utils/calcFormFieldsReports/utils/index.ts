@@ -17,9 +17,11 @@ export * from './calcDateTimeFormFieldReport';
 export * from './calcRatingFormFieldReport';
 export * from './calcNetPromoterScoreFormFieldReport';
 
-export * from './calcUsersFormFieldReport';
+export * from './calcSignatureFormFieldReport';
 
 export * from './calcFilesFormFieldReport';
+
+export * from './calcUsersFormFieldReport';
 
 export * from './calcSectionFormFieldReport';
 export * from './calcTableFormFieldReport';

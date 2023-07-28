@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import {
   AddCircle as AddIcon,
+  TableRows as AddRowIcon,
   ArrowDropUp as ArrowUpIcon,
   ArrowDropDown as ArrowDownIcon,
   RemoveCircle as RemoveIcon,
@@ -40,6 +41,7 @@ import {
   DateColumn,
   DateTimeColumn,
   RatingColumn,
+  SignatureColumn,
   FilesColumn,
   UsersColumn,
 } from './components';
@@ -106,6 +108,8 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
       TIME: TimeColumn,
       DATE: DateColumn,
       DATETIME: DateTimeColumn,
+
+      SIGNATURE: SignatureColumn,
 
       RATING: RatingColumn,
 
@@ -212,72 +216,99 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
 
           <TableBody>
             {config && config.columns && config.columns.length > 0 ? (
-              rows.map((row, index) => (
-                <TableRow key={row.id}>
+              rows.length > 0 ? (
+                rows.map((row, index) => (
+                  <TableRow key={row.id}>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        borderRight: (theme) =>
+                          errors[field.id]?.root
+                            ? `1px dashed ${theme.palette.error.main}`
+                            : `1px dashed ${theme.palette.divider}`,
+                      }}
+                    >
+                      <Stack
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={0.5}
+                      >
+                        <Stack direction="row" spacing={0.5}>
+                          <IconButton
+                            size="small"
+                            disabled={isSubmitting || index === 0}
+                            onClick={() => swap(index, index - 1)}
+                          >
+                            <ArrowUpIcon fontSize="small" />
+                          </IconButton>
+
+                          <IconButton
+                            size="small"
+                            disabled={isSubmitting || rows.length - 1 === index}
+                            onClick={() => swap(index, index + 1)}
+                          >
+                            <ArrowDownIcon fontSize="small" />
+                          </IconButton>
+                        </Stack>
+
+                        <IconButton
+                          size="small"
+                          color="error"
+                          disabled={isSubmitting}
+                          onClick={() => remove(index)}
+                        >
+                          <RemoveIcon fontSize="small" />
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+
+                    {config.columns.map((column) => (
+                      <TableCell
+                        key={column.heading}
+                        align="center"
+                        sx={{
+                          minWidth: 225,
+                          ':not(:last-child)': {
+                            borderRight: (theme) =>
+                              `1px solid ${theme.palette.divider}`,
+                          },
+                        }}
+                      >
+                        {createElement(columns[column.type], {
+                          field,
+                          column,
+                          row: index,
+                        })}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
                   <TableCell
-                    align="center"
+                    colSpan={config.columns.length + 1}
                     sx={{
-                      borderRight: (theme) =>
-                        errors[field.id]?.root
-                          ? `1px dashed ${theme.palette.error.main}`
-                          : `1px dashed ${theme.palette.divider}`,
+                      opacity: 0.75,
+                      backgroundColor: (theme) =>
+                        theme.palette.action.disabledBackground,
                     }}
                   >
                     <Stack
+                      direction="column"
                       justifyContent="center"
                       alignItems="center"
                       spacing={0.5}
+                      sx={{ padding: (theme) => theme.spacing(4, 2) }}
                     >
-                      <Stack direction="row" spacing={0.5}>
-                        <IconButton
-                          size="small"
-                          disabled={isSubmitting || index === 0}
-                          onClick={() => swap(index, index - 1)}
-                        >
-                          <ArrowUpIcon fontSize="small" />
-                        </IconButton>
+                      <AddRowIcon />
 
-                        <IconButton
-                          size="small"
-                          disabled={isSubmitting || rows.length - 1 === index}
-                          onClick={() => swap(index, index + 1)}
-                        >
-                          <ArrowDownIcon fontSize="small" />
-                        </IconButton>
-                      </Stack>
-
-                      <IconButton
-                        size="small"
-                        color="error"
-                        disabled={isSubmitting}
-                        onClick={() => remove(index)}
-                      >
-                        <RemoveIcon fontSize="small" />
-                      </IconButton>
+                      <Typography align="center">
+                        Haz click en el botón de abajo para agregar una fila
+                      </Typography>
                     </Stack>
                   </TableCell>
-
-                  {config.columns.map((column) => (
-                    <TableCell
-                      key={column.heading}
-                      align="center"
-                      sx={{
-                        minWidth: 225,
-                        ':not(:last-child)': {
-                          borderRight: (theme) =>
-                            `1px solid ${theme.palette.divider}`,
-                        },
-                      }}
-                    >
-                      {createElement(columns[column.type], {
-                        field,
-                        column,
-                        row: index,
-                      })}
-                    </TableCell>
-                  ))}
                 </TableRow>
-              ))
+              )
             ) : (
               <TableRow>
                 <TableCell>

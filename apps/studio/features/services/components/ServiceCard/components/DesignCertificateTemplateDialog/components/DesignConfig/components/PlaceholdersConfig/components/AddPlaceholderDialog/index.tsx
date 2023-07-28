@@ -33,8 +33,9 @@ const schema = zod.object(
     type: zod.enum(
       [
         ServiceCertificateTemplatePlaceholderType.TEXT,
-        ServiceCertificateTemplatePlaceholderType.TABLE,
         ServiceCertificateTemplatePlaceholderType.SIGNATURE,
+        ServiceCertificateTemplatePlaceholderType.SECTION,
+        ServiceCertificateTemplatePlaceholderType.TABLE,
       ],
       {
         description: 'Tipo del placeholder',

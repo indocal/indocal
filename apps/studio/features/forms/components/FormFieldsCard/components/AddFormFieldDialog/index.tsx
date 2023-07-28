@@ -48,6 +48,8 @@ const schema = zod.object(
           'RATING',
           'NET_PROMOTER_SCORE',
 
+          'SIGNATURE',
+
           'FILES',
 
           'USERS',

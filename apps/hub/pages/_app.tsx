@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 import { SessionProvider } from 'next-auth/react';
 import { SnackbarProvider } from 'notistack';
 import { SWRConfig, Fetcher } from 'swr';
@@ -25,25 +26,31 @@ const App: EnhancedNextApp = ({ Component, pageProps }) => {
   }, []);
 
   return (
-    <ErrorBoundary fullscreen message="Error al cargar la aplicación">
-      <SessionProvider session={pageProps.session}>
-        <SWRConfig value={{ fetcher }}>
-          <AbilityProvider>
-            <ThemeProvider>
-              <SnackbarProvider>
-                <ConfirmProvider>
-                  {boostraping ? (
-                    <Loader fullscreen />
-                  ) : (
-                    getLayout(<Component {...pageProps} />)
-                  )}
-                </ConfirmProvider>
-              </SnackbarProvider>
-            </ThemeProvider>
-          </AbilityProvider>
-        </SWRConfig>
-      </SessionProvider>
-    </ErrorBoundary>
+    <>
+      <Head>
+        <title>INDOCAL</title>
+      </Head>
+
+      <ErrorBoundary fullscreen message="Error al cargar la aplicación">
+        <SessionProvider session={pageProps.session}>
+          <SWRConfig value={{ fetcher }}>
+            <AbilityProvider>
+              <ThemeProvider>
+                <SnackbarProvider>
+                  <ConfirmProvider>
+                    {boostraping ? (
+                      <Loader fullscreen />
+                    ) : (
+                      getLayout(<Component {...pageProps} />)
+                    )}
+                  </ConfirmProvider>
+                </SnackbarProvider>
+              </ThemeProvider>
+            </AbilityProvider>
+          </SWRConfig>
+        </SessionProvider>
+      </ErrorBoundary>
+    </>
   );
 };
 

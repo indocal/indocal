@@ -3,7 +3,9 @@ import { ServiceCertificate } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
-export type ServiceCertificateData = Record<string, string>;
+export type ServiceCertificateData =
+  | Record<string, string>
+  | Record<string, Array<Record<string, string>>>;
 
 export class ServiceCertificateEntity implements Entity, ServiceCertificate {
   constructor(certificate: ServiceCertificate) {

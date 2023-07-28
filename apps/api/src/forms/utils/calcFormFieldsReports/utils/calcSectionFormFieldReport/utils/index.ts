@@ -17,6 +17,8 @@ export * from './calcDateTimeItemReport';
 export * from './calcRatingItemReport';
 export * from './calcNetPromoterScoreItemReport';
 
-export * from './calcUsersItemReport';
+export * from './calcSignatureItemReport';
 
 export * from './calcFilesItemReport';
+
+export * from './calcUsersItemReport';

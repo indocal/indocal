@@ -17,6 +17,8 @@ export * from './DateTimeItemConfig';
 export * from './RatingItemConfig';
 export * from './NetPromoterScoreItemConfig';
 
+export * from './SignatureItemConfig';
+
 export * from './FilesItemConfig';
 
 export * from './UsersItemConfig';

@@ -132,6 +132,7 @@ export const AddFileDialog: React.FC = () => {
             name="files"
             control={control as unknown as Control}
             disabled={isSubmitting}
+            dropzoneProps={{ maxSize: 5 * 1024 * 1024 }}
           />
         </Stack>
       </DialogContent>

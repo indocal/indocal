@@ -17,6 +17,8 @@ export * from './DateTimeItemReport';
 export * from './RatingItemReport';
 export * from './NetPromoterScoreItemReport';
 
+export * from './SignatureItemReport';
+
 export * from './FilesItemReport';
 
 export * from './UsersItemReport';

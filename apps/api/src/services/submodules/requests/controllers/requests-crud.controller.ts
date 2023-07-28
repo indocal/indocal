@@ -328,7 +328,12 @@ export class ServicesRequestsCRUDController {
   ): Promise<SingleEntityResponse<EnhancedServiceRequest>> {
     const request = await this.prismaService.serviceRequest.update({
       where: { id },
-      data: { status: updateRequestDto.status },
+      data: {
+        status: updateRequestDto.status,
+        ...(updateRequestDto.currentStep && {
+          currentStep: { connect: { id: updateRequestDto.currentStep } },
+        }),
+      },
       include: {
         entry: true,
         requestedBy: true,

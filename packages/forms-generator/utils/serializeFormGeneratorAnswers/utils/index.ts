@@ -17,6 +17,8 @@ export * from './serializeDateTimeFormFieldAnswer';
 export * from './serializeRatingFormFieldAnswer';
 export * from './serializeNetPromoterScoreFormFieldAnswer';
 
+export * from './serializeSignatureFormFieldAnswer';
+
 export * from './serializeFilesFormFieldAnswer';
 
 export * from './serializeUsersFormFieldAnswer';

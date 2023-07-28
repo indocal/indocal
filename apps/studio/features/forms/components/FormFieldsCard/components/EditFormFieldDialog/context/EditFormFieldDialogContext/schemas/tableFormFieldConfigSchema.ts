@@ -15,6 +15,7 @@ import timeFormFieldConfigSchema from './timeFormFieldConfigSchema';
 import dateFormFieldConfigSchema from './dateFormFieldConfigSchema';
 import dateTimeFormFieldConfigSchema from './dateTimeFormFieldConfigSchema';
 import ratingFormFieldConfigSchema from './ratingFormFieldConfigSchema';
+import signatureFormFieldConfigSchema from './signatureFormFieldConfigSchema';
 import filesFormFieldConfigSchema from './filesFormFieldConfigSchema';
 import usersFormFieldConfigSchema from './usersFormFieldConfigSchema';
 
@@ -66,6 +67,7 @@ const columnConfigSchema = zod.object({
   ...dateFormFieldConfigSchema.shape,
   ...dateTimeFormFieldConfigSchema.shape,
   ...ratingFormFieldConfigSchema.shape,
+  ...signatureFormFieldConfigSchema.shape,
   ...filesFormFieldConfigSchema.shape,
   ...usersFormFieldConfigSchema.shape,
 });
@@ -99,6 +101,8 @@ const columnSchema = zod.object({
         'DATETIME',
 
         'RATING',
+
+        'SIGNATURE',
 
         'FILES',
 

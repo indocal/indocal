@@ -102,13 +102,13 @@ export class ServicesCertificatesTemplatesController {
 
           content: upsertTemplateDto.content,
           styles: upsertTemplateDto.styles,
-          placeholders: upsertTemplateDto.placeholders,
+          placeholders: upsertTemplateDto.placeholders || [],
         },
         update: {
           layout: upsertTemplateDto.layout,
           content: upsertTemplateDto.content,
           styles: upsertTemplateDto.styles,
-          placeholders: upsertTemplateDto.placeholders,
+          placeholders: upsertTemplateDto.placeholders || [],
         },
         include: { service: true, assets: true },
       });

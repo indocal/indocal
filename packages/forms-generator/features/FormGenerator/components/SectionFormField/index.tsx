@@ -20,6 +20,7 @@ import {
   DateTimeItem,
   RatingItem,
   NetPromoterScoreItem,
+  SignatureItem,
   FilesItem,
   UsersItem,
 } from './components';
@@ -60,6 +61,8 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
 
       RATING: RatingItem,
       NET_PROMOTER_SCORE: NetPromoterScoreItem,
+
+      SIGNATURE: SignatureItem,
 
       FILES: FilesItem,
 

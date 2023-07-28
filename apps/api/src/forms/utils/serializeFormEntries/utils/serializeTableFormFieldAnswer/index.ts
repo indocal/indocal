@@ -24,6 +24,7 @@ import {
   serializeDateColumnAnswer,
   serializeDateTimeColumnAnswer,
   serializeRatingColumnAnswer,
+  serializeSignatureColumnAnswer,
   serializeUsersColumnAnswer,
   serializeFilesColumnAnswer,
 } from './utils';
@@ -57,6 +58,8 @@ export async function serializeTableFormFieldAnswer(
     DATETIME: serializeDateTimeColumnAnswer,
 
     RATING: serializeRatingColumnAnswer,
+
+    SIGNATURE: serializeSignatureColumnAnswer,
 
     FILES: serializeFilesColumnAnswer,
 

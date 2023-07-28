@@ -8,7 +8,11 @@ import {
 } from '@indocal/services';
 
 import { DesignCertificateTemplateDialogData } from '../../context';
-import { getAssetsSources, highlightPlaceholders } from '../../utils';
+import {
+  getAssetsSources,
+  previewInternals,
+  highlightPlaceholders,
+} from '../../utils';
 
 const styles = StyleSheet.create({
   viewer: {
@@ -54,9 +58,9 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
                     ${CSS}
                   </style>
 
-                  ${getAssetsSources(
-                    highlightPlaceholders(HTML, placeholders),
-                    assets
+                  ${highlightPlaceholders(
+                    previewInternals(getAssetsSources(HTML, assets), service),
+                    placeholders
                   )}
                 </body>
               </html>
