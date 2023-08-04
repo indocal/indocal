@@ -7,7 +7,7 @@ export function highlightTablePlaceholder(
                   style="display: flex;
                   justify-content: center;
                   align-items: center;
-                  height: 150px;
+                  height: 75px;
                   border: 2px dashed black;
                   font-family: Courier-BoldOblique;
                   background-color: rgba(0, 255, 0, 0.7)"
