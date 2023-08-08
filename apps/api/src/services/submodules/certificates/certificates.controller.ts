@@ -16,11 +16,13 @@ import {
   ServiceCertificateTemplate,
   ServiceRequest,
   File,
+  User,
 } from '@prisma/client';
 
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
+import { UserEntity } from '../../../auth/submodules/users';
 import { FileEntity } from '../../../uploads/submodules/files';
 
 import { ServiceCertificateTemplateEntity } from '../certificates-templates';
@@ -41,11 +43,12 @@ class EnhancedServiceCertificateTemplate extends ServiceCertificateTemplateEntit
 class EnhancedServiceCertificate extends ServiceCertificateEntity {
   template: EnhancedServiceCertificateTemplate;
   request: ServiceRequestEntity;
+  user: UserEntity;
 }
 
 type CreateEnhancedServiceCertificate = ServiceCertificate & {
   template: ServiceCertificateTemplate & { assets: File[] };
-  request: ServiceRequest;
+  request: ServiceRequest & { requestedBy: User };
 };
 
 @Controller('certificates')
@@ -55,7 +58,7 @@ export class ServicesCertificatesController {
 
   createEnhancedServiceCertificate({
     template: { assets, ...template },
-    request,
+    request: { requestedBy, ...request },
     ...rest
   }: CreateEnhancedServiceCertificate): EnhancedServiceCertificate {
     const certificate = new EnhancedServiceCertificate(rest);
@@ -65,6 +68,8 @@ export class ServicesCertificatesController {
     certificate.template.assets = assets.map((asset) => new FileEntity(asset));
 
     certificate.request = new ServiceRequestEntity(request);
+
+    certificate.user = new UserEntity(requestedBy);
 
     return certificate;
   }
@@ -83,7 +88,10 @@ export class ServicesCertificatesController {
         request: { connect: { id: createCertificateDto.request } },
         data: createCertificateDto.data,
       },
-      include: { template: { include: { assets: true } }, request: true },
+      include: {
+        template: { include: { assets: true } },
+        request: { include: { requestedBy: true } },
+      },
     });
 
     return this.createEnhancedServiceCertificate(certificate);
@@ -119,7 +127,10 @@ export class ServicesCertificatesController {
         skip: query.pagination?.skip && Number(query.pagination.skip),
         take: query.pagination?.take && Number(query.pagination.take),
         cursor: query.pagination?.cursor,
-        include: { template: { include: { assets: true } }, request: true },
+        include: {
+          template: { include: { assets: true } },
+          request: { include: { requestedBy: true } },
+        },
       }),
       this.prismaService.serviceCertificate.count({
         where: query.filters,
@@ -145,7 +156,10 @@ export class ServicesCertificatesController {
   ): Promise<SingleEntityResponse<EnhancedServiceCertificate | null>> {
     const certificate = await this.prismaService.serviceCertificate.findUnique({
       where: { id },
-      include: { template: { include: { assets: true } }, request: true },
+      include: {
+        template: { include: { assets: true } },
+        request: { include: { requestedBy: true } },
+      },
     });
 
     return certificate
@@ -169,7 +183,10 @@ export class ServicesCertificatesController {
         request: { connect: { id: updateCertificateDto.request } },
         data: updateCertificateDto.data,
       },
-      include: { template: { include: { assets: true } }, request: true },
+      include: {
+        template: { include: { assets: true } },
+        request: { include: { requestedBy: true } },
+      },
     });
 
     return this.createEnhancedServiceCertificate(certificate);
@@ -185,7 +202,10 @@ export class ServicesCertificatesController {
   ): Promise<SingleEntityResponse<EnhancedServiceCertificate>> {
     const certificate = await this.prismaService.serviceCertificate.delete({
       where: { id },
-      include: { template: { include: { assets: true } }, request: true },
+      include: {
+        template: { include: { assets: true } },
+        request: { include: { requestedBy: true } },
+      },
     });
 
     return this.createEnhancedServiceCertificate(certificate);

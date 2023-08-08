@@ -21,7 +21,7 @@ export const RatingItem: React.FC<RatingItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<RatingFormFieldConfig | null>(
-    () => item.config as RatingFormFieldConfig,
+    () => item.config as RatingFormFieldConfig | null,
     [item.config]
   );
 

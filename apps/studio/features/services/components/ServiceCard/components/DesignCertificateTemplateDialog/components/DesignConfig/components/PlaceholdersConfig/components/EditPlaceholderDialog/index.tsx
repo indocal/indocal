@@ -1,14 +1,17 @@
-import { useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
+  Stack,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Tab,
+  TextField,
   Typography,
   IconButton,
 } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton, TabContext, TabList, TabPanel } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
 import { useSWRConfig } from 'swr';
@@ -52,21 +55,29 @@ const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
   const confirm = useConfirm();
 
   const {
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, errors },
+    register,
     reset,
     handleSubmit,
   } = useFormContext<EditPlaceholderDialogData>();
+
+  const enum Tabs {
+    INFO = 'info',
+    CONFIG = 'config',
+  }
+
+  const [tab, setTab] = useState<Tabs>(Tabs.INFO);
 
   const options = useMemo<
     Record<ServiceCertificateTemplatePlaceholderType, React.ReactElement>
   >(
     () => ({
-      TEXT: <TextPlaceholderConfig />,
-      SIGNATURE: <SignaturePlaceholderConfig />,
+      TEXT: <TextPlaceholderConfig placeholder={placeholder} />,
+      SIGNATURE: <SignaturePlaceholderConfig placeholder={placeholder} />,
       SECTION: <SectionPlaceholderConfig />,
       TABLE: <TablePlaceholderConfig />,
     }),
-    []
+    [placeholder]
   );
 
   const onSubmit = useCallback(
@@ -199,7 +210,46 @@ const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
       </DialogTitle>
 
       <DialogContent dividers sx={{ padding: 0 }}>
-        <form>{options[placeholder.type]}</form>
+        <Stack component="form" autoComplete="off">
+          <TabContext value={tab}>
+            <TabList
+              variant="fullWidth"
+              onChange={(_, value) => setTab(value)}
+              sx={{
+                backgroundColor: (theme) => theme.palette.background.paper,
+              }}
+            >
+              <Tab label="Información" value={Tabs.INFO} />
+              <Tab label="Configuración" value={Tabs.CONFIG} />
+            </TabList>
+
+            <TabPanel value={Tabs.INFO}>
+              <Stack spacing={2}>
+                <TextField
+                  required
+                  autoComplete="off"
+                  label="Nombre"
+                  disabled={isSubmitting}
+                  inputProps={register('name')}
+                  error={Boolean(errors.name)}
+                  helperText={errors.name?.message}
+                />
+
+                <TextField
+                  required
+                  autoComplete="off"
+                  label="Título"
+                  disabled={isSubmitting}
+                  inputProps={register('title')}
+                  error={Boolean(errors.title)}
+                  helperText={errors.title?.message}
+                />
+              </Stack>
+            </TabPanel>
+
+            <TabPanel value={Tabs.CONFIG}>{options[placeholder.type]}</TabPanel>
+          </TabContext>
+        </Stack>
       </DialogContent>
 
       <DialogActions>

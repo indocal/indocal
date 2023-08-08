@@ -26,7 +26,7 @@ export const DateColumn: React.FC<DateColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<DateFormFieldConfig | null>(
-    () => column.config as DateFormFieldConfig,
+    () => column.config as DateFormFieldConfig | null,
     [column.config]
   );
 

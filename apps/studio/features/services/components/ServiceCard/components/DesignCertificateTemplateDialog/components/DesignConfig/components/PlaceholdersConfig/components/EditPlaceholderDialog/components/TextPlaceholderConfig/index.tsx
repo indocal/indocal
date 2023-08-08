@@ -1,34 +1,38 @@
-import { Stack, TextField } from '@mui/material';
-import { useFormContext } from 'react-hook-form';
+import { Stack } from '@mui/material';
+import { useFormContext, Control } from 'react-hook-form';
+
+import { ServiceCertificateTemplatePlaceholder } from '@indocal/services';
+
+import { useDesignCertificateTemplateDialog } from '../../../../../../../../context';
 
 import { EditPlaceholderDialogData } from '../../context';
 
-export const TextPlaceholderConfig: React.FC = () => {
+import ControlledCompatibleServiceFormFieldsAutocomplete from '../ControlledCompatibleServiceFormFieldsAutocomplete';
+
+export interface TextPlaceholderConfigProps {
+  placeholder: ServiceCertificateTemplatePlaceholder;
+}
+
+export const TextPlaceholderConfig: React.FC<TextPlaceholderConfigProps> = ({
+  placeholder,
+}) => {
+  const { service } = useDesignCertificateTemplateDialog();
+
   const {
-    formState: { isSubmitting, errors },
-    register,
+    formState: { isSubmitting },
+    control,
   } = useFormContext<EditPlaceholderDialogData>();
 
   return (
-    <Stack spacing={2} sx={{ padding: (theme) => theme.spacing(2) }}>
-      <TextField
-        required
-        autoComplete="off"
-        label="Nombre"
+    <Stack spacing={2}>
+      <ControlledCompatibleServiceFormFieldsAutocomplete
+        name="config.associatedField"
+        label="Campo asociado"
+        service={service}
+        placeholder={placeholder}
+        control={control as unknown as Control}
         disabled={isSubmitting}
-        inputProps={register('name')}
-        error={Boolean(errors.name)}
-        helperText={errors.name?.message}
-      />
-
-      <TextField
-        required
-        autoComplete="off"
-        label="Título"
-        disabled={isSubmitting}
-        inputProps={register('title')}
-        error={Boolean(errors.title)}
-        helperText={errors.title?.message}
+        autocompleteProps={{ fullWidth: true }}
       />
     </Stack>
   );

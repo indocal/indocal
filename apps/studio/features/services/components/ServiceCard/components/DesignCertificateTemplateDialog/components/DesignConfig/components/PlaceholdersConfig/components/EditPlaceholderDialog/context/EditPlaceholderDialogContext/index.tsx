@@ -5,6 +5,8 @@ import { z as zod } from 'zod';
 import { ServiceCertificateTemplatePlaceholder } from '@indocal/services';
 
 import {
+  textPlaceholderConfigSchema,
+  signaturePlaceholderConfigSchema,
   sectionPlaceholderConfigSchema,
   tablePlaceholderConfigSchema,
 } from './schemas';
@@ -12,6 +14,8 @@ import {
 export type EditPlaceholderDialogData = zod.infer<typeof schema>;
 
 const configSchema = zod.object({
+  ...textPlaceholderConfigSchema.shape,
+  ...signaturePlaceholderConfigSchema.shape,
   ...sectionPlaceholderConfigSchema.shape,
   ...tablePlaceholderConfigSchema.shape,
 });

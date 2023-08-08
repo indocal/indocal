@@ -56,7 +56,7 @@ export const TableFormField: React.FC<TableFormFieldProps> = ({ field }) => {
   } = useFormContext();
 
   const config = useMemo<TableFormFieldConfig | null>(
-    () => field.config as TableFormFieldConfig,
+    () => field.config as TableFormFieldConfig | null,
     [field.config]
   );
 

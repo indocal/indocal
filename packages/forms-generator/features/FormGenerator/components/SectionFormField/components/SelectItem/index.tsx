@@ -21,7 +21,7 @@ export const SelectItem: React.FC<SelectItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<SelectFormFieldConfig | null>(
-    () => item.config as SelectFormFieldConfig,
+    () => item.config as SelectFormFieldConfig | null,
     [item.config]
   );
 

@@ -20,7 +20,7 @@ export const DniItem: React.FC<DniItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<DniFormFieldConfig | null>(
-    () => item.config as DniFormFieldConfig,
+    () => item.config as DniFormFieldConfig | null,
     [item.config]
   );
 

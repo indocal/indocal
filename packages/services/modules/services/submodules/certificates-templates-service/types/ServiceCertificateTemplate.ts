@@ -1,6 +1,9 @@
-import { Entity } from '../../../../../common';
+import { Entity, UUID } from '../../../../../common';
+
+import { FormFieldType } from '../../../../forms';
 
 import { ServiceStatus } from '../../../types';
+
 import { ServiceRequestStatus } from '../../requests-service';
 
 ////////////
@@ -28,6 +31,8 @@ export enum ServiceCertificateTemplatePlaceholderType {
 }
 
 export type ServiceCertificateTemplatePlaceholderConfig = Partial<
+  | ServiceCertificateTemplateTextPlaceholderConfig
+  | ServiceCertificateTemplateSignaturePlaceholderConfig
   | ServiceCertificateTemplateSectionPlaceholderConfig
   | ServiceCertificateTemplateTablePlaceholderConfig
 >;
@@ -42,6 +47,21 @@ export type ServiceCertificateTemplatePlaceholder = {
 ////////////////////////////////
 // Placeholder Config By Type //
 ////////////////////////////////
+
+type Field = {
+  id: UUID;
+  type: FormFieldType;
+  name: string;
+  description: string | null;
+};
+
+export type ServiceCertificateTemplateTextPlaceholderConfig = Partial<{
+  associatedField: Field;
+}>;
+
+export type ServiceCertificateTemplateSignaturePlaceholderConfig = Partial<{
+  associatedField: Field;
+}>;
 
 export enum ServiceCertificateTemplateSectionPlaceholderItemType {
   TEXT = 'TEXT',

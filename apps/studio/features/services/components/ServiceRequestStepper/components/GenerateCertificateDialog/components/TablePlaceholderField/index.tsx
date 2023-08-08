@@ -46,7 +46,7 @@ export const TablePlaceholderField: React.FC<TablePlaceholderFieldProps> = ({
   const config =
     useMemo<ServiceCertificateTemplateTablePlaceholderConfig | null>(
       () =>
-        placeholder.config as ServiceCertificateTemplateTablePlaceholderConfig,
+        placeholder.config as ServiceCertificateTemplateTablePlaceholderConfig | null,
       [placeholder.config]
     );
 

@@ -25,7 +25,7 @@ export const CheckboxColumn: React.FC<CheckboxColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<CheckboxFormFieldConfig | null>(
-    () => column.config as CheckboxFormFieldConfig,
+    () => column.config as CheckboxFormFieldConfig | null,
     [column.config]
   );
 

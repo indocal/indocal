@@ -1,3 +1,4 @@
+import { useContext, createContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
@@ -7,6 +8,18 @@ import {
   ServiceCertificateTemplateLayout,
   ServiceCertificateTemplateLayoutOrientation,
 } from '@indocal/services';
+
+export const initialContextValue: DesignCertificateTemplateDialogContextValue =
+  { service: {} as Service };
+
+export interface DesignCertificateTemplateDialogContextValue {
+  service: Service;
+}
+
+const DesignCertificateTemplateDialogContext =
+  createContext<DesignCertificateTemplateDialogContextValue>(
+    initialContextValue
+  );
 
 export type DesignCertificateTemplateDialogData = {
   layout: ServiceCertificateTemplateLayout;
@@ -89,7 +102,15 @@ export const DesignCertificateTemplateDialogProvider: React.FC<
     },
   });
 
-  return <FormProvider {...methods}>{children}</FormProvider>;
+  return (
+    <DesignCertificateTemplateDialogContext.Provider value={{ service }}>
+      <FormProvider {...methods}>{children}</FormProvider>
+    </DesignCertificateTemplateDialogContext.Provider>
+  );
 };
+
+export function useDesignCertificateTemplateDialog(): DesignCertificateTemplateDialogContextValue {
+  return useContext(DesignCertificateTemplateDialogContext);
+}
 
 export default DesignCertificateTemplateDialogProvider;

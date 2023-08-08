@@ -26,7 +26,7 @@ export const DniColumn: React.FC<DniColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<DniFormFieldConfig | null>(
-    () => column.config as DniFormFieldConfig,
+    () => column.config as DniFormFieldConfig | null,
     [column.config]
   );
 

@@ -1,5 +1,7 @@
 import { Entity } from '../../../../../common';
 
+import { UserStatus } from '../../../../auth';
+
 import { ServiceStatus } from '../../../types';
 
 import {
@@ -30,6 +32,13 @@ type Request = Entity & {
   status: ServiceStatus;
 };
 
+type User = Entity & {
+  username: string;
+  email: string;
+  name: string;
+  status: UserStatus;
+};
+
 export type ServiceCertificateData =
   | Record<string, string>
   | Record<string, Array<Record<string, string>>>;
@@ -38,6 +47,7 @@ export interface ServiceCertificate extends Entity {
   data: ServiceCertificateData;
   template: Template;
   request: Request;
+  user: User;
 }
 
 export default ServiceCertificate;

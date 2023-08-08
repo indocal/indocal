@@ -15,7 +15,7 @@ export const PhoneFormField: React.FC<PhoneFormFieldProps> = ({ field }) => {
   } = useFormContext();
 
   const config = useMemo<PhoneFormFieldConfig | null>(
-    () => field.config as PhoneFormFieldConfig,
+    () => field.config as PhoneFormFieldConfig | null,
     [field.config]
   );
 

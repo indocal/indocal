@@ -20,7 +20,7 @@ export const UsersItem: React.FC<UsersItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<UsersFormFieldConfig | null>(
-    () => item.config as UsersFormFieldConfig,
+    () => item.config as UsersFormFieldConfig | null,
     [item.config]
   );
 

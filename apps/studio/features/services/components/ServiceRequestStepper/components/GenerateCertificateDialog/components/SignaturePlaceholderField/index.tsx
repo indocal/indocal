@@ -1,8 +1,11 @@
-import { Stack } from '@mui/material';
+import { Stack, Button } from '@mui/material';
+import { OfflineBolt as AutocompleteIcon } from '@mui/icons-material';
 import { useFormContext } from 'react-hook-form';
 
 import { ControlledSignaturePad } from '@indocal/ui';
 import { ServiceCertificateTemplatePlaceholder } from '@indocal/services';
+
+import { useGenerateCertificateDialog } from '../../context';
 
 export interface SignaturePlaceholderFieldProps {
   placeholder: ServiceCertificateTemplatePlaceholder;
@@ -11,16 +14,26 @@ export interface SignaturePlaceholderFieldProps {
 export const SignaturePlaceholderField: React.FC<
   SignaturePlaceholderFieldProps
 > = ({ placeholder }) => {
+  const { openAutocompletePopover } = useGenerateCertificateDialog();
+
   const {
     formState: { isSubmitting, errors },
     control,
   } = useFormContext();
 
+  const handleAutocompleteClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void =>
+    openAutocompletePopover(event.currentTarget, {
+      type: 'SIGNATURE',
+      name: placeholder.name,
+    });
+
   return (
     <Stack
       sx={{
         display: 'grid',
-        gap: (theme) => theme.spacing(1),
+        gap: (theme) => theme.spacing(0.5),
         padding: (theme) => theme.spacing(2),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) =>
@@ -53,6 +66,15 @@ export const SignaturePlaceholderField: React.FC<
           },
         }}
       />
+
+      <Button
+        variant="contained"
+        size="small"
+        endIcon={<AutocompleteIcon fontSize="small" />}
+        onClick={handleAutocompleteClick}
+      >
+        LLenado Automatico
+      </Button>
     </Stack>
   );
 };

@@ -21,7 +21,7 @@ export const FilesItem: React.FC<FilesItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<FilesFormFieldConfig | null>(
-    () => item.config as FilesFormFieldConfig,
+    () => item.config as FilesFormFieldConfig | null,
     [item.config]
   );
 

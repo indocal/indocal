@@ -18,7 +18,7 @@ export const NetPromoterScoreFormField: React.FC<
   } = useFormContext();
 
   const config = useMemo<NetPromoterScoreFormFieldConfig | null>(
-    () => field.config as NetPromoterScoreFormFieldConfig,
+    () => field.config as NetPromoterScoreFormFieldConfig | null,
     [field.config]
   );
 

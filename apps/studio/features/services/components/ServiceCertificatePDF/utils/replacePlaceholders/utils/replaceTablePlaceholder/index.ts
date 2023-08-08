@@ -1,6 +1,7 @@
 import {
   ServiceCertificateData,
   ServiceCertificateTemplatePlaceholder,
+  ServiceCertificateTemplateTablePlaceholderConfig,
 } from '@indocal/services';
 
 import { replaceTextColumn, replaceSignatureColumn } from './utils';
@@ -18,19 +19,22 @@ export function replaceTablePlaceholder({
 }: ReplaceTablePlaceholderParams): string {
   const table = data[key];
 
-  const columns = placeholder.config?.columns;
+  const config =
+    placeholder.config as ServiceCertificateTemplateTablePlaceholderConfig | null;
 
   const replacers = {
     TEXT: replaceTextColumn,
     SIGNATURE: replaceSignatureColumn,
   };
 
-  return Array.isArray(table) && columns
+  return Array.isArray(table) && config?.columns
     ? `
         <table>
           <thead>
             <tr>
-              ${columns.map((column) => `<th>${column.heading}</th>`).join('')}
+              ${config.columns
+                .map((column) => `<th>${column.heading}</th>`)
+                .join('')}
             </tr>
           </thead>
 
@@ -39,7 +43,7 @@ export function replaceTablePlaceholder({
               .map((row) => {
                 const entries = Object.entries(row);
 
-                const cells = columns.map((column) => {
+                const cells = config.columns.map((column) => {
                   const [, value] =
                     entries.find(([key]) => key === column.name) || [];
 

@@ -26,7 +26,7 @@ export const SelectColumn: React.FC<SelectColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<SelectFormFieldConfig | null>(
-    () => column.config as SelectFormFieldConfig,
+    () => column.config as SelectFormFieldConfig | null,
     [column.config]
   );
 

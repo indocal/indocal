@@ -25,7 +25,7 @@ export const RatingColumn: React.FC<RatingColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<RatingFormFieldConfig | null>(
-    () => column.config as RatingFormFieldConfig,
+    () => column.config as RatingFormFieldConfig | null,
     [column.config]
   );
 

@@ -1,8 +1,9 @@
-import { IsUUID, IsObject } from 'class-validator';
+import { IsUUID } from 'class-validator';
 
 import { UUID } from '@/common';
 
 import { ServiceCertificateData } from '../entities';
+import { IsServiceCertificateData } from '../decorators';
 
 export class CreateServiceCertificateDto {
   @IsUUID()
@@ -11,7 +12,7 @@ export class CreateServiceCertificateDto {
   @IsUUID()
   request: UUID;
 
-  @IsObject() // TODO: Validate this object
+  @IsServiceCertificateData()
   data: ServiceCertificateData;
 }
 

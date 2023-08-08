@@ -25,7 +25,7 @@ export const PhoneColumn: React.FC<PhoneColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<PhoneFormFieldConfig | null>(
-    () => column.config as PhoneFormFieldConfig,
+    () => column.config as PhoneFormFieldConfig | null,
     [column.config]
   );
 

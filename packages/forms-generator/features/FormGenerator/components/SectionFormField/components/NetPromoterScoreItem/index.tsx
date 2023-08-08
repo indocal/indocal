@@ -24,7 +24,7 @@ export const NetPromoterScoreItem: React.FC<NetPromoterScoreItemProps> = ({
   } = useFormContext();
 
   const config = useMemo<NetPromoterScoreFormFieldConfig | null>(
-    () => item.config as NetPromoterScoreFormFieldConfig,
+    () => item.config as NetPromoterScoreFormFieldConfig | null,
     [item.config]
   );
 

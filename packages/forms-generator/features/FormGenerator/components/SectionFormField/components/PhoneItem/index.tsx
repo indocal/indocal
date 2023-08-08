@@ -20,7 +20,7 @@ export const PhoneItem: React.FC<PhoneItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<PhoneFormFieldConfig | null>(
-    () => item.config as PhoneFormFieldConfig,
+    () => item.config as PhoneFormFieldConfig | null,
     [item.config]
   );
 

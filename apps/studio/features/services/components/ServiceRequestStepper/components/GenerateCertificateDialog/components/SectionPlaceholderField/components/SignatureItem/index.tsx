@@ -1,4 +1,5 @@
-import { Stack } from '@mui/material';
+import { Stack, Button } from '@mui/material';
+import { OfflineBolt as AutocompleteIcon } from '@mui/icons-material';
 import { useFormContext } from 'react-hook-form';
 
 import { ControlledSignaturePad } from '@indocal/ui';
@@ -6,6 +7,8 @@ import {
   ServiceCertificateTemplatePlaceholder,
   ServiceCertificateTemplateSectionPlaceholderItem,
 } from '@indocal/services';
+
+import { useGenerateCertificateDialog } from '../../../../context';
 
 export interface SignatureItemProps {
   placeholder: ServiceCertificateTemplatePlaceholder;
@@ -16,26 +19,38 @@ export const SignatureItem: React.FC<SignatureItemProps> = ({
   placeholder,
   item,
 }) => {
+  const { openAutocompletePopover } = useGenerateCertificateDialog();
+
   const {
     formState: { isSubmitting, errors },
     control,
   } = useFormContext();
 
+  const key = `${placeholder.name}__${item.name}`;
+
+  const handleAutocompleteClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void =>
+    openAutocompletePopover(event.currentTarget, {
+      type: 'SIGNATURE',
+      name: key,
+    });
+
   return (
     <Stack
       sx={{
         display: 'grid',
-        gap: (theme) => theme.spacing(1),
+        gap: (theme) => theme.spacing(0.5),
         padding: (theme) => theme.spacing(1.5, 2),
         borderRadius: (theme) => theme.spacing(0.5),
         border: (theme) =>
-          errors[`${placeholder.name}__${item.name}`]
+          errors[key]
             ? `1px solid ${theme.palette.error.main}`
             : `1px solid ${theme.palette.divider}`,
       }}
     >
       <ControlledSignaturePad
-        name={`${placeholder.name}__${item.name}`}
+        name={key}
         label={item.title}
         control={control}
         formControlProps={{
@@ -58,6 +73,15 @@ export const SignatureItem: React.FC<SignatureItemProps> = ({
           },
         }}
       />
+
+      <Button
+        variant="contained"
+        size="small"
+        endIcon={<AutocompleteIcon fontSize="small" />}
+        onClick={handleAutocompleteClick}
+      >
+        LLenado Automatico
+      </Button>
     </Stack>
   );
 };

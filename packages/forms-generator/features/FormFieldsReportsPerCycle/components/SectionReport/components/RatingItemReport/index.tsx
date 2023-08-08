@@ -26,7 +26,7 @@ export const RatingItemReport: React.FC<RatingItemReportProps> = ({
   report,
 }) => {
   const config = useMemo(
-    () => report.item.config as RatingFormFieldConfig,
+    () => report.item.config as RatingFormFieldConfig | null,
     [report]
   );
 

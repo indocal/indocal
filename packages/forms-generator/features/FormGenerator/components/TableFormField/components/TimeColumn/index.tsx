@@ -26,7 +26,7 @@ export const TimeColumn: React.FC<TimeColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<TimeFormFieldConfig | null>(
-    () => column.config as TimeFormFieldConfig,
+    () => column.config as TimeFormFieldConfig | null,
     [column.config]
   );
 

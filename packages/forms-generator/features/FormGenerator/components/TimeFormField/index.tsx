@@ -16,7 +16,7 @@ export const TimeFormField: React.FC<TimeFormFieldProps> = ({ field }) => {
   } = useFormContext();
 
   const config = useMemo<TimeFormFieldConfig | null>(
-    () => field.config as TimeFormFieldConfig,
+    () => field.config as TimeFormFieldConfig | null,
     [field.config]
   );
 

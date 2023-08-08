@@ -26,9 +26,8 @@ export function replaceSectionPlaceholder({
       replaceSignatureItem,
   };
 
-  const config = placeholder.config as
-    | ServiceCertificateTemplateSectionPlaceholderConfig
-    | undefined;
+  const config =
+    placeholder.config as ServiceCertificateTemplateSectionPlaceholderConfig | null;
 
   const item = config?.items.find((item) => {
     const [, name] = key.split('__');

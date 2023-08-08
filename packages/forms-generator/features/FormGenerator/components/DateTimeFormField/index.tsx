@@ -18,7 +18,7 @@ export const DateTimeFormField: React.FC<DateTimeFormFieldProps> = ({
   } = useFormContext();
 
   const config = useMemo<DateTimeFormFieldConfig | null>(
-    () => field.config as DateTimeFormFieldConfig,
+    () => field.config as DateTimeFormFieldConfig | null,
     [field.config]
   );
 

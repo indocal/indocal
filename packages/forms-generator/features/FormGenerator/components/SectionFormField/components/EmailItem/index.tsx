@@ -20,7 +20,7 @@ export const EmailItem: React.FC<EmailItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<EmailFormFieldConfig | null>(
-    () => item.config as EmailFormFieldConfig,
+    () => item.config as EmailFormFieldConfig | null,
     [item.config]
   );
 

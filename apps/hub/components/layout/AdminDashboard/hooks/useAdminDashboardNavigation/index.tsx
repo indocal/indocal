@@ -1,19 +1,11 @@
 import { useMemo } from 'react';
-import {
-  ShoppingCart as ServicesIcon,
-  Feed as FormsIcon,
-  ConfirmationNumber as RequestICon,
-  SupportAgent as TicketsIcon,
-  Warehouse as WarehouseIcon,
-  Settings as SettingsIcon,
-} from '@mui/icons-material';
+import { Settings as SettingsIcon } from '@mui/icons-material';
 
 import {
   DrawerNavigation,
   DrawerNavigationItem,
   DrawerNavigationMenu,
 } from '@indocal/ui';
-import { useAppAbility } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -34,50 +26,8 @@ type Navigation =
     };
 
 export function useAdminDashboardNavigation(): DrawerNavigation[] {
-  const ability = useAppAbility();
-
   const navigation = useMemo<Navigation[]>(
     () => [
-
-      {
-        type: 'ITEM',
-        item: {
-          show: ability.can('read', 'service'),
-          label: 'Servicios',
-          icon: <ServicesIcon />,
-          href: Pages.SERVICES,
-        },
-      },
-      {
-        type: 'ITEM',
-        item: {
-          show: ability.can('read', 'form'),
-          label: 'Formularios',
-          icon: <FormsIcon />,
-          href: Pages.FORMS,
-        },
-      },
-      {
-        type: 'MENU',
-        menu: {
-          label: 'Solicitudes',
-          icon: <RequestICon />,
-          items: [
-            {
-              show: ability.can('read', 'ticket'),
-              label: 'Soporte técnico',
-              icon: <TicketsIcon />,
-              href: Pages.TICKETS,
-            },
-            {
-              show: ability.can('read', 'supplyRequest'),
-              label: 'Almacén & Suministro',
-              icon: <WarehouseIcon />,
-              href: Pages.WAREHOUSE,
-            },
-          ],
-        },
-      },
       {
         type: 'ITEM',
         item: {
@@ -88,7 +38,7 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
         },
       },
     ],
-    [ability]
+    []
   );
 
   return navigation

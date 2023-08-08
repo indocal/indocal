@@ -26,7 +26,7 @@ export const NumberColumn: React.FC<NumberColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<NumberFormFieldConfig | null>(
-    () => column.config as NumberFormFieldConfig,
+    () => column.config as NumberFormFieldConfig | null,
     [column.config]
   );
 

@@ -18,6 +18,10 @@ export function replaceInternals(
     REQUEST_ID: getShortUUID(certificate.request.id),
     REQUESTED_AT: serializeDate(certificate.request.createdAt),
 
+    REQUESTER_USERNAME: certificate.user.username,
+    REQUESTER_EMAIL: certificate.user.email,
+    REQUESTER_NAME: certificate.user.name,
+
     CERTIFICATE_ID: getShortUUID(certificate.id),
     CERTIFICATED_AT: serializeDate(certificate.createdAt),
   };

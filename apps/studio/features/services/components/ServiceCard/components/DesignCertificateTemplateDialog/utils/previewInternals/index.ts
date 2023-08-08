@@ -15,6 +15,10 @@ export function previewInternals(html: string, service: Service): string {
     REQUEST_ID: highlightInternal('#-XXXXX'),
     REQUESTED_AT: highlightInternal('dd/mm/yyyy'),
 
+    REQUESTER_USERNAME: highlightInternal('Requester Username'),
+    REQUESTER_EMAIL: highlightInternal('Requester Email'),
+    REQUESTER_NAME: highlightInternal('Requester Name'),
+
     CERTIFICATE_ID: highlightInternal('#-XXXXX'),
     CERTIFICATED_AT: highlightInternal('dd/mm/yyyy'),
   };

@@ -18,7 +18,7 @@ export const SignatureFormField: React.FC<SignatureFormFieldProps> = ({
   } = useFormContext();
 
   const config = useMemo<SignatureFormFieldConfig | null>(
-    () => field.config as SignatureFormFieldConfig,
+    () => field.config as SignatureFormFieldConfig | null,
     [field.config]
   );
 

@@ -15,7 +15,7 @@ export const DniFormField: React.FC<DniFormFieldProps> = ({ field }) => {
   } = useFormContext();
 
   const config = useMemo<DniFormFieldConfig | null>(
-    () => field.config as DniFormFieldConfig,
+    () => field.config as DniFormFieldConfig | null,
     [field.config]
   );
 

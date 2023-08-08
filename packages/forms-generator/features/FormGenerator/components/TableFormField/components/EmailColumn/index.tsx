@@ -26,7 +26,7 @@ export const EmailColumn: React.FC<EmailColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<EmailFormFieldConfig | null>(
-    () => column.config as EmailFormFieldConfig,
+    () => column.config as EmailFormFieldConfig | null,
     [column.config]
   );
 

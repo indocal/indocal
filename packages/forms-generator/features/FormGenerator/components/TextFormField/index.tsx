@@ -15,7 +15,7 @@ export const TextFormField: React.FC<TextFormFieldProps> = ({ field }) => {
   } = useFormContext();
 
   const config = useMemo<TextFormFieldConfig | null>(
-    () => field.config as TextFormFieldConfig,
+    () => field.config as TextFormFieldConfig | null,
     [field.config]
   );
 

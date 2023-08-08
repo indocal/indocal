@@ -3,11 +3,9 @@ export enum Pages {
   SIGN_IN = '/auth/sign-in',
   FORGOT_PASSWORD = '/auth/forgot-password',
 
-  // Public
+  // Sections
   ROOT = '/',
-
-  // Admin
-  ADMIN_ROOT = '/admin',
+  SETTINGS = '/settings',
 }
 
 export default Pages;

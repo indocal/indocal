@@ -16,7 +16,7 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = ({ field }) => {
   } = useFormContext();
 
   const config = useMemo<RadioFormFieldConfig | null>(
-    () => field.config as RadioFormFieldConfig,
+    () => field.config as RadioFormFieldConfig | null,
     [field.config]
   );
 

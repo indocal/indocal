@@ -25,7 +25,7 @@ export const SignatureColumn: React.FC<SignatureColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<SignatureFormFieldConfig | null>(
-    () => column.config as SignatureFormFieldConfig,
+    () => column.config as SignatureFormFieldConfig | null,
     [column.config]
   );
 

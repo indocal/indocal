@@ -20,7 +20,7 @@ export const NumberItem: React.FC<NumberItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<NumberFormFieldConfig | null>(
-    () => item.config as NumberFormFieldConfig,
+    () => item.config as NumberFormFieldConfig | null,
     [item.config]
   );
 

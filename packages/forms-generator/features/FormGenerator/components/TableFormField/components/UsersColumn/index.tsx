@@ -25,7 +25,7 @@ export const UsersColumn: React.FC<UsersColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<UsersFormFieldConfig | null>(
-    () => column.config as UsersFormFieldConfig,
+    () => column.config as UsersFormFieldConfig | null,
     [column.config]
   );
 

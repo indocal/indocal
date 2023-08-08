@@ -21,7 +21,7 @@ export const CheckboxItem: React.FC<CheckboxItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<CheckboxFormFieldConfig | null>(
-    () => item.config as CheckboxFormFieldConfig,
+    () => item.config as CheckboxFormFieldConfig | null,
     [item.config]
   );
 

@@ -1,9 +1,10 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsString, IsObject, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 import { TrimParam } from '@/common';
 
 import { FormFieldConfig } from '../entities';
+import { IsFormFieldConfig } from '../decorators';
 
 class UpdateFormFieldDtoSchema {
   @IsString()
@@ -15,7 +16,7 @@ class UpdateFormFieldDtoSchema {
   @TrimParam()
   description: string | null;
 
-  @IsObject() // TODO: Validate this object
+  @IsFormFieldConfig()
   config: FormFieldConfig;
 }
 

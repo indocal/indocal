@@ -37,7 +37,7 @@ export const SectionFormField: React.FC<SectionFormFieldProps> = ({
   } = useFormContext();
 
   const config = useMemo<SectionFormFieldConfig | null>(
-    () => field.config as SectionFormFieldConfig,
+    () => field.config as SectionFormFieldConfig | null,
     [field.config]
   );
 

@@ -25,7 +25,7 @@ export const TextColumn: React.FC<TextColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<TextFormFieldConfig | null>(
-    () => column.config as TextFormFieldConfig,
+    () => column.config as TextFormFieldConfig | null,
     [column.config]
   );
 

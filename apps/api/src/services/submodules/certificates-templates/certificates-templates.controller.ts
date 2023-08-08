@@ -96,7 +96,7 @@ export class ServicesCertificatesTemplatesController {
           serviceId,
           layout: {
             orientation:
-              upsertTemplateDto.layout ||
+              upsertTemplateDto.layout?.orientation ||
               ServiceCertificateTemplateLayoutOrientation.PORTRAIT,
           },
 

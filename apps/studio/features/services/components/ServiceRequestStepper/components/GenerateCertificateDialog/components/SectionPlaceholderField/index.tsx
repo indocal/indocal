@@ -24,7 +24,7 @@ export const SectionPlaceholderField: React.FC<
   const config =
     useMemo<ServiceCertificateTemplateSectionPlaceholderConfig | null>(
       () =>
-        placeholder.config as ServiceCertificateTemplateSectionPlaceholderConfig,
+        placeholder.config as ServiceCertificateTemplateSectionPlaceholderConfig | null,
       [placeholder.config]
     );
 

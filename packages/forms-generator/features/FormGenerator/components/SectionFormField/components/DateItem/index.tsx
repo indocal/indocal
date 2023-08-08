@@ -21,7 +21,7 @@ export const DateItem: React.FC<DateItemProps> = ({ field, item }) => {
   } = useFormContext();
 
   const config = useMemo<DateFormFieldConfig | null>(
-    () => item.config as DateFormFieldConfig,
+    () => item.config as DateFormFieldConfig | null,
     [item.config]
   );
 

@@ -30,6 +30,7 @@ import {
   SignaturePlaceholderField,
   SectionPlaceholderField,
   TablePlaceholderField,
+  AutocompletePopover,
 } from './components';
 
 export interface GenerateCertificateDialogProps {
@@ -127,10 +128,7 @@ const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
 
           Object.entries(JSON.parse(event.target.result as string)).forEach(
             ([key, value]) => {
-              setValue(key, value, {
-                shouldDirty: true,
-                shouldTouch: true,
-              });
+              setValue(key, value, { shouldDirty: true });
             }
           );
         };
@@ -161,64 +159,68 @@ const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
   }, [isDirty, reset, toggleGenerateCertificateDialog, confirm]);
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="md"
-      open={isGenerateCertificateDialogOpen}
-      onClose={handleOnClose}
-    >
-      <DialogTitle
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: (theme) => theme.spacing(1),
-        }}
+    <>
+      <AutocompletePopover request={request} />
+
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open={isGenerateCertificateDialogOpen}
+        onClose={handleOnClose}
       >
-        <Typography fontWeight="bolder">Generar certificado</Typography>
-
-        <Button
-          variant="contained"
-          endIcon={<UploadFileIcon />}
-          disabled={!service?.template?.placeholders?.length || isSubmitting}
-          onClick={handleImportData}
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: (theme) => theme.spacing(1),
+          }}
         >
-          Importar datos
-        </Button>
-      </DialogTitle>
+          <Typography fontWeight="bolder">Generar certificado</Typography>
 
-      <DialogContent dividers>
-        {loading ? (
-          <Loader invisible message="Cargando datos..." />
-        ) : error ? (
-          <ErrorInfo error={error} />
-        ) : service?.template && service.template.placeholders.length > 0 ? (
-          <Stack component="form" autoComplete="off" spacing={2}>
-            {service.template.placeholders.map((placeholder, index) =>
-              createElement(fields[placeholder.type], {
-                key: `${index}-${placeholder.name}`,
-                placeholder,
-              })
-            )}
-          </Stack>
-        ) : (
-          <NoData message="Placeholders aún sin definir" />
-        )}
-      </DialogContent>
+          <Button
+            variant="contained"
+            endIcon={<UploadFileIcon />}
+            disabled={!service?.template?.placeholders?.length || isSubmitting}
+            onClick={handleImportData}
+          >
+            Importar datos
+          </Button>
+        </DialogTitle>
 
-      <DialogActions>
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          color="primary"
-          loading={isSubmitting}
-          disabled={!isDirty}
-          onClick={handleSubmit(onSubmit)}
-        >
-          Generar
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
+        <DialogContent dividers>
+          {loading ? (
+            <Loader invisible message="Cargando datos..." />
+          ) : error ? (
+            <ErrorInfo error={error} />
+          ) : service?.template && service.template.placeholders.length > 0 ? (
+            <Stack component="form" autoComplete="off" spacing={2}>
+              {service.template.placeholders.map((placeholder, index) =>
+                createElement(fields[placeholder.type], {
+                  key: `${index}-${placeholder.name}`,
+                  placeholder,
+                })
+              )}
+            </Stack>
+          ) : (
+            <NoData message="Placeholders aún sin definir" />
+          )}
+        </DialogContent>
+
+        <DialogActions>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            loading={isSubmitting}
+            disabled={!isDirty}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Generar
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

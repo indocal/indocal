@@ -26,7 +26,7 @@ export const RadioColumn: React.FC<RadioColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<RadioFormFieldConfig | null>(
-    () => column.config as RadioFormFieldConfig,
+    () => column.config as RadioFormFieldConfig | null,
     [column.config]
   );
 

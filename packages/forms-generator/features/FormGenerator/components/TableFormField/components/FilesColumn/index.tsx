@@ -25,7 +25,7 @@ export const FilesColumn: React.FC<FilesColumnProps> = ({
   } = useFormContext();
 
   const config = useMemo<FilesFormFieldConfig | null>(
-    () => column.config as FilesFormFieldConfig,
+    () => column.config as FilesFormFieldConfig | null,
     [column.config]
   );
 

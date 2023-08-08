@@ -4,7 +4,6 @@ import {
   IsUUID,
   IsEnum,
   IsOptional,
-  IsObject,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -12,6 +11,7 @@ import { Type } from 'class-transformer';
 import { TrimParam, UUID } from '@/common';
 
 import { UserRoleConfig, UserRoleAccessType } from '../entities';
+import { IsUserRolePermissions } from '../decorators';
 
 export type UserRolePermissions = Record<string, Record<string, boolean>>;
 
@@ -35,7 +35,7 @@ class UpdateUserRoleDtoSchema {
   @Type(() => UserRoleConfigSchema)
   config: UserRoleConfig;
 
-  @IsObject() // TODO: Validate this object
+  @IsUserRolePermissions()
   permissions: UserRolePermissions;
 }
 
