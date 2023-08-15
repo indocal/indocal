@@ -1,0 +1,27 @@
+{
+  "name": "@indocal/services-generator",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "11.11.1",
+    "@emotion/styled": "11.11.0",
+    "@indocal/forms-generator": "*",
+    "@indocal/services": "*",
+    "@indocal/ui": "*",
+    "@mui/icons-material": "5.14.1",
+    "@mui/lab": "5.0.0-alpha.137",
+    "@mui/material": "5.14.2",
+    "next": "13.4.12",
+    "notistack": "3.0.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "7.45.2"
+  },
+  "devDependencies": {
+    "@indocal/eslint-config-indocal": "*",
+    "@indocal/typescript-config": "*",
+    "@types/node": "20.4.5",
+    "@types/react": "18.2.16",
+    "typescript": "5.1.6"
+  }
+}

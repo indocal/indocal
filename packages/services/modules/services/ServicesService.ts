@@ -15,6 +15,8 @@ import {
   UpdateServiceDto,
   CountServicesParamsDto,
   FindManyServicesParamsDto,
+  ServiceRequestsPerMonth,
+  CalcServiceRequestsPerMonthParamsDto,
 } from './types';
 
 import {
@@ -52,6 +54,11 @@ export interface UpdateServiceReturn {
 
 export interface DeleteServiceReturn {
   service: Service | null;
+  error: ServiceError | null;
+}
+
+export interface CalcServiceRequestsPerMonthReturn {
+  requestsPerMonth: ServiceRequestsPerMonth[];
   error: ServiceError | null;
 }
 
@@ -182,6 +189,28 @@ export class ServicesService {
     } catch (error) {
       return {
         service: null,
+        error: createServiceError(error),
+      };
+    }
+  }
+
+  async calcServiceRequestsPerMonth(
+    service: UUID,
+    params: CalcServiceRequestsPerMonthParamsDto
+  ): Promise<CalcServiceRequestsPerMonthReturn> {
+    try {
+      const response = await this.config.axios.get<ServiceRequestsPerMonth[]>(
+        `${ApiEndpoints.SERVICES}/${service}/stats/requests-per-month`,
+        { params }
+      );
+
+      return {
+        requestsPerMonth: response.data,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        requestsPerMonth: [],
         error: createServiceError(error),
       };
     }

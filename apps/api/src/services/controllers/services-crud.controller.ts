@@ -24,21 +24,21 @@ import {
 import { UUID, SingleEntityResponse, MultipleEntitiesResponse } from '@/common';
 import { PoliciesGuard, CheckPolicies } from '@/auth';
 
-import { FileEntity } from '../uploads/submodules/files/entities';
-import { FormEntity } from '../forms/entities';
-import { UserGroupEntity } from '../auth/submodules/groups/entities';
-import { UserEntity } from '../auth/submodules/users/entities';
+import { FileEntity } from '../../uploads/submodules/files/entities';
+import { FormEntity } from '../../forms/entities';
+import { UserGroupEntity } from '../../auth/submodules/groups/entities';
+import { UserEntity } from '../../auth/submodules/users/entities';
 
-import { ServiceEntity } from './entities';
+import { ServiceEntity } from '../entities';
 import {
   FindManyServicesParamsDto,
   CountServicesParamsDto,
   CreateServiceDto,
   UpdateServiceDto,
-} from './dto';
+} from '../dto';
 
-import { ServiceProcessStepEntity } from './submodules/process-steps/entities';
-import { ServiceCertificateTemplateEntity } from './submodules/certificates-templates/entities';
+import { ServiceProcessStepEntity } from '../submodules/process-steps/entities';
+import { ServiceCertificateTemplateEntity } from '../submodules/certificates-templates/entities';
 
 class EnhancedServiceProcessStep extends ServiceProcessStepEntity {
   owners: UserEntity[];
@@ -75,7 +75,7 @@ type CreateEnhancedService = Service & {
 
 @Controller('services')
 @UseGuards(PoliciesGuard)
-export class ServicesController {
+export class ServicesCRUDController {
   constructor(private prismaService: PrismaService) {}
 
   createEnhancedService({
@@ -317,4 +317,4 @@ export class ServicesController {
   }
 }
 
-export default ServicesController;
+export default ServicesCRUDController;

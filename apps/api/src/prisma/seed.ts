@@ -65,10 +65,21 @@ async function main() {
     },
     {
       scope: 'service',
-      actions: ['count', 'read', 'create', 'update', 'delete'],
+      actions: [
+        'count',
+        'read',
+        'create',
+        'update',
+        'delete',
+        'generate-reports',
+      ],
     },
     {
       scope: 'serviceRequest',
+      actions: ['count', 'read', 'create', 'update', 'delete'],
+    },
+    {
+      scope: 'serviceCertificate',
       actions: ['count', 'read', 'create', 'update', 'delete'],
     },
     {

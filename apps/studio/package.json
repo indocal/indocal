@@ -16,6 +16,7 @@
     "@hookform/resolvers": "3.1.1",
     "@indocal/forms-generator": "*",
     "@indocal/services": "*",
+    "@indocal/services-generator": "*",
     "@indocal/theme": "*",
     "@indocal/ui": "*",
     "@monaco-editor/react": "4.5.1",

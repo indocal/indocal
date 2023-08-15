@@ -277,6 +277,13 @@ const UserRolePermissionsManagementPanel: React.FC = () => {
                   Boolean(permissions?.service) &&
                   Boolean(permissions?.service['delete']),
               },
+              {
+                label: 'Generar reportes',
+                action: 'generate-reports',
+                checked:
+                  Boolean(permissions?.service) &&
+                  Boolean(permissions?.service['generate-reports']),
+              },
             ],
           },
           {

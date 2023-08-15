@@ -14,6 +14,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 import {
+  QueryStats as ReportsIcon,
   Launch as ViewDetailsIcon,
   Edit as EditIcon,
   Handyman as SettingsIcon,
@@ -106,6 +107,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service: entity }) => {
             subheader="Detalles del servicio"
             action={
               <Stack direction="row" alignItems="center" spacing={0.25}>
+                <IconButton
+                  LinkComponent={NextLink}
+                  href={`${Pages.SERVICES_REPORTS}/${service.id}`}
+                  size="small"
+                  sx={{ display: 'flex' }}
+                >
+                  <ReportsIcon />
+                </IconButton>
+
                 <Can I="read" a="service">
                   <IconButton
                     LinkComponent={NextLink}

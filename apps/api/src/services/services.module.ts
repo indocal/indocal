@@ -3,7 +3,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 import { AuthModule } from '@/auth';
 
-import ServicesController from './services.controller';
+import { ServicesCRUDController, ServicesStatsController } from './controllers';
 
 import {
   ServicesProcessStepsModule,
@@ -20,7 +20,7 @@ import {
     ServicesRequestsModule,
     ServicesCertificatesModule,
   ],
-  controllers: [ServicesController],
+  controllers: [ServicesCRUDController, ServicesStatsController],
   providers: [PrismaService],
 })
 export class ServicesModule {}
