@@ -16,6 +16,7 @@ import { rootFolder } from '@/uploads';
 
 import { InvalidCurrentStepException } from '../../../errors';
 
+import { ServiceRequestTracking } from '../entities';
 import { ApproveOrRejectCurrentStepDto } from '../dto';
 
 @Controller('requests/actions')
@@ -107,11 +108,41 @@ export class ServicesRequestsActionsController {
         }
       }
 
+      const tracking = request.tracking as ServiceRequestTracking[];
+
+      const lastTrack = tracking.pop();
+
       await tx.serviceRequest.update({
         where: { id: request.id },
         data: {
           status: nextStep.nextRequestStatus,
           currentStep: { connect: { id: nextStep.id } },
+          tracking: lastTrack
+            ? tracking.concat(
+                {
+                  step: lastTrack.step,
+                  startedAt: lastTrack.startedAt,
+                  endedAt: new Date().toISOString(),
+                },
+                {
+                  step: {
+                    id: nextStep.id,
+                    title: nextStep.title,
+                    description: nextStep.description,
+                  },
+                  startedAt: new Date().toISOString(),
+                  endedAt: null,
+                }
+              )
+            : tracking.concat({
+                step: {
+                  id: nextStep.id,
+                  title: nextStep.title,
+                  description: nextStep.description,
+                },
+                startedAt: new Date().toISOString(),
+                endedAt: null,
+              }),
         },
       });
     });

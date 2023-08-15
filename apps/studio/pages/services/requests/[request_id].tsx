@@ -11,6 +11,7 @@ import {
   UserCard,
   ServiceRequestStepper,
   ServiceRequestComments,
+  ServiceRequestTimeline,
 } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
@@ -81,6 +82,12 @@ const ServiceRequestPage: EnhancedNextPage = () => {
             <Unstable_Grid2 xs={12} md={5}>
               <Widget sx={{ height: 350 }}>
                 <ServiceRequestComments request={request} />
+              </Widget>
+            </Unstable_Grid2>
+
+            <Unstable_Grid2 xs={12}>
+              <Widget disableDefaultSizes>
+                <ServiceRequestTimeline request={request} />
               </Widget>
             </Unstable_Grid2>
 

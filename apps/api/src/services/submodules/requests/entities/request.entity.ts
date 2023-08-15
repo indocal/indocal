@@ -3,6 +3,18 @@ import { ServiceRequest, ServiceRequestStatus } from '@prisma/client';
 
 import { Entity, UUID } from '@/common';
 
+export type ServiceRequestTrackingStep = {
+  id: UUID;
+  title: string;
+  description: string | null;
+};
+
+export type ServiceRequestTracking = {
+  step: ServiceRequestTrackingStep;
+  startedAt: string;
+  endedAt: string | null;
+};
+
 export class ServiceRequestEntity implements Entity, ServiceRequest {
   constructor(request: ServiceRequest) {
     Object.assign(this, request);
@@ -10,6 +22,7 @@ export class ServiceRequestEntity implements Entity, ServiceRequest {
 
   id: UUID;
   status: ServiceRequestStatus;
+  tracking: ServiceRequestTracking[];
 
   @Exclude()
   entryId: UUID;

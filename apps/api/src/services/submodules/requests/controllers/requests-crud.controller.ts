@@ -34,7 +34,7 @@ import { ServiceEntity } from '../../../entities';
 import { ServiceProcessStepEntity } from '../../process-steps/entities';
 import { ServiceCertificateEntity } from '../../certificates/entities';
 
-import { ServiceRequestEntity } from './../entities';
+import { ServiceRequestEntity, ServiceRequestTracking } from './../entities';
 import {
   FindManyServicesRequestsParamsDto,
   CountServicesRequestsParamsDto,
@@ -186,6 +186,17 @@ export class ServicesRequestsCRUDController {
           ...(firstStep && {
             status: firstStep.nextRequestStatus,
             currentStep: { connect: { id: firstStep.id } },
+            tracking: [
+              {
+                step: {
+                  id: firstStep.id,
+                  title: firstStep.title,
+                  description: firstStep.description,
+                },
+                startedAt: new Date().toISOString(),
+                endedAt: null,
+              } as ServiceRequestTracking,
+            ],
           }),
         },
         include: {

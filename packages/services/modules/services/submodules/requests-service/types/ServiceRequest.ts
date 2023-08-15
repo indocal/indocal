@@ -1,4 +1,4 @@
-import { Entity } from '../../../../../common';
+import { Entity, UUID } from '../../../../../common';
 
 import { FormFieldAnswer } from '../../../../forms';
 import { UserStatus } from '../../../../auth';
@@ -109,8 +109,21 @@ export type ServiceRequestStatus =
   | 'COMPLETED'
   | 'CANCELLED';
 
+export type ServiceRequestTrackingStep = {
+  id: UUID;
+  title: string;
+  description: string | null;
+};
+
+export type ServiceRequestTracking = {
+  step: ServiceRequestTrackingStep;
+  startedAt: string;
+  endedAt: string | null;
+};
+
 export interface ServiceRequest extends Entity {
   status: ServiceRequestStatus;
+  tracking: ServiceRequestTracking[];
   entry: Entry;
   requestedBy: RequestedBy;
   service: Service;

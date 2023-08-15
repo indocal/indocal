@@ -315,6 +315,8 @@ model ServiceRequest {
 
   status ServiceRequestStatus @default(PENDING)
 
+  tracking Json[]
+
   entry   FormEntry @relation(fields: [entryId], references: [id], onDelete: Restrict)
   entryId String    @unique
 
