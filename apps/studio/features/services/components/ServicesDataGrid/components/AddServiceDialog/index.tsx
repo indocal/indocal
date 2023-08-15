@@ -57,7 +57,7 @@ const schema = zod.object(
           'PENDING_PAYMENT',
           'IN_PROGRESS',
           'COMPLETED',
-          'CANCELED',
+          'CANCELLED',
         ],
         {
           description: 'Estados soportados por el servicio',
@@ -106,7 +106,7 @@ export const AddServiceDialog: React.FC = () => {
         'PENDING',
         'IN_PROGRESS',
         'COMPLETED',
-        'CANCELED',
+        'CANCELLED',
       ],
     },
   });

@@ -78,7 +78,7 @@ const schema = zod.object(
         'PENDING_PAYMENT',
         'IN_PROGRESS',
         'COMPLETED',
-        'CANCELED',
+        'CANCELLED',
       ],
       {
         description: 'Siguiente estado de solicitud',

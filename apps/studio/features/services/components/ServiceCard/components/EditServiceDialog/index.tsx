@@ -75,7 +75,7 @@ const schema = zod
             'PENDING_PAYMENT',
             'IN_PROGRESS',
             'COMPLETED',
-            'CANCELED',
+            'CANCELLED',
           ],
           {
             description: 'Estados soportados por el servicio',

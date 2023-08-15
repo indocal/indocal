@@ -107,7 +107,7 @@ export type ServiceRequestStatus =
   | 'PENDING_PAYMENT'
   | 'IN_PROGRESS'
   | 'COMPLETED'
-  | 'CANCELED';
+  | 'CANCELLED';
 
 export interface ServiceRequest extends Entity {
   status: ServiceRequestStatus;

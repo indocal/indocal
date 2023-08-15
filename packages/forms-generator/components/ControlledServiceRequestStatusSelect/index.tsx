@@ -50,7 +50,7 @@ export const ControlledServiceRequestStatusSelect: React.FC<
       'PENDING_PAYMENT',
       'IN_PROGRESS',
       'COMPLETED',
-      'CANCELED',
+      'CANCELLED',
     ],
     []
   );

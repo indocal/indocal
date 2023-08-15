@@ -341,7 +341,7 @@ enum ServiceRequestStatus {
   PENDING_PAYMENT
   IN_PROGRESS
   COMPLETED
-  CANCELED
+  CANCELLED
 }
 
 model ServiceCertificateTemplate {

@@ -9,7 +9,7 @@ export function translateServiceRequestStatus(
     PENDING_PAYMENT: 'Pendiente de pago',
     IN_PROGRESS: 'En progreso',
     COMPLETED: 'Completado',
-    CANCELED: 'Cancelado',
+    CANCELLED: 'Cancelado',
   };
 
   return translations[status] ?? status;

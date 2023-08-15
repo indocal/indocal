@@ -93,7 +93,7 @@ export const GenericServicesRequestsDataGrid: React.FC<
         PENDING_PAYMENT: 'info',
         IN_PROGRESS: 'warning',
         COMPLETED: 'success',
-        CANCELED: 'error',
+        CANCELLED: 'error',
       }),
       []
     );

@@ -82,7 +82,7 @@ const schema = zod
           'PENDING_PAYMENT',
           'IN_PROGRESS',
           'COMPLETED',
-          'CANCELED',
+          'CANCELLED',
         ],
         {
           description: 'Siguiente estado de solicitud',
