@@ -1,36 +1,25 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
-    "dev": {
-      "cache": false
-    },
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
-    },
-    "lint": {
-      "outputs": []
-    }
-  },
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "NODE_ENV",
     "PORT",
     "DATABASE_URL",
     "JWT_SECRET",
-    "ROOT_USER_USERNAME",
-    "ROOT_USER_EMAIL",
-    "ROOT_USER_NAME",
-    "ROOT_USER_PASSWORD",
-    "NODEMAILER_SERVICE",
-    "NODEMAILER_FROM",
-    "NODEMAILER_AUTH_USER",
-    "NODEMAILER_AUTH_PASSWORD",
-    "NEXT_PUBLIC_SITE_URL",
-    "NEXT_PUBLIC_BACKEND_URL",
-    "NEXT_PUBLIC_API_URL",
-    "NEXT_PUBLIC_INDOCAL_API_TOKEN",
-    "NEXTAUTH_URL",
-    "NEXTAUTH_SECRET",
-    "INDOCAL_API_TOKEN"
-  ]
+    "NODEMAILER_*",
+    "ROOT_USER_*",
+    "NEXT_PUBLIC_*",
+    "NEXTAUTH_*"
+  ],
+  "pipeline": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "lint": {}
+  }
 }

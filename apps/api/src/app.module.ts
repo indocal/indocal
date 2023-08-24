@@ -29,7 +29,7 @@ import { WarehouseModule } from '@/warehouse';
     UploadsModule,
     CommentsModule,
     WarehouseModule,
-    PrismaModule.forRoot(),
+    PrismaModule,
     ScheduleModule.forRoot(),
   ],
   providers: [
