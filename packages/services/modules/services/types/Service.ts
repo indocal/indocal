@@ -1,7 +1,7 @@
 import { Entity } from '../../../common';
 
 import { UserStatus } from '../../auth';
-import { FormConfig, FormStatus, FormVisibility } from '../../forms';
+import { FormStatus, FormVisibility } from '../../forms';
 
 import {
   ServiceProcessStepType,
@@ -14,7 +14,6 @@ type Form = Entity & {
   slug: string;
   title: string;
   description: string | null;
-  config: FormConfig | null;
   status: FormStatus;
   visibility: FormVisibility;
 };

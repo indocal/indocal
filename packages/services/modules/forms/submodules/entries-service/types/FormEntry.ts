@@ -2,7 +2,7 @@ import { Entity, UUID } from '../../../../../common';
 
 import { UserStatus } from '../../../../auth';
 
-import { Form, FormStatus, FormVisibility, FormConfig } from '../../../types';
+import { Form, FormStatus, FormVisibility } from '../../../types';
 
 import {
   SectionFormFieldItem,
@@ -47,7 +47,6 @@ type EntryForm = Entity & {
   description: string | null;
   status: FormStatus;
   visibility: FormVisibility;
-  config: FormConfig | null;
 };
 
 export interface FormEntry extends Entity {

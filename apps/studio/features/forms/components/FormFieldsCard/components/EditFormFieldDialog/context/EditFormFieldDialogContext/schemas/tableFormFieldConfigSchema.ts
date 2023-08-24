@@ -25,31 +25,6 @@ const commonColumnConfigSchema = zod.object({
     required_error: 'Debe indicar si el campo es requerido o no',
     invalid_type_error: 'Formato no válido',
   }),
-
-  webhook: zod
-    .object({
-      include: zod.boolean({
-        description: '¿Incluir en el webhook?',
-        required_error: 'Debe indicar si el campo debe ser incluido o no',
-        invalid_type_error: 'Formato no válido',
-      }),
-
-      key: zod
-        .string({
-          description: 'Webhook key',
-          required_error: 'Debe ingresar el webhook key',
-          invalid_type_error: 'Formato no válido',
-        })
-        .nullable(),
-    })
-    .refine(
-      (data) =>
-        !data.include || (data.include && data.key && data.key.length > 0),
-      {
-        message: 'Debe ingresar el webhook key',
-        path: ['key'],
-      }
-    ),
 });
 
 const columnConfigSchema = zod.object({

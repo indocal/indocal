@@ -61,7 +61,7 @@ export const ServiceRequestsPerMonthChart: React.FC<
   const series: ChartSeries = useMemo(
     () => [
       {
-        name: 'Cantidad de entradas',
+        name: 'Cantidad de solicitudes',
         data: requestsPerMonth.map((request) => request.count),
       },
     ],

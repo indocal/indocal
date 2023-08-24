@@ -7,6 +7,27 @@ generator client {
   provider = "prisma-client-js"
 }
 
+////////////////////////
+// Logging Management //
+////////////////////////
+
+model Log {
+  id      String @id @default(uuid())
+  context String
+  action  String // method::handler
+
+  metadata Json?
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  userId String?
+
+  apiToken   ApiToken? @relation(fields: [apiTokenId], references: [id], onDelete: Restrict)
+  apiTokenId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 ///////////////////////////
 // API Tokens Management //
 ///////////////////////////
@@ -35,27 +56,6 @@ enum ApiTokenType {
 enum ApiTokenStatus {
   ENABLED
   DISABLED
-}
-
-////////////////////////
-// Logging Management //
-////////////////////////
-
-model Log {
-  id      String @id @default(uuid())
-  context String
-  action  String // method::handler
-
-  metadata Json?
-
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Restrict)
-  userId String?
-
-  apiToken   ApiToken? @relation(fields: [apiTokenId], references: [id], onDelete: Restrict)
-  apiTokenId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 //////////////////////
@@ -147,8 +147,6 @@ model Form {
   slug        String  @unique
   title       String
   description String?
-
-  config Json?
 
   status     FormStatus     @default(DRAFT)
   visibility FormVisibility @default(PRIVATE)
@@ -315,7 +313,7 @@ model ServiceRequest {
 
   status ServiceRequestStatus @default(PENDING)
 
-  tracking Json[]
+  tracking Json[] @default([])
 
   entry   FormEntry @relation(fields: [entryId], references: [id], onDelete: Restrict)
   entryId String    @unique

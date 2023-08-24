@@ -22,5 +22,3 @@ export * from './SignatureItemConfig';
 export * from './FilesItemConfig';
 
 export * from './UsersItemConfig';
-
-export * from './WebhookItemConfig';

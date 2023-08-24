@@ -1,6 +1,6 @@
 import { Entity, UUID } from '../../../../../common';
 
-import { FormStatus, FormVisibility, FormConfig } from '../../../types';
+import { FormStatus, FormVisibility } from '../../../types';
 
 type Form = Entity & {
   slug: string;
@@ -8,7 +8,6 @@ type Form = Entity & {
   description: string | null;
   status: FormStatus;
   visibility: FormVisibility;
-  config: FormConfig | null;
 };
 
 export type FormFieldType =
@@ -74,15 +73,9 @@ export type FormFieldHintConfig = {
   content?: string | null;
 };
 
-export type FormFieldWebhookConfig = {
-  include: boolean;
-  key?: string | null;
-};
-
 export type CommonFormFieldConfig = {
   required: boolean;
   hint: FormFieldHintConfig;
-  webhook: FormFieldWebhookConfig;
 };
 
 export type TextFormFieldConfig = CommonFormFieldConfig & {

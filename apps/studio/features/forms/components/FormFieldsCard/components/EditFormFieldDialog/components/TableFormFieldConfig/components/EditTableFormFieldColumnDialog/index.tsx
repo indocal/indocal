@@ -35,7 +35,6 @@ import {
   SignatureColumnConfig,
   FilesColumnConfig,
   UsersColumnConfig,
-  WebhookColumnConfig,
 } from './components';
 
 export interface EditTableFormFieldColumnDialogProps {
@@ -62,7 +61,6 @@ export const EditTableFormFieldColumnDialog: React.FC<
   const enum Tabs {
     INFO = 'info',
     CONFIG = 'config',
-    WEBHOOK = 'webhook',
   }
 
   const [tab, setTab] = useState<Tabs>(Tabs.INFO);
@@ -139,8 +137,6 @@ export const EditTableFormFieldColumnDialog: React.FC<
                 value={Tabs.CONFIG}
                 sx={{ width: 150 }}
               />
-
-              <Tab label="Webhook" value={Tabs.WEBHOOK} sx={{ width: 150 }} />
             </TabList>
 
             <TabPanel value={Tabs.INFO}>
@@ -166,10 +162,6 @@ export const EditTableFormFieldColumnDialog: React.FC<
 
             <TabPanel value={Tabs.CONFIG}>
               {options[getValues(`config.columns.${column}.type`)]}
-            </TabPanel>
-
-            <TabPanel value={Tabs.WEBHOOK}>
-              <WebhookColumnConfig column={column} />
             </TabPanel>
           </TabContext>
         </Stack>

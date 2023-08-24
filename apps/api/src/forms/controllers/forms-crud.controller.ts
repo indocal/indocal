@@ -155,7 +155,6 @@ export class FormsCRUDController {
         description: updateFormDto.description,
         status: updateFormDto.status,
         visibility: updateFormDto.visibility,
-        config: updateFormDto.config,
         ...(updateFormDto.group && {
           group: { connect: { id: updateFormDto.group } },
         }),

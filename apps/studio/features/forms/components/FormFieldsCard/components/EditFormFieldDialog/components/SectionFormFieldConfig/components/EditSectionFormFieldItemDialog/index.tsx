@@ -36,7 +36,6 @@ import {
   SignatureItemConfig,
   FilesItemConfig,
   UsersItemConfig,
-  WebhookItemConfig,
 } from './components';
 
 export interface EditSectionFormFieldItemDialogProps {
@@ -63,7 +62,6 @@ export const EditSectionFormFieldItemDialog: React.FC<
   const enum Tabs {
     INFO = 'info',
     CONFIG = 'config',
-    WEBHOOK = 'webhook',
   }
 
   const [tab, setTab] = useState<Tabs>(Tabs.INFO);
@@ -141,8 +139,6 @@ export const EditSectionFormFieldItemDialog: React.FC<
                 value={Tabs.CONFIG}
                 sx={{ width: 150 }}
               />
-
-              <Tab label="Webhook" value={Tabs.WEBHOOK} sx={{ width: 150 }} />
             </TabList>
 
             <TabPanel value={Tabs.INFO}>
@@ -187,10 +183,6 @@ export const EditSectionFormFieldItemDialog: React.FC<
 
             <TabPanel value={Tabs.CONFIG}>
               {options[getValues(`config.items.${item}.type`)]}
-            </TabPanel>
-
-            <TabPanel value={Tabs.WEBHOOK}>
-              <WebhookItemConfig item={item} />
             </TabPanel>
           </TabContext>
         </Stack>

@@ -21,5 +21,3 @@ export * from './SignatureColumnConfig';
 export * from './FilesColumnConfig';
 
 export * from './UsersColumnConfig';
-
-export * from './WebhookColumnConfig';

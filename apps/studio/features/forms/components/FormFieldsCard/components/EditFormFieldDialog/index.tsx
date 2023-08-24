@@ -49,7 +49,6 @@ import {
   SectionFormFieldConfig,
   TableFormFieldConfig,
   FormFieldHintConfig,
-  FormFieldWebhookConfig,
 } from './components';
 
 export interface EditFormFieldDialogProps {
@@ -80,7 +79,6 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
   const enum Tabs {
     INFO = 'info',
     CONFIG = 'config',
-    WEBHOOK = 'webhook',
   }
 
   const [tab, setTab] = useState<Tabs>(Tabs.INFO);
@@ -228,7 +226,6 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
             >
               <Tab label="Información" value={Tabs.INFO} />
               <Tab label="Configuración" value={Tabs.CONFIG} />
-              <Tab label="Webhook" value={Tabs.WEBHOOK} />
             </TabList>
 
             <TabPanel value={Tabs.INFO}>
@@ -260,10 +257,6 @@ const EditFormFieldDialog: React.FC<EditFormFieldDialogProps> = ({
             </TabPanel>
 
             <TabPanel value={Tabs.CONFIG}>{options[field.type]}</TabPanel>
-
-            <TabPanel value={Tabs.WEBHOOK}>
-              <FormFieldWebhookConfig field={field} />
-            </TabPanel>
           </TabContext>
         </Stack>
       </DialogContent>

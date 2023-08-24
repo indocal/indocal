@@ -59,15 +59,9 @@ export type FormFieldHintConfig = {
   content?: string | null;
 };
 
-export type FormFieldWebhookConfig = {
-  include: boolean;
-  key?: string | null;
-};
-
 export type CommonFormFieldConfig = {
   required: boolean;
   hint: FormFieldHintConfig;
-  webhook: FormFieldWebhookConfig;
 };
 
 export type TextFormFieldConfig = CommonFormFieldConfig & {
