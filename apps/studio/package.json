@@ -13,7 +13,7 @@
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
     "@hello-pangea/dnd": "16.3.0",
-    "@hookform/resolvers": "3.3.0",
+    "@hookform/resolvers": "3.1.1",
     "@indocal/forms-generator": "*",
     "@indocal/services": "*",
     "@indocal/services-generator": "*",
@@ -39,11 +39,10 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.45.4",
-    "react-pdf": "7.3.3",
     "react-pdf-html": "1.1.18",
     "reactflow": "11.8.3",
     "sharp": "0.32.5",
-    "zod": "3.22.2"
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",

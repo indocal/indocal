@@ -247,9 +247,9 @@ model FormEntry {
 /////////////////////////
 
 model Service {
-  id          String  @id @default(uuid())
+  id          String @id @default(uuid())
   title       String
-  description String?
+  description String
 
   status                 ServiceStatus          @default(DRAFT)
   supportedRequestStatus ServiceRequestStatus[]

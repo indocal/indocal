@@ -15,6 +15,7 @@ import {
   ServiceCertificate,
   ServiceCertificateTemplate,
   ServiceRequest,
+  Service,
   File,
   User,
 } from '@prisma/client';
@@ -24,6 +25,8 @@ import { PoliciesGuard, CheckPolicies } from '@/auth';
 
 import { UserEntity } from '../../../auth/submodules/users';
 import { FileEntity } from '../../../uploads/submodules/files';
+
+import { ServiceEntity } from '../../entities';
 
 import { ServiceCertificateTemplateEntity } from '../certificates-templates';
 import { ServiceRequestEntity } from '../requests';
@@ -43,12 +46,13 @@ class EnhancedServiceCertificateTemplate extends ServiceCertificateTemplateEntit
 class EnhancedServiceCertificate extends ServiceCertificateEntity {
   template: EnhancedServiceCertificateTemplate;
   request: ServiceRequestEntity;
+  service: ServiceEntity;
   user: UserEntity;
 }
 
 type CreateEnhancedServiceCertificate = ServiceCertificate & {
   template: ServiceCertificateTemplate & { assets: File[] };
-  request: ServiceRequest & { requestedBy: User };
+  request: ServiceRequest & { service: Service; requestedBy: User };
 };
 
 @Controller('certificates')
@@ -58,7 +62,7 @@ export class ServicesCertificatesController {
 
   createEnhancedServiceCertificate({
     template: { assets, ...template },
-    request: { requestedBy, ...request },
+    request: { service, requestedBy, ...request },
     ...rest
   }: CreateEnhancedServiceCertificate): EnhancedServiceCertificate {
     const certificate = new EnhancedServiceCertificate(rest);
@@ -68,6 +72,8 @@ export class ServicesCertificatesController {
     certificate.template.assets = assets.map((asset) => new FileEntity(asset));
 
     certificate.request = new ServiceRequestEntity(request);
+
+    certificate.service = new ServiceEntity(service);
 
     certificate.user = new UserEntity(requestedBy);
 
@@ -90,7 +96,7 @@ export class ServicesCertificatesController {
       },
       include: {
         template: { include: { assets: true } },
-        request: { include: { requestedBy: true } },
+        request: { include: { service: true, requestedBy: true } },
       },
     });
 
@@ -129,7 +135,7 @@ export class ServicesCertificatesController {
         cursor: query.pagination?.cursor,
         include: {
           template: { include: { assets: true } },
-          request: { include: { requestedBy: true } },
+          request: { include: { service: true, requestedBy: true } },
         },
       }),
       this.prismaService.serviceCertificate.count({
@@ -158,7 +164,7 @@ export class ServicesCertificatesController {
       where: { id },
       include: {
         template: { include: { assets: true } },
-        request: { include: { requestedBy: true } },
+        request: { include: { service: true, requestedBy: true } },
       },
     });
 
@@ -185,7 +191,7 @@ export class ServicesCertificatesController {
       },
       include: {
         template: { include: { assets: true } },
-        request: { include: { requestedBy: true } },
+        request: { include: { service: true, requestedBy: true } },
       },
     });
 
@@ -204,7 +210,7 @@ export class ServicesCertificatesController {
       where: { id },
       include: {
         template: { include: { assets: true } },
-        request: { include: { requestedBy: true } },
+        request: { include: { service: true, requestedBy: true } },
       },
     });
 

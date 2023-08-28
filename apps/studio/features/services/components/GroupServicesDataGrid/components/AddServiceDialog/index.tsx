@@ -46,8 +46,8 @@ const schema = zod.object(
         required_error: 'Debe ingresar la descripción del servicio',
         invalid_type_error: 'Formato no válido',
       })
-      .trim()
-      .optional(),
+      .min(1, 'Debe ingresar la descripción del servicio')
+      .trim(),
 
     supportedRequestStatus: zod
       .enum<string, [ServiceRequestStatus, ...ServiceRequestStatus[]]>(
@@ -115,7 +115,7 @@ export const AddServiceDialog: React.FC = () => {
     async (formData: FormData) => {
       const { service, error } = await indocal.services.create({
         title: formData.title,
-        ...(formData.description && { description: formData.description }),
+        description: formData.description,
         supportedRequestStatus: formData.supportedRequestStatus,
         form: formData.form.id,
       });
@@ -175,6 +175,7 @@ export const AddServiceDialog: React.FC = () => {
           />
 
           <TextField
+            required
             multiline
             autoComplete="off"
             label="Descripción"

@@ -1,11 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import {
-  IsString,
-  IsEnum,
-  IsUUID,
-  ArrayMinSize,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsEnum, IsUUID, ArrayMinSize } from 'class-validator';
 import { ServiceStatus, ServiceRequestStatus } from '@prisma/client';
 
 import { TrimParam, UUID } from '@/common';
@@ -16,9 +10,8 @@ class UpdateServiceDtoSchema {
   title: string;
 
   @IsString()
-  @IsOptional()
   @TrimParam()
-  description: string | null;
+  description: string;
 
   @IsEnum(ServiceStatus)
   status: ServiceStatus;

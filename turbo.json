@@ -9,7 +9,8 @@
     "NODEMAILER_*",
     "ROOT_USER_*",
     "NEXT_PUBLIC_*",
-    "NEXTAUTH_*"
+    "NEXTAUTH_*",
+    "INDOCAL_API_TOKEN"
   ],
   "pipeline": {
     "dev": {

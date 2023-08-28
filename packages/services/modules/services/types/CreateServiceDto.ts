@@ -4,7 +4,7 @@ import { ServiceRequestStatus } from '../submodules';
 
 export type CreateServiceDto = {
   title: string;
-  description?: string;
+  description: string;
   supportedRequestStatus: ServiceRequestStatus[];
   form: UUID;
 };

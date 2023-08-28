@@ -10,7 +10,7 @@ export class ServiceEntity implements Entity, Service {
 
   id: UUID;
   title: string;
-  description: string | null;
+  description: string;
   status: ServiceStatus;
   supportedRequestStatus: ServiceRequestStatus[];
 

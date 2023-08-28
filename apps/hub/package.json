@@ -12,7 +12,7 @@
     "@date-io/date-fns": "2.17.0",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
-    "@hookform/resolvers": "3.3.0",
+    "@hookform/resolvers": "3.1.1",
     "@indocal/forms-generator": "*",
     "@indocal/services": "*",
     "@indocal/services-generator": "*",
@@ -35,7 +35,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "7.45.4",
     "sharp": "0.32.5",
-    "zod": "3.22.2"
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",

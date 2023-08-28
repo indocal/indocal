@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "zod": "3.22.2"
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@types/node": "20.5.4",

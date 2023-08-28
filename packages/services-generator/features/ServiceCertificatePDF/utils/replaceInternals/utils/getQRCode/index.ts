@@ -1,10 +1,11 @@
 import { ServiceCertificate } from '@indocal/services';
 
-import { Pages } from '@/config';
-
-export function getQRCode(certificate: ServiceCertificate): string {
+export function getQRCode(
+  certificate: ServiceCertificate,
+  validationPage: string
+): string {
   const certificateUrl = new URL(
-    `${Pages.SERVICES_CERTIFICATES_PREVIEW}/${certificate.id}`,
+    `${validationPage}/${certificate.id}`,
     process.env.NEXT_PUBLIC_SITE_URL
   );
 

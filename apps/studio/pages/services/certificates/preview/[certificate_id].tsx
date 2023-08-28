@@ -2,10 +2,11 @@ import { useRouter } from 'next/router';
 import { Container } from '@mui/material';
 
 import { Page, Loader, NotFound, ErrorInfo } from '@indocal/ui';
+import { ServiceCertificatePDF } from '@indocal/services-generator';
 import { useServiceCertificate, getShortUUID, UUID } from '@indocal/services';
 
-import { ServiceCertificatePDF } from '@/features';
 import { AdminDashboard } from '@/components';
+import { Pages } from '@/config';
 import { EnhancedNextPage } from '@/types';
 
 const ServiceCertificatePreviewPage: EnhancedNextPage = () => {
@@ -32,7 +33,10 @@ const ServiceCertificatePreviewPage: EnhancedNextPage = () => {
         ) : error ? (
           <ErrorInfo error={error} />
         ) : certificate ? (
-          <ServiceCertificatePDF certificate={certificate} />
+          <ServiceCertificatePDF
+            certificate={certificate}
+            validationPage={Pages.FORMS_PREVIEW}
+          />
         ) : (
           <NotFound />
         )}

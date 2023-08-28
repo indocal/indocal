@@ -6,7 +6,7 @@ import { ServiceStatus } from './Service';
 
 export type UpdateServiceDto = Partial<{
   title: string;
-  description: string | null;
+  description: string;
   status: ServiceStatus;
   supportedRequestStatus: ServiceRequestStatus[];
   form: UUID;

@@ -53,8 +53,8 @@ const schema = zod
           required_error: 'Debe ingresar la descripción del servicio',
           invalid_type_error: 'Formato no válido',
         })
-        .trim()
-        .nullable(),
+        .min(1, 'Debe ingresar la descripción del servicio')
+        .trim(),
 
       status: zod
         .enum<string, [ServiceStatus, ...ServiceStatus[]]>(
@@ -140,7 +140,7 @@ export const EditServiceDialog: React.FC<EditServiceDialogProps> = ({
         service.id,
         {
           title: formData.title,
-          description: formData.description || null,
+          description: formData.description,
           status: formData.status,
           supportedRequestStatus: formData.supportedRequestStatus,
           form: formData.form?.id,
@@ -202,6 +202,7 @@ export const EditServiceDialog: React.FC<EditServiceDialogProps> = ({
           />
 
           <TextField
+            required
             multiline
             autoComplete="off"
             label="Descripción"

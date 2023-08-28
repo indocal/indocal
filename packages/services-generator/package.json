@@ -11,11 +11,13 @@
     "@mui/icons-material": "5.14.6",
     "@mui/lab": "5.0.0-alpha.141",
     "@mui/material": "5.14.6",
+    "@react-pdf/renderer": "3.1.12",
     "next": "13.4.19",
     "notistack": "3.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "7.45.4"
+    "react-hook-form": "7.45.4",
+    "react-pdf-html": "1.1.18"
   },
   "devDependencies": {
     "@indocal/eslint-config-indocal": "*",

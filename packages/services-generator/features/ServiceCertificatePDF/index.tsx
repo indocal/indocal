@@ -24,17 +24,20 @@ const styles = StyleSheet.create({
 
 export interface ServiceCertificatePDFProps {
   certificate: ServiceCertificate;
+  validationPage: string;
 }
 
 export const ServiceCertificatePDF: React.FC<ServiceCertificatePDFProps> = ({
   certificate,
+  validationPage,
 }) => {
   const content = certificate.template.content || '';
   const assets = certificate.template.assets || [];
 
   const hydratedContent = replaceInternals(
     getAssetsSources(content, assets),
-    certificate
+    certificate,
+    validationPage
   );
 
   return (

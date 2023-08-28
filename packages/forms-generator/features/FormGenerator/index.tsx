@@ -54,6 +54,7 @@ import {
   parseSectionFormFieldAnswer,
   parseTableFormFieldAnswer,
 } from './utils';
+import { initialConfig, FormGeneratorConfig } from './config';
 
 export type FormGeneratorFormData = Record<
   string,
@@ -103,6 +104,7 @@ export type FormGeneratorAnswers = Array<
 export interface FormGeneratorProps {
   form: Form;
   showThankYouMessage?: boolean;
+  config?: FormGeneratorConfig;
   onSubmit: (answers: FormGeneratorAnswers) => void | Promise<void>;
   onReset?: () => void | Promise<void>;
 }
@@ -110,9 +112,34 @@ export interface FormGeneratorProps {
 const FormGenerator: React.FC<FormGeneratorProps> = ({
   form,
   showThankYouMessage,
+  config = initialConfig,
   onSubmit,
   onReset,
 }) => {
+  const configuration = {
+    acceptMultipleResponses:
+      config.acceptMultipleResponses ?? initialConfig.acceptMultipleResponses,
+
+    messages: {
+      saveResponse:
+        config.messages?.saveResponse ?? initialConfig.messages?.saveResponse,
+
+      submitAnotherResponse:
+        config.messages?.submitAnotherResponse ??
+        initialConfig.messages?.submitAnotherResponse,
+
+      thankYouMessage: {
+        title:
+          config.messages?.thankYouMessage?.title ??
+          initialConfig.messages?.thankYouMessage?.title,
+
+        feedback:
+          config.messages?.thankYouMessage?.feedback ??
+          initialConfig.messages?.thankYouMessage?.feedback,
+      },
+    },
+  };
+
   const {
     formState: { isSubmitting },
     handleSubmit,
@@ -204,21 +231,20 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
           alignItems="center"
           sx={{
             margin: 'auto',
-            padding: (theme) => theme.spacing(2),
+            padding: (theme) => theme.spacing(8, 4),
           }}
         >
           <CheckIcon fontSize="large" color="success" />
 
           <Typography variant="h5" align="center" sx={{ fontWeight: 'bolder' }}>
-            Respuestas recibidas
+            {configuration.messages?.thankYouMessage?.title}
           </Typography>
 
           <Typography variant="caption" align="center" color="text.secondary">
-            Hemos recibido sus respuestas, estaremos trabajando para brindarle
-            la mejor experiencia
+            {configuration.messages?.thankYouMessage?.feedback}
           </Typography>
 
-          {onReset && (
+          {configuration.acceptMultipleResponses && onReset && (
             <Button
               variant="contained"
               size="small"
@@ -226,7 +252,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
               onClick={() => reset(async () => await onReset())}
               sx={{ marginTop: (theme) => theme.spacing(1.5) }}
             >
-              Enviar otra respuesta
+              {configuration.messages?.submitAnotherResponse}
             </Button>
           )}
         </Stack>
@@ -285,7 +311,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
                 loading={isSubmitting}
                 endIcon={<SaveIcon />}
               >
-                Guardar respuestas
+                {configuration.messages?.saveResponse}
               </LoadingButton>
             </Stack>
           ) : (
@@ -304,5 +330,7 @@ const FormGeneratorWrapper: React.FC<FormGeneratorProps> = (props) => (
 );
 
 export { FormGeneratorWrapper as FormGenerator };
+
+export { type FormGeneratorConfig };
 
 export default FormGeneratorWrapper;

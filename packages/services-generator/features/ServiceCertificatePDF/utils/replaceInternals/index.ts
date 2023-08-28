@@ -4,7 +4,8 @@ import { getQRCode, serializeDate } from './utils';
 
 export function replaceInternals(
   html: string,
-  certificate: ServiceCertificate
+  certificate: ServiceCertificate,
+  validationPage: string
 ): string {
   const regex = /\[\[(.*?)\]\]/g;
 
@@ -13,7 +14,7 @@ export function replaceInternals(
   if (!matches) return html;
 
   const INTERNALS: Record<string, string> = {
-    QR_CODE: getQRCode(certificate),
+    QR_CODE: getQRCode(certificate, validationPage),
 
     REQUEST_ID: getShortUUID(certificate.request.id),
     REQUESTED_AT: serializeDate(certificate.request.createdAt),

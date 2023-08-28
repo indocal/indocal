@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { Container, Unstable_Grid2, Typography } from '@mui/material';
 
 import { Page, Widget, Loader, NotFound, ErrorInfo } from '@indocal/ui';
+import { ServiceRequestTimeline } from '@indocal/services-generator';
 import { FormEntryAnswers } from '@indocal/forms-generator';
 import { useServiceRequest, getShortUUID, UUID } from '@indocal/services';
 
@@ -11,7 +12,6 @@ import {
   UserCard,
   ServiceRequestStepper,
   ServiceRequestComments,
-  ServiceRequestTimeline,
 } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';

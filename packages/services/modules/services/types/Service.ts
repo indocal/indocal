@@ -80,7 +80,7 @@ export type ServiceStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';
 
 export interface Service extends Entity {
   title: string;
-  description: string | null;
+  description: string;
   status: ServiceStatus;
   supportedRequestStatus: ServiceRequestStatus[];
   form: Form;

@@ -1,11 +1,18 @@
 import { useMemo } from 'react';
-import { Settings as SettingsIcon } from '@mui/icons-material';
+import {
+  Dashboard as DashboardIcon,
+  ShoppingCart as ServicesIcon,
+  ListAlt as ServicesListIcon,
+  History as ServicesHistoryIcon,
+  Settings as SettingsIcon,
+} from '@mui/icons-material';
 
 import {
   DrawerNavigation,
   DrawerNavigationItem,
   DrawerNavigationMenu,
 } from '@indocal/ui';
+import { useAppAbility } from '@indocal/services';
 
 import { Pages } from '@/config';
 
@@ -26,8 +33,40 @@ type Navigation =
     };
 
 export function useAdminDashboardNavigation(): DrawerNavigation[] {
+  const ability = useAppAbility();
+
   const navigation = useMemo<Navigation[]>(
     () => [
+      {
+        type: 'ITEM',
+        item: {
+          show: true,
+          label: 'Resumen',
+          icon: <DashboardIcon />,
+          href: Pages.ROOT,
+        },
+      },
+      {
+        type: 'MENU',
+        menu: {
+          label: 'Servicios',
+          icon: <ServicesIcon />,
+          items: [
+            {
+              show: ability.can('read', 'service'),
+              label: 'Listado de servicios',
+              icon: <ServicesListIcon />,
+              href: Pages.SERVICES,
+            },
+            {
+              show: ability.can('read', 'serviceRequest'),
+              label: 'Historial de solicitudes',
+              icon: <ServicesHistoryIcon />,
+              href: Pages.SERVICES_REQUESTS,
+            },
+          ],
+        },
+      },
       {
         type: 'ITEM',
         item: {
@@ -38,7 +77,7 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
         },
       },
     ],
-    []
+    [ability]
   );
 
   return navigation

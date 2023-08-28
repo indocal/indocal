@@ -114,7 +114,7 @@ type Asset = Entity & {
 
 type Service = Entity & {
   title: string;
-  description: string | null;
+  description: string;
   status: ServiceStatus;
   supportedRequestStatus: ServiceRequestStatus[];
 };
