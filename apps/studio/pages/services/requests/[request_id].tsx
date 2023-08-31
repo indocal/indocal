@@ -86,7 +86,7 @@ const ServiceRequestPage: EnhancedNextPage = () => {
             </Unstable_Grid2>
 
             <Unstable_Grid2 xs={12}>
-              <Widget disableDefaultSizes>
+              <Widget sx={{ height: 400 }}>
                 <ServiceRequestTimeline request={request} />
               </Widget>
             </Unstable_Grid2>
