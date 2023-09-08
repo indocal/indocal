@@ -23,7 +23,7 @@ export const EnhancedDataGridToolbar: React.FC<
       borderBottom: (theme) => `1px dashed ${theme.palette.divider}`,
     }}
   >
-    <GridToolbarExport />
+    <GridToolbarExport csvOptions={{ utf8WithBom: true }} />
 
     <GridToolbarQuickFilter
       size="small"
