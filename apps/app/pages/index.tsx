@@ -43,7 +43,7 @@ const DashboardPage: EnhancedNextPage<DashboardPageProps> = ({
         <Unstable_Grid2 xs={12} md={8}>
           <Widget>
             <GenericServicesRequestsDataGrid
-              title="Solicitudes pendientes"
+              title={`Solicitudes pendientes (${pendingRequests.length})`}
               requests={pendingRequests}
               enhancedDataGridProps={{ density: 'compact' }}
             />

@@ -48,7 +48,7 @@ const ServicesRequestsPage: EnhancedNextPage<ServicesRequestsPageProps> = ({
           <Unstable_Grid2 xs={12}>
             <Widget sx={{ height: 500 }}>
               <GenericServicesRequestsDataGrid
-                title="Solicitudes realizadas"
+                title={`Solicitudes realizadas (${requests.length})`}
                 requests={requests}
                 onAddButtonClick={canCreate && handleAdd}
               />
