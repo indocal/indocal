@@ -68,9 +68,13 @@ export const SelectColumnConfig: React.FC<SelectColumnConfigProps> = ({
       </Stack>
 
       <List
+        disablePadding
         sx={{
-          borderRadius: (theme) => theme.shape.borderRadius,
+          position: 'relative',
+          maxHeight: 300,
+          borderRadius: 1,
           backgroundColor: (theme) => theme.palette.background.paper,
+          overflow: 'auto',
           ...(errors.config?.columns &&
             errors.config.columns[column]?.config?.options && {
               border: (theme) => `1px solid ${theme.palette.error.main}`,
@@ -78,13 +82,13 @@ export const SelectColumnConfig: React.FC<SelectColumnConfigProps> = ({
         }}
       >
         <ListSubheader
-          disableSticky
           sx={{
+            zIndex: (theme) => theme.zIndex.tooltip,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             gap: (theme) => theme.spacing(1),
-            padding: (theme) => theme.spacing(1.5, 2),
+            padding: (theme) => theme.spacing(1, 2),
             borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
           }}
         >
