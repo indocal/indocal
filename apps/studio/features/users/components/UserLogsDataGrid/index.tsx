@@ -45,7 +45,7 @@ export const UserLogsDataGrid: React.FC<UserLogsDataGridProps> = ({ user }) => {
 
   return (
     <GenericLogsDataGrid
-      title={`Registros del usuario (${count})`}
+      title={`Registros del usuario (${count.toLocaleString()})`}
       logs={logs}
       onRefreshButtonClick={ability.can('read', 'log') && handleRefetch}
       enhancedDataGridProps={{

@@ -53,7 +53,7 @@ const FormsDataGrid: React.FC = () => {
       {isAddFormDialogOpen && <AddFormDialog />}
 
       <GenericFormsDataGrid
-        title={`Formularios (${count})`}
+        title={`Formularios (${count.toLocaleString()})`}
         forms={forms}
         onAddButtonClick={
           ability.can('create', 'form') &&

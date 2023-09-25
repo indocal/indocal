@@ -64,7 +64,7 @@ const GroupServicesDataGrid: React.FC<GroupServicesDataGridProps> = ({
       {isAddServiceDialogOpen && <AddServiceDialog />}
 
       <GenericServicesDataGrid
-        title={`Servicios del grupo (${count})`}
+        title={`Servicios del grupo (${count.toLocaleString()})`}
         services={services}
         onAddButtonClick={
           ability.can('create', 'service') &&

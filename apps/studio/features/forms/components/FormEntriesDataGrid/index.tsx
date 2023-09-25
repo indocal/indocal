@@ -60,7 +60,7 @@ export const FormEntriesDataGrid: React.FC<FormEntriesDataGridProps> = ({
 
   return (
     <GenericFormsEntriesDataGrid
-      title={`Entradas (${count})`}
+      title={`Entradas (${count.toLocaleString()})`}
       entries={entries}
       onAddButtonClick={ability.can('create', 'formEntry') && handleAdd}
       onRefreshButtonClick={ability.can('read', 'formEntry') && handleRefetch}

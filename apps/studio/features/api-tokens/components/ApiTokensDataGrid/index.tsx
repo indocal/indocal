@@ -54,7 +54,7 @@ const ApiTokensDataGrid: React.FC = () => {
       {isAddApiTokenDialogOpen && <AddApiTokenDialog />}
 
       <GenericApiTokensDataGrid
-        title={`API Tokens (${count})`}
+        title={`API Tokens (${count.toLocaleString()})`}
         apiTokens={apiTokens}
         onAddButtonClick={ability.can('create', 'apiToken') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'apiToken') && handleRefetch}

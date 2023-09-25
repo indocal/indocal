@@ -55,7 +55,7 @@ export const ServiceRequestsDataGrid: React.FC<
 
   return (
     <GenericServicesRequestsDataGrid
-      title={`Solicitudes (${count})`}
+      title={`Solicitudes (${count.toLocaleString()})`}
       requests={requests}
       onRefreshButtonClick={
         ability.can('read', 'serviceRequest') && handleRefetch

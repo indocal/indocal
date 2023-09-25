@@ -47,7 +47,7 @@ export const ApiTokenLogsDataGrid: React.FC<ApiTokenLogsDataGridProps> = ({
 
   return (
     <GenericLogsDataGrid
-      title={`Registros del API Token (${count})`}
+      title={`Registros del API Token (${count.toLocaleString()})`}
       logs={logs}
       onRefreshButtonClick={ability.can('read', 'log') && handleRefetch}
       enhancedDataGridProps={{

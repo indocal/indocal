@@ -54,7 +54,7 @@ const SuppliersDataGrid: React.FC = () => {
       {isAddSupplierDialogOpen && <AddSupplierDialog />}
 
       <GenericSuppliersDataGrid
-        title={`Suplidores (${count})`}
+        title={`Suplidores (${count.toLocaleString()})`}
         suppliers={suppliers}
         onAddButtonClick={ability.can('create', 'supplier') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'supplier') && handleRefetch}

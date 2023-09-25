@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
-import { Loader, ErrorInfo , FilesGallery} from '@indocal/ui';
+import { Loader, ErrorInfo, FilesGallery } from '@indocal/ui';
 import { useFiles } from '@indocal/services';
 
 import { indocal } from '@/lib';
@@ -95,7 +95,7 @@ export const LastFilesGallery: React.FC = () => {
         </Paper>
       ) : (
         <FilesGallery
-          title={`Últimos archivos (${count})`}
+          title={`Últimos archivos (${count.toLocaleString()})`}
           files={files}
           client={indocal}
         />

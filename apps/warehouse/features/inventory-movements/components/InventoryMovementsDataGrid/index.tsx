@@ -58,7 +58,7 @@ const InventoryMovementsDataGrid: React.FC = () => {
       {isAddInventoryMovementDialogOpen && <AddInventoryMovementDialog />}
 
       <GenericInventoryMovementsDataGrid
-        title={`Movimientos (${count})`}
+        title={`Movimientos (${count.toLocaleString()})`}
         movements={movements}
         onAddButtonClick={
           ability.can('create', 'inventoryMovement') && handleAdd

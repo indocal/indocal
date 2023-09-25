@@ -211,7 +211,7 @@ export const SupplyOrdersDataGrid: React.FC<SupplyOrdersDataGridProps> = ({
             wordBreak: 'break-word',
           }}
         >
-          Últimas órdenes ({count})
+          Últimas órdenes ({count.toLocaleString()})
         </Typography>
 
         <Stack direction="row" spacing={0.25}>

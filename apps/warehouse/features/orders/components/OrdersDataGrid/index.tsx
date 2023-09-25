@@ -53,7 +53,7 @@ const OrdersDataGrid: React.FC = () => {
       {isAddOrderDialogOpen && <AddOrderDialog />}
 
       <GenericOrdersDataGrid
-        title={`Ordenes (${count})`}
+        title={`Ordenes (${count.toLocaleString()})`}
         orders={orders}
         onAddButtonClick={ability.can('create', 'order') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'order') && handleRefetch}

@@ -102,7 +102,7 @@ export const FolderFilesGallery: React.FC<FolderFilesGalleryProps> = ({
         </Paper>
       ) : (
         <FilesGallery
-          title={`Archivos (${count})`}
+          title={`Archivos (${count.toLocaleString()})`}
           files={files}
           client={indocal}
         />

@@ -60,7 +60,7 @@ const RoleUsersDataGrid: React.FC<RoleUsersDataGridProps> = ({ role }) => {
       {isManageRoleUsersDialogOpen && <ManageRoleUsersDialog role={role} />}
 
       <GenericUsersDataGrid
-        title={`Miembros del rol (${count})`}
+        title={`Miembros del rol (${count.toLocaleString()})`}
         users={users}
         onAddButtonClick={
           ability.can('update', 'userRole') &&

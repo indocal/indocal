@@ -50,7 +50,7 @@ export const SuppliesRequestsDataGrid: React.FC = () => {
   return (
     <>
       <GenericSuppliesRequestsDataGrid
-        title={`Solicitudes (${count})`}
+        title={`Solicitudes (${count.toLocaleString()})`}
         requests={requests}
         onRefreshButtonClick={
           ability.can('read', 'supplyRequest') && handleRefetch

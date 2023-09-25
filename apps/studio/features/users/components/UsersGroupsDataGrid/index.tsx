@@ -54,7 +54,7 @@ const UsersGroupsDataGrid: React.FC = () => {
       {isAddUserGroupDialogOpen && <AddUserGroupDialog />}
 
       <GenericUsersGroupsDataGrid
-        title={`Grupos (${count})`}
+        title={`Grupos (${count.toLocaleString()})`}
         groups={groups}
         onAddButtonClick={ability.can('create', 'userGroup') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'userGroup') && handleRefetch}

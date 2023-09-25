@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
-import { Loader, ErrorInfo ,FoldersGallery} from '@indocal/ui';
+import { Loader, ErrorInfo, FoldersGallery } from '@indocal/ui';
 import { useFolders } from '@indocal/services';
 
 import { indocal } from '@/lib';
@@ -94,7 +94,7 @@ export const LastFoldersGallery: React.FC = () => {
         </Paper>
       ) : (
         <FoldersGallery
-          title={`Últimas carpetas (${count})`}
+          title={`Últimas carpetas (${count.toLocaleString()})`}
           folders={folders}
           client={indocal}
           basePath={Pages.UPLOADS}

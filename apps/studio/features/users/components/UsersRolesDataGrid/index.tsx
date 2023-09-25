@@ -54,7 +54,7 @@ const UsersRolesDataGrid: React.FC = () => {
       {isAddUserRoleDialogOpen && <AddUserRoleDialog />}
 
       <GenericUsersRolesDataGrid
-        title={`Roles (${count})`}
+        title={`Roles (${count.toLocaleString()})`}
         roles={roles}
         onAddButtonClick={ability.can('create', 'userRole') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'userRole') && handleRefetch}

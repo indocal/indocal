@@ -54,7 +54,7 @@ const UsersDataGrid: React.FC = () => {
       {isAddUserDialogOpen && <AddUserDialog />}
 
       <GenericUsersDataGrid
-        title={`Usuarios (${count})`}
+        title={`Usuarios (${count.toLocaleString()})`}
         users={users}
         onAddButtonClick={ability.can('create', 'user') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'user') && handleRefetch}

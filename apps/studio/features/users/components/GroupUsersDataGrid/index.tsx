@@ -60,7 +60,7 @@ const GroupUsersDataGrid: React.FC<GroupUsersDataGridProps> = ({ group }) => {
       {isManageGroupUsersDialogOpen && <ManageGroupUsersDialog group={group} />}
 
       <GenericUsersDataGrid
-        title={`Miembros del grupo (${count})`}
+        title={`Miembros del grupo (${count.toLocaleString()})`}
         users={users}
         onAddButtonClick={
           ability.can('update', 'userGroup') &&

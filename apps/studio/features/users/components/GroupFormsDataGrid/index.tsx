@@ -59,7 +59,7 @@ const GroupFormsDataGrid: React.FC<GroupFormsDataGridProps> = ({ group }) => {
       {isAddGroupFormDialogOpen && <AddGroupFormDialog group={group} />}
 
       <GenericFormsDataGrid
-        title={`Formularios del grupo (${count})`}
+        title={`Formularios del grupo (${count.toLocaleString()})`}
         forms={forms}
         onAddButtonClick={ability.can('create', 'form') && handleAdd}
         onRefreshButtonClick={ability.can('read', 'form') && handleRefetch}

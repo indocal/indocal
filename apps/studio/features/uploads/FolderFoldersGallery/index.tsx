@@ -101,7 +101,7 @@ export const FolderFoldersGallery: React.FC<FolderFoldersGalleryProps> = ({
         </Paper>
       ) : (
         <FoldersGallery
-          title={`Carpetas (${count})`}
+          title={`Carpetas (${count.toLocaleString()})`}
           folders={folders}
           client={indocal}
           basePath={Pages.UPLOADS}

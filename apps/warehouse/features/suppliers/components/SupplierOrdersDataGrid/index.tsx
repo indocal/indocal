@@ -46,7 +46,7 @@ export const SupplierOrdersDataGrid: React.FC<SupplierOrdersDataGridProps> = ({
 
   return (
     <GenericOrdersDataGrid
-      title={`Ordenes realizadas (${count})`}
+      title={`Ordenes realizadas (${count.toLocaleString()})`}
       orders={orders}
       onRefreshButtonClick={ability.can('read', 'order') && handleRefetch}
       enhancedDataGridProps={{
