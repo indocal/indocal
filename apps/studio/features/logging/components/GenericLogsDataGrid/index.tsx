@@ -80,11 +80,11 @@ const GenericLogsDataGrid: React.FC<GenericLogsDataGridProps> = ({
         valueGetter: ({ row }) => {
           const [method, handler] = row.action.split('::');
 
-          if (row.authentication.type === 'api-token') {
+          if (row.authentication?.type === 'api-token') {
             return `{ ${row.authentication.apiToken.name} } -> [ ${row.context} ] -> ( ${method} ) -> ${handler}`;
           }
 
-          if (row.authentication.type === 'user') {
+          if (row.authentication?.type === 'user') {
             return `{ ${row.authentication.user.username} } -> [ ${row.context} ] -> ( ${method} ) -> ${handler}`;
           }
 
