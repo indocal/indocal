@@ -1,18 +1,13 @@
-import { useState, useCallback } from 'react';
 import { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
-import { Container } from '@mui/material';
-import { useSnackbar } from 'notistack';
+import { Container, Unstable_Grid2, Typography } from '@mui/material';
 
-import { Page } from '@indocal/ui';
-import {
-  FormGenerator,
-  serializeFormGeneratorAnswers,
-  FormGeneratorAnswers,
-} from '@indocal/forms-generator';
-import { createServiceError, UUID, Service, Form } from '@indocal/services';
+import { Page, Widget } from '@indocal/ui';
+import { ServiceRequestsPerMonthChart } from '@indocal/services-generator';
+import { FormFieldsReportsPerCycle } from '@indocal/forms-generator';
+import { UUID, Service } from '@indocal/services';
 
 import { indocal } from '@/lib';
+import { ServiceCard, ServiceRequestsDataGrid } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
@@ -22,90 +17,81 @@ type ServicesPageParams = {
 
 type ServicesPageProps = {
   service: Service;
-  form: Form;
 };
 
-const ServicePage: EnhancedNextPage<ServicesPageProps> = ({
-  service,
-  form,
-}) => {
-  const { data: session } = useSession();
+const ServicePage: EnhancedNextPage<ServicesPageProps> = ({ service }) => (
+  <Page transition="right" title={`Servicio: ${service.title}`}>
+    <Container
+      fixed
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr',
+        paddingY: (theme) => theme.spacing(2),
+      }}
+    >
+      <Unstable_Grid2
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={1}
+        sx={{ height: 'fit-content' }}
+      >
+        <Unstable_Grid2 xs={12} md={4}>
+          <Widget>
+            <ServiceCard service={service} />
+          </Widget>
+        </Unstable_Grid2>
 
-  const { enqueueSnackbar } = useSnackbar();
+        <Unstable_Grid2 xs={12} md={8}>
+          <Widget>
+            <ServiceRequestsDataGrid service={service} />
+          </Widget>
+        </Unstable_Grid2>
 
-  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
-
-  const handleOnSubmit = useCallback(
-    async (answers: FormGeneratorAnswers) => {
-      try {
-        if (!session) return;
-
-        const data = await serializeFormGeneratorAnswers(answers, indocal);
-
-        const { error } = await indocal.services.requests.create({
-          answers: data,
-          service: service.id,
-          requestedBy: session.user.id,
-        });
-
-        if (error) {
-          enqueueSnackbar(
-            error.details
-              ? error.details.reduce(
-                  (acc, current) => (acc ? `${acc} | ${current}` : current),
-                  ``
-                )
-              : error.message,
-            { variant: 'error' }
-          );
-        } else {
-          enqueueSnackbar('Solicitud enviada exitosamente', {
-            variant: 'success',
-            onEntered: () => setIsSubmitSuccessful(true),
-          });
-        }
-      } catch (exeption) {
-        const error = createServiceError(exeption);
-
-        enqueueSnackbar(
-          error.details
-            ? error.details.reduce(
-                (acc, current) => (acc ? `${acc} | ${current}` : current),
-                ``
-              )
-            : error.message,
-          { variant: 'error' }
-        );
-      }
-    },
-    [service.id, session, enqueueSnackbar]
-  );
-
-  return (
-    <Page transition="right" title={`Formulario: ${form.title}`}>
-      <Container fixed sx={{ paddingY: (theme) => theme.spacing(2) }}>
-        <FormGenerator
-          form={form}
-          showThankYouMessage={isSubmitSuccessful}
-          config={{
-            acceptMultipleResponses: true,
-            messages: {
-              saveResponse: 'Enviar solicitud',
-              submitAnotherResponse: 'Enviar otra solicitud',
-              thankYouMessage: {
-                title: 'Solicitud recibida',
-                feedback:
-                  'Hemos recibido su solicitud, estaremos procesándola lo más rápido posible',
+        <Unstable_Grid2 xs={12}>
+          <Typography
+            variant="h6"
+            sx={{
+              display: 'flex',
+              margin: (theme) => theme.spacing(4),
+              alignItems: 'center',
+              '::before': {
+                content: '""',
+                flexGrow: 1,
+                marginRight: (theme) => theme.spacing(2),
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
               },
-            },
-          }}
-          onSubmit={handleOnSubmit}
-          onReset={() => setIsSubmitSuccessful(false)}
-        />
-      </Container>
-    </Page>
-  );
-};
+              '::after': {
+                content: '""',
+                flexGrow: 1,
+                marginLeft: (theme) => theme.spacing(2),
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+              },
+            }}
+          >
+            Reportes
+          </Typography>
+        </Unstable_Grid2>
+
+        <Unstable_Grid2 xs={12} md={12}>
+          <Widget>
+            <ServiceRequestsPerMonthChart service={service} />
+          </Widget>
+        </Unstable_Grid2>
+
+        <Unstable_Grid2 xs={12}>
+          <Widget disableDefaultSizes>
+            <FormFieldsReportsPerCycle
+              form={service.form.id}
+              client={indocal}
+            />
+          </Widget>
+        </Unstable_Grid2>
+      </Unstable_Grid2>
+    </Container>
+  </Page>
+);
 
 ServicePage.getLayout = (page) => <AdminDashboard>{page}</AdminDashboard>;
 
@@ -123,18 +109,9 @@ export const getServerSideProps: GetServerSideProps<
     };
   }
 
-  const { form } = await indocal.forms.findOneByUUID(service.form.id);
-
-  if (!form || form.status !== 'PUBLISHED') {
-    return {
-      notFound: true,
-    };
-  }
-
   return {
     props: {
       service,
-      form,
     },
   };
 };

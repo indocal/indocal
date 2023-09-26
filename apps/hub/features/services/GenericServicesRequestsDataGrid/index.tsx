@@ -104,7 +104,7 @@ export const GenericServicesRequestsDataGrid: React.FC<
         headerName: 'Estado',
         headerAlign: 'center',
         align: 'center',
-        minWidth: 200,
+        minWidth: 225,
         valueGetter: ({ value }) => translateServiceRequestStatus(value),
         renderCell: ({ value, row }) => (
           <Chip
@@ -115,6 +115,15 @@ export const GenericServicesRequestsDataGrid: React.FC<
             }
           />
         ),
+      },
+      {
+        field: 'requestedBy',
+        headerName: 'Usuario',
+        headerAlign: 'center',
+        align: 'center',
+        minWidth: 300,
+        flex: 1,
+        valueGetter: ({ value }) => value.name,
       },
       {
         field: 'createdAt',
@@ -134,6 +143,7 @@ export const GenericServicesRequestsDataGrid: React.FC<
         id: request.id,
         service: request.service,
         status: request.status,
+        requestedBy: request.requestedBy,
         createdAt: request.createdAt,
       })),
     [requests]

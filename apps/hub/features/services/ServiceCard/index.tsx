@@ -7,7 +7,7 @@ import {
   Typography,
   Button,
 } from '@mui/material';
-import { Draw as RequestIcon } from '@mui/icons-material';
+import { Launch as ViewDetailsIcon } from '@mui/icons-material';
 
 import { Entity, ServiceStatus, ServiceRequestStatus } from '@indocal/services';
 
@@ -61,13 +61,12 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => (
       <Button
         LinkComponent={NextLink}
         href={`${Pages.SERVICES}/${service.id}`}
-        target="_blank"
         fullWidth
         size="small"
         variant="contained"
-        endIcon={<RequestIcon />}
+        endIcon={<ViewDetailsIcon />}
       >
-        Solicitar Servicio
+        Consultar Servicio
       </Button>
     </CardActions>
   </Card>
