@@ -92,7 +92,13 @@ export const AddPlaceholderDialog: React.FC = () => {
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      if (!service.template) return;
+      if (!service.template) {
+        enqueueSnackbar(
+          'Antes de agregar un placeholder debe crear una plantilla básica',
+          { variant: 'info' }
+        );
+        return;
+      }
 
       const { error } = await indocal.services.templates.upsert(service.id, {
         placeholders: service.template.placeholders.concat({
