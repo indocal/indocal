@@ -6,7 +6,7 @@ import { FormFieldAnswer } from '../../../../forms/submodules/entries/entities';
 
 export class CreateServiceRequestDto {
   @IsObject({ each: true })
-  answers: FormFieldAnswer[]; // TODO: Validate this object
+  answers: FormFieldAnswer[];
 
   @IsUUID()
   service: UUID;
