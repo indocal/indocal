@@ -23,7 +23,7 @@
     "@mui/material": "5.14.6",
     "@mui/x-data-grid": "6.11.2",
     "@mui/x-date-pickers": "6.11.2",
-    "axios": "1.4.0",
+    "axios": "1.6.0",
     "date-fns": "2.30.0",
     "material-ui-confirm": "3.0.9",
     "next": "13.4.19",
