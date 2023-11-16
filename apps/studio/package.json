@@ -41,7 +41,7 @@
     "react-hook-form": "7.45.4",
     "react-pdf-html": "1.1.18",
     "reactflow": "11.8.3",
-    "sharp": "0.32.5",
+    "sharp": "0.32.6",
     "zod": "3.21.4"
   },
   "devDependencies": {
