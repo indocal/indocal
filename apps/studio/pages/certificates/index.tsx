@@ -2,12 +2,12 @@ import { Container, Unstable_Grid2 } from '@mui/material';
 
 import { Page, Widget } from '@indocal/ui';
 
-import { AppearanceSettings } from '@/features';
+import { CertificatesDataGrid } from '@/features';
 import { AdminDashboard } from '@/components';
 import { EnhancedNextPage } from '@/types';
 
-const SettingsPage: EnhancedNextPage = () => (
-  <Page title="Configuración" transition="down">
+const CertificatesPage: EnhancedNextPage = () => (
+  <Page title="Servicios" transition="down">
     <Container
       fixed
       sx={{
@@ -25,8 +25,8 @@ const SettingsPage: EnhancedNextPage = () => (
         sx={{ height: 'fit-content' }}
       >
         <Unstable_Grid2 xs={12}>
-          <Widget disableDefaultSizes>
-            <AppearanceSettings />
+          <Widget height={500}>
+            <CertificatesDataGrid />
           </Widget>
         </Unstable_Grid2>
       </Unstable_Grid2>
@@ -34,6 +34,6 @@ const SettingsPage: EnhancedNextPage = () => (
   </Page>
 );
 
-SettingsPage.getLayout = (page) => <AdminDashboard>{page}</AdminDashboard>;
+CertificatesPage.getLayout = (page) => <AdminDashboard>{page}</AdminDashboard>;
 
-export default SettingsPage;
+export default CertificatesPage;

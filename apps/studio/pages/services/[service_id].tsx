@@ -8,7 +8,7 @@ import {
   ServiceCard,
   FormCard,
   UserGroupCard,
-  ServiceRequestsDataGrid,
+  // ServiceRequestsDataGrid,
 } from '@/features';
 
 import { AdminDashboard } from '@/components';
@@ -71,11 +71,11 @@ const ServicePage: EnhancedNextPage = () => {
               </Widget>
             </Unstable_Grid2>
 
-            <Unstable_Grid2 xs={12}>
+            {/* <Unstable_Grid2 xs={12}>
               <Widget>
                 <ServiceRequestsDataGrid service={service} />
               </Widget>
-            </Unstable_Grid2>
+            </Unstable_Grid2> */}
           </Unstable_Grid2>
         ) : (
           <NotFound />

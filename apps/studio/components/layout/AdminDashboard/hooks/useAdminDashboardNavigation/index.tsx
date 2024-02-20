@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import {
+  CardMembership as CertificatesIcon,
   ShoppingCart as ServicesIcon,
   Feed as FormsIcon,
   SnippetFolder as UploadsIcon,
@@ -42,6 +43,15 @@ export function useAdminDashboardNavigation(): DrawerNavigation[] {
 
   const navigation = useMemo<Navigation[]>(
     () => [
+      {
+        type: 'ITEM',
+        item: {
+          show: ability.can('read', 'serviceCertificate'),
+          label: 'Certificados',
+          icon: <CertificatesIcon />,
+          href: Pages.CERTIFICATES,
+        },
+      },
       {
         type: 'ITEM',
         item: {

@@ -5,6 +5,7 @@ export enum Pages {
 
   // Sections
   ROOT = '/',
+  CERTIFICATES = '/certificates',
   SERVICES = '/services',
   SERVICES_REPORTS = '/services/reports',
   SERVICES_REQUESTS = '/services/requests',
