@@ -98,6 +98,8 @@ export const ControlledCompatibleServiceFormFieldsAutocomplete: React.FC<
       'DATETIME',
     ],
 
+    [ServiceCertificateTemplatePlaceholderType.IMAGE]: [],
+
     [ServiceCertificateTemplatePlaceholderType.SIGNATURE]: ['SIGNATURE'],
 
     [ServiceCertificateTemplatePlaceholderType.SECTION]: [],

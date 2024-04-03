@@ -9,6 +9,7 @@ export function translateServiceCertificateTemplatePlaceholderType(
   > = {
     TEXT: 'Texto',
     SIGNATURE: 'Firma',
+    IMAGE: 'Firma (Imagen)',
     SECTION: 'Sección',
     TABLE: 'Tabla',
   };

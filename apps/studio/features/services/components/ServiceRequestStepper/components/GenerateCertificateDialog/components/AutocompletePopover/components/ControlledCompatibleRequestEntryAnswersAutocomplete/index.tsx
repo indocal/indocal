@@ -87,6 +87,8 @@ export const ControlledCompatibleRequestEntryAnswersAutocomplete: React.FC<
       'DATETIME',
     ],
 
+    [ServiceCertificateTemplatePlaceholderType.IMAGE]: [],
+
     [ServiceCertificateTemplatePlaceholderType.SIGNATURE]: ['SIGNATURE'],
 
     [ServiceCertificateTemplatePlaceholderType.SECTION]: [],
