@@ -20,8 +20,6 @@ import { useSnackbar } from 'notistack';
 import { Loader, NoData, ErrorInfo } from '@indocal/ui';
 import { Can, useForm, UUID, Form } from '@indocal/services';
 
-import { Pages } from '@/config';
-
 import { FormFieldsCardProvider, useFormFieldsCard } from './context';
 import { ManageFormFieldsDialog } from './components';
 
@@ -42,8 +40,8 @@ const FormFieldsCard: React.FC<FormFieldsCardProps> = ({ form: entity }) => {
   const url = useMemo(
     () =>
       new URL(
-        `${Pages.FORMS_PREVIEW}/${form?.id}`,
-        process.env.NEXT_PUBLIC_SITE_URL
+        `public/forms/${form?.id}`,
+        process.env.NEXT_PUBLIC_USER_SITE_URL
       ),
     [form?.id]
   );
