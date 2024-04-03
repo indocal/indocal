@@ -1,14 +1,28 @@
 import { useState, useCallback } from 'react';
-import { Stack } from '@mui/material';
+import NextLink from 'next/link';
+import {
+  Paper,
+  Stack,
+  Divider,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  IconButton,
+} from '@mui/material';
+import { Download } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from 'notistack';
 import { useForm, Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
 
-import { ControlledDniTextField ,formatDni} from '@indocal/ui';
-import { ServiceCertificate } from '@indocal/services';
+import { ControlledDniTextField, formatDni } from '@indocal/ui';
+import { getShortUUID, ServiceCertificate } from '@indocal/services';
 
+import { Pages } from '@/config';
 import { indocal } from '@/lib';
 
 type FormData = zod.infer<typeof schema>;
@@ -35,11 +49,9 @@ export const CertificatesSearcher: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    formState: { isDirty, isSubmitting, errors },
-    register,
+    formState: { isSubmitting },
     control,
     handleSubmit,
-    reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -48,17 +60,16 @@ export const CertificatesSearcher: React.FC = () => {
 
   const onSubmit = useCallback(
     async (formData: FormData) => {
-      const { certificates, error } = await indocal.services.certificates.findMany({
-        filters: {
-          request: {
-            requestedBy: {
-              username: formatDni(formData.dni, 'DB')
-            }
-          }
-        }
-      });
-
-      console.log(formatDni(formData.dni, 'DB'))
+      const { certificates, error } =
+        await indocal.services.certificates.findMany({
+          filters: {
+            request: {
+              requestedBy: {
+                username: formatDni(formData.dni, 'DB'),
+              },
+            },
+          },
+        });
 
       if (error) {
         enqueueSnackbar(
@@ -72,40 +83,87 @@ export const CertificatesSearcher: React.FC = () => {
         );
       }
 
+      if (certificates.length === 0) {
+        enqueueSnackbar('No se encontraron certificados con esta cédula', {
+          variant: 'error',
+        });
+      }
+
       setCertificates(certificates);
     },
     [enqueueSnackbar]
   );
 
   return (
-    <Stack component="form" autoComplete="off" spacing={2}>
-      <ControlledDniTextField
-        name="dni"
-        label="Cédula"
-        description='Ingrese su cédula para consultar sus certificados'
-        control={control as unknown as Control}
-        textFieldProps={{
-          required: true,
-          disabled: isSubmitting,
-          FormHelperTextProps: {
-            sx: {
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
+    <Stack divider={<Divider flexItem />} spacing={2}>
+      <Stack component="form" autoComplete="off" spacing={2}>
+        <ControlledDniTextField
+          name="dni"
+          label="Cédula"
+          description="Ingrese su cédula para consultar sus certificados"
+          control={control as unknown as Control}
+          textFieldProps={{
+            required: true,
+            disabled: isSubmitting,
+            FormHelperTextProps: {
+              sx: {
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
 
-      <LoadingButton
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-        onClick={handleSubmit(onSubmit)}
-      >
-        Consultar
-      </LoadingButton>
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+          onClick={handleSubmit(onSubmit)}
+        >
+          Consultar
+        </LoadingButton>
+      </Stack>
 
-      <pre>{JSON.stringify(certificates, null, 2)}</pre>
+      {certificates.length > 0 && (
+        <TableContainer component={Paper}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">--</TableCell>
+                <TableCell align="center">Certificado</TableCell>
+                <TableCell align="right">Fecha de emisión</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {certificates.map((certificate) => (
+                <TableRow
+                  key={certificate.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell align="center">
+                    <NextLink
+                      href={`${Pages.SERVICES_CERTIFICATES}/${certificate.id}`}
+                    >
+                      <IconButton size="small">
+                        <Download />
+                      </IconButton>
+                    </NextLink>
+                  </TableCell>
+
+                  <TableCell align="center">
+                    {getShortUUID(certificate.id)}
+                  </TableCell>
+
+                  <TableCell align="right">
+                    {new Date(certificate.createdAt).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Stack>
   );
-}
+};

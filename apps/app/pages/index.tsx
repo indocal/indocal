@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 
 import { Page, Widget, BasicLayout } from '@indocal/ui';
 
@@ -7,15 +7,11 @@ import { EnhancedNextPage } from '@/types';
 
 const DashboardPage: EnhancedNextPage = () => (
   <Page title="INDOCAL" transition="down">
-    <Container
-      fixed
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gridTemplateRows: '1fr',
-        paddingY: (theme) => theme.spacing(2),
-      }}
-    >
+    <Container fixed sx={{ width: 500, paddingY: 4 }}>
+      <Typography variant="h4" textAlign="center" sx={{ marginBottom: 2 }}>
+        Consultar certificados
+      </Typography>
+
       <Widget disableDefaultSizes>
         <CertificatesSearcher />
       </Widget>
