@@ -4,7 +4,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "module": "commonjs",
+    "module": "CommonJS",
     "outDir": "./dist",
     "target": "es2017",
     "declaration": true,

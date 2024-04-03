@@ -28,6 +28,9 @@ export function highlightPlaceholders(
       [ServiceCertificateTemplatePlaceholderType.SIGNATURE]:
         highlightSignaturePlaceholder,
 
+      [ServiceCertificateTemplatePlaceholderType.IMAGE]:
+        highlightSignaturePlaceholder,
+
       [ServiceCertificateTemplatePlaceholderType.SECTION]:
         highlightSectionPlaceholder,
 

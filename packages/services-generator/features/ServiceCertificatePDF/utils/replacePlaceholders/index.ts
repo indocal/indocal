@@ -7,6 +7,7 @@ import {
 import {
   replaceTextPlaceholder,
   replaceSignaturePlaceholder,
+  replaceImagePlaceholder,
   replaceSectionPlaceholder,
   replaceTablePlaceholder,
 } from './utils';
@@ -44,6 +45,9 @@ export function replacePlaceholders({
 
       [ServiceCertificateTemplatePlaceholderType.SIGNATURE]:
         replaceSignaturePlaceholder,
+
+      [ServiceCertificateTemplatePlaceholderType.IMAGE]:
+        replaceImagePlaceholder,
 
       [ServiceCertificateTemplatePlaceholderType.SECTION]:
         replaceSectionPlaceholder,

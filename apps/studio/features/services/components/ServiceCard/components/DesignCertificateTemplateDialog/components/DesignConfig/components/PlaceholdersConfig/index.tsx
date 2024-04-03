@@ -20,6 +20,7 @@ import {
   Edit as EditIcon,
   ShortText as TextIcon,
   Draw as SignatureIcon,
+  Image as ImageIcon,
   BackupTable as SectionIcon,
   TableChart as TableIcon,
 } from '@mui/icons-material';
@@ -34,7 +35,11 @@ import {
 import { DesignCertificateTemplateDialogData } from '../../../../context';
 
 import { PlaceholdersConfigProvider, usePlaceholdersConfig } from './context';
-import { AddPlaceholderDialog, EditPlaceholderDialog } from './components';
+import {
+  AddPlaceholderDialog,
+  AddSignaturePlaceholderDialog,
+  EditPlaceholderDialog,
+} from './components';
 
 export interface PlaceholdersConfigProps {
   service: Service;
@@ -47,8 +52,10 @@ const PlaceholdersConfig: React.FC<PlaceholdersConfigProps> = ({ service }) => {
 
   const {
     isAddPlaceholderDialogOpen,
+    isAddSignaturePlaceholderDialogOpen,
     isEditPlaceholderDialogOpen,
     toggleAddPlaceholderDialog,
+    toggleAddSignaturePlaceholderDialog,
     toggleEditPlaceholderDialog,
   } = usePlaceholdersConfig();
 
@@ -62,6 +69,7 @@ const PlaceholdersConfig: React.FC<PlaceholdersConfigProps> = ({ service }) => {
     () => ({
       TEXT: <TextIcon />,
       SIGNATURE: <SignatureIcon />,
+      IMAGE: <ImageIcon />,
       SECTION: <SectionIcon />,
       TABLE: <TableIcon />,
     }),
@@ -79,6 +87,8 @@ const PlaceholdersConfig: React.FC<PlaceholdersConfigProps> = ({ service }) => {
   return (
     <>
       {isAddPlaceholderDialogOpen && <AddPlaceholderDialog />}
+
+      {isAddSignaturePlaceholderDialogOpen && <AddSignaturePlaceholderDialog />}
 
       {isEditPlaceholderDialogOpen && placeholder && (
         <EditPlaceholderDialog placeholder={placeholder} />
@@ -99,6 +109,17 @@ const PlaceholdersConfig: React.FC<PlaceholdersConfigProps> = ({ service }) => {
               onClick={toggleAddPlaceholderDialog}
             >
               Nuevo placeholder
+            </Button>
+
+            <Button
+              variant="contained"
+              size="small"
+              color="secondary"
+              disabled={isSubmitting}
+              endIcon={<AddIcon />}
+              onClick={toggleAddSignaturePlaceholderDialog}
+            >
+              Nuevo placeholder (Firma)
             </Button>
 
             {service.template && service.template.placeholders.length ? (

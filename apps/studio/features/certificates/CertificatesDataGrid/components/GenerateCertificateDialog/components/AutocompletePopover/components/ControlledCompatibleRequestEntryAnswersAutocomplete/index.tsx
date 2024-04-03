@@ -89,6 +89,8 @@ export const ControlledCompatibleRequestEntryAnswersAutocomplete: React.FC<
 
     [ServiceCertificateTemplatePlaceholderType.SIGNATURE]: ['SIGNATURE'],
 
+    [ServiceCertificateTemplatePlaceholderType.IMAGE]: [],
+
     [ServiceCertificateTemplatePlaceholderType.SECTION]: [],
 
     [ServiceCertificateTemplatePlaceholderType.TABLE]: [],

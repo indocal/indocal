@@ -28,6 +28,7 @@ import { GenerateCertificateDialogProvider } from './context';
 import {
   TextPlaceholderField,
   SignaturePlaceholderField,
+  ImagePlaceholderField,
   SectionPlaceholderField,
   TablePlaceholderField,
   AutocompletePopover,
@@ -63,6 +64,7 @@ const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
     () => ({
       TEXT: TextPlaceholderField,
       SIGNATURE: SignaturePlaceholderField,
+      IMAGE: ImagePlaceholderField,
       SECTION: SectionPlaceholderField,
       TABLE: TablePlaceholderField,
     }),

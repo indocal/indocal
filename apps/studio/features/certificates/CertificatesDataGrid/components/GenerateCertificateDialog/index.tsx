@@ -28,6 +28,7 @@ import { GenerateCertificateDialogProvider } from './context';
 import {
   TextPlaceholderField,
   SignaturePlaceholderField,
+  ImagePlaceholderField,
   SectionPlaceholderField,
   TablePlaceholderField,
   AutocompletePopover,
@@ -45,8 +46,11 @@ const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
 
   const { loading, service, error } = useService(request.service.id);
 
-  const { isGenerateCertificateDialogOpen, toggleGenerateCertificateDialog, toggleAddCertificateDialog } =
-  useCertificatesDataGrid();
+  const {
+    isGenerateCertificateDialogOpen,
+    toggleGenerateCertificateDialog,
+    toggleAddCertificateDialog,
+  } = useCertificatesDataGrid();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -63,6 +67,7 @@ const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
     () => ({
       TEXT: TextPlaceholderField,
       SIGNATURE: SignaturePlaceholderField,
+      IMAGE: ImagePlaceholderField,
       SECTION: SectionPlaceholderField,
       TABLE: TablePlaceholderField,
     }),
@@ -96,14 +101,13 @@ const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
             typeof key === 'string' &&
             key.includes(ApiEndpoints.SERVICES_CERTIFICATES)
         ),
-
-        enqueueSnackbar('Certificado generado exitosamente', {
-          variant: 'success',
-          onEntered: () => {
-            toggleGenerateCertificateDialog()
-            toggleAddCertificateDialog()
-          },
-        });
+          enqueueSnackbar('Certificado generado exitosamente', {
+            variant: 'success',
+            onEntered: () => {
+              toggleGenerateCertificateDialog();
+              toggleAddCertificateDialog();
+            },
+          });
       }
     },
     [
@@ -112,6 +116,7 @@ const GenerateCertificateDialog: React.FC<GenerateCertificateDialogProps> = ({
       toggleGenerateCertificateDialog,
       mutate,
       enqueueSnackbar,
+      toggleAddCertificateDialog,
     ]
   );
 

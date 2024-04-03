@@ -8,16 +8,19 @@ import { Service } from '@indocal/services';
 
 const initialContextState: PlaceholdersConfigContextState = {
   isAddPlaceholderDialogOpen: false,
+  isAddSignaturePlaceholderDialogOpen: false,
   isEditPlaceholderDialogOpen: false,
 };
 
 interface PlaceholdersConfigContextState {
   isAddPlaceholderDialogOpen: boolean;
+  isAddSignaturePlaceholderDialogOpen: boolean;
   isEditPlaceholderDialogOpen: boolean;
 }
 
 type PlaceholdersConfigContextStateAction =
   | { type: 'TOGGLE_ADD_PLACEHOLDER_DIALOG' }
+  | { type: 'TOGGLE_ADD_SIGNATURE_PLACEHOLDER_DIALOG' }
   | { type: 'TOGGLE_EDIT_PLACEHOLDER_DIALOG' };
 
 function reducer(
@@ -29,6 +32,13 @@ function reducer(
       return {
         ...state,
         isAddPlaceholderDialogOpen: !state.isAddPlaceholderDialogOpen,
+      };
+
+    case 'TOGGLE_ADD_SIGNATURE_PLACEHOLDER_DIALOG':
+      return {
+        ...state,
+        isAddSignaturePlaceholderDialogOpen:
+          !state.isAddSignaturePlaceholderDialogOpen,
       };
 
     case 'TOGGLE_EDIT_PLACEHOLDER_DIALOG':
@@ -50,6 +60,9 @@ export const initialContextValue: PlaceholdersConfigContextValue = {
   service: {} as Service,
   isAddPlaceholderDialogOpen: initialContextState.isAddPlaceholderDialogOpen,
   toggleAddPlaceholderDialog: () => undefined,
+  isAddSignaturePlaceholderDialogOpen:
+    initialContextState.isAddSignaturePlaceholderDialogOpen,
+  toggleAddSignaturePlaceholderDialog: () => undefined,
   isEditPlaceholderDialogOpen: initialContextState.isEditPlaceholderDialogOpen,
   toggleEditPlaceholderDialog: () => undefined,
 };
@@ -58,6 +71,8 @@ export interface PlaceholdersConfigContextValue {
   service: Service;
   isAddPlaceholderDialogOpen: boolean;
   toggleAddPlaceholderDialog: () => void;
+  isAddSignaturePlaceholderDialogOpen: boolean;
+  toggleAddSignaturePlaceholderDialog: () => void;
   isEditPlaceholderDialogOpen: boolean;
   toggleEditPlaceholderDialog: () => void;
 }
@@ -79,6 +94,11 @@ export const PlaceholdersConfigProvider: React.FC<
     []
   );
 
+  const handleToggleAddSignaturePlaceholderDialog = useCallback(
+    () => dispatch({ type: 'TOGGLE_ADD_SIGNATURE_PLACEHOLDER_DIALOG' }),
+    []
+  );
+
   const handleToggleEditPlaceholderDialog = useCallback(
     () => dispatch({ type: 'TOGGLE_EDIT_PLACEHOLDER_DIALOG' }),
     []
@@ -90,6 +110,10 @@ export const PlaceholdersConfigProvider: React.FC<
         service,
         isAddPlaceholderDialogOpen: state.isAddPlaceholderDialogOpen,
         toggleAddPlaceholderDialog: handleToggleAddPlaceholderDialog,
+        isAddSignaturePlaceholderDialogOpen:
+          state.isAddSignaturePlaceholderDialogOpen,
+        toggleAddSignaturePlaceholderDialog:
+          handleToggleAddSignaturePlaceholderDialog,
         isEditPlaceholderDialogOpen: state.isEditPlaceholderDialogOpen,
         toggleEditPlaceholderDialog: handleToggleEditPlaceholderDialog,
       }}

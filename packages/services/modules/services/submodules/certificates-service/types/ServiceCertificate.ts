@@ -1,4 +1,5 @@
 import { Entity } from '../../../../../common';
+import { File } from '../../../../uploads';
 
 import { UserStatus } from '../../../../auth';
 
@@ -54,7 +55,8 @@ type User = Entity & {
 
 export type ServiceCertificateData =
   | Record<string, string>
-  | Record<string, Array<Record<string, string>>>;
+  | Record<string, Array<Record<string, string>>>
+  | Record<string, File>;
 
 export interface ServiceCertificate extends Entity {
   data: ServiceCertificateData;

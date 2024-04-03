@@ -23,6 +23,7 @@ export type ServiceCertificateTemplateLayout = {
 export enum ServiceCertificateTemplatePlaceholderType {
   TEXT = 'TEXT',
   SIGNATURE = 'SIGNATURE',
+  IMAGE = 'IMAGE',
   SECTION = 'SECTION',
   TABLE = 'TABLE',
 }

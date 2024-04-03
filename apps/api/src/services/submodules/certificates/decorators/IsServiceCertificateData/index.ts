@@ -32,6 +32,12 @@ export function IsServiceCertificateData(
               });
             }
 
+            if (typeof value === 'object' && value['mime']) {
+              const [mime] = value['mime'].split('/');
+
+              if (mime === 'image') return true;
+            }
+
             return false;
           });
 

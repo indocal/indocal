@@ -74,6 +74,7 @@ const EditPlaceholderDialog: React.FC<EditPlaceholderDialogProps> = ({
     () => ({
       TEXT: <TextPlaceholderConfig placeholder={placeholder} />,
       SIGNATURE: <SignaturePlaceholderConfig placeholder={placeholder} />,
+      IMAGE: <SignaturePlaceholderConfig placeholder={placeholder} />,
       SECTION: <SectionPlaceholderConfig />,
       TABLE: <TablePlaceholderConfig />,
     }),
