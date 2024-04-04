@@ -47,6 +47,7 @@ export const AddFileDialog: React.FC = () => {
         content: formData.content,
         styles: formData.styles,
         assets: formData.assets,
+        placeholders: service.template.placeholders,
       });
 
       if (error) {
